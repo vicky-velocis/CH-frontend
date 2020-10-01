@@ -125,7 +125,8 @@ import {
       await getOpeningBalanceData(action,state, dispatch,applicationNumber);
     }
     else{
-      dispatch(prepareFinalObject("materialReceipt[0]", null));
+      //dispatch(prepareFinalObject("materialReceipt[0]", null));
+      dispatch(prepareFinalObject("materialReceipt", null));
     }
   };
   
