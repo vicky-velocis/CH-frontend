@@ -284,7 +284,7 @@ return
     const sanctionDateEpoch = (!!mortgageApplication.mortgageApprovedGrantDetails[0].sanctionDate) ? parseInt(mortgageApplication.mortgageApprovedGrantDetails[0].sanctionDate) : ""
     const mortgageEndDateEpoch = (!!mortgageApplication.mortgageApprovedGrantDetails[0].mortgageEndDate) ? parseInt(mortgageApplication.mortgageApprovedGrantDetails[0].mortgageEndDate) : ""
 
-    if(!bankName && !mortgageAmountValid && ! sanctionLetterNumber && !sanctionDateEpoch && !mortageEndDate){
+    if(!bankName || !mortgageAmountValid || ! sanctionLetterNumber || !sanctionDateEpoch || !mortgageEndDateEpoch){
       toggleSnackbar(
         true,
         { labelName: "Please enter all required fields", labelKey: "Please enter all required fields"},
