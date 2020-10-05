@@ -8,6 +8,7 @@ import {
   getBreak
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import get from "lodash/get";
+import set from "lodash/set";
 import { prepareFinalObject, handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import { footer } from "./applyResource/footer";
@@ -249,6 +250,13 @@ export const getData = async (action, state, dispatch) => {
         try { payloadWater = await getSearchResults(queryObject) } catch (error) { console.error(error); };
         payloadWater.WaterConnection[0].water = true;
         payloadWater.WaterConnection[0].sewerage = false;
+        if(payloadWater.WaterConnection[0].activityType === "NEW_TUBEWELL_CONNECTION"){
+          payloadWater.WaterConnection[0].water = false;
+          payloadWater.WaterConnection[0].tubewell = true;
+          dispatch(prepareFinalObject("applyScreen.water", false));
+          dispatch(prepareFinalObject("applyScreen.tubewell", true));
+          toggleWaterFeilds(action, false);
+        }
         dispatch(prepareFinalObject("WaterConnection", payloadWater.WaterConnection));
 
         if(payloadWater && payloadWater.WaterConnection.length > 0){
@@ -481,6 +489,7 @@ const screenConfig = {
     getData(action, state, dispatch).then(() => { });
     dispatch(prepareFinalObject("applyScreen.water", true));
     dispatch(prepareFinalObject("applyScreen.sewerage", false));
+    dispatch(prepareFinalObject("applyScreen.tubewell", false));
     const propertyId = getQueryArg(window.location.href, "propertyId");
 
     const applicationNumber = getQueryArg(window.location.href, "applicationNumber");
