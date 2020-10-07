@@ -101,7 +101,7 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
       }else{
         set(action.screenConfig, "components.div.children.headerDiv.children.header1.children.connection.children.connectionNumber.visible",false ); 
       }
-      if(processInstanceAppStatus==="PENDING_FOR_FIELD_INSPECTION"){
+      if(processInstanceAppStatus==="PENDING_FOR_FIELD_INSPECTION"|| processInstanceAppStatus==="PENDING_FOR_METER_INSTALLATION"|| processInstanceAppStatus==="PENDING_FOR_JE_BR_APPROVAL"){
         let queryObjectForEst = [{
           applicationNo: applicationNumber,
           tenantId: tenantId,
@@ -187,7 +187,8 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
     //   "screenConfiguration.preparedFinalObject.WaterConnection[0].applicationStatus"
     // );
     // for showing addPenaltyRebateButton
-    if(process.env.REACT_APP_NAME !== "Citizen" && (processInstanceAppStatus !== 'PENDING_FOR_PAYMENT' && processInstanceAppStatus !=="PENDING_FOR_CONNECTION_ACTIVATION" && processInstanceAppStatus !== 'CONNECTION_ACTIVATED')){
+ //   if(process.env.REACT_APP_NAME !== "Citizen" && (processInstanceAppStatus !== 'PENDING_FOR_PAYMENT' && processInstanceAppStatus !=="PENDING_FOR_CONNECTION_ACTIVATION" && processInstanceAppStatus !== 'CONNECTION_ACTIVATED')){
+  if(process.env.REACT_APP_NAME !== "Citizen" && ((serviceModuleName==="WS_DISCONNECTION" && processInstanceAppStatus === 'PENDING_METER_READING_CAPTURE')|| (serviceModuleName==="NewWS1" && processInstanceAppStatus === 'PENDING_FOR_TEMPORARY_TO_REGULAR_CONNECTION_APPROVAL'))){
       
       dispatch(
           handleField(
