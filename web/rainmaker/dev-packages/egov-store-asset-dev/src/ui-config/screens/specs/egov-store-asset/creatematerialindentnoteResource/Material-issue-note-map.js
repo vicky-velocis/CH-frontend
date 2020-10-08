@@ -340,7 +340,7 @@ import {
                 },
                 required: false,
                 pattern: getPattern("Name") || null,
-                jsonPath: "materialIssues[0].materialIssueDetails[0].uom.code"
+                jsonPath: "materialIssues[0].materialIssueDetails[0].uom.name"
               })
             },
             unitRate: {
