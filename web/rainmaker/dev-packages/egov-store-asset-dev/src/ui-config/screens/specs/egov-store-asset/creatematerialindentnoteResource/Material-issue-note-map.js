@@ -411,6 +411,7 @@ import {
                   disabled:true
                 },
                 required: false,
+                visible:false,
                 pattern: getPattern("Name") || null,
                 jsonPath: "materialIssues[0].materialIssueDetails[0].assestCode"
               })
@@ -429,6 +430,7 @@ import {
                   disabled:true
                 },
                 required: false,
+                visible:false,
                 pattern: getPattern("Name") || null,
                 jsonPath: "materialIssues[0].materialIssueDetails[0].projectCode"
               })
