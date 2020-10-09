@@ -558,13 +558,26 @@ const screenConfig = {
       if (applicationNumber.includes("SW")) {
         dispatch(prepareFinalObject("applyScreen.water", false));
         dispatch(prepareFinalObject("applyScreen.sewerage", true));
+        dispatch(prepareFinalObject("applyScreen.tubewell", false));
         toggleWaterFeilds(action, false);
         toggleSewerageFeilds(action, true);
       } else {
+       const isTubeWell = window.localStorage.getItem("isTubeWell");
+       if(isTubeWell){
+        dispatch(prepareFinalObject("applyScreen.water", false));
+        dispatch(prepareFinalObject("applyScreen.sewerage", false));
+        dispatch(prepareFinalObject("applyScreen.tubewell", true));
+        toggleWaterFeilds(action, false);
+        toggleSewerageFeilds(action, false);
+       }else{
         dispatch(prepareFinalObject("applyScreen.water", true));
         dispatch(prepareFinalObject("applyScreen.sewerage", false));
+        dispatch(prepareFinalObject("applyScreen.tubewell", false));
         toggleWaterFeilds(action, true);
         toggleSewerageFeilds(action, false);
+       }
+       
+       window.localStorage.removeItem("isTubeWell");
       }
     } else {
       togglePropertyFeilds(action, false)

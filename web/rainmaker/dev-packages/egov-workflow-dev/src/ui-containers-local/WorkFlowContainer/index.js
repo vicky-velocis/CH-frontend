@@ -356,7 +356,7 @@ class WorkFlowContainer extends React.Component {
   };
 
   getRedirectUrl = (action, businessId, moduleName) => {
-    console.log("modulenamewater", moduleName);
+    //console.log("modulenamewater", moduleName);
     const isAlreadyEdited = getQueryArg(window.location.href, "edited");
     const tenant = getQueryArg(window.location.href, "tenantId");
     const { ProcessInstances } = this.props;
@@ -375,6 +375,8 @@ class WorkFlowContainer extends React.Component {
       baseUrl = "wns"
       if (moduleName === "NewWS1" || moduleName === "WS_CONVERSION" || moduleName === "WS_DISCONNECTION" || moduleName === "WS_RENAME" || moduleName === "WS_TUBEWELL") {
         bservice = "WS.ONE_TIME_FEE"
+        if(moduleName === "NewWS1")   window.localStorage.setItem("isTubeWell",false);
+        if( moduleName === "WS_TUBEWELL") window.localStorage.setItem("isTubeWell",true);
       } else {
         bservice = "SW.ONE_TIME_FEE"
       }

@@ -40,9 +40,20 @@ let applicationNumber = getQueryArg(window.location.href, "applicationNumber");
 let service = getQueryArg(window.location.href, "service");
 const serviceModuleName = service === "WATER" ? window.localStorage.getItem("wns_workflow")==="NEWWS1" ? "NewWS1":  window.localStorage.getItem("wns_workflow") : "NewSW1";
 const serviceUrl = serviceModuleName === "NewSW1" ?  "/sw-services/swc/_update" : "/ws-services/wc/_update" ;
+
+const getLabelForWnsHeader = () => {
+  const wnsHeader =  window.localStorage.getItem("wns_workflow");
+
+  if(wnsHeader)
+    return `${wnsHeader}_DETAIL_HEADER`;
+  
+  else
+    return "WS_TASK_DETAILS"
+}
+
 const headerrow = getCommonContainer({
   header: getCommonHeader({
-    labelKey: "WS_TASK_DETAILS"
+    labelKey: getLabelForWnsHeader()
   }),
   application: getCommonContainer({
     applicationNumber: {
@@ -325,7 +336,12 @@ const setStatusBasedValue = status => {
   }
 };
 
-const estimate = getCommonGrayCard({
+const estimateSection = () => {
+
+  if(serviceModuleName === "WS_TUBEWELL")
+  return{};
+
+  return getCommonGrayCard({
   header: getCommonSubHeader({ labelKey: "WS_TASK_DETAILS_FEE_ESTIMATE" }),
   estimateSection: getFeesEstimateOverviewCard({
     sourceJsonPath: "dataCalculation",
@@ -356,7 +372,8 @@ const estimate = getCommonGrayCard({
     visible: false
   },
 });
-
+}
+const estimate = estimateSection();
 export const reviewConnectionDetails = getReviewConnectionDetails(false);
 
 export const reviewOwnerDetails = getReviewOwner(false);
@@ -543,6 +560,13 @@ const searchResults = async (action, state, dispatch, applicationNumber,processI
     }]
     if (payload !== undefined && payload !== null) {
       dispatch(prepareFinalObject("WaterConnection[0]", payload.WaterConnection[0]));
+      if(!payload.WaterConnection[0].connectionHolders || payload.WaterConnection[0].connectionHolders === 'NA'){        
+        set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewConnectionDetails.children.cardContent.children.viewFive.visible",false);
+        set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewConnectionDetails.children.cardContent.children.viewSix.visible",true);
+      }else{
+        set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewConnectionDetails.children.cardContent.children.viewSix.visible",false);
+        set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewConnectionDetails.children.cardContent.children.viewFive.visible",true);
+      }
     }
     if(processInstanceAppStatus==="CONNECTION_ACTIVATED"){
       let connectionNumber= payload.WaterConnection[0].connectionNo;
@@ -577,7 +601,15 @@ const searchResults = async (action, state, dispatch, applicationNumber,processI
     payload = await getSearchResultsForSewerage(queryObjForSearch, dispatch);
     payload.SewerageConnections[0].service = service;
     if (payload !== undefined && payload !== null) {
+      dispatch(prepareFinalObject("SewerageConnection[0]", payload.SewerageConnections[0]));
       dispatch(prepareFinalObject("WaterConnection[0]", payload.SewerageConnections[0]));
+      if(!payload.SewerageConnections[0].connectionHolders || payload.SewerageConnections[0].connectionHolders === 'NA'){        
+        set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewConnectionDetails.children.cardContent.children.viewFive.visible",false);
+        set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewConnectionDetails.children.cardContent.children.viewSix.visible",true);
+      }else{
+        set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewConnectionDetails.children.cardContent.children.viewSix.visible",false);
+        set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewConnectionDetails.children.cardContent.children.viewFive.visible",true);
+      }
     }
     //connection number display
     if(processInstanceAppStatus==="CONNECTION_ACTIVATED"){
