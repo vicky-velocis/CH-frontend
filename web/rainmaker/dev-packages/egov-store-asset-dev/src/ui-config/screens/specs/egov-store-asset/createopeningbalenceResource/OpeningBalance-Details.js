@@ -10,6 +10,8 @@ import {
   } from "egov-ui-framework/ui-config/screens/specs/utils";
  import { getTodaysDateInYMD } from "../../utils";
  import { getSTOREPattern} from "../../../../../ui-utils/commons";
+ import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
+ import set from "lodash/set";
  const OpeningbalenceDetailsCard = {
   uiFramework: "custom-containers",
   componentPath: "MultiItem",
@@ -190,6 +192,7 @@ import {
         }
       )
     }),
+ 
     items: [],
     addItemLabel: {
       labelName: "ADD",

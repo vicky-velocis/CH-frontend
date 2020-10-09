@@ -3,7 +3,7 @@ import {
     getCommonHeader,
     getLabel,
   } from "egov-ui-framework/ui-config/screens/specs/utils";
-  import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+  import { prepareFinalObject ,handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
   import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
   import set from "lodash/set";
   import { httpRequest,getsto } from "../../../../ui-utils";
@@ -162,7 +162,26 @@ const getMDMSWorkflowData = async (action, state, dispatch) => {
     }
     else{
       //dispatch(prepareFinalObject("materialReceipt[0]", null));
-      dispatch(prepareFinalObject("materialReceipt", null));
+     
+      const textFields = ["remarks", "oldReceiptNumber", "unitRate","userReceivedQty","lotNo"];
+      let MaterialDetailsCardPath =
+    "components.div.children.OpeningBalanceDetails.children.cardContent.children.View2.children.cardContent.children.OpeningbalenceDetailsCard.props.items";
+      for (let i = 0; i < textFields.length; i++) {
+      let j =0;
+          // dispatch(
+          //   handleField(
+          //     "createopeningbalence",
+          //     `${MaterialDetailsCardPath}[${j}].item${j}.children.cardContent.children.rltnDetailsCardContainer.children${textFields[i]}`,
+          //     "props.value",
+          //     ""
+          //   )
+          // );
+       
+      }
+      dispatch(prepareFinalObject("materialReceipt[0]", null));
+      for (let i = 0; i < textFields.length; i++) {
+     dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[0].${textFields[i]}`, ''));
+      }
     }
   };
   

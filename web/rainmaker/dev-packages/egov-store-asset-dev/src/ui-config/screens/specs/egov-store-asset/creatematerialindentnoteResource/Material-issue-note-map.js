@@ -410,8 +410,8 @@ import {
                 props:{
                   disabled:true
                 },
-                required: false,
                 visible:false,
+                required: false,
                 pattern: getPattern("Name") || null,
                 jsonPath: "materialIssues[0].materialIssueDetails[0].assestCode"
               })
