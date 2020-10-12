@@ -488,7 +488,6 @@ return
                     /> */}
                      { (showEmployeeList && !!dropDownData.length) ? <label className="commentsLabel">{fieldConfig.comments.label.labelName}</label> : <div style={{height: "10px"}}></div>
                     }
-                    {/* <label className="commentsLabel">{fieldConfig.comments.label.labelName}</label> */}
                     <textarea className="form-control comments" rows="5" placeholder={fieldConfig.comments.placeholder.labelName} onChange={e => handleFieldChange(`${dataPath}.comment`, e.target.value)}/>
                   </Grid>
                   )}
