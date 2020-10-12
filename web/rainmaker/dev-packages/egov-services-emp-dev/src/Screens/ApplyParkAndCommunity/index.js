@@ -108,7 +108,7 @@ export class StepForm extends Component {
     };
     showStep = () => {
 
-        const {facilationChargesSuccess} = this.props;
+        // const {facilationChargesSuccess} = this.props;
 
         let { step, firstName, transactionDate, transactionNumber, bankName, paymentMode,
             lastName, utGST, cGST, GSTnumber, type, jobTitle, facilitationCharges, surcharge,
@@ -183,7 +183,6 @@ export class StepForm extends Component {
         if (step === 1)
             return (<BookingDetails
                 houseNo={houseNo}
-                facilationChargesSuccess={facilationChargesSuccess}
                 handleChangeDiscount={this.handleChangeDiscount}
                 discountType={discountType}
                 onFromDateChange={this.onFromDateChange}
@@ -243,7 +242,6 @@ export class StepForm extends Component {
         if (step === 4)
             return (<SummaryInfo
                 bookingData={bookingData}
-                facilationChargesSuccess={facilationChargesSuccess}
                 venueType={venueType}
                 bokingType={bokingType}
                 discountType={discountType}
@@ -315,15 +313,15 @@ const mapStateToProps = state => {
   let fromDateone = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.availabilityCheckData : "one"
   console.log("fromDateone1--",fromDateone)
   let bookingOne = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.bkBookingData:"two"
-  const {facilationChargesSuccess} = bookings;
-  console.log("facilationChargesSuccess--",facilationChargesSuccess)
+//   const {facilationChargesSuccess} = bookings;
+//   console.log("facilationChargesSuccess--",facilationChargesSuccess)
   let stateData = state;
 
     return {
         stateData,
         fromDateone,
         bookingOne,
-        facilationChargesSuccess
+        // facilationChargesSuccess
     }
 }
 export default connect(

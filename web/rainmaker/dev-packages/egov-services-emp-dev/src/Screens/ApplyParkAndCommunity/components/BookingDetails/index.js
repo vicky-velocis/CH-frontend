@@ -604,7 +604,8 @@ const mapStateToProps = state => {
   const {facilationChargesSuccess} = bookings;
 
   return {
-    complaintSector
+    complaintSector,
+    facilationChargesSuccess
   }
 }
 const mapDispatchToProps = dispatch => {

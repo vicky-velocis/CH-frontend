@@ -6,8 +6,15 @@ import "./index.css";
 
 class PayDetails extends Component {
   
-  render() {
-const {amount, cGST, utGST, location} = this.props
+  
+
+render() {
+const {amount, cGST, utGST, location,facilationChargesSuccess} = this.props
+
+
+let TotalAmountSp = amount + cGST + utGST;
+console.log("TotalAmountSp--",TotalAmountSp)
+
     return (
       <div>
         <Card
@@ -28,10 +35,10 @@ const {amount, cGST, utGST, location} = this.props
 
               <div className="complaint-detail-detail-section-status row" style={{marginLeft:'-10px',marginTop:30}}>
                 <div className="col-sm-4 col-xs-12">
-                  <Label className="col-xs-12  col-sm-12 col-md-12 status-color" label="BK_FEE_HEAD_PACC" />
+                  <Label className="col-xs-12  col-sm-12 col-md-12 status-color" label="Amount" />
                 </div>
                 <div className="col-sm-4 col-xs-12"> 
-                  <h5 style={{ textAlign: "right" }}>7896</h5>
+                <h5 style={{ textAlign: "right" }}>{amount ? amount : 'NA'}</h5>
                 </div>
               </div>
 
@@ -54,6 +61,17 @@ const {amount, cGST, utGST, location} = this.props
                 {/* <h5 style={{ textAlign: "right" }}>{location}</h5> */}
                 </div>
               </div>
+
+              <div className="complaint-detail-detail-section-status row" style={{marginLeft:'-10px'}}>
+                <div className="col-sm-4 col-xs-12">
+                  <Label className="col-xs-12  col-sm-12 col-md-12 status-color" label="BK_MYBK_CGST_PLACEHOLDER" />
+                </div>
+                <div className="col-sm-4 col-xs-12">
+                <h5 style={{ textAlign: "right" }}>{facilationChargesSuccess ? facilationChargesSuccess : 'NA'}</h5>
+                {/* <h5 style={{ textAlign: "right" }}>{location}</h5> */}
+                </div>
+              </div>
+
 
               <div className="complaint-detail-detail-section-status row" style={{marginLeft:'-10px'}}>
                 <hr class="MuiDividerLine" style={{ marginbottom: "16px" }}></hr>

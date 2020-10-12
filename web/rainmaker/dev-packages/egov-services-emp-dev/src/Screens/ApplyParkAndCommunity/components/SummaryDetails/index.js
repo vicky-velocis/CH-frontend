@@ -205,9 +205,9 @@ class SummaryDetails extends Component {
     render() {
         //const { firstName,approverName,comment, email, mobileNo, houseNo, address, locality, residenials, propsData } = this.props;
 
-        const { firstName, email, mobileNo, locality, surcharge, fromDate, toDate,
+        const { firstName, email, mobileNo, locality, surcharge, fromDate, toDate,facilationChargesSuccess,
             onFromDateChange, onToDateChange, utGST, cGST, GSTnumber, handleChange, bankName, amount, transactionDate, transactionNumber, paymentMode,
-            dimension, location, facilitationCharges, cleaningCharges, rent, approverName, comment, houseNo, type, purpose, residenials,documentMap, facilationChargesSuccess} = this.props;
+            dimension, location, facilitationCharges, cleaningCharges, rent, approverName, comment, houseNo, type, purpose, residenials,documentMap} = this.props;
             console.log("facilationChargesSuccess-in summarPage--",this.props)
         return (
             <div>
@@ -229,6 +229,8 @@ class SummaryDetails extends Component {
                 {/* <div style={{ marginLeft: "20px", paddingBottom: '5px', paddingLeft: 25 }}>
                     <Label label="BK_MYBK_FEE_ESTIMATE" containerStyle={{ marginLeft: "13px" }} labelClassName="dark-heading" />
 
+  facilationChargesSuccess={facilationChargesSuccess}
+
                     <div style={{ right: '50px', position: 'absolute' }}>
                         <h5><Label label="BK_TOTAL_AMOUNT" /></h5>
                         <h3 style={{ marginTop: '-8px', fontSize: '28px', color: 'black' }}><b>Rs {amount ? amount : 'NA'}</b></h3>
@@ -237,7 +239,7 @@ class SummaryDetails extends Component {
                     <PaccFeeEstimate
                         amount={amount}
                         cGST={cGST}
-                        utGST={utGST}
+                        utGST={utGST}                   
                     />
                    
                 {/* </div> */}
@@ -536,14 +538,15 @@ documentMap={documentMap}
 const mapStateToProps = state => {
 
     const { bookings, common, auth, form } = state;
-    const { createPACCApplicationData } = bookings;
+    const { createPACCApplicationData,facilationChargesSuccess } = bookings;
+
     let documentMap = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.documentMap : "";
     let bkLocation = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.availabilityCheckData.bkLocation : "";
 
     console.log('createPACCApplicationData', createPACCApplicationData, "state---", state)
     return {
         createPACCApplicationData,
-        documentMap, bkLocation
+        documentMap, bkLocation,facilationChargesSuccess
     }
 
 }
