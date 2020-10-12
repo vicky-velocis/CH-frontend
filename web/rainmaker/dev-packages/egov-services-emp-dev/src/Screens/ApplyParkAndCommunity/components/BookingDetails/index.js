@@ -10,7 +10,7 @@ import { toggleSnackbarAndSetText } from "egov-ui-kit/redux/app/actions";
 import { connect } from "react-redux";
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import { fetchApplicaionSector } from "egov-ui-kit/redux/bookings/actions";
+import { fetchApplicaionSector,fetchfacilationCharges } from "egov-ui-kit/redux/bookings/actions";
 import "./index.css";
 import Footer from "../../../../modules/footer"
 
@@ -30,8 +30,9 @@ class BookingsDetails extends Component {
 
 
   componentDidMount = async () => {
-    let { fetchApplicaionSector } = this.props;
+    let { fetchApplicaionSector, fetchfacilationCharges} = this.props;
     fetchApplicaionSector();
+    fetchfacilationCharges();
   }
   continue = e => {
     e.preventDefault();
@@ -96,8 +97,9 @@ class BookingsDetails extends Component {
     { value: "Other", label: <Label label="ES_REJECT_OPTION_FOUR" /> }
   ];
   render() {
-    const { jobTitle, jobCompany, jobLocation, handleChangeDiscount,discountType,dimension, complaintSector, fromDate, surcharge, toDate, onFromDateChange, onToDateChange, utGST, cGST, GSTnumber, handleChange, location, facilitationCharges, cleaningCharges, rent, approverName, comment, houseNo, type, purpose, locality, residenials } = this.props;
+    const { jobTitle, jobCompany, jobLocation, handleChangeDiscount,discountType,dimension, complaintSector, fromDate, surcharge, toDate, onFromDateChange, onToDateChange, utGST, cGST, GSTnumber, handleChange, location, facilitationCharges, cleaningCharges, rent, approverName, comment, houseNo, type, purpose, locality, residenials, facilationChargesSuccess} = this.props;
     // let dimension="Wed Sep 23 2020 12:00:00 GMT+0530 (India Standard Time)"
+    console.log("facilationChargesSuccess--props-",this.props)
     console.log(' in booking rent in', rent)
     let sectorData = [];
     sectorData.push(complaintSector);
@@ -246,7 +248,7 @@ class BookingsDetails extends Component {
               id="facilitationCharges"
               name="facilitationCharges"
               type="text"
-              value={facilitationCharges}
+              value={facilationChargesSuccess}
               required = {true}
               hintText={
                 <Label
@@ -597,8 +599,9 @@ class BookingsDetails extends Component {
   }
 }
 const mapStateToProps = state => {
-  const { complaints, common, auth, form } = state;
+  const { complaints, common, auth, form ,bookings} = state;
   const { complaintSector } = complaints;
+  const {facilationChargesSuccess} = bookings;
 
   return {
     complaintSector
@@ -609,6 +612,7 @@ const mapDispatchToProps = dispatch => {
     toggleSnackbarAndSetText: (open, message, error) =>
       dispatch(toggleSnackbarAndSetText(open, message, error)),
     fetchApplicaionSector: criteria => dispatch(fetchApplicaionSector(criteria)),
+    fetchfacilationCharges: criteria => dispatch(fetchfacilationCharges(criteria)),
   }
 }
 

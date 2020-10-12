@@ -35,8 +35,8 @@ class ApplicatInfo extends Component {
       this.props.toggleSnackbarAndSetText(
         true,
         {
-          labelName: "Please Enter Name in Alphabets",
-          labelKey: `Please Enter Name in Alphabets`
+          labelName: "please enter valid User Name",
+          labelKey: `please enter valid User Name`
         },
         "warning"
       )}

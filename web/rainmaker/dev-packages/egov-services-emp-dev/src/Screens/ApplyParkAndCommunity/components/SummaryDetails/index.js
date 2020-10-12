@@ -22,7 +22,7 @@ class SummaryDetails extends Component {
         console.log('createPACCApplication', this.props)
         let { createPACCApplication, userInfo } = this.props;
         let { firstName, venueType, bokingType, bookingData, email, mobileNo, surcharge, fromDate, toDate,
-            utGST, cGST, GSTnumber, dimension, location, facilitationCharges, cleaningCharges, rent, houseNo, type, purpose, locality, residenials } = this.props;
+            utGST, cGST, GSTnumber, dimension, location, facilitationCharges, cleaningCharges, rent, houseNo, type, purpose, locality, residenials, facilationChargesSuccess} = this.props;
         console.log('type==', bookingData, fromDate, toDate, venueType)
         let Booking = {
             "discount": 50,
@@ -207,7 +207,8 @@ class SummaryDetails extends Component {
 
         const { firstName, email, mobileNo, locality, surcharge, fromDate, toDate,
             onFromDateChange, onToDateChange, utGST, cGST, GSTnumber, handleChange, bankName, amount, transactionDate, transactionNumber, paymentMode,
-            dimension, location, facilitationCharges, cleaningCharges, rent, approverName, comment, houseNo, type, purpose, residenials,documentMap } = this.props;
+            dimension, location, facilitationCharges, cleaningCharges, rent, approverName, comment, houseNo, type, purpose, residenials,documentMap, facilationChargesSuccess} = this.props;
+            console.log("facilationChargesSuccess-in summarPage--",this.props)
         return (
             <div>
 <div className="form-without-button-cont-generic">

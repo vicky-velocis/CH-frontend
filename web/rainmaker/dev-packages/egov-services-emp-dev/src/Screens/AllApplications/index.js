@@ -120,7 +120,7 @@ class AllRequests extends Component {
     });
   };
   gotoPArkAndCommunityTanker = () => {
-    this.props.history.push(`/egov-services/applyPark-community-center`);
+    this.props.history.push(`/egov-services/checkavailability_pcc`);
   };
   gotoMcc = () => {
     this.props.history.push(`/egov-services/all-MccApplications`);
@@ -747,7 +747,7 @@ class AllRequests extends Component {
       
           <Button
             className="responsive-action-button"
-            label={<Label buttonLabel={true} label="BK_MYBK_WATER_TANKER_APPLY" />}
+            label={<Label buttonLabel={true} label="Apply E-Sampark" />}
             fullWidth={true}
             primary={true}
             style={{ float: 'right', marginRight: '50px', marginTop: '40px' }}
