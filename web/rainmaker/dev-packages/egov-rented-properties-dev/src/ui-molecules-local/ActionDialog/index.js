@@ -333,6 +333,18 @@ return
       return
     }
   }
+  else if((this.props.moduleName==="MasterRP"||this.props.moduleName===WORKFLOW_BUSINESS_SERVICE_OT||this.props.moduleName===WORKFLOW_BUSINESS_SERVICE_DC||this.props.moduleName==="PermissionToMortgage")&&(buttonLabel==="REJECT" || buttonLabel==="APPROVE"))
+  {
+const comments=data.comment
+if(!comments){
+  toggleSnackbar(
+    true,
+    { labelName: "Please enter all required fields", labelKey: "Please enter all required fields"},
+    "error"
+  );
+return
+}
+  }
     this.props.onButtonClick(buttonLabel, isDocRequired)
  }
 
@@ -463,6 +475,7 @@ return
                       />
                     </Grid>
                   )}
+                  {(
                   <Grid item sm="12">
                     {/* <TextFieldContainer
                       InputLabelProps={{ shrink: true }}
@@ -473,10 +486,12 @@ return
                       jsonPath={`${dataPath}.comment`}
                       placeholder={fieldConfig.comments.placeholder}
                     /> */}
-                    <label className="commentsLabel">{fieldConfig.comments.label.labelName}</label>
+                     { (showEmployeeList && !!dropDownData.length) ? <label className="commentsLabel">{fieldConfig.comments.label.labelName}</label> : <div style={{height: "10px"}}></div>
+                    }
+                    {/* <label className="commentsLabel">{fieldConfig.comments.label.labelName}</label> */}
                     <textarea className="form-control comments" rows="5" placeholder={fieldConfig.comments.placeholder.labelName} onChange={e => handleFieldChange(`${dataPath}.comment`, e.target.value)}/>
                   </Grid>
-    
+                  )}
                   {moduleName === WORKFLOW_BUSINESS_SERVICE_OT && (applicationState === "OT_PENDINGSAVERIFICATION" || applicationState === "OT_PENDINGAPRO") && (buttonLabel === "FORWARD" || buttonLabel === "SUBMIT") && (
                     <Grid item sm="12">
                     <TextFieldContainer

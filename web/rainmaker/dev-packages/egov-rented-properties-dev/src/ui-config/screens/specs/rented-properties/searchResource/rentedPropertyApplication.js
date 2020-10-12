@@ -583,9 +583,15 @@ const accountStatementTransitNumber = {
           ""
         )
       )
+        dispatch(
+          prepareFinalObject(
+            "searchScreen.ownername",
+            ""
+          )    
+      )
       dispatch(
         prepareFinalObject(
-          "searchScreen.ownername",
+          "searchScreen.area",
           ""
         )
       )
@@ -603,7 +609,8 @@ export const accountStatementFilterForm = getCommonCard({
   }),
   statusContainer: getCommonContainer({
     pincode:getTextField(pincodeField),
-    ownername:getTextField(ownernameField)
+    ownername:getTextField(ownernameField),
+    areaField:getTextField(areaField)
   }),
   subParagraph: getCommonParagraph({
     labelName: "Select start date and end date to generate account statement",

@@ -177,7 +177,7 @@ const callBackForNext = async(state, dispatch) => {
                 case DOCUMENT_UPLOAD_STEP:
                     errorMessage = {
                         labelName: "Please upload all the required documents !",
-                        labelKey: "ERR_UPLOAD_REQUIRED_DOCUMENTS"
+                        labelKey: "RP_ERR_UPLOAD_REQUIRED_DOCUMENTS"
                     };
                     break;
             }
@@ -389,7 +389,7 @@ const callBackForNextDuplicate = async(state, dispatch) => {
                 case DOCUMENT_UPLOAD_STEP:
                     errorMessage = {
                         labelName: "Please upload all the required documents !",
-                        labelKey: "ERR_UPLOAD_REQUIRED_DOCUMENTS"
+                        labelKey: "RP_ERR_UPLOAD_REQUIRED_DOCUMENTS"
                     };
                     break;
             }
