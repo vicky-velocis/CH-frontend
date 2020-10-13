@@ -228,9 +228,25 @@ const editOwnerDetailsByDso = (isEditableByDso, index) => ({
         dispatch(
           handleField(
             "owner-details",
+            `components.adhocDialog.children.details.children.address`,
+            `props.value`,
+            owners[index].ownerDetails.address
+          )
+        )
+        dispatch(
+          handleField(
+            "owner-details",
             `components.adhocDialog.children.details.children.mobileNumber`,
             `jsonPath`,
             `Properties[0].propertyDetails.owners[${index}].ownerDetails.mobileNumber`
+          )
+        )
+        dispatch(
+          handleField(
+            "owner-details",
+            `components.adhocDialog.children.details.children.mobileNumber`,
+            `props.value`,
+            owners[index].ownerDetails.mobileNumber
           )
         )
       }
