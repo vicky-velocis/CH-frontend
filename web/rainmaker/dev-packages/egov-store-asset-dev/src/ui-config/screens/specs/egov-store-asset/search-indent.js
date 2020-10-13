@@ -13,6 +13,7 @@ import {
   import { getTenantId , getOPMSTenantId} from "egov-ui-kit/utils/localStorageUtils";
   import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
   import{UserRoles} from '../../../../ui-utils/sampleResponses'
+  import { getSearchResults } from "../../../../ui-utils/commons";
   const hasButton = getQueryArg(window.location.href, "hasButton");
   let enableButton = true;
   //enableButton = hasButton && hasButton === "false" ? false : true;
