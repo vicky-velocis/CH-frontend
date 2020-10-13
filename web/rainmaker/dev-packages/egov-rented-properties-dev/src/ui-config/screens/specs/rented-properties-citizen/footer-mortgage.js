@@ -83,10 +83,11 @@ const callBackForNextMortgage = async(state, dispatch) => {
             dispatch(
               prepareFinalObject("MortgageApplicationsTemp[0].reviewDocData", reviewDocData)
           );
+          const Res = await applyMortgage(state, dispatch, activeStep)
   }
   }
   if(activeStep === SUMMARY_STEP) {
-  isFormValid = await applyMortgage(state, dispatch);
+  isFormValid = await applyMortgage(state, dispatch,activeStep);
     if (isFormValid) {
       const rentedData = get(
         state.screenConfiguration.preparedFinalObject,
