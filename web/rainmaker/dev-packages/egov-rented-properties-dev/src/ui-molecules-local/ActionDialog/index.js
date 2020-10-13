@@ -339,7 +339,7 @@ const comments=data.comment
 if(!comments){
   toggleSnackbar(
     true,
-    { labelName: "Please enter all required fields", labelKey: "Please enter all required fields"},
+    { labelName: "Please enter the comments", labelKey: "RP_ERR_ENTER_COMMENTS"},
     "error"
   );
 return
