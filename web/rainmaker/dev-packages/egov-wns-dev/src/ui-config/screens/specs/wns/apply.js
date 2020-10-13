@@ -563,7 +563,7 @@ const screenConfig = {
         toggleSewerageFeilds(action, true);
       } else {
        const isTubeWell = window.localStorage.getItem("isTubeWell");
-       if(isTubeWell){
+       if(isTubeWell && isTubeWell == "true"){
         dispatch(prepareFinalObject("applyScreen.water", false));
         dispatch(prepareFinalObject("applyScreen.sewerage", false));
         dispatch(prepareFinalObject("applyScreen.tubewell", true));
