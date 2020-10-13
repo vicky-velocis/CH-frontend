@@ -271,10 +271,11 @@ export const populateBiddersTable = (biddersList, screenKey, componentJsonPath) 
             if (confirm('Are you sure you want to initiate refund?')) {
               let isMarked = e.target.checked;
               setTimeout((e) => {
-                let { bidders } = store.getState().screenConfiguration.preparedFinalObject.Properties[0].propertyDetails;
+                store.dispatch(toggleSpinner());
+                let { Properties } = store.getState().screenConfiguration.preparedFinalObject;
                 let bidderData = store.getState().screenConfiguration.preparedFinalObject.BidderData;
 
-                bidders.map((item, index) => {
+                biddersList.map((item, index) => {
                   if (bidderData[1] == item.bidderName) {
                     item.refundStatus = isMarked ? "Initiated" : "";
                     store.dispatch(
@@ -296,7 +297,7 @@ export const populateBiddersTable = (biddersList, screenKey, componentJsonPath) 
                     "refund", 
                     "components.div.children.submitButton",
                     "visible",
-                    (bidders.length === refundedBidders.length)
+                    (biddersList.length === refundedBidders.length)
                   )
                 )
                 store.dispatch(
@@ -304,10 +305,13 @@ export const populateBiddersTable = (biddersList, screenKey, componentJsonPath) 
                     "refund", 
                     "components.div.children.saveButton",
                     "visible",
-                    (bidders.length !== refundedBidders.length)
+                    (biddersList.length !== refundedBidders.length)
                   )
                 )
+                let action = (biddersList.length == refundedBidders.length) ? "SUBMIT" : "";
+                let state = ""
 
+                let properties = [{...Properties[0], action: action, state: state, propertyDetails: {...Properties[0].propertyDetails, bidders: biddersList}}]
                 store.dispatch(
                   prepareFinalObject(
                     "Properties[0].propertyDetails.bidders",
