@@ -344,7 +344,6 @@ const EstateOwnerDetails = {
         open: false,
         maxWidth: "sm",
         screenKey: "owner-details",
-        fullWidth: true
       },
       children: {
         header: ownerHeader,
