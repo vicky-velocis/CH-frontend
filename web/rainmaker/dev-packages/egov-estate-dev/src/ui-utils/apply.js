@@ -345,6 +345,7 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
             removedDocs
           )
         );
+        setDocsForEditFlow(state, dispatch, `Properties[0].propertyDetails.owners[${index}].ownerDetails.ownerDocuments`, `PropertiesTemp[0].propertyDetails.owners[${index}].ownerDetails.uploadedDocsInRedux`);
       })
 
       let currOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == true);

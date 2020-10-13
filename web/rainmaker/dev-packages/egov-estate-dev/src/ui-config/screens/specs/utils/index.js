@@ -1538,6 +1538,12 @@ export const getTextToLocalMapping = label => {
         "ES_INITIATE_REFUND",
         localisationLabels
       );
+    case "Refund Status":
+      return getLocaleLabels(
+        "Refund Status",
+        "ES_REFUND_STATUS",
+        localisationLabels
+      );
   }
 };
 
