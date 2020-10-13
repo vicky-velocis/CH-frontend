@@ -11,6 +11,19 @@ class PayDetails extends Component {
 render() {
 const {amount, cGST, utGST, location,facilationChargesSuccess,result} = this.props
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 let num = 100.000;
 let TotalAmountSp = parseInt(amount) + parseInt(cGST) + parseInt(utGST) + parseInt(num);
 console.log("TotalAmountSp--",TotalAmountSp)

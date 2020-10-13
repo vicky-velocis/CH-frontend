@@ -120,6 +120,7 @@ class CustomTimeSlots extends Component {
         //         document.getElementById(currentSelectedTimeSlot).checked = true;
         //     }
         // }
+        console.log("componentDidMount-initiatedBookingTimeSlot",this.props)
         if (this.props.initiatedBookingFromDate) {
             var [goYear, goMonth, goDay] = this.props.initiatedBookingFromDate.split("-");
             let goDate = `${goDay}-${goMonth}-${goYear}`;
@@ -638,7 +639,8 @@ const mapStateToProps = (state) => {
         state,
         "screenConfiguration.preparedFinalObject.availabilityCheckData.bkFromDate"
     );
-
+console.log("initiatedBookingTimeSlot--",initiatedBookingTimeSlot)
+console.log("initiatedBookingFromDate--",initiatedBookingFromDate)
     //******************************** */
 
 
@@ -676,6 +678,7 @@ const mapStateToProps = (state) => {
         }
 
         if (initiatedBookingFromDate) {
+            console.log("initiatedBookingFromDate-if-condition--",initiatedBookingFromDate)
             var [goYear, goMonth, goDay] = initiatedBookingFromDate.split("-");
             let goDate = `${goDay}-${goMonth}-${goYear}`;
             if (timeSlotArray[j].date === goDate && initiatedBookingTimeSlot) {

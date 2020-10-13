@@ -233,7 +233,7 @@ console.log('arrayData',arrayData)
             id="amount"
             name="amount"
             type="number"
-            value={amount}
+            value={rent}
             required = {true}   
             hintText={
               <Label
