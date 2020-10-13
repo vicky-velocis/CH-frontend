@@ -309,6 +309,7 @@ const {fromDateone,
 
 const mapStateToProps = state => {
     const { complaints, common, auth, form, bookings} = state;
+    const {arrayName} = bookings;
     console.log('state--->>apply',state)
   let fromDateone = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.availabilityCheckData : "one"
   console.log("fromDateone1--",fromDateone)
@@ -321,6 +322,7 @@ const mapStateToProps = state => {
         stateData,
         fromDateone,
         bookingOne,
+        arrayName
         // facilationChargesSuccess
     }
 }

@@ -69,6 +69,12 @@ class ApplicatInfo extends Component {
 
   render() {
     const { firstName, email, mobileNo, lastName,houseNo, handleChange,discountType,handleChangeDiscount } = this.props;
+   let number = 778.8897544667;
+   console.log("number--",number)
+   let number2 = Math.round((number + Number.EPSILON) * 100) / 100
+    console.log("number2--",number2)
+    let number3 = (Math.round(number * 100) / 100).toFixed(2);
+console.log("number3--",number3)
     const hintTextStyle = {
       letterSpacing: "0.7px",
       textOverflow: "ellipsis",

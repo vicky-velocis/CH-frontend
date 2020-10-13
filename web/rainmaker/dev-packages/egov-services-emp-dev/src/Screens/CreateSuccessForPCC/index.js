@@ -41,7 +41,7 @@ class CreateWBTApplicationSuccess extends Component {
           "applicantDetail": {
               "name": applicationDetails.bkApplicantName,
               "mobileNumber":applicationDetails.bkMobileNumber,
-              "email": applicationDetails.bkHouseNo,
+              "email": applicationDetails.bkEmail,
               "permanentAddress": "",
               "permanentCity": "Chandigarh",
               "sector": applicationDetails.bkSector,
@@ -63,7 +63,7 @@ class CreateWBTApplicationSuccess extends Component {
               "baseCharge": applicationDetails.bkRent,
               "cleaningCharge": applicationDetails.bkCleansingCharges,
               "surcharges": applicationDetails.bkSurchargeRent,
-              "facilitationCharge": applicationDetails.bkFacilitationCharges,
+              "facilitationCharge": "100",
               "utgst": applicationDetails.bkUtgst,
               "cgst": applicationDetails.bkCgst,
               "gst": applicationDetails.bkCgst,

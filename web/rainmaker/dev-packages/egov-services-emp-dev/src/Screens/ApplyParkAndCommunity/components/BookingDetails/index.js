@@ -10,7 +10,7 @@ import { toggleSnackbarAndSetText } from "egov-ui-kit/redux/app/actions";
 import { connect } from "react-redux";
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import { fetchApplicaionSector,fetchfacilationCharges } from "egov-ui-kit/redux/bookings/actions";
+import { fetchApplicaionSector,fetchfacilationCharges,fetchfacilationtry } from "egov-ui-kit/redux/bookings/actions";
 import "./index.css";
 import Footer from "../../../../modules/footer"
 
@@ -30,15 +30,16 @@ class BookingsDetails extends Component {
 
 
   componentDidMount = async () => {
-    let { fetchApplicaionSector, fetchfacilationCharges} = this.props;
+    let { fetchApplicaionSector, fetchfacilationCharges, fetchfacilationtry} = this.props;
     fetchApplicaionSector();
     fetchfacilationCharges();
+    fetchfacilationtry();
   }
   continue = e => {
     e.preventDefault();
     const { jobTitle, jobCompany, toggleSnackbarAndSetText, utGST, GSTnumber, jobLocation, handleChange, facilitationCharges, approverName, dimension, location, cleaningCharges, comment, houseNo, rent, purpose, surcharge, cGST, locality, type, residenials, fromDate, toDate } = this.props;
     //|| purpose == "" || locality == "" || residenials == "" || dimension == "" || location == "" || cleaningCharges == "" || rent == "" || facilitationCharges == "" || surcharge == "" || utGST == "" || cGST== "" || GSTnumber == "" || type == ""||fromDate==""||toDate==""
-    if (purpose == "" || facilitationCharges == "" || residenials == "") {
+    if (purpose == "" || residenials == "") {
 
 
       toggleSnackbarAndSetText(
@@ -97,21 +98,23 @@ class BookingsDetails extends Component {
     { value: "Other", label: <Label label="ES_REJECT_OPTION_FOUR" /> }
   ];
   render() {
-    const { jobTitle, jobCompany, jobLocation, handleChangeDiscount,discountType,dimension, complaintSector, fromDate, surcharge, toDate, onFromDateChange, onToDateChange, utGST, cGST, GSTnumber, handleChange, location, facilitationCharges, cleaningCharges, rent, approverName, comment, houseNo, type, purpose, locality, residenials, facilationChargesSuccess} = this.props;
+    const { arrayName, result,jobTitle, jobCompany, jobLocation, handleChangeDiscount,discountType,dimension, complaintSector, fromDate, surcharge, toDate, onFromDateChange, onToDateChange, utGST, cGST, GSTnumber, handleChange, location, facilitationCharges, cleaningCharges, rent, approverName, comment, houseNo, type, purpose, locality, residenials, facilationChargesSuccess} = this.props;
     // let dimension="Wed Sep 23 2020 12:00:00 GMT+0530 (India Standard Time)"
     console.log("facilationChargesSuccess--props-",this.props)
+    console.log("arrayNameinbookingcomponent--",arrayName)
     console.log(' in booking rent in', rent)
+    // console.log("result--",result)
     let sectorData = [];
     sectorData.push(complaintSector);
+    let fc = 100;
+    // let arrayData = [];
 
-    let arrayData = [];
-
-    let y = sectorData.forEach((item, index) => {
-      let finalValues = Object.values(item);
-      finalValues.forEach((event) => {
-        arrayData.push(event);
-      })
-    })
+    // let y = sectorData.forEach((item, index) => {
+    //   let finalValues = Object.values(item);
+    //   finalValues.forEach((event) => {
+    //     arrayData.push(event);
+    //   })
+    // })
 
     const hintTextStyle = {
       letterSpacing: "0.7px",
@@ -248,7 +251,7 @@ class BookingsDetails extends Component {
               id="facilitationCharges"
               name="facilitationCharges"
               type="text"
-              value={facilationChargesSuccess}
+              value={fc}
               required = {true}
               hintText={
                 <Label
@@ -601,19 +604,66 @@ class BookingsDetails extends Component {
 const mapStateToProps = state => {
   const { complaints, common, auth, form ,bookings} = state;
   const { complaintSector } = complaints;
-  const {facilationChargesSuccess} = bookings;
+  const {facilationChargesSuccess, arrayName} = bookings;
+  console.log("arrayName----",arrayName)
+//   let fcharges;
+//   let arrayData2 = [];
+//   if(arrayName && arrayName.length > 0 ){
+//   for(let i = 0; i < arrayName.length; i++){
+//     if(arrayName[i].code == "FACILITATION_CHARGE")
+//     {
+//       console.log()
+//       fcharges = arrayName[i].facilitationCharge
+//     }   
+//   } 
+// }
+// console.log("fcharges--",fcharges)
 
-  return {
-    complaintSector,
-    facilationChargesSuccess
-  }
+// if(arrayName && arrayName.length > 0 ){
+//   for(let i = 0; i < arrayName.length; i++){
+//     if(arrayName[i].code == "FACILITATION_CHARGE")
+//     {
+//       arrayData2.push(arrayName[i]);
+//     }   
+//   } 
+// }
+// console.log("arrayData--2",arrayData2)
+
+
+// let arrayData = [];
+
+//     let y = sectorData.forEach((item, index) => {
+//       if(item){
+//       let finalValues = Object.values(item);
+//       finalValues.forEach((event) => {
+//         arrayData.push(event);
+//       })
+//     }
+//     })
+// let x;
+// if(arrayName && arrayName.length >0 ){
+// arrayName.forEach((item)=>{
+//   if(item.code == "FACILITATION_CHARGE"){
+//     x = item
+//   }
+// })
+// }
+// console.log("Xin Foreach--",x)
+//   const result = arrayName&&arrayName.length>0  ?arrayName.filter(item => item.code == "FACILITATION_CHARGE"):'';
+// console.log("result--",result)
+//   return {
+//     complaintSector,
+//     facilationChargesSuccess,
+//     arrayName
+//   }
 }
 const mapDispatchToProps = dispatch => {
   return {
     toggleSnackbarAndSetText: (open, message, error) =>
       dispatch(toggleSnackbarAndSetText(open, message, error)),
     fetchApplicaionSector: criteria => dispatch(fetchApplicaionSector(criteria)),
-    fetchfacilationCharges: criteria => dispatch(fetchfacilationCharges(criteria)),
+    fetchfacilationCharges: () => dispatch(fetchfacilationCharges()),  
+    fetchfacilationtry: () => dispatch(fetchfacilationtry()),
   }
 }
 

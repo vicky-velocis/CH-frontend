@@ -205,7 +205,7 @@ class SummaryDetails extends Component {
     render() {
         //const { firstName,approverName,comment, email, mobileNo, houseNo, address, locality, residenials, propsData } = this.props;
 
-        const { firstName, email, mobileNo, locality, surcharge, fromDate, toDate,facilationChargesSuccess,
+        const { firstName,result, email, mobileNo, locality, surcharge, fromDate, toDate,facilationChargesSuccess,
             onFromDateChange, onToDateChange, utGST, cGST, GSTnumber, handleChange, bankName, amount, transactionDate, transactionNumber, paymentMode,
             dimension, location, facilitationCharges, cleaningCharges, rent, approverName, comment, houseNo, type, purpose, residenials,documentMap} = this.props;
             console.log("facilationChargesSuccess-in summarPage--",this.props)
@@ -219,7 +219,8 @@ class SummaryDetails extends Component {
                             onClick={this.firstStep}>
                             <EditIcon />
                             <h5 style={{ fontSize: "14px", marginTop: "-27px", marginBottom: "15px", marginLeft: "59px" }}>
-                                EDIT
+                                Edit
+                            {/* <h5><Label label="BK_MY_BK_EDIT_BUTTON" /></h5> */}
                     </h5>
                         </button>
                     </div>
@@ -239,7 +240,7 @@ class SummaryDetails extends Component {
                     <PaccFeeEstimate
                         amount={amount}
                         cGST={cGST}
-                        utGST={utGST}                   
+                        utGST={utGST}             
                     />
                    
                 {/* </div> */}
@@ -538,12 +539,13 @@ documentMap={documentMap}
 const mapStateToProps = state => {
 
     const { bookings, common, auth, form } = state;
-    const { createPACCApplicationData,facilationChargesSuccess } = bookings;
+    const { createPACCApplicationData,facilationChargesSuccess,arrayName } = bookings;
 
     let documentMap = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.documentMap : "";
     let bkLocation = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.availabilityCheckData.bkLocation : "";
 
     console.log('createPACCApplicationData', createPACCApplicationData, "state---", state)
+
     return {
         createPACCApplicationData,
         documentMap, bkLocation,facilationChargesSuccess
