@@ -102,7 +102,7 @@ export const applyforApplication = async (state, dispatch, activeIndex) => {
         { Applications : queryObject }
       );
     } else {
-        if(activeIndex === 0) {
+        if(activeIndex === 0 || activeIndex === 1) {
           set(queryObject[0], "action", "")
         } else {
           set(queryObject[0], "action", "SUBMIT")
