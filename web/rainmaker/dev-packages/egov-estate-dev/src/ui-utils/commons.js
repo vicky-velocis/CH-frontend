@@ -381,21 +381,27 @@ export const setDocuments = async (
   reviewDocData && dispatch(prepareFinalObject(destJsonPath, reviewDocData));
 };
 
-export const setXLSTableData = async({Calculations, componentJsonPath, screenKey}) => {
+export const setXLSTableData = async({demands, payments ,componentJsonPath, screenKey}) => {
 
-  let data  = Calculations.map(item => ({
-    [ES_MONTH]: !!item.month && moment(new Date(item.month)).format("DD MMM YYYY"),
-    [ES_RENT_DUE]: !!item.rentDue && item.rentDue.toFixed(2),
-    [ES_RENT_RECEIVED]: '',
-    [ES_RECEIPT_NO]: !!item.rentReceiptNo && item.rentReceiptNo,
-    [ES_RENT_DUE_DATE]: !!item.date && moment(new Date(item.date)).format("DD MMM YYYY"),
-    [ES_PENALTY_INTEREST]: !!item.penaltyInterest && item.penaltyInterest.toFixed(2),
-    [ES_ST_GST_RATE]:!!item.stGstRate && item.stGstRate.toFixed(2),
-    [ES_ST_GST_DUE]: !!item.stGstDue && item.stGstDue.toFixed(2),
-    [ES_PAID]: !!item.paid && item.paid.toFixed(2),
-    [ES_DATE_OF_RECEIPT]: !!item.dateOfReceipt && moment(new Date(item.dateOfReceipt)).format("DD MMM YYYY"),
-    [ES_NO_OF_DAYS]: !!item.noOfDays && item.noOfDays,
-    [ES_INTEREST_ON_DELAYED_PAYMENT]: !!item.delayedPaymentOfGST && item.delayedPaymentOfGST.toFixed(2)
+  let data = demands.map(item => {
+    const findItem = payments.find(payData => moment(new Date(payData.receiptDate)).format("MMM YYYY") === moment(new Date(item.demandDate)).format("MMM YYYY"));
+    return !!findItem ? {...item, ...findItem} : {...item}
+  })
+
+  data  = data.map(item => ({
+    [ES_MONTH]:  ' ',
+    [ES_RENT_DUE]: !!item.rent && item.rent.toFixed(2) || ' ',
+    [ES_RENT_RECEIVED]:!!item.rentReceived && item.rentReceived.toFixed(2) || ' ',
+    [ES_RECEIPT_NO]: !!item.receiptNo && item.receiptNo || ' ',
+    [ES_DATE] : ' ',
+    [ES_RENT_DUE_DATE]: ' ',
+    [ES_PENALTY_INTEREST]: !!item.penaltyInterest && item.penaltyInterest.toFixed(2) || '',
+    [ES_ST_GST_RATE]:!!item.gst && item.gst.toFixed(2) || '',
+    [ES_ST_GST_DUE]: !!item.collectedGST && item.collectedGST.toFixed(2) || '',
+    [ES_PAID]: !!item.paid && item.paid.toFixed(2) || '',
+    [ES_DATE_OF_RECEIPT]: !!item.receiptDate && moment(new Date(item.receiptDate)).format("DD MMM YYYY") || '',
+    [ES_NO_OF_DAYS]: !!item.noOfDays && item.noOfDays || '',
+    [ES_INTEREST_ON_DELAYED_PAYMENT]: !!item.gstInterest && item.gstInterest.toFixed(2) || ''
   }))
 
   if(data.length > 1) {
@@ -437,9 +443,9 @@ export const getXLSData = async (getUrl, componentJsonPath, screenKey, fileStore
     )
    
     if(!!response) {
-      let {Calculations} = response
-        if(!!Calculations.length){
-          setXLSTableData({Calculations:Calculations, componentJsonPath, screenKey})
+      let {estateDemands, estatePayments} = response.Calculations;
+      if(!!estateDemands.length && !!estatePayments.length){
+          setXLSTableData({demands:estateDemands,payments:estatePayments, componentJsonPath, screenKey})
       }
     }
     store.dispatch(toggleSpinner());
