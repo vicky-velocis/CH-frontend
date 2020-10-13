@@ -127,10 +127,11 @@ const callBackForNext = async(state, dispatch) => {
               dispatch(
                 prepareFinalObject("OwnersTemp[0].reviewDocData", reviewDocData)
             );
+            const Res = await applyOwnershipTransfer(state, dispatch, activeStep)
     }
     }
     if(activeStep === SUMMARY_STEP) {
-    isFormValid = await applyOwnershipTransfer(state, dispatch);
+    isFormValid = await applyOwnershipTransfer(state, dispatch,activeStep);
       if (isFormValid) {
         const rentedData = get(
           state.screenConfiguration.preparedFinalObject,
@@ -357,6 +358,7 @@ const callBackForNextDuplicate = async(state, dispatch) => {
               dispatch(
                 prepareFinalObject("DuplicateTemp[0].reviewDocData", reviewDocData)
             );
+            const Res = await applyDuplicateCopy(state, dispatch, activeStep)
     }
     }
     if(activeStep === SUMMARY_STEP) {
@@ -364,7 +366,7 @@ const callBackForNextDuplicate = async(state, dispatch) => {
         state.screenConfiguration.preparedFinalObject,
         "DuplicateCopyApplications[0]"
     );
-    isFormValid = await applyDuplicateCopy(state, dispatch);
+    isFormValid = await applyDuplicateCopy(state, dispatch,activeStep);
       if (isFormValid) {
           moveToSuccess(rentedData, dispatch, DUPLICATECOPYOFALLOTMENTLETTERRP);
       }
