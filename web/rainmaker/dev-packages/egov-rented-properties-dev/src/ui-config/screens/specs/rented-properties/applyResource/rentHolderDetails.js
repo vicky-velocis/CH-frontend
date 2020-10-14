@@ -818,6 +818,8 @@ const applicantEmailFieldMortgage = {
 
 const applicantAadharField = {
     ...aadharFieldConfig,
+    pattern:getPattern("AdharCardNumber"),
+    errorMessage:"RP_ERR_ADHAR_CARD_VALIDATION",
      jsonPath: "Owners[0].ownerDetails.aadhaarNumber"
 }
 
