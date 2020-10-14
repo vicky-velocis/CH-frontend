@@ -192,7 +192,7 @@ const callBackForSaveOrSubmit = async (state, dispatch) => {
       "Properties"
     )
 
-    await httpRequest(
+    const response = await httpRequest(
       "post",
       "/est-services/property-master/_update",
       "",
@@ -201,11 +201,29 @@ const callBackForSaveOrSubmit = async (state, dispatch) => {
         Properties: reqBody
       }
     );
-    let message = {
-      labelName: "Success",
-      labelKey: "ES_SUCCESS"
-    };
-    dispatch(toggleSnackbar(true, { labelName: message }, "success"));
+    if (!!response) {
+      let message = {
+        labelName: "Success",
+        labelKey: "ES_SUCCESS"
+      };
+      dispatch(toggleSnackbar(true, message, "success"));
+      dispatch(
+        handleField(
+          "refund",
+          "components.div.children.saveButton",
+          "visible",
+          false
+        )
+      )
+      dispatch(
+        handleField(
+          "refund",
+          "components.div.children.submitButton",
+          "visible",
+          false
+        )
+      )
+    }
   } catch(err) {
     dispatch(toggleSnackbar(true, { labelName: err.message }, "error"));
   }
