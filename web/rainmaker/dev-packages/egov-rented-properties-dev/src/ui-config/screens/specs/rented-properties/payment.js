@@ -326,7 +326,7 @@ const goToPayment = async (state, dispatch, type) => {
       }
     }
   } else {
-    dispatch(toggleSnackbar(true, {labelName: "ERR_FILL_RENTED_MANDATORY_FIELDS", labelKey: "ERR_FILL_RENTED_MANDATORY_FIELDS"}, "warning"))
+    dispatch(toggleSnackbar(true, {labelName: "RP_ERR_FILL_RENTED_MANDATORY_FIELDS", labelKey: "RP_ERR_FILL_RENTED_MANDATORY_FIELDS"}, "warning"))
   }
 }
 

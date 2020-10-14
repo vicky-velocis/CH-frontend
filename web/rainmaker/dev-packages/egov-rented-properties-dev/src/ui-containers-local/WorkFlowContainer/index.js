@@ -196,7 +196,7 @@ class WorkFlowContainer extends React.Component {
             true,
             {
               labelName: "Workflow update error!",
-              labelKey: "ERR_WF_UPDATE_ERROR"
+              labelKey: "RP_ERR_WF_UPDATE_ERROR"
             },
             "error"
           );
