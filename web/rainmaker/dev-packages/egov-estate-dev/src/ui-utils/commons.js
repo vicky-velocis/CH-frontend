@@ -273,10 +273,9 @@ export const populateBiddersTable = (biddersList, screenKey, componentJsonPath) 
               setTimeout((e) => {
                 store.dispatch(toggleSpinner());
                 let { Properties } = store.getState().screenConfiguration.preparedFinalObject;
-                let { bidders } = Properties[0].propertyDetails;
                 let bidderData = store.getState().screenConfiguration.preparedFinalObject.BidderData;
 
-                bidders.map((item, index) => {
+                biddersList.map((item, index) => {
                   if (bidderData[1] == item.bidderName) {
                     item.refundStatus = isMarked ? "Initiated" : "";
                     store.dispatch(
@@ -290,13 +289,13 @@ export const populateBiddersTable = (biddersList, screenKey, componentJsonPath) 
                   }
                   return item;
                 })
-                let refundedBidders = bidders.filter(item => item.refundStatus == "Initiated");
+                let refundedBidders = biddersList.filter(item => item.refundStatus == "Initiated");
                 store.dispatch(
                   handleField(
                     "refund", 
                     "components.div.children.submitButton",
                     "visible",
-                    (bidders.length === refundedBidders.length)
+                    (biddersList.length === refundedBidders.length)
                   )
                 )
                 store.dispatch(
@@ -304,13 +303,13 @@ export const populateBiddersTable = (biddersList, screenKey, componentJsonPath) 
                     "refund", 
                     "components.div.children.saveButton",
                     "visible",
-                    (bidders.length !== refundedBidders.length)
+                    (biddersList.length !== refundedBidders.length)
                   )
                 )
-                let action = (bidders.length == refundedBidders.length) ? "SUBMIT" : "";
-                let state = ""
+                let action = (biddersList.length == refundedBidders.length) ? "SUBMIT" : "";
+                let state = (biddersList.length == refundedBidders.length) ? "" : Properties[0].state;
 
-                let properties = [{...Properties[0], action: action, state: state, propertyDetails: {...Properties[0].propertyDetails, bidders: bidders}}]
+                let properties = [{...Properties[0], action: action, state: state, propertyDetails: {...Properties[0].propertyDetails, bidders: biddersList}}]
                 store.dispatch(
                   prepareFinalObject(
                     "Properties",
