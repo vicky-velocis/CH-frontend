@@ -753,7 +753,7 @@ export const downloadReceipt = (
         { key: "consumerCodes", value: applicationNumber },
         {
             key: "tenantId",
-            value: tenantId,
+            value: tenantId.length > 2 ? tenantId.split('.')[0] : tenantId,
         },
     ];
     const FETCHRECEIPT = {
@@ -781,7 +781,7 @@ export const downloadReceipt = (
                     { key: "key", value: "pacc-payment-receipt" },
                     {
                         key: "tenantId",
-                        value: tenantId,
+                        value: tenantId.length > 2 ? tenantId.split('.')[0] : tenantId,
                     },
                 ];
             } else {
@@ -789,7 +789,7 @@ export const downloadReceipt = (
                     { key: "key", value: "bk-payment-receipt" },
                     {
                         key: "tenantId",
-                        value: tenantId,
+                        value: tenantId.length > 2 ? tenantId.split('.')[0] : tenantId,
                     },
                 ];
             }
@@ -949,7 +949,7 @@ export const downloadReceipt = (
                 res.filestoreIds[0];
                 if (res && res.filestoreIds && res.filestoreIds.length > 0) {
                     res.filestoreIds.map((fileStoreId) => {
-                        downloadReceiptFromFilestoreID(fileStoreId, mode, tenantId);
+                        downloadReceiptFromFilestoreID(fileStoreId, mode);
                     });
                 } else {
                     console.log("Error In Receipt Download");
@@ -992,7 +992,7 @@ export const downloadCertificate = async (
                                 ? "bk-oswmcc-booking-pl"
                                 : "bk-cg-pl",
             },
-            { key: "tenantId", value: tenantId },
+            { key: "tenantId", value: tenantId.length > 2 ? tenantId.split('.')[0] : tenantId },
         ];
 
         // applicationData.businessService == "OSBM"
@@ -1106,7 +1106,7 @@ export const downloadCertificate = async (
             res.filestoreIds[0];
             if (res && res.filestoreIds && res.filestoreIds.length > 0) {
                 res.filestoreIds.map((fileStoreId) => {
-                    downloadReceiptFromFilestoreID(fileStoreId, mode, tenantId);
+                    downloadReceiptFromFilestoreID(fileStoreId, mode);
                 });
             } else {
                 console.log("Error In Permission Letter Download");
@@ -1136,8 +1136,7 @@ export const downloadApplication = async (
             state.screenConfiguration.preparedFinalObject,
             "documentsPreview"
         );
-        console.log(attachedDocuments, "nero Docs")
-        documentName = attachedDocuments[0].name;
+        documentName = attachedDocuments && attachedDocuments[0].name;
     }
     let paymentData = get(
         state.screenConfiguration.preparedFinalObject,
@@ -1170,7 +1169,7 @@ export const downloadApplication = async (
                                             ? "bk-wt-app-form"
                                             : "bk-wt-unpaid-app-form",
             },
-            { key: "tenantId", value: tenantId },
+            { key: "tenantId", value: tenantId.length > 2 ? tenantId.split('.')[0] : tenantId },
         ];
 
         let bookingDataOsbm = {
@@ -1192,8 +1191,6 @@ export const downloadApplication = async (
             categoryImage: "",
             // categoryImage: applicationData.bkCategory === "Cat-A" ? "http://3.6.65.87:3000/static/media/cat-a.4e1bc5ec.jpeg" : applicationData.bkCategory === "Cat-B" ? "" : "http://3.6.65.87:3000/static/media/cat-c.4e1bc5ec.jpeg"
         };
-
-
         let bookingDataWt = {
             applicationNumber: applicationNumber,
             name: applicationData.bkApplicantName,
@@ -1378,7 +1375,7 @@ export const downloadApplication = async (
             res.filestoreIds[0];
             if (res && res.filestoreIds && res.filestoreIds.length > 0) {
                 res.filestoreIds.map((fileStoreId) => {
-                    downloadReceiptFromFilestoreID(fileStoreId, mode, tenantId);
+                    downloadReceiptFromFilestoreID(fileStoreId, mode);
                 });
             } else {
                 console.log("Error In Application Download");
@@ -1403,7 +1400,6 @@ export const getAvailabilityData = async (sectorData) => {
             [],
             requestBody
         );
-        console.log(response, "availability response");
         return response;
     } catch (exception) {
         console.log(exception);
@@ -1448,7 +1444,6 @@ export const getNewLocatonImages = async (bookingSector, bookingArea) => {
             requestBody
         );
         // return response;
-        console.log(response, "myNew response");
         return { status: "success", data: response };
     } catch (exception) {
         console.log(exception);
