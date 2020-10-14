@@ -298,6 +298,8 @@ export const getData = async (action, state, dispatch) => {
                           true
                         )
                       );
+                      payloadWater.WaterConnection[0].securityCharge = securityCharges;
+                      dispatch(prepareFinalObject("applyScreen.securityCharge", securityCharges));
                     }else{
                       dispatch(
                         handleField(
