@@ -10,7 +10,8 @@ import {
 } from "egov-ui-framework/ui-utils/commons";
 import {
   prepareFinalObject,
-  handleScreenConfigurationFieldChange as handleField
+  handleScreenConfigurationFieldChange as handleField,
+  toggleSnackbar
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import {
   getSearchResults,
@@ -76,6 +77,13 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
       getTextToLocalMapping("EMD Validity Date"),
       {
         name: getTextToLocalMapping("Initiate Refund"),
+        options: { 
+          display: true,
+          viewColumns: true
+        }
+      },
+      {
+        name: getTextToLocalMapping("Refund Status"),
         options: { 
           display: true,
           viewColumns: true
@@ -178,21 +186,29 @@ const saveButton = {
 }
 
 const callBackForSaveOrSubmit = async (state, dispatch) => {
-  let reqBody = get(
-    state.screenConfiguration.preparedFinalObject,
-    "Properties"
-  )
+  try {
+    let reqBody = get(
+      state.screenConfiguration.preparedFinalObject,
+      "Properties"
+    )
 
-  /* let response = await httpRequest(
-    "post",
-    "/est-services/property-master/_update",
-    "",
-    [], 
-    {
-      Properties: reqBody
-    }
-  );
-  console.log(response); */
+    await httpRequest(
+      "post",
+      "/est-services/property-master/_update",
+      "",
+      [], 
+      {
+        Properties: reqBody
+      }
+    );
+    let message = {
+      labelName: "Success",
+      labelKey: "ES_SUCCESS"
+    };
+    dispatch(toggleSnackbar(true, { labelName: message }, "success"));
+  } catch(err) {
+    dispatch(toggleSnackbar(true, { labelName: err.message }, "error"));
+  }
 }
 
 const refund = {
