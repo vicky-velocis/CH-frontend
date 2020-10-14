@@ -260,7 +260,7 @@ const complaintsReducer = (state = intialState, action) => {
       };
 
     case actionTypes.APPLICATION_TYPE_FETCH_SUCCESS:
-      let applicationType = transformById(action.payload.MdmsRes["Booking"].Sector, "code");
+       let applicationType = action.payload.MdmsRes["Booking"];
       console.log('applicationType', applicationType)
       return {
         ...state,

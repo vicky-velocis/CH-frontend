@@ -48,7 +48,7 @@ import {
 	fetchApplications, fetchMccApplications, fetchPayment, fetchHistory, fetchDataAfterPayment, downloadPaymentReceipt, downloadApplication,
 	sendMessage, downloadPermissionLetter,
 	sendMessageMedia
-} from "../../redux/bookings/actions";
+} from "egov-ui-kit/redux/bookings/actions";
 import { connect } from "react-redux";
 import DialogContainer from '../../modules/DialogContainer';
 import Footer from "../../modules/footer"
@@ -154,9 +154,10 @@ class ApplicationDetails extends Component {
 		const { complaint } = transformedComplaint;
 
 		let requestbody = {
-			"applicationNumber": match.params.applicationId, 'uuid': userInfo.uuid,
+			"applicationNumber": match.params.applicationId, 
+			"uuid": userInfo.uuid,
 			"applicationStatus": "",
-			"mobileNumber": "", "bookingType": "", "tenantId": "ch"
+			"mobileNumber": "", "bookingType": "", "tenantId": userInfo.tenantId
 		}
 
 		let imageListFromAPI = await httpRequest(

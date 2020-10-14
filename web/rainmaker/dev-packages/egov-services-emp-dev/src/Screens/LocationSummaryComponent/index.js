@@ -205,7 +205,7 @@ class ApplicationDetails extends Component {
 			{
 				"applicationNumber": match.params.applicationId, 'uuid': userInfo.uuid,
 				"applicationStatus": "",
-				"mobileNumber": "", "bookingType": ""
+				"mobileNumber": "", "bookingType": "","tenantId":userInfo.tenantId
 			}
 		);
 
