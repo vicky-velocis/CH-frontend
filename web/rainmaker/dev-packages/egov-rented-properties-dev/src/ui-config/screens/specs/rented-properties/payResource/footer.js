@@ -336,7 +336,7 @@ export const getCommonApplyFooter = children => {
     componentPath: "Div",
     props: {
       className: "apply-wizard-footer",
-      style: { display: "flex", justifyContent: "flex-end" }
+      style: { justifyContent: "flex-end" }
     },
     children
   };
