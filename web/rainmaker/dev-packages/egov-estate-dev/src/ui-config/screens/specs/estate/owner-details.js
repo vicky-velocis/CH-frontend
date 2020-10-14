@@ -106,7 +106,7 @@ export const searchResults = async (action, state, dispatch, fileNumber) => {
           let ownerdetailsComponent = getOwnerDetails(false, index, (!!findItem && applicationState == "ES_PM_APPROVED"));
           let allotmentDetailsComponent = getAllotmentDetails(false,index);
 
-          if (applicationState == "PS_PM_APPROVED") {
+          if (applicationState == "ES_PM_APPROVED") {
             let ownerId = element.id;
             let queryObject = [
               { key: "ownerId", value: ownerId }
