@@ -389,14 +389,14 @@ export const setXLSTableData = async({demands, payments ,componentJsonPath, scre
     const findItem = payments.find(payData => moment(new Date(payData.receiptDate)).format("MMM YYYY") === moment(new Date(item.demandDate)).format("MMM YYYY"));
     return !!findItem ? {...item, ...findItem} : {...item}
   })
-
+  
   data  = data.map(item => ({
-    [ES_MONTH]:  ' ',
+    [ES_MONTH]:  !!item.demandDate && moment(new Date(item.demandDate)).format("MMM") || '',
     [ES_RENT_DUE]: !!item.rent && item.rent.toFixed(2) || ' ',
-    [ES_RENT_RECEIVED]:!!item.rentReceived && item.rentReceived.toFixed(2) || ' ',
+    [ES_RENT_RECEIVED]:!!item.collectedRent && item.collectedRent.toFixed(2) || ' ',
     [ES_RECEIPT_NO]: !!item.receiptNo && item.receiptNo || ' ',
     [ES_DATE] : ' ',
-    [ES_RENT_DUE_DATE]: ' ',
+    [ES_RENT_DUE_DATE]: !!item.demandDate && moment(new Date(item.demandDate)).format("DD MMM YYYY") || '',
     [ES_PENALTY_INTEREST]: !!item.penaltyInterest && item.penaltyInterest.toFixed(2) || '',
     [ES_ST_GST_RATE]:!!item.gst && item.gst.toFixed(2) || '',
     [ES_ST_GST_DUE]: !!item.collectedGST && item.collectedGST.toFixed(2) || '',
