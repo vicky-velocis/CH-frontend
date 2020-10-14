@@ -23,6 +23,7 @@ export const TOTAL_DUE = getTextToLocalMapping("RP_COMMON_TABLE_COL_AS_TOTAL_DUE
 export const TYPE = getTextToLocalMapping("RP_COMMON_TABLE_COL_AS_TYPE")+"(Payment)"
 export const TYPES = getTextToLocalMapping("RP_COMMON_TABLE_COL_AS_TYPE")+"(Rent)"
 export const ACCOUNT_BALANCE = getTextToLocalMapping("RP_COMMON_TABLE_ACCOUNT_BALANCE") + " (₹)"
+export const RECIEPT_NO=getTextToLocalMapping("RP_RECEIPT_NO")
 export const searchResults = {
   uiFramework: "custom-molecules",
   componentPath: "Table",
@@ -135,6 +136,16 @@ export const accountStatementResults = {
         }
       },
       {
+        name: REMAINING_INTEREST,
+        options: {
+          customBodyRender: value => (
+            <span style={{ display: 'flex', justifyContent: 'right', flexDirection: 'row-reverse',marginBottom:'none'}}>
+          {value}
+        </span> 
+          )
+        }
+      },
+      {
         name: TOTAL_DUE,
         options: {
           customBodyRender: value => (
@@ -154,16 +165,7 @@ export const accountStatementResults = {
           )
         }
       },
-      {
-        name: REMAINING_INTEREST,
-        options: {
-          customBodyRender: value => (
-            <span style={{ display: 'flex', justifyContent: 'right', flexDirection: 'row-reverse',marginBottom:'none'}}>
-          {value}
-        </span> 
-          )
-        }
-      } 
+      RECIEPT_NO 
     ],
     options: {...searchResults.props.options,
       onRowClick: () => {},

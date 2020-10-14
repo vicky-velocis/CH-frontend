@@ -236,7 +236,7 @@ export const HISTORY = {
 
 export const DOWNLOADAPPLICATION = {
   POST: {
-    URL:"pdf-service/v1/_create?key=bk-osbm-app-form",
+    URL:"pdf-service/v1/_create?key=bk-osbm-app-form&tenatId=ch",
     ACTION: "_search",
   },
 };

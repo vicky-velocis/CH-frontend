@@ -21,6 +21,7 @@ import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 import ImportExportIcon from "@material-ui/icons/ImportExport";
 import "./index.css";
 import get from "lodash/get"
+import {  convertEpochToDate } from "egov-ui-framework/ui-config/screens/specs/utils";
 
 class InboxData extends React.Component {
   state = {
@@ -73,7 +74,48 @@ class InboxData extends React.Component {
     ];
     const payload = await httpRequest("egov-workflow-v2/egov-wf/process/_search?", "", queryObject);
     const processInstances = payload && payload.ProcessInstances.length > 0 && orderWfProcessInstances(payload.ProcessInstances);
+    var horticultureBusinessServices =
+    ["PRUNING OF TREES GIRTH LESS THAN OR EQUAL TO 90 CMS",
+     "PRUNING OF TREES GIRTH GREATER THAN 90 CMS",
+     "REMOVAL OF GREEN TREES",
+     "REMOVAL OF DEAD/DANGEROUS/DRY TREES" ]
+     if(horticultureBusinessServices.includes(processInstances[0].businessService))
+    {
+      var finalProcessInstancesHorticulture = processInstances.map(function(element, index) {
+        if(index == 0)
+        {
+        var o = Object.assign({}, element);
+        o.numberOfDaysToTakeAction = Math.ceil((element.auditDetails.lastModifiedTime - element.auditDetails.createdTime)/(1000 * 3600 * 24) )
+        return o;
+      
+      }
+        else{
+        var o = Object.assign({}, element);
+        var currentDateArray = []
+        var prevDateArray = []
+        var prevDateArray = ((convertEpochToDate(processInstances[index-1].auditDetails.lastModifiedTime)).toString()).split("/")
+        var currentDateArray =((convertEpochToDate(element.auditDetails.lastModifiedTime)).toString()).split("/")
+        var prevDate = new Date(prevDateArray[2], prevDateArray[1]-1, prevDateArray[0])
+        var currentDate = new Date(currentDateArray[2], currentDateArray[1]-1, currentDateArray[0])
+        var prevDateString =  new Date(prevDate.toString())
+        var currentDateString = new Date(currentDate.toString())
+        
+        
+        var diff =(currentDateString.getTime() - prevDateString.getTime()) / 1000;
+        diff /= (60 * 60 * 24);
+        o.numberOfDaysToTakeAction = Math.abs(Math.round(diff));
+        return o;
+        }
+
+    })
+
+    return finalProcessInstancesHorticulture
+  }
+  else
+  {
     return processInstances;
+  
+  }
   };
 
   onHistoryClick = async (moduleNumber) => {
@@ -108,10 +150,11 @@ class InboxData extends React.Component {
     // if (processInstances && processInstances.length > 0) {
     //   await addWflowFileUrl(processInstances, prepareFinalObject);
     // }
+	
     let contextPath = status === "Initiated" ? getWFConfig(row[0].hiddenText,row[0].subtext,taskId).INITIATED : getWFConfig(row[0].hiddenText,row[0].subtext,taskId).DEFAULT;
     let queryParams = `applicationNumber=${taskId}&tenantId=${tenantId}`;
     
-    if(contextPath=='/egov-services/application-details'||contextPath=='/egov-services/bwt-application-details'){
+    if(contextPath=='/egov-services/application-details'||contextPath=='/egov-services/bwt-application-details'|| "/egov-services/newLocation-application-details"){
       queryParams = `${taskId}`;
     }
 
@@ -128,8 +171,9 @@ class InboxData extends React.Component {
     } else if(row[0].subtext === "MasterRP") {
       queryParams = `transitNumber=${taskId}&tenantId=${tenantId}`
     }
-    else if (row[0].subtext === "NewWS1") {
+    else if (row[0].subtext === "NewWS1" || row[0].subtext === "WS_CONVERSION" || row[0].subtext === "WS_DISCONNECTION" || row[0].subtext === "WS_RENAME" || row[0].subtext === "WS_TUBEWELL") {
       queryParams += '&history=true&service=WATER';
+      window.localStorage.setItem("wns_workflow",row[0].subtext);
     }
     else if (row[0].subtext === "NewSW1") {
       queryParams += '&history=true&service=SEWERAGE';
@@ -141,7 +185,12 @@ class InboxData extends React.Component {
       queryParams += `&status=${wfStatus}`;
     }
 
+    if(contextPath=='/egov-services/application-details'||contextPath=='/egov-services/bwt-application-details'|| "/egov-services/newLocation-application-details"){
+      this.props.setRoute(`${contextPath}/${queryParams}`);
+
+    }else{
     this.props.setRoute(`${contextPath}?${queryParams}`);
+    }
   };
 
   getSlaColor = (sla, businessService) => {
@@ -220,6 +269,7 @@ class InboxData extends React.Component {
                   return (
                     <TableRow key={i} className="inbox-data-table-bodyrow">
                       {row.map((item, index) => {
+                        if(index !== 1 && index !== 4 ){
                         let classNames = `inbox-data-table-bodycell inbox-data-table-bodycell-${index}`;
                         if (item.subtext) {
                           return (
@@ -230,7 +280,7 @@ class InboxData extends React.Component {
                               <div className="inbox-cell-subtext">
                                 {<Label label={`CS_COMMON_INBOX_${item.subtext.toUpperCase()}`} color="#000000" />}
                               </div>
-                            </TableCell>
+                            </TableCell>  
                           );
                         } else if (item.badge) {
                           return (
@@ -253,7 +303,7 @@ class InboxData extends React.Component {
                             </TableCell>
                           );
                         }
-                      })}
+                      }})}
                     </TableRow>
                   );
                 })}
@@ -294,27 +344,28 @@ class InboxData extends React.Component {
                           <Label label={`CS_COMMON_INBOX_${row[0].subtext.toUpperCase()}`} color="#000000" />
                         </div>
 
-                        <div className="card-div-style">
+                         <div className="card-div-style">
                           <Label label={data.headers[1]} labelStyle={{ fontWeight: "500" }} />
                         </div>
-                        <div className="card-div-style">{row[1].text}</div>
+                        {/* <div className="card-div-style">{row[1].text}</div> */} 
+                        <div className="card-div-style">{row[2].text}</div>
 
                         <div className="card-div-style">
                           <Label label={data.headers[2]} labelStyle={{ fontWeight: "500" }} />
                         </div>
-                        <div className="card-div-style">{row[2].text}</div>
+                        <div className="card-div-style">{row[3].text}</div>
 
                         <div className="card-div-style">
                           <Label label={data.headers[3]} labelStyle={{ fontWeight: "500" }} />
                         </div>
-                        <div className="card-div-style">{row[3].text}</div>
+                      
 
-                        <div className="card-div-style">
+                        {/* <div className="card-div-style">
                           <Label label={data.headers[4]} labelStyle={{ fontWeight: "500" }} />
                         </div>
                         <div className="card-sladiv-style">
                           <span class={"inbox-cell-badge-primary"} style={{backgroundColor : this.getSlaColor(row[4].text, row[2].text.props.label.split("_")[1])}}>{row[4].text}</span>
-                        </div>
+                        </div> */}
 
                         <div className="card-viewHistory-icon" onClick={() => onHistoryClick(row[0])}>
                           <i class="material-icons">history</i>

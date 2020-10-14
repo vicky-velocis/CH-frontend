@@ -49,7 +49,7 @@ export const applicationSuccessFooter = (
         children: {
           downloadReceiptButtonLabel: getLabel({
             labelName: "GO TO HOME",
-            labelKey: "RP_COMMON_BUTTON_HOME"
+            labelKey: "RP_BUTTON_HOME"
           })
         },
         onClickDefination: {
@@ -71,7 +71,7 @@ export const applicationSuccessFooter = (
         children: {
           downloadFormButtonLabel: getLabel({
             labelName: "DOWNLOAD CONFIRMATION FORM",
-            labelKey: (type == "OWNERSHIPTRANSFERRP" || type == "DUPLICATECOPYOFALLOTMENTLETTERRP" || type == "PERMISSIONTOMORTGAGE") ? "RP_APPLICATION_BUTTON_DOWN_CONF" : "RP_DOWNLOAD_RECEIPT"
+            labelKey: (type == "OWNERSHIPTRANSFERRP" || type == "DUPLICATECOPYOFALLOTMENTLETTERRP" || type == "PERMISSIONTOMORTGAGE") ? "RP_APPLICATION_BUTTON_DOWN_CONF" : "RP_DOWNLOAD_PAYMENT_RECIEPT"
           })
         },
         onClickDefination: {
@@ -125,7 +125,7 @@ export const applicationSuccessFooter = (
                         { key: "consumerCodes", value:codes},
                         { key: "tenantId", value: id }
                     ]
-                      download(receiptQuery, Properties,[], userInfo.name,'online-payment');
+                      download(receiptQuery, Properties,[], userInfo.name,'rent-payment');
                   }
                   else{
                     let consumerCodes = getQueryArg(window.location.href, "applicationNumber");
@@ -159,7 +159,7 @@ export const applicationSuccessFooter = (
         children: {
           printFormButtonLabel: getLabel({
             labelName: "PRINT CONFIRMATION FORM",
-            labelKey: (type == "OWNERSHIPTRANSFERRP" || type == "DUPLICATECOPYOFALLOTMENTLETTERRP" || type == "PERMISSIONTOMORTGAGE") ? "RP_APPLICATION_BUTTON_PRINT_CONF" : "RP_PRINT_RECEIPT"
+            labelKey: (type == "OWNERSHIPTRANSFERRP" || type == "DUPLICATECOPYOFALLOTMENTLETTERRP" || type == "PERMISSIONTOMORTGAGE") ? "RP_APPLICATION_BUTTON_PRINT_CONF" : "RP_PRINT_PAYMENT_RECIEPT"
           })
         },
         onClickDefination: {
@@ -213,7 +213,7 @@ export const applicationSuccessFooter = (
                         { key: "consumerCodes", value:codes},
                         { key: "tenantId", value: id }
                     ]
-                      download(receiptQuery, Properties,[], userInfo.name,'online-payment','print');
+                      download(receiptQuery, Properties,[], userInfo.name,'rent-payment','print');
                   }
                   else{
                     let consumerCodes = getQueryArg(window.location.href, "applicationNumber");
@@ -251,7 +251,7 @@ export const applicationSuccessFooter = (
         children: {
           downloadReceiptButtonLabel: getLabel({
             labelName: "GO TO HOME",
-            labelKey: "RP_COMMON_BUTTON_HOME"
+            labelKey: "RP_BUTTON_HOME"
           })
         },
         onClickDefination: {
@@ -273,7 +273,7 @@ export const applicationSuccessFooter = (
         children: {
           downloadFormButtonLabel: getLabel({
             labelName: "DOWNLOAD CONFIRMATION FORM",
-            labelKey: (type == "OWNERSHIPTRANSFERRP" || type == "DUPLICATECOPYOFALLOTMENTLETTERRP" || type == "PERMISSIONTOMORTGAGE") ? "RP_APPLICATION_BUTTON_DOWN_CONF" : "RP_DOWNLOAD_RECEIPT"
+            labelKey: (type == "OWNERSHIPTRANSFERRP" || type == "DUPLICATECOPYOFALLOTMENTLETTERRP" || type == "PERMISSIONTOMORTGAGE") ? "RP_APPLICATION_BUTTON_DOWN_CONF" :type=="NOTICE_GENERATION"? "RP_DOWNLOAD_NOTICE": type=="RentedProperties.Rent"?"RP_DOWNLOAD_PAYMENT_RECIEPT" : "RP_DOWNLOAD_RECEIPT"
           })
         },
         onClickDefination: {
@@ -298,7 +298,7 @@ export const applicationSuccessFooter = (
                 { key: "consumerCodes", value:consumerCodes},
                 { key: "tenantId", value: tenantId }
             ]
-              download(receiptQueryString, Properties,[], userInfo.name,'online-payment');
+              download(receiptQueryString, Properties,[], userInfo.name,'rent-payment');
             break
             case 'NOTICE_GENERATION':
                 const { notices } = state.screenConfiguration.preparedFinalObject;
@@ -324,7 +324,7 @@ export const applicationSuccessFooter = (
         children: {
           printFormButtonLabel: getLabel({
             labelName: "PRINT CONFIRMATION FORM",
-            labelKey: (type == "OWNERSHIPTRANSFERRP" || type == "DUPLICATECOPYOFALLOTMENTLETTERRP" || type == "PERMISSIONTOMORTGAGE") ? "RP_APPLICATION_BUTTON_PRINT_CONF" : "RP_PRINT_RECEIPT"
+            labelKey: (type == "OWNERSHIPTRANSFERRP" || type == "DUPLICATECOPYOFALLOTMENTLETTERRP" || type == "PERMISSIONTOMORTGAGE") ? "RP_APPLICATION_BUTTON_PRINT_CONF" : type=="NOTICE_GENERATION"? "RP_PRINT_NOTICE":type=="RentedProperties.Rent"?"RP_PRINT_PAYMENT_RECIEPT" :"RP_PRINT_RECEIPT"
           })
         },
         onClickDefination: {
@@ -349,7 +349,7 @@ export const applicationSuccessFooter = (
                 { key: "consumerCodes", value:consumerCodes},
                 { key: "tenantId", value: tenantId }
             ]
-              download(receiptQueryString, Properties,[], userInfo.name,'online-payment','print');
+              download(receiptQueryString, Properties,[], userInfo.name,'rent-payment','print');
             break
         case 'NOTICE_GENERATION':
             const { notices } = state.screenConfiguration.preparedFinalObject;

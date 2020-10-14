@@ -4,7 +4,7 @@ import {
   import {
     getButtonVisibility,
     getCommonApplyFooter,
-    downloadAcknowledgementForm,downloadAcknowledgementFormForMortagage
+    downloadAcknowledgementFormForMortagage
   } from "../../utils";
   import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
   import "./index.css";
@@ -56,7 +56,7 @@ import {
                 children: {
                   submitButtonLabel: getLabel({
                     labelName: "MAKE PAYMENT",
-                    labelKey: "RP_COMMON_MAKE_PAYMENT"
+                    labelKey: "COMMON_MAKE_PAYMENT"
                   })
                 },
                 onClickDefination: {

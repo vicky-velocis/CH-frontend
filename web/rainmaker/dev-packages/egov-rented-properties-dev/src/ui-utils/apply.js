@@ -1,7 +1,6 @@
 import { httpRequest } from "./api";
 import {
   convertDateToEpoch,
-  getCurrentFinancialYear,
   addYears,
 } from "../ui-config/screens/specs/utils";
 import {
@@ -9,15 +8,7 @@ import {
     toggleSnackbar,
     toggleSpinner
   } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-  import {
-    getTranslatedLabel,
-    updateDropDowns,
-    ifUserRoleExists,
-    convertEpochToDate,
-    calculateAge
-  } from "../ui-config/screens/specs/utils";
   import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-  import store from "redux/store";
   import get from "lodash/get";
   import set from "lodash/set";
   import {
@@ -26,18 +17,10 @@ import {
     getFileUrlFromAPI
   } from "egov-ui-framework/ui-utils/commons";
   import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
-  import {
-    setBusinessServiceDataToLocalStorage,
-    getMultiUnits,
-    acceptedFiles,
-  } from "egov-ui-framework/ui-utils/commons";
-  import commonConfig from "config/common.js";
-  import { localStorageGet } from "egov-ui-kit/utils/localStorageUtils";
-import { getSearchResults,getMortgageSearchResults } from "./commons";
+import { getSearchResults } from "./commons";
 import { getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
 import { setDocsForEditFlow } from "./commons";
 import { getLocaleLabels } from "egov-ui-framework/ui-utils/commons";
-let userInfo = JSON.parse(getUserInfo());
 
 
 export const setApplicationNumberBox = (state, dispatch, applicationNumber, screenKey) => {
@@ -132,7 +115,9 @@ export const setApplicationNumberBox = (state, dispatch, applicationNumber, scre
             ...keys
           }]
         }, [])
-        dispatch(prepareFinalObject("Properties", Properties));
+        let properties = Properties
+        properties[0].formatrentSummary = rentSummary
+        dispatch(prepareFinalObject("Properties", properties));
         dispatch(
           prepareFinalObject(
             "PropertiesTemp[0].removedDocs",
@@ -226,6 +211,14 @@ export const setApplicationNumberBox = (state, dispatch, applicationNumber, scre
         const applicationNumber = Owners[0].ownerDetails.applicationNumber
         await setDocsForEditFlow(state, dispatch, "Owners[0].ownerDetails.ownershipTransferDocuments", "OwnersTemp[0].uploadedDocsInRedux");
         setApplicationNumberBox(state, dispatch, applicationNumber, "ownership-apply")
+        dispatch(
+          handleField(
+            "ownership-apply",
+            "components.div.children.formwizardFirstStep.children.ownershipAddressDetails.children.cardContent.children.detailsContainer.children.ownershipTransitNumber",
+            "props.disabled",
+            true
+          )
+        )
         return true;
     } catch (error) {
         dispatch(toggleSnackbar(true, { labelName: error.message }, "error"));
@@ -438,6 +431,14 @@ export const setApplicationNumberBox = (state, dispatch, applicationNumber, scre
         const applicationNumber = MortgageApplications[0].applicationNumber
         await setDocsForEditFlow(state, dispatch, "MortgageApplications[0].applicationDocuments", "MortgageApplicationsTemp[0].uploadedDocsInRedux");
         setApplicationNumberBox(state, dispatch, applicationNumber, "mortage-apply")
+        dispatch(
+          handleField(
+            "mortage-apply",
+            "components.div.children.formwizardFirstStep.children.ownershipAddressDetailsMortgage.children.cardContent.children.detailsContainer.children.ownershipTransitNumber",
+            "props.disabled",
+            true
+          )
+        )
         return true;
     } catch (error) {
         dispatch(toggleSnackbar(true, { labelName: error.message }, "error"));
@@ -511,6 +512,14 @@ export const applyDuplicateCopy = async (state, dispatch, activeIndex) => {
         const applicationNumber = DuplicateCopyApplications[0].applicationNumber
         await setDocsForEditFlow(state, dispatch, "DuplicateCopyApplications[0].applicationDocuments", "DuplicateTemp[0].uploadedDocsInRedux");
         setApplicationNumberBox(state, dispatch, applicationNumber, "duplicate-copy-apply")
+        dispatch(
+          handleField(
+            "duplicate-copy-apply",
+            "components.div.children.formwizardFirstStep.children.transitSiteDetails.children.cardContent.children.detailsContainer.children.transitNumber",
+            "props.disabled",
+            true
+          )
+        )
         return true;
     } catch (error) {
         dispatch(toggleSnackbar(true, { labelName: error.message }, "error"));
@@ -711,7 +720,7 @@ export const getDetailsFromProperty = async (state, dispatch) => {
           dispatch(
             prepareFinalObject(
               "Owners[0].ownerDetails.fatherOrHusband",
-              findOwner.ownerDetails.name
+              findOwner.ownerDetails.fatherOrHusband
             )
           )
           return true
@@ -802,18 +811,18 @@ export const getDetailsFromPropertyMortgage = async (state, dispatch) => {
               findOwner.ownerDetails.aadhaarNumber
             )
           )
-          dispatch(
-            prepareFinalObject(
-              "MortgageApplications[0].applicant[0].email",
-              findOwner.ownerDetails.email
-            )
-          )
-          dispatch(
-            prepareFinalObject(
-              "MortgageApplications[0].applicant[0].phone",
-              findOwner.ownerDetails.phone
-            )
-          )
+          // dispatch(
+          //   prepareFinalObject(
+          //     "MortgageApplications[0].applicant[0].email",
+          //     findOwner.ownerDetails.email
+          //   )
+          // )
+          // dispatch(
+          //   prepareFinalObject(
+          //     "MortgageApplications[0].applicant[0].phone",
+          //     findOwner.ownerDetails.phone
+          //   )
+          // )
           return true
         }
     }
@@ -948,18 +957,18 @@ export const getDuplicateDetailsFromProperty = async (state, dispatch) => {
               findOwner.ownerDetails.aadhaarNumber
             )
           )
-          dispatch(
-            prepareFinalObject(
-              "DuplicateCopyApplications[0].applicant[0].email",
-              findOwner.ownerDetails.email
-            )
-          )
-          dispatch(
-            prepareFinalObject(
-              "DuplicateCopyApplications[0].applicant[0].phone",
-              findOwner.ownerDetails.phone
-            )
-          )
+          // dispatch(
+          //   prepareFinalObject(
+          //     "DuplicateCopyApplications[0].applicant[0].email",
+          //     findOwner.ownerDetails.email
+          //   )
+          // )
+          // dispatch(
+          //   prepareFinalObject(
+          //     "DuplicateCopyApplications[0].applicant[0].phone",
+          //     findOwner.ownerDetails.phone
+          //   )
+          // )
           return true
         }
     }

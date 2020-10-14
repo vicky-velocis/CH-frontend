@@ -834,6 +834,7 @@ export const getModuleName = () => {
   else if (pathName.indexOf("wns") > -1) { return "rainmaker-ws"; }
   else if (pathName.indexOf("report/rainmaker-tl") > -1) { return "rainmaker-pgr,rainmaker-tl"; }
   else if (pathName.indexOf("tradelicense") > -1 || pathName.indexOf("tradelicence") > -1 || pathName.indexOf("tradelicense-citizen") > -1 || pathName.indexOf("rainmaker-tl") > -1 || pathName.indexOf("fine-master") > -1 ) { return "rainmaker-tl"; }
+  else if (pathName.indexOf("report/rainmaker-rp") > -1) { return "rainmaker-pgr,rainmaker-rp"; }
   else if (pathName.indexOf("rented-properties") > -1) { return "rainmaker-rp"}
   else if (pathName.indexOf("hrms") > -1) { return "rainmaker-hr"; }
   else if (pathName.indexOf("fire-noc") > -1) { return "rainmaker-noc,rainmaker-pgr"; }
@@ -854,6 +855,8 @@ export const getModuleName = () => {
     else if (pathName.indexOf("egov-pr") > -1) { return "rainmaker-pr"; }
     else if (pathName.indexOf("uc") > -1) { return "rainmaker-uc"; }
     else if (pathName.indexOf("egov-services") > -1) { return "rainmaker-services"; }
+    else if (pathName.indexOf("egov-rti") > -1) { return "rainmaker-rti"; }
+    else if (pathName.indexOf("egov-integration") > -1) { return "rainmaker-integration"; }
   else {
     return "rainmaker-common";
   }

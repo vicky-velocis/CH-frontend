@@ -25,6 +25,7 @@ export const getCheckboxContainer = {
   props: {
     jsonPathSewerage: "applyScreen.sewerage",
     jsonPathWater: "applyScreen.water",
+    jsonPathTubewell: "applyScreen.tubewell",
     required: true
   },
   type: "array",
@@ -64,7 +65,7 @@ export const OwnerInfoCard = getCommonCard({
       sourceJsonPath: "applyScreenMdmsData.ws-services-masters.WaterApplicationType",
       placeholder: { labelKey: "WATER_APPLICATION_TYPE_PLACEHOLDER" },
       required: true,
-      gridDefination: { xs: 12, sm: 6 },
+      gridDefination: { xs: 12, sm: 12 },
       jsonPath: "applyScreen.waterApplicationType",
       props: {
         optionValue: "code",

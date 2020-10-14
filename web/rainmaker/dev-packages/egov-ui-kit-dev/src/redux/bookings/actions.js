@@ -409,7 +409,6 @@ export const downloadPaymentReceipt = (requestBody, hasUsers = true, overWrite) 
 	};
 };
 export const downloadApplication = (requestBody, hasUsers = true, overWrite) => {
-	console.log('requestBody in action.js',requestBody);
 	return async (dispatch, getState) => {
 		try {
 			let tenantId = "";

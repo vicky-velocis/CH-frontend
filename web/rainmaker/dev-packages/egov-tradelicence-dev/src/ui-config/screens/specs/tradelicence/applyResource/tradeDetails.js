@@ -856,7 +856,7 @@ const applicationTypeField = {
 const tradeLicenseTypeField = {
     label: {
         labelName: "License Type",
-        labelKey: "TL_TRADE_TYPE_LABEL"
+        labelKey: "TL_TABLE_TRADE_TYPE_LABEL"
     },
     placeholder: {
         labelName: "Select License Type",
@@ -877,7 +877,7 @@ const tradeLicenseTypeField = {
 const serviceTypeField = {
     label: {
         labelName: "Service Type",
-        labelKey: "TL_SERVICE_TYPE_LABEL"
+        labelKey: "TL_TABLE_SERVICE_TYPE_LABEL"
     },
     placeholder: {
         labelName: "Select Service Type",
@@ -1572,7 +1572,7 @@ const platformNumberField = {
         labelName: "Enter Platform/Shop Number",
         labelKey: "TL_PLATFORM_NUMBER_PLACEHOLDER"
     },
-    pattern: getPattern("familyMonthlyIncome"),
+    pattern: getPattern("AlphaNumValidation"),
     visible: false,
     minLength: 1,
     maxLength: FIELD_MAXLENGTH,

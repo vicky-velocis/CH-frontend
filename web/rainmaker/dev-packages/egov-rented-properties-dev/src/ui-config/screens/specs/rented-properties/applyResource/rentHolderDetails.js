@@ -466,7 +466,7 @@ const applicantphoneNumberFieldMortgage = {
         labelKey: ""
       },
     props: {
-        // value: userInfo.userName,
+        value: userInfo.userName,
         disabled: true
       },
     jsonPath: "MortgageApplications[0].applicant[0].phone"
@@ -475,7 +475,7 @@ const applicantphoneNumberFieldMortgage = {
 const applicantphoneNumberFieldduplicate = {
     ...phoneNumberConfig,
     props: {
-        // value: userInfo.userName,
+        value: userInfo.userName,
         disabled: true
       },
     jsonPath: "DuplicateCopyApplications[0].applicant[0].phone"
@@ -515,16 +515,29 @@ export const  applicantGenderLabel = {
     errorMessage:"RP_ERR_GENDER_FIELD"
 };
 
-
+const fatherOrHusbandsNameOwnerShip = {
+    label: {
+        labelName: "Father/ Husband's Name",
+        labelKey: "RP_FATHER_OR_HUSBANDS_NAME_LABEL"
+    },
+    gridDefination: {
+        xs: 12,
+        sm: 6
+    },
+    minLength: 4,
+    maxLength: 40,
+    required: true,
+    props: {
+        disabled: true
+      },
+    jsonPath: "Owners[0].ownerDetails.fatherOrHusband",
+    errorMessage:"RP_ERR_FATHER_OR_HUSBAND_FIELD"
+}
 const fatherOrHusbandsName = {
     label: {
         labelName: "Father/ Husband's Name",
         labelKey: "RP_FATHER_OR_HUSBANDS_NAME_LABEL"
     },
-    // placeholder: {
-    //     labelName: "Enter Father/ Husband's Name",
-    //     labelKey: "TL_FATHER_OR_HUSBANDS_NAME_NAME_PLACEHOLDER"
-    // },
     gridDefination: {
         xs: 12,
         sm: 6
@@ -544,10 +557,6 @@ const fatherOrHusbandsNameMortgage = {
         labelName: "Father/ Husband's Name",
         labelKey: "RP_FATHER_OR_HUSBANDS_NAME_LABEL"
     },
-    // placeholder: {
-    //     labelName: "Enter Father/ Husband's Name",
-    //     labelKey: "TL_FATHER_OR_HUSBANDS_NAME_NAME_PLACEHOLDER"
-    // },
     gridDefination: {
         xs: 12,
         sm: 6
@@ -635,7 +644,7 @@ const applicantEmailFieldduplicate = {
         labelKey: ""
       },
     props: {
-        // value:userInfo.emailId,
+        value:userInfo.emailId,
         disabled: true
       },
     jsonPath: "DuplicateCopyApplications[0].applicant[0].email",
@@ -645,7 +654,7 @@ const applicantEmailFieldduplicate = {
 const applicantEmailFieldMortgage = {
     ...emailConfig,
     props: {
-        // value:userInfo.emailId,
+        value:userInfo.emailId,
         disabled: true
       },
     jsonPath: "MortgageApplications[0].applicant[0].email",
@@ -711,6 +720,7 @@ const getApplicantDetails = () => {
         header: applicantHeader,
         detailsContainer: getCommonContainer({
             ownerName: getTextField(applicantNameField),
+            fatherOrHusband: getTextField(fatherOrHusbandsNameOwnerShip),
             relationShip: ownerShipRelationShip,
             phone: getTextField(applicantphoneNumberField),
             deathOfAllotee: getDateField(deathField),

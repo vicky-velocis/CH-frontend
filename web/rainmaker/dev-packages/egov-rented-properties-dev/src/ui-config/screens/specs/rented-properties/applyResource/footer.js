@@ -367,7 +367,6 @@ dispatch(toggleSnackbar(true, errorMessage, "warning"));
 }
 
 const callBackForNextViolationnoticegeneration = async(state, dispatch) => {
-
   let isFormValid = true;
   let propertyIdTransit = getQueryArg(window.location.href, "propertyIdTransit");
 
@@ -384,6 +383,8 @@ const isRentHolderValid = validateFields(
   dispatch,
   "notice-violation"
 )
+
+
 let res = [];
 if(isOwnerDetailsValid && isRentHolderValid) {
   res = await applynoticegeneration(state, dispatch, "Violation",propertyIdTransit)
@@ -1343,9 +1344,9 @@ export const footer = getCommonApplyFooter({
     return {
       rightdiv: {
         uiFramework: "custom-atoms",
-        componentPath: "Container",
+        componentPath: "Div",
         props: {
-          style: { justifyContent: "flex-end", marginTop: 10 }
+          style: { textAlign: "right", display: "flex" }
         },
         children: {
           downloadMenu: {
@@ -1357,7 +1358,7 @@ export const footer = getCommonApplyFooter({
                 label: {labelName : "DOWNLOAD" , labelKey :"RP_DOWNLOAD"},
                  leftIcon: "cloud_download",
                 rightIcon: "arrow_drop_down",
-                props: { variant: "outlined", style: { height: "60px", color : "#FE7A51" }, className: "tl-download-button" },
+                props: { variant: "outlined", style: { height: "60px", color : "#FE7A51" ,marginRight: "10px"}, className: "tl-download-button" },
                 menu: downloadMenu
               }
             }

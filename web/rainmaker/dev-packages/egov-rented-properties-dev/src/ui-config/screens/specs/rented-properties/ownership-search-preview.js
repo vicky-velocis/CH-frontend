@@ -7,12 +7,12 @@ import {
 import { getQueryArg, setDocuments } from "egov-ui-framework/ui-utils/commons";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getOwnershipSearchResults } from "../../../../ui-utils/commons";
-import { getReviewApplicantDetails, getreviewPropertyAddressDetails,getReviewPropertyDetailsWithoutAllotmentNumber,getreviewChargesDetails } from "./applyResource/review-applications";
+import { getReviewApplicantDetails,getReviewPropertyDetailsWithoutAllotmentNumber,getreviewChargesDetails } from "./applyResource/review-applications";
 import { getReviewDocuments } from "./applyResource/review-documents";
 import {downloadPrintContainer} from "./applyResource/footer"
 import { footerReview,footerReviewTop } from "./applyResource/reviewFooter";
 import { set } from "lodash";
-import { getFeesEstimateCard, createEstimateData, getButtonVisibility } from "../utils";
+import { getFeesEstimateCard, createEstimateData } from "../utils";
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { BILLING_BUSINESS_SERVICE_OT, WORKFLOW_BUSINESS_SERVICE_OT } from "../../../../ui-constants";
 import {applicationNumber} from './apply'
@@ -73,8 +73,11 @@ const tenantId = getQueryArg(window.location.href, "tenantId")
     ownershipTransferDocuments = ownershipTransferDocuments.filter(item => !!item.active)
     Owners = [{...Owners[0], ownerDetails: {...Owners[0].ownerDetails, ownershipTransferDocuments}}]
     const status = Owners[0].applicationState
-    Owners = [{...Owners[0], property: {...Owners[0].property, rentSummary:{...Owners[0].property.rentSummary , totalDue : (Owners[0].property.rentSummary.balancePrincipal + 
-    Owners[0].property.rentSummary.balanceInterest).toFixed(2)}}}]
+    if(Owners[0].property.rentSummary){
+      Owners = [{...Owners[0], property: {...Owners[0].property, rentSummary:{...Owners[0].property.rentSummary , totalDue : (Owners[0].property.rentSummary.balancePrincipal + 
+        Owners[0].property.rentSummary.balanceInterest).toFixed(2)}}}]
+    }
+  
     dispatch(prepareFinalObject("Owners", Owners))
     dispatch(
       prepareFinalObject(

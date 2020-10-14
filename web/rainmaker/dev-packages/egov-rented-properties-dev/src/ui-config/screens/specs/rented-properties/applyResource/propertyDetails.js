@@ -184,7 +184,7 @@ const duplicateCopyTransitField = {
           }
         }
       },
-      beforeFieldChange: (action, state, dispatch) => {
+      afterFieldChange: (action, state, dispatch) => {
         dispatch(
             prepareFinalObject(
               "DuplicateCopyApplications[0].property.id",
@@ -193,13 +193,37 @@ const duplicateCopyTransitField = {
           )
         dispatch(
             prepareFinalObject(
-              "Properties[0].colony",
+              "DuplicateCopyApplications[0].property.pincode",
               ""
             )
           )
           dispatch(
             prepareFinalObject(
-              "Properties[0].pincode",
+              "DuplicateCopyApplications[0].property.colony",
+              ""
+            )
+          )
+          dispatch(
+            prepareFinalObject(
+              "DuplicateCopyApplications[0].applicant[0].name",
+              ""
+            )
+          )
+          dispatch(
+            prepareFinalObject(
+              "DuplicateCopyApplications[0].applicant[0].guardian",
+              ""
+            )
+          )
+          dispatch(
+            prepareFinalObject(
+              "DuplicateCopyApplications[0].applicant[0].relationship",
+              ""
+            )
+          )
+          dispatch(
+            prepareFinalObject(
+              "DuplicateCopyApplications[0].applicant[0].adhaarNumber",
               ""
             )
           )
@@ -258,8 +282,8 @@ const transitNumberField = {
 
   const areaField = {
     label: {
-        labelName: "Area of the property",
-        labelKey: "RP_AREA_PROPERTY_LABEL"
+        labelName: "Area of the property (in Sq.yd)",
+        labelKey: "RP_AREA_PROPERTY_LABEL_IN_UNITS"
     },
     placeholder: {
         labelName: "Enter Area of the property",
