@@ -382,7 +382,7 @@ export const headerDiv = {
       moduleName: "egov-estate",
       componentPath: "MultipleDocumentsContainer",
       props: {
-        sourceJsonPath: `Properties[0].propertyDetails.owners[0].ownerDetails.modeOfTransfer`,
+        sourceJsonPath: `Properties[0].propertyDetails.owners[0].ownerDetails.modeOfTransferArr`,
         btnhide: false,
         businessService:"EST",
         className: "review-documents",
