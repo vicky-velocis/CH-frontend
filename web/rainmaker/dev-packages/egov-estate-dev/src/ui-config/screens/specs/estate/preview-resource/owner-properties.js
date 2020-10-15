@@ -63,6 +63,11 @@ import {
     labelName: "Relationship",
     labelKey: "ES_RELATIONSHIP_LABEL"
   };
+
+  const dobLabel = {
+    labelName: "Date of Birth",
+    labelKey: "ES_DOB_LABEL"
+  };
   
   const addressField = {
    
@@ -294,6 +299,12 @@ export const headerDiv = {
         relationship:getLabelWithValue(
             getRelationshipLabel, {
               jsonPath: `Properties[0].propertyDetails.owners[${index}].ownerDetails.guardianRelation`
+            }
+          ),
+        dob:getLabelWithValue(
+            dobLabel, {
+              jsonPath: `Properties[0].propertyDetails.owners[${index}].ownerDetails.dob`,
+              callBack: convertEpochToDate
             }
           ),
         address: getLabelWithValue(
