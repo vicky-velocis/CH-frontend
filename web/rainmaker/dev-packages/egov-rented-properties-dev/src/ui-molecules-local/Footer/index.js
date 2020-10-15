@@ -144,8 +144,6 @@ class Footer extends React.Component {
         const applicationstate= get(state.screenConfiguration.preparedFinalObject,"Owners[0].applicationState")
         const duplicateState=get(state.screenConfiguration.preparedFinalObject,"DuplicateCopyApplications[0].state")
         const { buttonLabel, moduleName } = item;
-       // if((applicationstate==="OT_PENDINGCLAPPROVAL"||duplicateState==="DC_PENDINGCLAPPROVAL")&&item.buttonLabel==="REJECT"){
-          // item.buttonLabel= "FORWARD_REJECT"
           return {
             labelName: { buttonLabel },
             labelKey: ((applicationstate==="OT_PENDINGCLAPPROVAL"||duplicateState==="DC_PENDINGCLAPPROVAL")&&buttonLabel==="REJECT")?`WF_${moduleName.toUpperCase()}_FORWARD_${buttonLabel}`:`WF_${moduleName.toUpperCase()}_${buttonLabel}`,
@@ -155,18 +153,6 @@ class Footer extends React.Component {
               this.openActionDialog(item);
             }
           };
-        //}
-       //else{
-        // return {
-        //   labelName: { buttonLabel },
-        //   labelKey: `WF_${moduleName.toUpperCase()}_${buttonLabel}`,
-        //   link: moduleName === "MasterRP" && buttonLabel === "MODIFY" ? 
-        //     () => setRoute(`/rented-properties/apply?transitNumber=${transitNumber}&tenantId=${tenant}`)
-        //     : () => {
-        //     this.openActionDialog(item);
-        //   }
-        // };
-     // }
       }); 
      
     const buttonItems = {
