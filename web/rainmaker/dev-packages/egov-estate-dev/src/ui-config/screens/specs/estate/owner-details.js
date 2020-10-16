@@ -196,6 +196,8 @@ const callBackForSave = async (state, dispatch) => {
         state.screenConfiguration.preparedFinalObject,
         "Properties"
       )
+
+      properties = [{...properties[0], action: ""}];
       const response = await httpRequest(
         "post",
         "/est-services/property-master/_update",
