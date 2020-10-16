@@ -31,7 +31,7 @@ import {searchResults} from './searchResource/searchResults';
 import {
   getUserInfo
 } from "egov-ui-kit/utils/localStorageUtils";
-import { WF_PROPERTY_MASTER } from "../../../../ui-constants";
+import { WF_ALLOTMENT_OF_SITE } from "../../../../ui-constants";
 
 const userInfo = JSON.parse(getUserInfo());
 const {
@@ -54,12 +54,12 @@ const estateSearchAndResult = {
       },
       {
         key: "businessServices",
-        value: WF_PROPERTY_MASTER
+        value: WF_ALLOTMENT_OF_SITE
       }
     ]
     dispatch(prepareFinalObject("searchScreen", {}))
       searchApiCall(state, dispatch, true)
-      getStatusList( state, dispatch, queryObject, "search", "components.div.children.estateApplication.children.cardContent.children.colonyContainer.children.status", WF_PROPERTY_MASTER)
+      getStatusList( state, dispatch, queryObject, "search", "components.div.children.estateApplication.children.cardContent.children.colonyContainer.children.status", WF_ALLOTMENT_OF_SITE)
     return action
   },
   components: {
