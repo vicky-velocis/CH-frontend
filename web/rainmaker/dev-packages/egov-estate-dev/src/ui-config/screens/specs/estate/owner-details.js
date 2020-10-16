@@ -20,17 +20,20 @@ import {
 } from "egov-ui-kit/utils/localStorageUtils";
 import get from "lodash/get";
 import {
-  validateFields
+  validateFields,
 } from "../utils";
 import {
   httpRequest
 } from "../../../../ui-utils";
+import {
+  ESTATE_APPROVED_STATE
+} from "../../../../ui-constants"
 
 const userInfo = JSON.parse(getUserInfo());
 const {
     roles = []
 } = userInfo
-const findItem = roles.find(item => item.code === "ES_EB_DISPATCH_OFFICER");
+const findItem = roles.find(item => item.code === "ES_EB_SECTION_OFFICER");
 
 let fileNumber = getQueryArg(window.location.href, "fileNumber");
 
@@ -102,10 +105,10 @@ export const searchResults = async (action, state, dispatch, fileNumber) => {
       // properties[0].propertyDetails.owners.forEach((element,index) => { 
       await asyncForEach(properties[0].propertyDetails.owners, async (element,index) => {
         if (!!element.ownerDetails.isCurrentOwner) {
-          let ownerdetailsComponent = getOwnerDetails(false, index, (!!findItem && applicationState == "ES_PM_APPROVED"));
+          let ownerdetailsComponent = getOwnerDetails(false, index, (!!findItem && applicationState == ESTATE_APPROVED_STATE));
           let allotmentDetailsComponent = getAllotmentDetails(false,index);
 
-          if (applicationState == "ES_PM_APPROVED") {
+          if (applicationState == ESTATE_APPROVED_STATE) {
             let ownerId = element.id;
             let queryObject = [
               { key: "ownerId", value: ownerId }
@@ -380,8 +383,8 @@ const EstateOwnerDetails = {
             },
             type: "array",
           },
-          ownerContainer,
-          entityContainer
+          entityContainer,
+          ownerContainer
       }
     },
     adhocDialog: {
