@@ -11,13 +11,13 @@ import {
   import { poApprovalInfo } from "./createPurchaseOrderResource/poApprovalInfo";
   import {totalPOValue} from './createPurchaseOrderResource/totalPOValue';
   import commonConfig from '../../../../config/common';
-
+  import set from "lodash/set";
   import get from "lodash/get";
   import map from "lodash/map";
   import { httpRequest } from "../../../../ui-utils";
   import { prepareFinalObject, handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
   import { getSearchResults } from "../../../../ui-utils/commons";  
-import { getMaterialIndentSearchResults } from "../../../../ui-utils/storecommonsapi";
+  import { getMaterialIndentSearchResults } from "../../../../ui-utils/storecommonsapi";
   import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
   export const stepsData = [
     { labelName: "Purchase Order", labelKey: "STORE_PO_HEADER" },
@@ -195,6 +195,16 @@ import { getMaterialIndentSearchResults } from "../../../../ui-utils/storecommon
       const poNumber = getQueryArg(window.location.href, "poNumber");
       if(!step && !poNumber){
         dispatch(prepareFinalObject("purchaseOrders[0]",null));
+        // set(
+        //   action.screenConfig,
+        //   "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.supplier.props.style",
+        //   { display: "none" }
+        // );
+        // set(
+        //   action.screenConfig,
+        //   "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.supplier.props",
+        //   { disabled: true }
+        // );
       }
       if(indentNumber){     
           dispatch(prepareFinalObject("purchaseOrders[0].purchaseType", "Indent"));   
