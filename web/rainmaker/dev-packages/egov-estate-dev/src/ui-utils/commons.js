@@ -32,8 +32,8 @@ try {
     "/est-services/application/states",
     ""
   );
-  const {Status} = response
-  const data = Status.map(item => ({label: item, code: item}))
+  const {States} = response
+  const data = States.map(item => ({label: item, code: item}))
   dispatch(handleField(screenKey, componentJsonPath, "props.data", data))
 } catch (error) {
   console.log(error)

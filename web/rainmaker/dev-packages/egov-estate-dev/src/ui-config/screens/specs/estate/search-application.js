@@ -34,7 +34,7 @@ const estateSearchAndResult = {
     beforeInitScreen: (action, state, dispatch) => {
         dispatch(prepareFinalObject("searchScreen", {}))
         searchApplicationApiCall(state, dispatch, true)
-        getApplicationStatusList({state, dispatch, action, screenKey: "search-application", componentJsonPath: "components.div.children.estateApplicationSearch.children.cardContent.children.colonyContainer.children.status"})
+        getApplicationStatusList({state, dispatch, action, screenKey: "search-application", componentJsonPath: "components.div.children.estateApplicationSearch.children.cardContent.children.fileStatusContainer.children.status"})
         return action
     },
     components: {
