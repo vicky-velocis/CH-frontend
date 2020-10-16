@@ -405,7 +405,7 @@ return
     
     if((applicationState==="OT_PENDINGCLAPPROVAL"||duplicateCopyApplicationState==="DC_PENDINGCLAPPROVAL")&&buttonLabel==="REJECT"){
       dialogHeader.labelKey="RP_WF_FORWARD_REJECT_APPLICATION"
-      dialogHeader.labelName="Forward To SA"
+      dialogHeader.labelName="Forward To SA application"
      }
     return (
       <Dialog
