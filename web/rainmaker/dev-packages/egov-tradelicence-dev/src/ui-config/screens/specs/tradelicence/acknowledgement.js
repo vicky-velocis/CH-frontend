@@ -656,7 +656,7 @@ const getAcknowledgementCard = (
             body: {
               labelName:
                 "A notification regarding payment failure has been sent to the trade owner and applicant.",
-              labelKey: "TL_PAYMENT_NOTIFICATION"
+              labelKey: "TL_PAYMENT_FAIL_MESSAGE"
             }
           })
         }
