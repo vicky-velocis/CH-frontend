@@ -12,9 +12,8 @@ import {
   toggleSnackbar
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getSearchResults, getSearchApplicationsResults } from "../../../../ui-utils/commons";
-import { getOwnerDetails,getAllotmentDetails, getModeOfTransferDetailsForApprovedProperty, getCompanyDetails } from "./preview-resource/owner-properties";
+import { getOwnerDetails,getAllotmentDetails, getModeOfTransferDetailsForApprovedProperty, getCompanyDetails, getFirmDetails } from "./preview-resource/owner-properties";
 import {onTabChange, headerrow, tabs} from './search-preview'
-import { firmDetails } from "./applyResource/entityDetails";
 import { mobileNumberField } from "./applyResource/ownerDetails";
 import {
   getUserInfo
@@ -155,7 +154,9 @@ export const searchResults = async (action, state, dispatch, fileNumber) => {
         "owner-details",
         "components.div.children.entityContainer",
         "children",
-        entityDetails
+        {
+          entityDetails: getCommonCard({entityDetails})
+        }
       )
     );
 
