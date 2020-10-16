@@ -1,6 +1,7 @@
 import Grid from "@material-ui/core/Grid";
 import Icon from "@material-ui/core/Icon";
 import { withStyles } from "@material-ui/core/styles";
+import { Tabs, Card, TextField,Button } from "components";
 import {
     LabelContainer,
     TextFieldContainer,
@@ -17,6 +18,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import Label from "egov-ui-kit/utils/translationNode";
 import  UploadSingleFile  from "../UploadSingleFile";
+
+
 import "./index.css";
 
 // import { httpRequest } from "egov-ui-kit/utils/api";
@@ -242,6 +245,9 @@ class DocumentList extends Component {
         let { uploadedDocIndex } = this.state;
         let documentMap = {};
         const { prepareFinalObject, documentsUploadRedux, fetchUploadedDoc, userInfo} = this.props;
+
+        let pdfDocName =  file.name
+
         console.log("file--,file--",file),
         console.log("documentName--",file.name)
         console.log("filestoreId--",fileStoreId)
@@ -254,6 +260,11 @@ class DocumentList extends Component {
         this.props.prepareFinalObject(
             "documentMap",
             documentMap
+        );
+
+        this.props.prepareFinalObject(
+            "pdfDocName",
+            pdfDocName
         );
 
         this.setState({
@@ -341,6 +352,7 @@ console.log("getUploadCard-documentsUploadRedux--",documentsUploadRedux)
 // color: black;
 // font-weight: 500;
 <div>
+
 <Label
 label="BK_MYBK_REQUIRED_DOC_HEADING"
 color="#000000"
@@ -349,14 +361,17 @@ labelClassName={"myDOC"}
 />
 <Label label="BK_MYBK_DOCUMENT_VALIDATION_MSG"
   />
+  
   {/* BK_MYBK_DOCUMENT_VALIDATION_MSG ==
   Only one file can be uploaded for one document. If multiple files need to be uploaded then please combine all files in a pdf and then upload
   BK_MYBK_REQUIRED_DOC_HEADING ==
   Required Documents
   */}
 
+
             <Grid container={true}>
                 <Grid item={true} xs={2} sm={1} className={classes.iconDiv}>
+               
                     {documentsUploadRedux[key] &&
                        documentsUploadRedux[key].documents ? (
                             <div className={classes.documentSuccess}>
@@ -369,6 +384,7 @@ labelClassName={"myDOC"}
                                 <span>{key + 1}</span>
                             </div>
                         )}
+                 
                 </Grid>
                 <Grid
                     item={true}
@@ -411,7 +427,9 @@ labelClassName={"myDOC"}
                     sm={12}
                     md={3}
                     className={classes.fileUploadDiv}
-                >                   
+                >       
+
+
         <UploadSingleFile
                         classes={this.props.classes}
                         handleFileUpload={(e) =>
@@ -434,11 +452,13 @@ labelClassName={"myDOC"}
                         buttonLabel={this.props.buttonLabel}
 
                     />
-
                    
                 </Grid>
             </Grid>
+ 
+              
             </div>
+            
        );
     };
 
@@ -459,6 +479,10 @@ label= "Required Documents"
 />
 <Label label="Only one file can be uploaded for one document. If multiple files need to be uploaded then please combine all files in a pdf and then upload"
   /> */}
+
+<Card
+          textChildren={
+              <div>
                 {documentsList &&
                     documentsList.map((container) => {
                         return (
@@ -505,6 +529,9 @@ label= "Required Documents"
                             </div>
                         );
                     })}
+                    </div>
+                }
+                />
             </div>
         );
     }

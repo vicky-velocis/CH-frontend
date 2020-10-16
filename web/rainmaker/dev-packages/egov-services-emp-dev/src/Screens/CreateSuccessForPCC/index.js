@@ -33,7 +33,7 @@ class CreateWBTApplicationSuccess extends Component {
   }
 
   downloadApplicationFunction = async (e) => {
-    const { downloadEsamparkApp, userInfo,createPACCApplicationData} = this.props;
+    const { downloadEsamparkApp, userInfo,createPACCApplicationData,documentPDF} = this.props;
     console.log("createPACCApplicationData--this.props--",this.props)
     let applicationDetails = createPACCApplicationData ? createPACCApplicationData.data : '';
    let BookingInfo = [
@@ -74,7 +74,7 @@ class CreateWBTApplicationSuccess extends Component {
             "generatedDateTime": userInfo.createdDate
         },
         "documentDetail":{
-            "documentName": "neero_adharcard.pdf"
+            "documentName": documentPDF
         }
       }
   ]
@@ -156,8 +156,6 @@ class CreateWBTApplicationSuccess extends Component {
             onClick={this.downloadApplicationButton}
             style={{ marginRight: 18 }}
           />
-
-
           <Button
             id="resolve-success-continue"
             primary={true}
@@ -174,33 +172,19 @@ class CreateWBTApplicationSuccess extends Component {
 }
 
 
-// const mapStateToProps = state => {
-//   const { complaints, common, auth, form } = state;
-//   const { createWaterTankerApplicationData, DownloadBWTApplicationDetails,fetchSuccess, categoriesById } = complaints;
-//   const loading = !isEmpty(categoriesById)
-//   ? fetchSuccess
-//     ? false
-//     : true
-//   : true;
-//   return {
-//     createWaterTankerApplicationData, DownloadBWTApplicationDetails,loading,fetchSuccess
-//   }
-// }
-
-
 const mapStateToProps = state => {
   const { complaints, bookings,common, auth, form } = state;
   const { userInfo } = auth;
   const { updatePACCApplicationData, createPACCApplicationData,fetchSuccess, Downloadesamparkdetails} = bookings;
   const { createWaterTankerApplicationData, DownloadBWTApplicationDetails,categoriesById } = complaints;
-  let documentName = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.documentMap : "";
+  let documentPDF = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.pdfDocName : "";
   // let documentName1 = Object.keys(documentName).forEach(function (documentName) {
   //   return(
   //     documentName,
   //   console.log("keysInDocumentName--",documentName)
   //   )
   // });
-  console.log("documentName--",documentName)
+  console.log("documentName--",documentPDF)
   // console.log("documentName1--",documentName1)
   
   
@@ -212,7 +196,7 @@ const mapStateToProps = state => {
   console.log("createPACCApplicationData--123--",createPACCApplicationData)
   return {
     createWaterTankerApplicationData, DownloadBWTApplicationDetails,loading,fetchSuccess,createPACCApplicationData,
-    updatePACCApplicationData,Downloadesamparkdetails,userInfo
+    updatePACCApplicationData,Downloadesamparkdetails,userInfo,documentPDF
   }
 }
 

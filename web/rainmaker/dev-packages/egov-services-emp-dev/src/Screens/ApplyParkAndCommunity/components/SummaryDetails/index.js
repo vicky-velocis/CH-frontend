@@ -20,10 +20,14 @@ class SummaryDetails extends Component {
 
     componentDidMount = async () => {
         console.log('createPACCApplication', this.props)
-        let { createPACCApplication, userInfo } = this.props;
+        let { createPACCApplication, userInfo,documentMap } = this.props;
         let { firstName, venueType, bokingType, bookingData, email, mobileNo, surcharge, fromDate, toDate,
             utGST, cGST, GSTnumber, dimension, location, facilitationCharges, cleaningCharges, rent, houseNo, type, purpose, locality, residenials, facilationChargesSuccess} = this.props;
-        console.log('type==', bookingData, fromDate, toDate, venueType)
+       
+        let fid=documentMap?Object.keys(documentMap):""
+        let fname=documentMap?documentMap.fid:""
+        console.log("fname--",fname)
+        console.log('type==', documentMap, fid[0], toDate, venueType)
         let Booking = {
             "discount": 50,
             "bkBookingType": venueType,
@@ -40,12 +44,14 @@ class SummaryDetails extends Component {
             "bkUtgst": utGST,
             "bkCgst": cGST,
             "bkSector": locality,
+            "fname":fname,
             "bkEmail": email,
             "bkHouseNo": houseNo,
             "bkBookingPurpose": purpose,
             "bkCustomerGstNo": GSTnumber,
             "wfDocuments": [{
-                "fileStoreId": "0387281e-a040-49e7-af9d-99e9dac3a19d"
+                "fileStoreId": fid[0],
+                "fname":fname
             }],
             "tenantId": userInfo.tenantId,
             "bkAction": "OFFLINE_INITIATE",
@@ -55,7 +61,7 @@ class SummaryDetails extends Component {
 
         if (venueType == "Community Center" && bookingData && bookingData.bkFromTime) {
             Booking.timeslots = [{
-                "slot": bookingData.bkFromTime + ' - ' + bookingData.bkToTime
+                "slot": bookingData.bkFromTime + '-' + bookingData.bkToTime
             }],
                 Booking.bkDuration = "HOURLY",
                 Booking.bkFromDate = bookingData.bkFromDate,
@@ -82,9 +88,9 @@ class SummaryDetails extends Component {
 
 
     submit = e => {
-        let { updatePACCApplication, createPACCApplicationData, bookingData, venueType } = this.props;
+        let { updatePACCApplication,documentMap, createPACCApplicationData, bookingData, venueType } = this.props;
         let { data } = createPACCApplicationData;
-
+        let fid=documentMap?Object.keys(documentMap):""
         const { firstName, userInfo, email, mobileNo, surcharge, fromDate, toDate, utGST, cGST, GSTnumber, dimension, location, facilitationCharges, cleaningCharges, rent, houseNo, type, purpose, locality, residenials } = this.props;
         console.log('data in submit button', data)
         if (data) {
@@ -109,7 +115,7 @@ class SummaryDetails extends Component {
                 bkApplicationNumber: data.bkApplicationNumber,
                 bkCustomerGstNo: data.bkCustomerGstNo ? data.bkCustomerGstNo : 'NA',
                 "wfDocuments": [{
-                    "fileStoreId": "0387281e-a040-49e7-af9d-99e9dac3a19d"
+                    "fileStoreId": fid[0]
                 }],
                 "tenantId": userInfo.tenantId,
                 "bkAction": "OFFLINE_APPLY",
@@ -212,19 +218,17 @@ class SummaryDetails extends Component {
         return (
             <div>
 <div className="form-without-button-cont-generic">
-                <div classsName="container">
-                    <div className="col-xs-12">
-                        <button
+               
+                        {/* <button
                             style={{ color: "#FE7A51", border: "none", outline: "none", fontWeight: "500", float: 'right', marginRight: '50px', marginTop: '40px', background: "white" }}
                             onClick={this.firstStep}>
                             <EditIcon />
                             <h5 style={{ fontSize: "14px", marginTop: "-27px", marginBottom: "15px", marginLeft: "59px" }}>
                                 Edit
-                            {/* <h5><Label label="BK_MY_BK_EDIT_BUTTON" /></h5> */}
+                           
                     </h5>
-                        </button>
-                    </div>
-                </div>
+                        </button> */}
+                   
 
             
                 {/* <div style={{ marginLeft: "20px", paddingBottom: '5px', paddingLeft: 25 }}>
@@ -236,17 +240,16 @@ class SummaryDetails extends Component {
                         <h5><Label label="BK_TOTAL_AMOUNT" /></h5>
                         <h3 style={{ marginTop: '-8px', fontSize: '28px', color: 'black' }}><b>Rs {amount ? amount : 'NA'}</b></h3>
                     </div> */}
-                  
+                    <div classsName="container">
+                    <div className="col-xs-12">
                     <PaccFeeEstimate
                         amount={amount}
                         cGST={cGST}
-                        utGST={utGST}             
+                        utGST={utGST}      
+                        firstStep={this.firstStep}       
                     />
                    
                 {/* </div> */}
-               
-               
-
 
                 <SummaryApplicantDetail
                     firstName={firstName}
@@ -506,7 +509,7 @@ documentMap={documentMap}
 					</div> */}
                     </div>
                
-
+</div></div>
                 <Footer className="apply-wizard-footer" style={{ display: 'flex', justifyContent: 'flex-end' }} children={
                     <div className="responsive-action-button-cont">
                         <Button

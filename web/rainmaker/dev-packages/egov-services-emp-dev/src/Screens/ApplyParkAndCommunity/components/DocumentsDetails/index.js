@@ -189,38 +189,23 @@ let documentCode = [
   // }
 
   continue = (e) => {
+
+    
     let re = /\S+@\S+\.\S+/;
     let mb = /^\d{10}$/;
     e.preventDefault();
-    if ( this.props.documentMAP2 == "")
+    if ( this.props.documentMap === "Document Not Found")
      {
       this.props.toggleSnackbarAndSetText(
         true,
         {
-          labelName: "Error_Message_For_Water_tanker_Application",
-          labelKey: `BK_ERROR_MESSAGE_EMAIL_VALIDATION`,
+          labelName: "Please upload mandatory documents!",
+          labelKey: `Please upload mandatory documents!`,
         },
         "warning"
       );
-    } else if (!re.test(this.props.email)) {
-      this.props.toggleSnackbarAndSetText(
-        true,
-        {
-          labelName: "Please enter valid email address",
-          labelKey: `BK_ERROR_MESSAGE_EMAIL_VALIDATION`,
-        },
-        "warning"
-      );
-    } else if (!mb.test(this.props.mobileNo)) {
-      this.props.toggleSnackbarAndSetText(
-        true,
-        {
-          labelName: "Please enter valid mobile number",
-          labelKey: `BK_ERROR_MESSAGE_FOR_MOBILE_VALIDATION`,
-        },
-        "warning"
-      );
-    } else {
+    }  
+    else {
       this.props.nextStep();
     }
   };
@@ -291,20 +276,10 @@ let documentCode = [
 
     return (
       <div>
-  {/* <Card>
-
-<Label
-label= "Required Documents"
-/>
-
-export default connect(mapStateToProps, mapDispatchToProps)(ApplicatInfo);
-<Label label="Only one file can be uploaded for one document. If multiple files need to be uploaded then please combine all files in a pdf and then upload"
-  />
-</Card> */}
-
-
-
+        
         <div>
+        <div classsName="container">
+         <div className="col-xs-12">
         {this.state.documentsContract.length > 0 && (
           <DocumentList
             documentsList={this.state.documentsContract}
@@ -317,8 +292,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(ApplicatInfo);
             handleChange={handleChange}
           />
         )}
+ 
 </div>
 <div>
+</div>
+</div>
 <Footer className="apply-wizard-footer" style={{ display: 'flex', justifyContent: 'flex-end' }} children={
       <div className="col-sm-12 col-xs-12" style={{textAlign: 'right'}}>
       <Button
