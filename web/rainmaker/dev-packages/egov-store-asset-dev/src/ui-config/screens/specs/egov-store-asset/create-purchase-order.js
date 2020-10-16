@@ -191,7 +191,7 @@ import {
       getData(action, state, dispatch);
       let indentNumber="";
       indentNumber = getQueryArg(window.location.href, "indentNumber");
-      const step = getQueryArg(window.location.href, "step");
+      const step = getQueryArg(window.location.href, "tenantId");
       const poNumber = getQueryArg(window.location.href, "poNumber");
       if(!step && !poNumber){
         dispatch(prepareFinalObject("purchaseOrders[0]",null));
@@ -205,6 +205,7 @@ import {
         //   "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.supplier.props",
         //   { disabled: true }
         // );
+        dispatch(prepareFinalObject("purchaseOrders[0].purchaseOrderDate",new Date().toISOString().substr(0,10))); 
       }
       if(indentNumber){     
           dispatch(prepareFinalObject("purchaseOrders[0].purchaseType", "Indent"));   
@@ -265,6 +266,7 @@ import {
                         })
                   }
                   else{
+                    
                     dispatch(
                       handleField(`create-purchase-order`,
                    // state.screenConfiguration.screenConfig["create-purchase-order"],
@@ -273,8 +275,10 @@ import {
                         { max: new Date().toISOString().slice(0, 10)}
                       )
                     ); 
+                   
 
                   }
+                 
                   dispatch(
                     handleField(`create-purchase-order`,
                  // state.screenConfiguration.screenConfig["create-purchase-order"],
@@ -284,7 +288,8 @@ import {
                         max: new Date().toISOString().slice(0, 10)}
                     )
                   ); 
-                  dispatch(prepareFinalObject("purchaseOrders[0].purchaseOrderDate",new Date().toISOString().substr(0,10)));  
+                      
+                   
                 dispatch(prepareFinalObject("searchMaster.materialNames", materialNames));  
                 if(state.screenConfiguration.preparedFinalObject.searchMaster && state.screenConfiguration.preparedFinalObject.searchMaster.storeNames){
                   const {storeNames} = state.screenConfiguration.preparedFinalObject.searchMaster;
