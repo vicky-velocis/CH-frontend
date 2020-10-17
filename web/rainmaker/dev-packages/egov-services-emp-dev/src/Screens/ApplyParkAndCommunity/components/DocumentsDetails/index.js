@@ -331,7 +331,7 @@ const mapStateToProps = (state) => {
   let documentMAP2 = documentMap ? documentMap.documentMap:" "
   return {
     documentMap,
-    documentMAP2
+    documentMAP2,
   };
 };
 const mapDispatchToProps = (dispatch) => {

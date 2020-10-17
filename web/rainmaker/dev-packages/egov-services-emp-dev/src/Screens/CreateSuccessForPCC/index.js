@@ -5,12 +5,6 @@ import SuccessMessageForPCC from "../../modules/SuccessMessageForPCC";
 import { connect } from "react-redux";
 import { createWaterTankerApplication, downloadBWTApplication } from "../../redux/bookings/actions";
 import jp from "jsonpath";
-// import {
-// 	getQueryArg,
-// 	setBusinessServiceDataToLocalStorage,
-// 	getFileUrlFromAPI,
-// 	setDocuments
-// } from "egov-ui-framework/ui-utils/commons";
 import { getDurationDate, getFileUrlFromAPI} from '../../modules/commonFunction'
 import "./index.css";
 import { SortDialog, Screen } from "modules/common";
@@ -33,9 +27,11 @@ class CreateWBTApplicationSuccess extends Component {
   }
 
   downloadApplicationFunction = async (e) => {
-    const { downloadEsamparkApp, userInfo,createPACCApplicationData,documentPDF} = this.props;
+    const { downloadEsamparkApp, userInfo,createPACCApplicationData,documentMap} = this.props;
     console.log("createPACCApplicationData--this.props--",this.props)
     let applicationDetails = createPACCApplicationData ? createPACCApplicationData.data : '';
+    let fdocname = Object.entries(documentMap)[0][1]
+    console.log("fname--",fdocname)
    let BookingInfo = [
       {
           "applicantDetail": {
@@ -74,7 +70,7 @@ class CreateWBTApplicationSuccess extends Component {
             "generatedDateTime": userInfo.createdDate
         },
         "documentDetail":{
-            "documentName": documentPDF
+            "documentName": fdocname
         }
       }
   ]
@@ -177,26 +173,17 @@ const mapStateToProps = state => {
   const { userInfo } = auth;
   const { updatePACCApplicationData, createPACCApplicationData,fetchSuccess, Downloadesamparkdetails} = bookings;
   const { createWaterTankerApplicationData, DownloadBWTApplicationDetails,categoriesById } = complaints;
-  let documentPDF = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.pdfDocName : "";
-  // let documentName1 = Object.keys(documentName).forEach(function (documentName) {
-  //   return(
-  //     documentName,
-  //   console.log("keysInDocumentName--",documentName)
-  //   )
-  // });
-  console.log("documentName--",documentPDF)
-  // console.log("documentName1--",documentName1)
-  
-  
+  let documentMap = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.documentMap : "";
   const loading = !isEmpty(createPACCApplicationData)
   ? fetchSuccess
     ? false
     : true
   : true;
+
   console.log("createPACCApplicationData--123--",createPACCApplicationData)
   return {
     createWaterTankerApplicationData, DownloadBWTApplicationDetails,loading,fetchSuccess,createPACCApplicationData,
-    updatePACCApplicationData,Downloadesamparkdetails,userInfo,documentPDF
+    updatePACCApplicationData,Downloadesamparkdetails,userInfo,documentMap
   }
 }
 

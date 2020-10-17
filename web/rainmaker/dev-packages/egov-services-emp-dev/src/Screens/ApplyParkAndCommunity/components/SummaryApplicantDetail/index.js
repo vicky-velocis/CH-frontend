@@ -6,15 +6,7 @@ import { connect } from "react-redux";
 import "./index.css";
 
 class CGBookingDetails extends Component {
-//   convertEpochToDate = (dateEpoch) => {
-//     const dateFromApi = new Date(dateEpoch);
-//     let month = dateFromApi.getMonth() + 1;
-//     let day = dateFromApi.getDate();
-//     let year = dateFromApi.getFullYear();
-//     month = (month > 9 ? "" : "0") + month;
-//     day = (day > 9 ? "" : "0") + day;
-//     return `${day}-${month}-${year}`;
-//   };
+
 
   render() {
     const { firstName, email, mobileNo } = this.props;

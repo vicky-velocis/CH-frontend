@@ -206,9 +206,9 @@ class DocumentList extends Component {
                             oldDocType != docType.code ||
                             oldDocCode != card.name
                         ) {
-                            let oldDocumentData;
+                            // let oldDocumentData;
                             // if (Object.keys(documentsUploadReduxOld).length > 0) {
-                            //     oldDocumentData = {     conformed by sumit sir
+                            //     oldDocumentData = {    
                             //         documents: [documentsUploadReduxOld.documents[index]],
                             //     };
                             // }
@@ -245,9 +245,6 @@ class DocumentList extends Component {
         let { uploadedDocIndex } = this.state;
         let documentMap = {};
         const { prepareFinalObject, documentsUploadRedux, fetchUploadedDoc, userInfo} = this.props;
-
-        let pdfDocName =  file.name
-
         console.log("file--,file--",file),
         console.log("documentName--",file.name)
         console.log("filestoreId--",fileStoreId)
@@ -260,11 +257,6 @@ class DocumentList extends Component {
         this.props.prepareFinalObject(
             "documentMap",
             documentMap
-        );
-
-        this.props.prepareFinalObject(
-            "pdfDocName",
-            pdfDocName
         );
 
         this.setState({
@@ -345,12 +337,6 @@ console.log("getUploadCard-documentsUploadRedux--",documentsUploadRedux)
         console.log(jsonPath)
         return (
             
-// <h2>{this.state.documentsUploadRedux}</h2>  font-size: 21px;   color: black;
-
-// font-size: 17px;
-// padding-top: 24px;
-// color: black;
-// font-weight: 500;
 <div>
 
 <Label
@@ -362,13 +348,6 @@ labelClassName={"myDOC"}
 <Label label="BK_MYBK_DOCUMENT_VALIDATION_MSG"
   />
   
-  {/* BK_MYBK_DOCUMENT_VALIDATION_MSG ==
-  Only one file can be uploaded for one document. If multiple files need to be uploaded then please combine all files in a pdf and then upload
-  BK_MYBK_REQUIRED_DOC_HEADING ==
-  Required Documents
-  */}
-
-
             <Grid container={true}>
                 <Grid item={true} xs={2} sm={1} className={classes.iconDiv}>
                
@@ -565,14 +544,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         prepareFinalObject: (jsonPath, value) =>
-            dispatch(prepareFinalObject(jsonPath, value)),
-           // UploadDocComplete: criteria => dispatch(UploadDocComplete(criteria)), 
+            dispatch(prepareFinalObject(jsonPath, value)), 
     };
 };
-
-// export default withStyles(themeStyles)(
-//     connect(mapStateToProps, mapDispatchToProps)(DocumentList)
-// );
 
 export default withStyles(themeStyles)(
     connect(
