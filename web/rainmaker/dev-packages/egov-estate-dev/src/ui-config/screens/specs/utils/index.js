@@ -130,6 +130,7 @@ export const getFeesEstimateCard = props => {
 
 export const getButtonVisibility = (status, button) => {
   if (status === "ES_PENDING_PAYMENT" && button === "PENDINGPAYMENT") return true;
+  if ((status === "ES_PENDING_CITIZEN_TEMPLATE_SUBMISSION" || status === "ES_PENDING_CITIZEN_NOTICE_DOCUMENTS") && button === "UPLOAD_DOCUMENTS") return true
   return false;
 };
 
@@ -1073,7 +1074,7 @@ const isApplicationPaid = (currentStatus, workflowCode) => {
     const tlBusinessService = JSON.parse(localStorageGet("businessServiceData")).filter(item => item.businessService === workflowCode)
     const states = tlBusinessService && tlBusinessService.length > 0 && tlBusinessService[0].states;
     for (var i = 0; i < states.length; i++) {
-      if (states[i].state === currentStatus) {
+      if (states[i].applicationStatus === currentStatus) {
         break;
       }
       if (
