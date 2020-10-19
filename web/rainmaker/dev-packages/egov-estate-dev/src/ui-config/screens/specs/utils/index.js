@@ -715,6 +715,15 @@ let queryStr = []
         
       ]
       break;
+
+      case 'PatnershipDeed':  
+          queryStr = [{
+            key: "key",
+            value: `private-limited-company`
+          }
+          
+        ]
+    break;
     
       case 'Mortgage':
         let mortgageType = Applications[0].applicationDetails.mortgageType;
@@ -747,6 +756,7 @@ let queryStr = []
         }
       ]
       break;
+      
   }
   queryStr[1] = {
     key: "tenantId",
@@ -885,6 +895,14 @@ export const downloadNotice = (Applications, applicationType, mode = 'download')
         }
       ]
       break;
+
+      case 'NDC':
+        queryStr = [{
+            key: "key",
+            value: `est-ndc-who`
+          }
+        ]
+        break;
   }
     queryStr[1] = {
       key: "tenantId",
