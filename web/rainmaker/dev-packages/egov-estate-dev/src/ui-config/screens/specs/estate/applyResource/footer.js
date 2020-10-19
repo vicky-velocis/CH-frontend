@@ -112,7 +112,7 @@ const callBackForNext = async (state, dispatch) => {
 
   if (activeStep === AUCTION_DETAILS_STEP) {
     const isAuctionValid = validateFields(
-      "components.div.children.formwizardSecondStep.children.AllotmentAuctionDetails.children.cardContent.children.detailsContainer.children",
+      "components.div.children.formwizardSecondStep.children.AllotmentAuctionDetails.children.cardContent.children.detailsContainer.children.cardContent.children.auctionCard.children",
       state,
       dispatch,
       "apply"
