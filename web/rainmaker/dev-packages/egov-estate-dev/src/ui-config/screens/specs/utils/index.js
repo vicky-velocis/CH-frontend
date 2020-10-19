@@ -1572,5 +1572,49 @@ export const _getPattern = (type) => {
         return /^[+-]?\d+(\.\d+)?$/i;
     case "share":
       return /^[+-]?\d{1,5}(\.\d{1,2})?$/i;
+    case "areaOfProperty":
+      return /^[+-]?\d{1,15}(\.\d{1,2})?$/i;
+    case "alphaNumeric":
+      return /^[a-zA-Z0-9]{1,100}$/i;
+    case "fileNumber":
+      return /^[a-zA-Z0-9]{1,50}$/i;
   }
+}
+
+export const displayDefaultErr = (componentJsonpath, dispatch, screenName) => {
+  dispatch(
+      handleField(
+         screenName,
+         componentJsonpath,
+          "errorMessage",
+          "ERR_DEFAULT_INPUT_FIELD_MSG"
+      )
+  )
+  dispatch(
+      handleField(
+          screenName,
+          componentJsonpath,
+          "props.errorMessage",
+          "ERR_DEFAULT_INPUT_FIELD_MSG"
+      )
+  )
+}
+
+export const displayMaxLengthErr = (componentJsonpath, dispatch, errMsg, screenName) => {
+  dispatch(
+      handleField(
+          screenName,
+          componentJsonpath,
+          "errorMessage",
+          errMsg
+      )
+  )
+  dispatch(
+      handleField(
+          screenName,
+          componentJsonpath,
+          "props.errorMessage",
+          errMsg
+      )
+  )
 }
