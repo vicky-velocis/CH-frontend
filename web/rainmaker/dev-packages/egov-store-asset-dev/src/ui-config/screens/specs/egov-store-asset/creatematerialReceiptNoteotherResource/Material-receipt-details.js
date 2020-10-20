@@ -84,7 +84,7 @@ import {
         materialReceiptCardContainer: getCommonContainer(
           {
             PONo: {
-              ...getSelectField({
+              ...getTextField({
                 label: {
                   labelName: "PO No",
                   labelKey: "STORE_MATERIAL_RECEIPT_PO_NUMBER"
@@ -96,95 +96,10 @@ import {
                 required: true,  
                 errorMessage:"STORE_VALIDATION_PURCHASE_OREDER_NUMBER",             
                 jsonPath: "materialReceipt[0].receiptDetails[0].purchaseOrderDetail.purchaseOrderNumber",
-                sourceJsonPath: "purchaseOrder.purchaseOrders",
-                props: {
-                  optionValue: "purchaseOrderNumber",
-                  optionLabel: "purchaseOrderNumber",
-                  // optionValue: "id",
-                  // optionLabel: "id",
-                },
+               // sourceJsonPath: "purchaseOrder.purchaseOrders",
+               
               }),
-              beforeFieldChange: (action, state, dispatch) => {
-                let cardIndex = action.componentJsonpath.split("items[")[1].split("]")[0];
-                let purchaseOrder = get(
-                  state.screenConfiguration.preparedFinalObject,
-                  `purchaseOrder.purchaseOrders`,
-                  []
-                ); 
-                purchaseOrder =  purchaseOrder.filter(x=> x.purchaseOrderNumber === action.value) 
-                //if(purchaseOrder && purchaseOrder[0])  
-                //dispatch(prepareFinalObject("materialReceipt[0].receiptDetails[0].purchaseOrderDetail.name",purchaseOrder[0].purchaseOrderNumber));
-                //set material dropdown based on po selection
-                let material=[];
-                let purchaseOrderDetails =get(
-                  purchaseOrder[0],
-                  `purchaseOrderDetails`,
-                  []
-                );
-                for (let index = 0; index < purchaseOrderDetails.length; index++) {
-                  const element = purchaseOrderDetails[index];
-                  const mrnNumber = getQueryArg(window.location.href, "mrnNumber");
-                  if(mrnNumber)
-                  {
-                    material.push( element.material)
-
-                  }
-                  else{
-                    if((element.orderQuantity-element.receivedQuantity)>0)
-                    {
-                      material.push( element.material)
-                    }
-
-                  }
-                 
-                
-                  //material.push( purchaseOrderDetails:element.id)
-                  
-                }
-                // set
-               // alert(purchaseOrderDetails[0].id);
-               if(purchaseOrderDetails && purchaseOrderDetails[0])
-               {
-                dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].purchaseOrderDetail.id`,purchaseOrderDetails[0].id));
-                if(material.length>0)
-                dispatch(prepareFinalObject("ReceiptMaterial",material));
-                else
-                {
-                  let LocalizationCodeValue = getLocalizationCodeValue("STORE_MATERIAL_NOT_EXIST_PO")
-                  const errorMessage = {
-                    labelName: "Material Receipt completed for selected PO Number",
-                    labelKey:   LocalizationCodeValue+' '+action.value
-                  };
-                  dispatch(toggleSnackbar(true, errorMessage, "warning"));
-                }
-                dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].uom.code`,purchaseOrderDetails[0].uom.code));
-                dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].uom.name`,purchaseOrderDetails[0].uom.name));
-                //set AvailableQty from  po purchaseOrderDetails 0 index receivedQuantity,orderQuantity,unitPrice(unitRate)
-                //
-                dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].AvailableQty`,purchaseOrderDetails[0].receivedQuantity));
-                dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].orderQuantity`,purchaseOrderDetails[0].orderQuantity));
-                dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].unitRate`,purchaseOrderDetails[0].unitPrice));
-                dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].receivedQty`,purchaseOrderDetails[0].orderQuantity));
-                dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].acceptedQty`,purchaseOrderDetails[0].orderQuantity));
-                dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].totalAcceptedvalue`,purchaseOrderDetails[0].orderQuantity * purchaseOrderDetails[0].unitPrice));
-
-                 //set total value on Qty Change
-                 let cardJsonPath =
-                 "components.div.children.formwizardSecondStep.children.materialReceiptDetail.children.cardContent.children.materialReceiptCard.props.items";
-                let pagename = `createMaterialReceiptNote`;
-                let jasonpath =  "materialReceipt[0].receiptDetails";
-                let InputQtyValue = "indentQuantity";
-                let TotalValue_ = "totalAcceptedvalue";
-                let TotalQty ="acceptedQty"
-                let Qty = GetTotalQtyValue(state,cardJsonPath,pagename,jasonpath,InputQtyValue,TotalValue_,TotalQty)
-                if(Qty && Qty[0])
-                {                
-                 dispatch(prepareFinalObject(`materialReceipt[0].totalvalue`, Qty[0].TotalValue));
-                 dispatch(prepareFinalObject(`materialReceipt[0].totalQty`, Qty[0].TotalQty)); 
-                }
-
-              }
-            }
+             
 
             },
             MaterialName: {
@@ -200,8 +115,8 @@ import {
                 required: true,
                 errorMessage:"STORE_VALIDATION_MATERIAL_NAME_SELECT",               
                 jsonPath: "materialReceipt[0].receiptDetails[0].material.code",
-                //sourceJsonPath: "createScreenMdmsData.store-asset.Material",
-                sourceJsonPath:"ReceiptMaterial",
+                sourceJsonPath: "createScreenMdmsData.store-asset.Material",
+               // sourceJsonPath:"ReceiptMaterial",
                 props: {
                   optionValue: "code",
                   optionLabel: "name",
@@ -213,7 +128,7 @@ import {
                 let cardIndex = action.componentJsonpath.split("items[")[1].split("]")[0];
                 let materials = get(
                   state.screenConfiguration.preparedFinalObject,
-                  `ReceiptMaterial`,
+                  `createScreenMdmsData.store-asset.Material`,
                   []
                 ); 
                 materials =  materials.filter(x=> x.code === action.value)   
@@ -264,107 +179,8 @@ import {
                 jsonPath: "materialReceipt[0].receiptDetails[0].uom.name"
               })
             },
-            AvailableQty: {
-              ...getTextField({
-                label: {
-                  labelName: "Available Qty",
-                  labelKey: "STORE_MATERIAL_RECEIPT_AVAILABLE_QTY"
-                },
-                placeholder: {
-                  labelName: "Available Qty",
-                  labelKey: "STORE_MATERIAL_RECEIPT_AVAILABLE_QTY_PLACEHOLDER"
-                },
-                props:{
-                  disabled:true
-                },
-                required: false,
-                visible:false,
-                pattern: getPattern("Name") || null,
-                jsonPath: "materialReceipt[0].receiptDetails[0].AvailableQty"
-              })
-            },
-            orderQuantity: {
-              ...getTextField({
-                label: {
-                  labelName: "Ordered Qty",
-                  labelKey: "STORE_MATERIAL_RECEIPT_ORDERED_QTY"
-                },
-                placeholder: {
-                  labelName: "Ordered Qty",
-                  labelKey: "STORE_MATERIAL_RECEIPT_ORDERED_QTY_PLACEHOLDER"
-                },
-                props:{
-                  disabled:true
-                },
-                required: false,
-                pattern: getPattern("Name") || null,
-                jsonPath: "materialReceipt[0].receiptDetails[0].orderQuantity"
-              })
-            },
-            // qtyasperChallan: {
-            //   ...getTextField({
-            //     label: {
-            //       labelName: "Qty. as per Challan",
-            //       labelKey: "STORE_MATERIAL_RECEIPT_QTY_AS_PER_CHALLAN"
-            //     },
-            //     placeholder: {
-            //       labelName: "Qty. as per Challan",
-            //       labelKey: "STORE_MATERIAL_RECEIPT_QTY_AS_PER_CHALLAN_PLACEHOLDER"
-            //     },
-            //     props:{
-            //       disabled:false
-            //     },
-            //     required: false,
-            //     visible:false,
-            //     pattern: getPattern("Amount") || null,
-            //     jsonPath: "materialReceipt[0].receiptDetails[0].qtyasperChallan"
-            //   }),
-            //   beforeFieldChange: (action, state, dispatch) => {
-            //       }
-            // },
-            // rateperunit: {
-            //   ...getTextField({
-            //     label: {
-            //       labelName: "Qty Rate per unit",
-            //       labelKey: "STORE_MATERIAL_RECEIPT_RATE_PER_UNIT"
-            //     },
-            //     placeholder: {
-            //       labelName: "Enter Rate per unit",
-            //       labelKey: "STORE_MATERIAL_RECEIPT_RATE_PER_UNIT_PLACEHOLDER"
-            //     },
-            //     props:{
-            //       disabled:false
-            //     },
-            //     required: false,
-            //     visible:false,
-            //     pattern: getPattern("Amount") || null,
-            //     jsonPath: "materialReceipt[0].receiptDetails[0].rateperunit"
-            //   }),
-            //   beforeFieldChange: (action, state, dispatch) => {
-            //      }
-            // },
-            QtyReceived: {
-              ...getTextField({
-                label: {
-                  labelName: "Qty. Received",
-                  labelKey: "STORE_MATERIAL_RECEIPT_QTY_RECEIVED"
-                },
-                placeholder: {
-                  labelName: "Enter Qty. Received",
-                  labelKey: "STORE_MATERIAL_RECEIPT_QTY_RECEIVED_PLACEHOLDER"
-                },
-                props:{
-                  disabled:false
-                },
-                required: true,
-                visible:false,
-                errorMessage:"STORE_VALIDATION_RECEIVED_QUANTITY",
-                pattern: getPattern("Amount") || null,
-                jsonPath: "materialReceipt[0].receiptDetails[0].receivedQty"
-              }),
-              beforeFieldChange: (action, state, dispatch) => {
-                     }
-            },
+          
+
             QtyAccepted: {
               ...getTextField({
                 label: {
@@ -380,7 +196,7 @@ import {
                 },
                 required: true,
                 errorMessage:"STORE_VALIDATION_USER_RECEIVED_QUANTITY",
-                //pattern: getPattern("Amount") || null,
+                 //pattern: getPattern("Amount") || null,
               pattern: getSTOREPattern("Quantity"),
                 jsonPath: "materialReceipt[0].receiptDetails[0].acceptedQty"
               }),
@@ -390,7 +206,7 @@ import {
                 let unitRate =   get(state.screenConfiguration.preparedFinalObject,`materialReceipt[0].receiptDetails[${cardIndex}].unitRate`,0)
                 let QtyRejected = Number(receivedQty) - Number(action.value)
                 let totalAcceptedvalue = unitRate * Number(action.value)
-                dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].qtyRejected`,QtyRejected));
+               // dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].qtyRejected`,QtyRejected));
                 dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].acceptedQty`,Number(action.value)));
                 dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].receiptDetailsAddnInfo[0].quantity`,Number(action.value)));
                 dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].userReceivedQty`,receivedQty));
@@ -399,7 +215,7 @@ import {
                  //set total value on Qty Change
                  let cardJsonPath =
                  "components.div.children.formwizardSecondStep.children.materialReceiptDetail.children.cardContent.children.materialReceiptCard.props.items";
-                let pagename = `createMaterialReceiptNote`;
+                let pagename = `createMaterialReceiptNoteother`;
                 let jasonpath =  "materialReceipt[0].receiptDetails";
                 let InputQtyValue = "indentQuantity";
                 let TotalValue_ = "totalAcceptedvalue";
@@ -445,8 +261,7 @@ import {
                 },
                 required: true,
                 errorMessage:"STORE_VALIDATION_REMARK",
-                //pattern: getPattern("Amount") || null,
-              pattern: getSTOREPattern("Quantity"),
+                pattern: getPattern("Amount") || null,
                 jsonPath: "materialReceipt[0].receiptDetails[0].totalAcceptedvalue"
               }),
               beforeFieldChange: (action, state, dispatch) => {
@@ -654,7 +469,7 @@ import {
       //Update Total value when delete any card configuration settings     
       cardtotalpropes:{
         totalIndentQty:false,
-        pagename:`createMaterialReceiptNote`,
+        pagename:`createMaterialReceiptNoteother`,
         cardJsonPath:"components.div.children.formwizardSecondStep.children.materialReceiptDetail.children.cardContent.children.materialReceiptCard.props.items",
         jasonpath:"materialReceipt[0].receiptDetails",
         InputQtyValue:"indentQuantity",
