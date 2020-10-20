@@ -88,6 +88,14 @@ const cardItems = [
     },
     icon: < FormIcon / > ,
     route: "estate-payment"
+  },
+  {
+    label: {
+      labelKey: "ES_PROPERTY_MASTER_HEADER",
+      labelName: "Property Master"
+    },
+    icon: < FormIcon / > ,
+    route: "search-building-branch"
   }
 ]
 
