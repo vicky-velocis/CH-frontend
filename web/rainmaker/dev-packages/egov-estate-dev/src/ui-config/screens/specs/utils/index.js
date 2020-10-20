@@ -1621,7 +1621,7 @@ export const displayDefaultErr = (componentJsonpath, dispatch, screenName) => {
   )
 }
 
-export const displayMaxLengthErr = (componentJsonpath, dispatch, errMsg, screenName) => {
+export const displayCustomErr = (componentJsonpath, dispatch, errMsg, screenName) => {
   dispatch(
       handleField(
           screenName,
