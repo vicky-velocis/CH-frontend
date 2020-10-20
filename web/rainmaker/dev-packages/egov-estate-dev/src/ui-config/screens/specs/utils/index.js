@@ -130,7 +130,7 @@ export const getFeesEstimateCard = props => {
 
 export const getButtonVisibility = (status, button) => {
   if (status === "ES_PENDING_PAYMENT" && button === "PENDINGPAYMENT") return true;
-  if ((status === "ES_PENDING_CITIZEN_TEMPLATE_SUBMISSION" || status === "ES_PENDING_CITIZEN_NOTICE_DOCUMENTS") && button === "UPLOAD_DOCUMENTS") return true
+  if ((status === "ES_PENDING_CITIZEN_TEMPLATE_SUBMISSION" || status === "ES_PENDING_CITIZEN_NOTICE_DOCUMENTS") && button === "UPLOAD_DOCUMENT") return true
   return false;
 };
 
