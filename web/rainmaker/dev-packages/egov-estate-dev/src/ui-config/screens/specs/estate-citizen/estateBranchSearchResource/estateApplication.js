@@ -17,6 +17,10 @@ import {
   searchApiCall
 } from "./searchFunctions";
 import get from "lodash/get";
+import {
+  displayCustomErr,
+  displayDefaultErr
+} from "../../utils";
 
 const searchBy = {
   uiFramework: "custom-containers",
@@ -122,9 +126,19 @@ export const estateApplication = getCommonCard({
           sm: 4
         },
         required: true,
-        pattern: /^[a-zA-Z0-9-]*$/i,
+        // pattern: /^[a-zA-Z0-9-]*$/i,
+        minLength: 1,
+        maxLength: 50,
         errorMessage: "ES_ERR_INVALID_FILE_NO",
-        jsonPath: "searchScreenFileNo.fileNumber"
+        jsonPath: "searchScreenFileNo.fileNumber",
+        afterFieldChange: (action, state, dispatch) => {
+          if (action.value.length > 50) {
+              displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_50", "estate-branch-property-search");
+          }
+          else {
+              displayDefaultErr(action.componentJsonpath, dispatch, "estate-branch-property-search");
+          }
+      }
       })
     }),
     siteNumberContainer: getCommonContainer({

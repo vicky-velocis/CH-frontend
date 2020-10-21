@@ -19,7 +19,11 @@ import {
 import get from "lodash/get";
 import {
   ESTATE_APPROVED_STATE
-} from "../../../../../ui-constants"
+} from "../../../../../ui-constants";
+import {
+  displayCustomErr,
+  displayDefaultErr
+} from "../../utils"
 
 const searchBy = {
   uiFramework: "custom-containers",
@@ -121,7 +125,17 @@ export const estateApplication = getCommonCard({
           sm: 4
         },
         required: true,
-        jsonPath: "searchScreenFileNo.fileNumber"
+        minLength: 1,
+        maxLength: 50,
+        jsonPath: "searchScreenFileNo.fileNumber",
+        afterFieldChange: (action, state, dispatch) => {
+          if (action.value.length > 50) {
+              displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_50", "property-search");
+          }
+          else {
+              displayDefaultErr(action.componentJsonpath, dispatch, "property-search");
+          }
+        } 
       })
     }),
     siteNumberContainer: getCommonContainer({
