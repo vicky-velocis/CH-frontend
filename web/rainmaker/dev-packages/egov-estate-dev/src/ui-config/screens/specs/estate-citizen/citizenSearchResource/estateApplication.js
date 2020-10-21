@@ -313,44 +313,64 @@ export const estateApplication = getCommonCard({
 });
 
 function resetFields(state, dispatch) {
-  dispatch(
-    handleField(
-      "property-search",
-      "components.div.children.estateApplication.children.cardContent.children.searchBoxContainer.children.fileNumberContainer.children.fileNumber",
-      "props.value",
-      ""
+  let fileNumber = get(state.screenConfiguration.preparedFinalObject, "searchScreenFileNo.fileNumber", "");
+  let category = get(state.screenConfiguration.preparedFinalObject, "searchScreenSiteNo.category", "");
+  let subCategory = get(state.screenConfiguration.preparedFinalObject, "searchScreenSiteNo.subCategory", "");
+  let siteNumber = get(state.screenConfiguration.preparedFinalObject, "searchScreenSiteNo.siteNumber", "");
+  let sectorNumber = get(state.screenConfiguration.preparedFinalObject, "searchScreenSiteNo.sectorNumber", "");
+
+  if (fileNumber) {
+    dispatch(
+      handleField(
+        "property-search",
+        "components.div.children.estateApplication.children.cardContent.children.searchBoxContainer.children.fileNumberContainer.children.fileNumber",
+        "props.value",
+        ""
+      )
     )
-  )
-  dispatch(
-    handleField(
-      "property-search",
-      "components.div.children.estateApplication.children.cardContent.children.searchBoxContainer.children.siteNumberContainer.children.category",
-      "props.value",
-      ""
+  }
+
+  if (category) {
+    dispatch(
+      handleField(
+        "property-search",
+        "components.div.children.estateApplication.children.cardContent.children.searchBoxContainer.children.siteNumberContainer.children.category",
+        "props.value",
+        ""
+      )
     )
-  )
-  dispatch(
-    handleField(
-      "property-search",
-      "components.div.children.estateApplication.children.cardContent.children.searchBoxContainer.children.siteNumberContainer.children.subCategory",
-      "props.value",
-      ""
+  }
+
+  if (subCategory) {
+    dispatch(
+      handleField(
+        "property-search",
+        "components.div.children.estateApplication.children.cardContent.children.searchBoxContainer.children.siteNumberContainer.children.subCategory",
+        "props.value",
+        ""
+      )
     )
-  )
-  dispatch(
-    handleField(
-      "property-search",
-      "components.div.children.estateApplication.children.cardContent.children.searchBoxContainer.children.siteNumberContainer.children.siteNumber",
-      "props.value",
-      ""
+  }
+
+  if (siteNumber) {
+    dispatch(
+      handleField(
+        "property-search",
+        "components.div.children.estateApplication.children.cardContent.children.searchBoxContainer.children.siteNumberContainer.children.siteNumber",
+        "props.value",
+        ""
+      )
     )
-  )
-  dispatch(
-    handleField(
-      "property-search",
-      "components.div.children.estateApplication.children.cardContent.children.searchBoxContainer.children.siteNumberContainer.children.sectorNumber",
-      "props.value",
-      ""
+  }
+
+  if (sectorNumber) {
+    dispatch(
+      handleField(
+        "property-search",
+        "components.div.children.estateApplication.children.cardContent.children.searchBoxContainer.children.siteNumberContainer.children.sectorNumber",
+        "props.value",
+        ""
+      )
     )
-  )
+  }
 }
