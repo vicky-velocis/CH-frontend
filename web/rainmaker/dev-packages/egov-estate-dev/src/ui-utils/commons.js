@@ -434,7 +434,7 @@ export const setXLSTableData = async({demands, payments ,componentJsonPath, scre
   })
   
   data  = data.map(item => ({
-    [ES_MONTH]:  !!item.demandDate && moment(new Date(item.demandDate)).format("MMM") || '',
+    [ES_MONTH]:  !!item.demandDate && moment(new Date(item.demandDate)).format("MMM YYYY") || '',
     [ES_RENT_DUE]: !!item.rent && item.rent.toFixed(2) || ' ',
     [ES_RENT_RECEIVED]:!!item.collectedRent && item.collectedRent.toFixed(2) || ' ',
     [ES_RECEIPT_NO]: !!item.receiptNo && item.receiptNo || ' ',
