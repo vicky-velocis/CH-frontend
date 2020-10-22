@@ -24,9 +24,9 @@ import {
 // } from "../../../../ui-utils";
 import find from "lodash/find";
 import get from "lodash/get";
-// import { estateApplication } from './searchResource/estateApplication';
+import { estateApplication } from './searchResourceBuildingBranch/estateApplication';
 // import {getStatusList, searchApiCall} from './searchResource/functions';
-// import {searchResults} from './searchResource/searchResults';
+import {searchResults} from './searchResource/searchResults';
 
 import {
   getUserInfo
@@ -116,7 +116,7 @@ const estateSearchAndResult = {
             }
           }
         },
-          // estateApplication,
+        estateApplication,
         breakAfterSearch: getBreak(),
           // searchResults
       }
