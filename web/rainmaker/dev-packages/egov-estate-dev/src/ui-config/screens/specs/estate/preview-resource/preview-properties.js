@@ -144,82 +144,84 @@ export const headerDiv = {
     }
 }
 
-export const getPropertyDetails = (isEditable = true) => {
-    return getCommonGrayCard({
-      headerDiv: {
-        ...headerDiv,
-        children: {
-          header: {
-            gridDefination: {
-              xs: 12,
-              sm: 10
-            },
-            ...getCommonSubHeader({
-              labelName: "Property INFO",
-              labelKey: "ES_PROPERTY_INFO_HEADER"
-            })
-          },
-          editSection: masterEntryEditSection(isEditable, 0)
-        }
+export const propertyInfo = (isEditable) => ({
+  headerDiv: {
+    ...headerDiv,
+    children: {
+      header: {
+        gridDefination: {
+          xs: 12,
+          sm: 10
+        },
+        ...getCommonSubHeader({
+          labelName: "Property INFO",
+          labelKey: "ES_PROPERTY_INFO_HEADER"
+        })
       },
-      viewFour: getCommonContainer({
-        fileNumber: getLabelWithValue(
-          fileNumberLabel, {
-            jsonPath: "Properties[0].fileNumber"
-          }
-        ),
-        propertyType: getLabelWithValue(
-          propertyTypeLabel, {
-            jsonPath: "Properties[0].propertyDetails.propertyType"
-          }
-        ),
-        category: getLabelWithValue(
-          categoryLabel, {
-            jsonPath: "Properties[0].category"
-          }
-        ),
-        subCategory: getLabelWithValue(
-          subCategoryLabel, {
-            jsonPath: "Properties[0].subCategory"
-          }
-        ),
-        siteNumber: getLabelWithValue(
-          siteNumberLabel, {
-            jsonPath: "Properties[0].siteNumber"
-          }
-        ),
-        sectorNumber: getLabelWithValue(
-          sectorNumberLabel, {
-            jsonPath: "Properties[0].sectorNumber"
-          }
-        ),
-        areaOfProperty: getLabelWithValue(
-          areaOfPropertyLabel, {
-            jsonPath: "Properties[0].propertyDetails.areaSqft"
-          }
-        ),
-        rate: getLabelWithValue(
-          rateLabel, {
-            jsonPath: "Properties[0].propertyDetails.ratePerSqft"
-          }
-        ),
-        allocationType: getLabelWithValue(
-          allocationTypeLabel, {
-            jsonPath: "Properties[0].propertyDetails.typeOfAllocation"
-          }
-        ),
-        propertyRegisteredTo: getLabelWithValue(
-          propertyRegisteredToLabel, {
-            jsonPath: "Properties[0].propertyDetails.propertyRegisteredTo"
-          }
-        ),
-        entityType: getLabelWithValue(
-          entityTypeLabel, {
-            jsonPath: "Properties[0].propertyDetails.entityType"
-          }
-        )
-      })
-    })
+      editSection: masterEntryEditSection(isEditable, 0)
+    }
+  },
+  viewFour: getCommonContainer({
+    fileNumber: getLabelWithValue(
+      fileNumberLabel, {
+        jsonPath: "Properties[0].fileNumber"
+      }
+    ),
+    propertyType: getLabelWithValue(
+      propertyTypeLabel, {
+        jsonPath: "Properties[0].propertyDetails.propertyType"
+      }
+    ),
+    category: getLabelWithValue(
+      categoryLabel, {
+        jsonPath: "Properties[0].category"
+      }
+    ),
+    subCategory: getLabelWithValue(
+      subCategoryLabel, {
+        jsonPath: "Properties[0].subCategory"
+      }
+    ),
+    siteNumber: getLabelWithValue(
+      siteNumberLabel, {
+        jsonPath: "Properties[0].siteNumber"
+      }
+    ),
+    sectorNumber: getLabelWithValue(
+      sectorNumberLabel, {
+        jsonPath: "Properties[0].sectorNumber"
+      }
+    ),
+    areaOfProperty: getLabelWithValue(
+      areaOfPropertyLabel, {
+        jsonPath: "Properties[0].propertyDetails.areaSqft"
+      }
+    ),
+    rate: getLabelWithValue(
+      rateLabel, {
+        jsonPath: "Properties[0].propertyDetails.ratePerSqft"
+      }
+    ),
+    allocationType: getLabelWithValue(
+      allocationTypeLabel, {
+        jsonPath: "Properties[0].propertyDetails.typeOfAllocation"
+      }
+    ),
+    propertyRegisteredTo: getLabelWithValue(
+      propertyRegisteredToLabel, {
+        jsonPath: "Properties[0].propertyDetails.propertyRegisteredTo"
+      }
+    ),
+    entityType: getLabelWithValue(
+      entityTypeLabel, {
+        jsonPath: "Properties[0].propertyDetails.entityType"
+      }
+    )
+  })
+})
+
+export const getPropertyDetails = (isEditable = true) => {
+    return getCommonGrayCard(propertyInfo(isEditable))
   }
 
 
