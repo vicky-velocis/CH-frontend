@@ -427,7 +427,6 @@ export const setDocuments = async (
 };
 
 export const setXLSTableData = async({demands, payments ,componentJsonPath, screenKey}) => {
-
   let data = demands.map(item => {
     const findItem = payments.find(payData => moment(new Date(payData.receiptDate)).format("MMM YYYY") === moment(new Date(item.demandDate)).format("MMM YYYY"));
     return !!findItem ? {...item, ...findItem} : {...item}
@@ -448,7 +447,6 @@ export const setXLSTableData = async({demands, payments ,componentJsonPath, scre
     [ES_NO_OF_DAYS]: !!item.noOfDays && item.noOfDays || '',
     [ES_INTEREST_ON_DELAYED_PAYMENT]: !!item.gstInterest && item.gstInterest.toFixed(2) || ''
   }))
-
   if(data.length > 1) {
     store.dispatch(
       handleField(
@@ -467,9 +465,12 @@ export const setXLSTableData = async({demands, payments ,componentJsonPath, scre
       )
     );
   }
-  // store.dispatch(
-  //   prepareFinalObject("Properties[0].Calculations", Calculations)
-  // )
+  store.dispatch(
+    prepareFinalObject("Properties[0].propertyDetails.estateDemands", demands)
+  )
+  store.dispatch(
+    prepareFinalObject("Properties[0].propertyDetails.estatePayments", payments)
+  )
  
 }
 
