@@ -9,11 +9,11 @@ import {
     getDateField,
     getLabel
   } from "egov-ui-framework/ui-config/screens/specs/utils";
-  import { getSearchResults, getCount } from "../../../../..//ui-utils/commons";
+  import { getSearchResults, getCount } from "../../../../../ui-utils/commons";
   import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject,toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
   import {
     searchApiCallAccountStatement
-  } from "./searchAccountStatementFunction";
+  } from "./searchAccountStatementFunction.js";
   import get from "lodash/get";
   import { getTodaysDateInYMD } from "../../utils";
 import { set } from "lodash";
@@ -34,9 +34,8 @@ export const estateApplicationAccountStatementGen = getCommonCard({
             labelKey: "ES_FILE_NUMBER_PLACEHOLDER"
           },
           gridDefination: {
-            xs: 14,
-            sm: 6,
-            align: "center"
+            xs: 12,
+            sm: 6
           },
           required: true,
           jsonPath: "searchScreenFileNo.fileNumber",
@@ -122,8 +121,7 @@ export const estateApplicationAccountStatementGen = getCommonCard({
             sourceJsonPath: "searchScreenMdmsData.EstateServices.categories",
             gridDefination: {
                 xs: 12,
-                sm: 6,
-                align: "center"
+                sm: 6
             },
             errorMessage: "ES_ERR_CATEGORY_FIELD",
             beforeFieldChange: (action, state, dispatch) => {
@@ -216,8 +214,7 @@ export const estateApplicationAccountStatementGen = getCommonCard({
             sourceJsonPath: "applyScreenMdmsData.propertyTypes",
             gridDefination: {
                 xs: 12,
-                sm: 6,
-                align: "center"
+                sm: 6
             },
             errorMessage: "ES_ERR_SITE_NUMBER_FIELD"
       })
@@ -235,8 +232,7 @@ export const estateApplicationAccountStatementGen = getCommonCard({
         pattern: getPattern("Date"),
         gridDefination:{
           xs: 12,
-          sm: 6,
-          align: "center"
+          sm: 6
         },
         required: true,
         jsonPath: "searchScreen.fromDate",
@@ -268,72 +264,83 @@ export const estateApplicationAccountStatementGen = getCommonCard({
     
     button: getCommonContainer({
       buttonContainer: getCommonContainer({
-        resetButton: {
-          componentPath: "Button",
+        firstCont: {
+          uiFramework: "custom-atoms",
+          componentPath: "Div",
           gridDefination: {
-            xs: 6,
-            sm: 6,
-            align: "center"
-          },
-          props: {
-            variant: "outlined",
-            style: {
-            //   color: "rgba(0, 0, 0, 0.6000000238418579)",
-            //   borderColor: "rgba(0, 0, 0, 0.6000000238418579)",
-              color: "white",
-              backgroundColor: "rgba(85,85,85,1)",
-              width: "70%",
-              height: "48px",
-              margin: "8px", 
-            //   float: "right"
-            }
-          },
-          children: {
-            buttonLabel: getLabel({
-              labelName: "Reset",
-              labelKey: "ES_HOME_SEARCH_RESULTS_BUTTON_RESET"
-            })
-          },
-          onClickDefination: {
-            action: "condition",
-            callBack: resetFields
+            xs: 12,
+            sm: 4
           }
         },
-        searchButton: {
+        filterButton: {
           componentPath: "Button",
           gridDefination: {
-            xs: 6,
-            sm: 6,
-            align: "left"
+            xs: 12,
+            sm: 4
           },
           props: {
             variant: "contained",
             style: {
               color: "white",
-              margin: "8px",
-              backgroundColor: "rgba(255,153,51,1)",
+              backgroundColor: "#fe7a51",
               borderRadius: "2px",
-              width: "70%",
+              width: "80%",
               height: "48px",
-            //   align: "center"
-                }
+              margin: "0px 0px 20px 0px"      
+            }
           },
           children: {
             buttonLabel: getLabel({
               labelName: "Generate Account Statement",
               labelKey: "ES_GENERATE_ACCOUNT_STATEMENT"
             })
-          },
-          onClickDefination: {
-            action: "condition",
-            callBack: searchApiCallAccountStatement
+          }
+        },onClickDefination: {
+          action: "condition",
+          callBack: searchApiCallAccountStatement
+        }, lastCont: {
+          uiFramework: "custom-atoms",
+          componentPath: "Div",
+          gridDefination: {
+            xs: 12,
+            sm: 4
           }
         }
+        // resetButton: {
+        //   componentPath: "Button",
+        //   gridDefination: {
+        //     xs: 6,
+        //     sm: 6,
+        //     align: "center"
+        //   },
+        //   props: {
+        //     variant: "outlined",
+        //     style: {
+        //     //   color: "rgba(0, 0, 0, 0.6000000238418579)",
+        //     //   borderColor: "rgba(0, 0, 0, 0.6000000238418579)",
+        //       color: "white",
+        //       backgroundColor: "rgba(85,85,85,1)",
+        //       width: "70%",
+        //       height: "48px",
+        //       margin: "8px", 
+        //     //   float: "right"
+        //     }
+        //   },
+        //   children: {
+        //     buttonLabel: getLabel({
+        //       labelName: "Reset",
+        //       labelKey: "ES_HOME_SEARCH_RESULTS_BUTTON_RESET"
+        //     })
+        //   },
+        //   onClickDefination: {
+        //     action: "condition",
+        //     callBack: resetFields
+        //   }
+        // }
       })
     })
 }),
   });
-
 
   const getAccountStatementProperty = async (state, dispatch) => {
     try {

@@ -69,7 +69,7 @@ import { ESTATE_SERVICES_MDMS_MODULE } from "../../../../ui-constants";
               header: {
                 gridDefination: {
                   xs: 12,
-                  sm: 8
+                  sm: 6
                 },
                 ...header
               },
