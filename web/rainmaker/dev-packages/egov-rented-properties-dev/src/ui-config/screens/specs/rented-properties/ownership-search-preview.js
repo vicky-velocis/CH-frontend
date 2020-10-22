@@ -72,11 +72,17 @@ const tenantId = getQueryArg(window.location.href, "tenantId")
     let ownershipTransferDocuments = Owners[0].ownerDetails.ownershipTransferDocuments || [];
     const removedDocs = ownershipTransferDocuments.filter(item => !item.active)
     ownershipTransferDocuments = ownershipTransferDocuments.filter(item => !!item.active)
+    let formatter = new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+    });
     Owners = [{...Owners[0], ownerDetails: {...Owners[0].ownerDetails, ownershipTransferDocuments}}]
     const status = Owners[0].applicationState
     if(Owners[0].property.rentSummary){
-      Owners = [{...Owners[0], property: {...Owners[0].property, rentSummary:{...Owners[0].property.rentSummary , totalDue : (Owners[0].property.rentSummary.balancePrincipal + 
-        Owners[0].property.rentSummary.balanceInterest).toFixed(2)}}}]
+      Owners = [{...Owners[0], property: {...Owners[0].property, rentSummary:{...Owners[0].property.rentSummary , totalDue : formatter.format((Owners[0].property.rentSummary.balancePrincipal + 
+        Owners[0].property.rentSummary.balanceInterest).toFixed(2))
+      }}
+      }]
     }
   
     dispatch(prepareFinalObject("Owners", Owners))

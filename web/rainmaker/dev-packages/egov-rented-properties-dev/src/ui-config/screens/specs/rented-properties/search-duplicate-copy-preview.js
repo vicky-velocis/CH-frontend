@@ -60,10 +60,16 @@ const duplicateReviewDetails = getCommonCard({
         let applicationDocuments = DuplicateCopyApplications[0].applicationDocuments|| [];
         const removedDocs = applicationDocuments.filter(item => !item.active)
         applicationDocuments = applicationDocuments.filter(item => !!item.active)
+        let formatter = new Intl.NumberFormat('en-IN', {
+          style: 'currency',
+          currency: 'INR',
+        });
         DuplicateCopyApplications = [{...DuplicateCopyApplications[0], applicationDocuments}]
         if(DuplicateCopyApplications[0].property.rentSummary){
-          DuplicateCopyApplications = [{...DuplicateCopyApplications[0], property: {...DuplicateCopyApplications[0].property, rentSummary:{...DuplicateCopyApplications[0].property.rentSummary , totalDue : (DuplicateCopyApplications[0].property.rentSummary.balancePrincipal + 
-            DuplicateCopyApplications[0].property.rentSummary.balanceInterest).toFixed(2)}}}]
+          DuplicateCopyApplications = [{...DuplicateCopyApplications[0], property: {...DuplicateCopyApplications[0].property, rentSummary:{...DuplicateCopyApplications[0].property.rentSummary , totalDue : formatter.format((DuplicateCopyApplications[0].property.rentSummary.balancePrincipal + 
+            DuplicateCopyApplications[0].property.rentSummary.balanceInterest).toFixed(2))
+          }}
+          }]
         }      
         const status = DuplicateCopyApplications[0].state
         dispatch(prepareFinalObject("DuplicateCopyApplications", DuplicateCopyApplications))
