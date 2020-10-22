@@ -17,6 +17,8 @@ import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-fra
 import { BILLING_BUSINESS_SERVICE_OT, WORKFLOW_BUSINESS_SERVICE_OT } from "../../../../ui-constants";
 import {applicationNumber} from './apply'
 import { setApplicationNumberBox } from "../../../../ui-utils/apply";
+import { setBusinessServiceDataToLocalStorage } from "egov-ui-framework/ui-utils/commons";
+import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 let NoticedetailsId
 const headerrow = getCommonContainer({
     header: getCommonHeader({
@@ -206,12 +208,17 @@ dispatch(
     }
   }
 }
-
+const getData = async (action, state, dispatch) => {
+  const queryObject = [{ key: "tenantId", value: getTenantId() }, 
+                      { key: "businessServices", value: WORKFLOW_BUSINESS_SERVICE_OT }]
+  await setBusinessServiceDataToLocalStorage(queryObject, dispatch);
+}
 const ownerShipDetailsPreview = {
     uiFramework: "material-ui",
     name: "ownership-search-preview",
     beforeInitScreen: (action, state, dispatch) => {
         beforeInitFn(action, state, dispatch)
+        getData(action, state, dispatch)
         return action
     },
     components: {

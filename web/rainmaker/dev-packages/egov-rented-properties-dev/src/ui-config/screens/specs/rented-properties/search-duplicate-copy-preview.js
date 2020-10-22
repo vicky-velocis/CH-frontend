@@ -17,7 +17,8 @@ import {downloadPrintContainer} from "./applyResource/footer"
 import { WORKFLOW_BUSINESS_SERVICE_DC, BILLING_BUSINESS_SERVICE_DC } from "../../../../ui-constants";
 import { setApplicationNumberBox } from "../../../../ui-utils/apply";
 import {applicationNumber} from './apply'
-
+import { setBusinessServiceDataToLocalStorage } from "egov-ui-framework/ui-utils/commons";
+import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 const headerrow = getCommonContainer({
     header: getCommonHeader({
       labelName: "Duplicate Copy Application",
@@ -150,12 +151,17 @@ dispatch(
         }
       }
     }
-  
+  const getData = async (action, state, dispatch) => {
+      const queryObject = [{ key: "tenantId", value: getTenantId() }, 
+                          { key: "businessServices", value: WORKFLOW_BUSINESS_SERVICE_DC }]
+      await setBusinessServiceDataToLocalStorage(queryObject, dispatch);
+    }
 const duplicateCopySearchPreview = {
     uiFramework: "material-ui",
     name: "search-duplicate-copy-preview",
     beforeInitScreen: (action, state, dispatch) => {
         beforeInitFn(action, state, dispatch)
+        getData(action, state, dispatch)
         return action
     },
     components: {
