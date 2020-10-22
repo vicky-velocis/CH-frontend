@@ -15,10 +15,7 @@ const beforeInitFn = async (action, state, dispatch, filenumber) => {
       let queryObject = [
           { key: "filenumber", value: filenumber }
         ];
-    // await getSearchResults(queryObject);
-   await new Promise((resolve) => {
-        setTimeout(resolve, 0)
-    })
+  //  const response =  await getSearchResults(queryObject);
    const response = 
     {
       "ResponseInfo": {
@@ -321,7 +318,6 @@ const beforeInitFn = async (action, state, dispatch, filenumber) => {
           ]
       }
   }
-    // setApplicationNumberBox(state, dispatch, filenumber, "payment-details")   
     if(!!response) {
       // let {demands, payments} = response.Properties[0];
       let {estateDemands, estatePayments} = response.Calculations;
@@ -338,7 +334,7 @@ const EstatePaymentDetails = {
   uiFramework: "material-ui",
   name: "payment-details",
   beforeInitScreen: (action, state, dispatch) => {
-    const fileNumber = getQueryArg(window.location.href, "fileNumber");
+    const fileNumber = getQueryArg(window.location.href, "filenumber");
     beforeInitFn(action, state, dispatch, fileNumber);
     return action;
   },
