@@ -29,6 +29,10 @@ const header = getCommonContainer({
   }
 })
 
+const getData = (action, state, dispatch) => {
+  
+}
+
 const createProperty = {
   uiFramework: "material-ui",
   name: "apply-building-branch",

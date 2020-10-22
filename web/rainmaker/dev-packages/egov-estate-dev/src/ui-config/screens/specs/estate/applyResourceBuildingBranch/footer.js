@@ -54,7 +54,7 @@ export const moveToSuccess = (data, dispatch, type) => {
 
 const callBackForNext = async (state, dispatch) => {
   let activeStep = get(
-    state.screenConfiguration.screenConfig["apply"],
+    state.screenConfiguration.screenConfig["apply-building-branch"],
     "components.div.children.stepper.props.activeStep",
     0
   );
@@ -169,7 +169,7 @@ const callBackForNext = async (state, dispatch) => {
 
   if (activeStep !== SUMMARY_STEP) {
     if (isFormValid) {
-      changeStep(state, dispatch, "apply");
+      changeStep(state, dispatch, "apply-building-branch");
     } else if (hasFieldToaster) {
       let errorMessage = {
         labelName: "Please fill all mandatory fields and upload the documents !",
@@ -318,7 +318,7 @@ export const getActionDefinationForStepper = path => {
 };
 
 export const callBackForPrevious = (state, dispatch) => {
-  changeStep(state, dispatch, "apply", "previous");
+  changeStep(state, dispatch, "apply-building-branch", "previous");
 };
 
 export const previousButton = {

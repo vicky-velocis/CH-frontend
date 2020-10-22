@@ -110,7 +110,7 @@ const estateSearchAndResult = {
               onClickDefination: {
                 action: "condition",
                 callBack: (state, dispatch) => {
-                  dispatch(setRoute(`/estate/apply?tenantId=${getTenantId()}`));
+                  dispatch(setRoute(`/estate/apply-building-branch?tenantId=${getTenantId()}`));
                 }
               }
             }

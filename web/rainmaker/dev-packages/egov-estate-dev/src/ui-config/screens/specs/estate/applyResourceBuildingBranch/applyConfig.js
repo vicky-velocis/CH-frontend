@@ -7,8 +7,16 @@ import {
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import {
   documentList
-} from "../applyResource/documentList"
-
+} from "../applyResource/documentList";
+import {
+  propertyDetails
+} from "./propertyDetails"
+import {
+  ownerDetails
+} from "./ownerDetails"
+import {
+  reviewDetails
+} from "./reviewDetails"
 
 const documentCardConfig = {
   header: getCommonTitle({
@@ -35,7 +43,7 @@ export const ownerDocumentDetails_0 = getCommonCard({
       uploadedDocumentsJsonPath: "PropertiesTemp[0].propertyDetails.owners[0].ownerDetails.uploadedDocsInRedux",
       tenantIdJsonPath: "Properties[0].tenantId",
       removedJsonPath: "PropertiesTemp[0].propertyDetails.owners[0].ownerDetails.removedDocs",
-      callBack: applyEstates,
+      // callBack: applyEstates,
       activeIndex: 2
     }
   }
@@ -106,7 +114,7 @@ export const formwizardFourthStep = {
   uiFramework: "custom-atoms",
   componentPath: "Form",
   props: {
-    id: "apply_form8"
+    id: "apply_form4"
   },
   children: {
     reviewDetails
