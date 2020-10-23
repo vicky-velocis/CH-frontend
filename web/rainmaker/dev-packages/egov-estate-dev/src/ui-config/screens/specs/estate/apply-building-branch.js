@@ -11,7 +11,39 @@ import {
 } from "./applyResourceBuildingBranch/applyConfig";
 import {
   footer
-} from "./applyResourceBuildingBranch/footer"
+} from "./applyResourceBuildingBranch/footer";
+import { ESTATE_SERVICES_MDMS_MODULE } from "../../../../ui-constants";
+import {
+  httpRequest
+} from "../../../../ui-utils";
+import {
+  prepareFinalObject
+} from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import {
+  getQueryArg
+} from "egov-ui-framework/ui-utils/commons";
+import commonConfig from "config/common.js";
+
+export const getMdmsData = async (dispatch, body) => {
+  let mdmsBody = {
+    MdmsCriteria: {
+      tenantId: commonConfig.tenantId,
+      moduleDetails: body
+    }
+  };
+  try {
+    let payload = await httpRequest(
+      "post",
+      "/egov-mdms-service/v1/_search",
+      "_search",
+      [],
+      mdmsBody
+    );
+    return payload;
+  } catch (e) {
+    console.log(e);
+  }
+};
 
 const header = getCommonContainer({
   header: getCommonHeader({
@@ -29,8 +61,36 @@ const header = getCommonContainer({
   }
 })
 
-const getData = (action, state, dispatch) => {
-  
+const getData = async(action, state, dispatch) => {
+  const fileNumber = getQueryArg(window.location.href, "fileNumber");
+  if (!fileNumber) {
+    dispatch(
+      prepareFinalObject(
+        "Properties",
+        []
+      )
+    )
+  }
+
+  const mdmsPayload = [{
+    moduleName: ESTATE_SERVICES_MDMS_MODULE,
+    masterDetails: [{
+      name: "categories"
+    },
+    {
+      name: "propertyType"
+    },
+    {
+      name: "modeOfTransfer"
+    },
+    {
+      name: "allocationType"
+    }
+    ]
+  }]
+
+  const response = await getMdmsData(dispatch, mdmsPayload);
+  dispatch(prepareFinalObject("applyScreenMdmsData", response.MdmsRes));
 }
 
 const createProperty = {

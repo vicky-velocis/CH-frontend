@@ -21,6 +21,8 @@ import {
   displayDefaultErr
 } from "../../utils"
 
+let screenName = "apply-building-branch";
+
 const ownerNameField = {
   label: {
     labelName: "Owner Name",

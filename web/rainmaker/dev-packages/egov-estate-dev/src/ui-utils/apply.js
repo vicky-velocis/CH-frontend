@@ -207,7 +207,7 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
     if (!id) {
       console.log(queryObject[0]);
       set(queryObject[0], "propertyDetails.owners", [])
-      set(queryObject[0], "propertyDetails.purchaseDetails", [])
+      set(queryObject[0], "propertyDetails.purchaser", [])
       set(queryObject[0], "action", "");
       response = await httpRequest(
         "post",

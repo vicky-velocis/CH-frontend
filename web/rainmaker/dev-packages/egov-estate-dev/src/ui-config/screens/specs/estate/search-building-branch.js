@@ -25,13 +25,13 @@ import {
 import find from "lodash/find";
 import get from "lodash/get";
 import { estateApplication } from './searchResourceBuildingBranch/estateApplication';
-// import {getStatusList, searchApiCall} from './searchResource/functions';
-import {searchResults} from './searchResource/searchResults';
+import {searchResults} from './searchResourceBuildingBranch/searchResults';
+import {getStatusList, searchApiCall} from './searchResource/functions';
 
 import {
   getUserInfo
 } from "egov-ui-kit/utils/localStorageUtils";
-// import { WF_ALLOTMENT_OF_SITE } from "../../../../ui-constants";
+import { WF_ALLOTMENT_OF_SITE } from "../../../../ui-constants";
 
 const userInfo = JSON.parse(getUserInfo());
 const {
@@ -39,6 +39,7 @@ const {
 } = userInfo
 console.log(roles);
 const findItem = roles.find(item => item.code === "ES_EB_SECTION_OFFICER");
+
 const header = getCommonHeader({
   labelName: "Search Property Master",
   labelKey: "ES_SEARCH_PROPERTY_MASTER_HEADER"
@@ -54,12 +55,12 @@ const estateSearchAndResult = {
       },
       {
         key: "businessServices",
-        // value: WF_ALLOTMENT_OF_SITE
+        value: WF_ALLOTMENT_OF_SITE
       }
     ]
     dispatch(prepareFinalObject("searchScreen", {}))
-      // searchApiCall(state, dispatch, true)
-      // getStatusList( state, dispatch, queryObject, "search", "components.div.children.estateApplication.children.cardContent.children.colonyContainer.children.status", WF_ALLOTMENT_OF_SITE)
+    searchApiCall(state, dispatch, true)
+    getStatusList( state, dispatch, queryObject, "search-building-branch", "components.div.children.estateApplication.children.cardContent.children.searchContainer.children.status", WF_ALLOTMENT_OF_SITE)
     return action
   },
   components: {
@@ -118,7 +119,7 @@ const estateSearchAndResult = {
         },
         estateApplication,
         breakAfterSearch: getBreak(),
-          // searchResults
+        searchResults
       }
     }
   }

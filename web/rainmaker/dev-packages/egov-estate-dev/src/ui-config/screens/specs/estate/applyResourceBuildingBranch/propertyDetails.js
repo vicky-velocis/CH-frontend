@@ -60,8 +60,8 @@ const categoryField = {
   afterFieldChange: (action, state, dispatch) => {
     dispatch(
       handleField(
-        "apply",
-        `components.div.children.formwizardFirstStep.children.propertyInfoDetails.children.cardContent.children.detailsContainer.children.subCategory`,
+        screenName,
+        `components.div.children.formwizardFirstStep.children.propertyDetails.children.cardContent.children.detailsContainer.children.subCategory`,
         "props.value",
         ""
       )
@@ -70,8 +70,8 @@ const categoryField = {
     if (action.value == "CAT.RESIDENTIAL" || action.value == "CAT.COMMERCIAL") {
       dispatch(
         handleField(
-          "apply",
-          `components.div.children.formwizardFirstStep.children.propertyInfoDetails.children.cardContent.children.detailsContainer.children.subCategory`,
+          screenName,
+          `components.div.children.formwizardFirstStep.children.propertyDetails.children.cardContent.children.detailsContainer.children.subCategory`,
           "visible",
           true
         )
@@ -85,8 +85,8 @@ const categoryField = {
       const filteredCategory = categories.filter(item => item.code === action.value);
       dispatch(
         handleField(
-          "apply",
-          `components.div.children.formwizardFirstStep.children.propertyInfoDetails.children.cardContent.children.detailsContainer.children.subCategory`,
+          screenName,
+          `components.div.children.formwizardFirstStep.children.propertyDetails.children.cardContent.children.detailsContainer.children.subCategory`,
           "props.data",
           filteredCategory[0].SubCategory
         )
@@ -94,8 +94,8 @@ const categoryField = {
     } else {
       dispatch(
         handleField(
-          "apply",
-          `components.div.children.formwizardFirstStep.children.propertyInfoDetails.children.cardContent.children.detailsContainer.children.subCategory`,
+          screenName,
+          `components.div.children.formwizardFirstStep.children.propertyDetails.children.cardContent.children.detailsContainer.children.subCategory`,
           "visible",
           false
         )
@@ -297,15 +297,15 @@ const propertyDetailsHeader = getCommonTitle({
 export const propertyDetails = getCommonCard({
   header: propertyDetailsHeader,
   detailsContainer: getCommonContainer({
-      possessionDate: getDateField(possessionDateField),
-      category: getSelectField(categoryField),
-      subCategory: getSelectField(subCategoryField),
-      siteNumber: getTextField(siteNumberField),
-      sectorNumber: getSelectField(sectorNumberField),
-      fileNumber: getTextField(fileNumberField),
-      houseNumber: getTextField(houseNumberField),
-      mohalla: getTextField(mohallaField),
-      village: getTextField(villageField),
-      sizeOfAreaPurchase: getTextField(sizeOfAreaPurchasedField)
+    fileNumber: getTextField(fileNumberField),
+    possessionDate: getDateField(possessionDateField),
+    category: getSelectField(categoryField),
+    subCategory: getSelectField(subCategoryField),
+    siteNumber: getTextField(siteNumberField),
+    sectorNumber: getSelectField(sectorNumberField),
+    houseNumber: getTextField(houseNumberField),
+    mohalla: getTextField(mohallaField),
+    village: getTextField(villageField),
+    sizeOfAreaPurchase: getTextField(sizeOfAreaPurchasedField)
   })
 })
