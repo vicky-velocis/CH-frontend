@@ -37,7 +37,17 @@ const companyNameField = {
     xs: 12,
     sm: 6
   },
-  jsonPath: "Properties[0].propertyDetails.companyName"
+  required: true,
+  pattern: _getPattern("alphabet"),
+  jsonPath: "Properties[0].propertyDetails.companyName",
+  afterFieldChange: (action, state, dispatch) => {
+    if (action.value.length > 150) {
+        displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_150", screenName);
+    }
+    else {
+        displayDefaultErr(action.componentJsonpath, dispatch, screenName);
+    }
+  }
 }
 
 const companyRegNoField = {
@@ -53,7 +63,17 @@ const companyRegNoField = {
     xs: 12,
     sm: 6
   },
-  jsonPath: "Properties[0].propertyDetails.companyRegistrationNumber"
+  required: true,
+  jsonPath: "Properties[0].propertyDetails.companyRegistrationNumber",
+  pattern: _getPattern("alphaNumeric"),
+  afterFieldChange: (action, state, dispatch) => {
+    if (action.value.length > 100) {
+        displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_100", screenName);
+    }
+    else {
+        displayDefaultErr(action.componentJsonpath, dispatch, screenName);
+    }
+  }
 }
 
 const companyRegDateField = {
@@ -63,6 +83,7 @@ const companyRegDateField = {
   },
   pattern: getPattern("Date"),
   jsonPath: "Properties[0].propertyDetails.companyRegistrationDate",
+  required: true
   // props: {
   //   inputProps: {
   //     max: getTodaysDateInYMD()
@@ -87,6 +108,16 @@ const companyAddressField = {
   props:{
     multiline: true,
     rows: "2"
+  },
+  required: true,
+  pattern: _getPattern("address"),
+  afterFieldChange: (action, state, dispatch) => {
+    if (action.value.length > 150) {
+        displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_150", screenName);
+    }
+    else {
+        displayDefaultErr(action.componentJsonpath, dispatch, screenName);
+    }
   }
 }
 
@@ -124,7 +155,17 @@ const firmNameField = {
     xs: 12,
     sm: 6
   },
-  jsonPath: "Properties[0].propertyDetails.companyName"
+  jsonPath: "Properties[0].propertyDetails.companyName",
+  required: true,
+  pattern: _getPattern("alphabet"),
+  afterFieldChange: (action, state, dispatch) => {
+    if (action.value.length > 150) {
+        displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_150", screenName);
+    }
+    else {
+        displayDefaultErr(action.componentJsonpath, dispatch, screenName);
+    }
+  }
 }
 
 const getIsFirmRegisteredRadioButton = {
@@ -181,6 +222,22 @@ const getIsFirmRegisteredRadioButton = {
         !!(action.value == "true")
       )
     )
+    dispatch(
+      handleField(
+        screenName,
+        `components.div.children.${stepName}.children.firmDetails.children.cardContent.children.detailsContainer.children.firmRegNo`,
+        "required",
+        !!(action.value == "true")
+      )
+    )
+    dispatch(
+      handleField(
+        screenName,
+        `components.div.children.${stepName}.children.firmDetails.children.cardContent.children.detailsContainer.children.firmRegDate`,
+        "required",
+        !!(action.value == "true")
+      )
+    )
   }
 }
 
@@ -197,7 +254,16 @@ const firmRegNoField = {
     xs: 12,
     sm: 6
   },
-  jsonPath: "Properties[0].propertyDetails.companyRegistrationNumber"
+  jsonPath: "Properties[0].propertyDetails.companyRegistrationNumber",
+  pattern: _getPattern("alphaNumeric"),
+  afterFieldChange: (action, state, dispatch) => {
+    if (action.value.length > 100) {
+        displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_100", screenName);
+    }
+    else {
+        displayDefaultErr(action.componentJsonpath, dispatch, screenName);
+    }
+  }
 }
 
 const firmRegDateField = {
@@ -231,6 +297,16 @@ const firmAddressField = {
   props:{
     multiline: true,
     rows: "2"
+  },
+  required: true,
+  pattern: _getPattern("address"),
+  afterFieldChange: (action, state, dispatch) => {
+    if (action.value.length > 150) {
+        displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_150", screenName);
+    }
+    else {
+        displayDefaultErr(action.componentJsonpath, dispatch, screenName);
+    }
   }
 }
 

@@ -144,7 +144,6 @@ const callBackForNext = async (state, dispatch) => {
   }
 
   if (activeStep === ENTITY_OWNER_DETAILS_STEP) {
-    debugger
     let entityType = get(
       state.screenConfiguration.preparedFinalObject,
       "Properties[0].propertyDetails.entityType",

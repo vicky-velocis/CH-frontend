@@ -147,6 +147,12 @@ const callBackForNext = async (state, dispatch) => {
         isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "partnerDetails");
         break;
       case "ET.PROPRIETORSHIP":
+        var isFirmDetailsValid = validateFields(
+          "components.div.children.formwizardThirdStepAllotment.children.firmDetails.children.cardContent.children.detailsContainer.children",
+          state,
+          dispatch,
+          "allotment"
+        )
         var isProprietorshipDetailsValid = validateFields(
           "components.div.children.formwizardThirdStepAllotment.children.proprietorshipDetails.children.cardContent.children.detailsContainer.children",
           state,
@@ -178,7 +184,7 @@ const callBackForNext = async (state, dispatch) => {
       }
     }
 
-    if ((isOwnerOrPartnerDetailsValid && isCompanyDetailsValid) || (isFirmDetailsValid || isOwnerOrPartnerDetailsValid) || isProprietorshipDetailsValid) {
+    if ((isOwnerOrPartnerDetailsValid && isCompanyDetailsValid) || (isFirmDetailsValid && isOwnerOrPartnerDetailsValid) || (isFirmDetailsValid && isProprietorshipDetailsValid)) {
       const res = await applyEstates(state, dispatch, activeStep, "allotment");
       if (!res) {
         return
