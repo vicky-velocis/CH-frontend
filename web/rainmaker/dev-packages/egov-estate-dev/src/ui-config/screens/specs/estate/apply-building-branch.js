@@ -17,12 +17,20 @@ import {
   httpRequest
 } from "../../../../ui-utils";
 import {
-  prepareFinalObject
+  prepareFinalObject,
+  handleScreenConfigurationFieldChange as handleField
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import {
   getQueryArg
 } from "egov-ui-framework/ui-utils/commons";
 import commonConfig from "config/common.js";
+import * as docsData from './applyResourceBuildingBranch/buildingBranchOwnerDocs.json';
+import {
+  prepareDocumentTypeObjMaster
+} from "../utils";
+import {
+  get
+} from "lodash";
 
 export const getMdmsData = async (dispatch, body) => {
   let mdmsBody = {
@@ -91,6 +99,74 @@ const getData = async(action, state, dispatch) => {
 
   const response = await getMdmsData(dispatch, mdmsPayload);
   dispatch(prepareFinalObject("applyScreenMdmsData", response.MdmsRes));
+
+  setDocumentData(action, state, dispatch);
+}
+
+export const setDocumentData = (action, state, dispatch, ownerIndex = 0) => {
+  debugger;
+  const {
+    EstateServices
+  } = docsData && docsData.MdmsRes ? docsData.MdmsRes : {}
+  const {
+    buildingBranchOwnerDocs = []
+  } = EstateServices || {}
+  const findMasterItem = buildingBranchOwnerDocs.find(item => item.code === "MasterEst")
+  const masterDocuments = !!findMasterItem ? findMasterItem.documentList : [];
+
+  const estateMasterDocuments = masterDocuments.map(item => ({
+    type: item.code,
+    description: {
+      labelName: "Only .jpg and .pdf files. 6MB max file size.",
+      labelKey: item.fileType
+    },
+    formatProps: {
+      accept: item.accept || "image/*, .pdf, .png, .jpeg",
+    },
+    maxFileSize: 6000,
+    downloadUrl: item.downloadUrl,
+    moduleName: "Estate",
+    statement: {
+      labelName: "Allowed documents are Aadhar Card / Voter ID Card / Driving License",
+      labelKey: item.description
+    }
+  }))
+  var documentTypes;
+  var applicationDocs;
+  documentTypes = prepareDocumentTypeObjMaster(masterDocuments, ownerIndex);
+  applicationDocs = get(
+    state.screenConfiguration.preparedFinalObject,
+    `Properties[0].propertyDetails.owners[${ownerIndex}].ownerDetails.ownerDocuments`,
+    []
+  ) || [];
+
+  applicationDocs = applicationDocs.filter(item => !!item)
+  let applicationDocsReArranged =
+    applicationDocs &&
+    applicationDocs.length &&
+    documentTypes.map(item => {
+      const index = applicationDocs.findIndex(
+        i => i.documentType === item.name
+      );
+      return applicationDocs[index];
+    }).filter(item => !!item)
+  applicationDocsReArranged &&
+    dispatch(
+      prepareFinalObject(
+        `Properties[0].propertyDetails.owners[${ownerIndex}].ownerDetails.ownerDocuments`,
+        applicationDocsReArranged
+      )
+    );
+  dispatch(
+    handleField(
+      "apply-building-branch",
+      `components.div.children.formwizardThirdStep.children.ownerDocumentDetails_${ownerIndex}.children.cardContent.children.documentList`,
+      "props.inputProps",
+      estateMasterDocuments
+    )
+  );
+  dispatch(prepareFinalObject(`PropertiesTemp[0].propertyDetails.owners[${ownerIndex}].ownerDetails.ownerDocuments`, documentTypes))
+  dispatch(prepareFinalObject("applyScreenMdmsData.estateApplicationsBuildingBranchDocs", buildingBranchOwnerDocs))
 }
 
 const createProperty = {

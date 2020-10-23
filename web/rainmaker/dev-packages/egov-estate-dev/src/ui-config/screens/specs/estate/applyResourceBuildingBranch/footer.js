@@ -30,7 +30,10 @@ import {
 } from "./reviewDocuments";
 import {
   getReviewOwner
-} from "./reviewDetails"
+} from "./reviewDetails";
+import {
+ setDocumentData
+} from "../apply-building-branch"
 
 export const DEFAULT_STEP = -1;
 export const PROPERTY_DETAILS_STEP = 0;
@@ -130,12 +133,12 @@ const callBackForNext = async (state, dispatch) => {
             documentDetailsObj
           )
   
-          // setDocumentData("", state, dispatch, i)
+          setDocumentData("", state, dispatch, i)
         }
         set(
           state.screenConfiguration.screenConfig,
           `apply-building-branch.components.div.children.formwizardThirdStep.children.ownerDocumentDetails_${i}.children.cardContent.children.header.children.key.props.labelKey`,
-          `Douments - ${ownerName}`
+          `Documents - ${ownerName}`
         )
 
         const reviewOwnerDetails = getReviewOwner(true, i);
