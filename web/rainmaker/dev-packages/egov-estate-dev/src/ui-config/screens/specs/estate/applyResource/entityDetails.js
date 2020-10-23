@@ -10,11 +10,18 @@ import {
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import {
   getTodaysDateInYMD,
-  _getPattern
+  _getPattern,
+  displayCustomErr,
+  displayDefaultErr
 } from "../../utils";
 import {
   handleScreenConfigurationFieldChange as handleField
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+
+let screenName = "apply";
+if ((window.location.href).includes("allotment")) {
+    screenName = "allotment";
+}
 
 /*********************** Company Details **********************/
 const companyNameField = {
@@ -30,8 +37,6 @@ const companyNameField = {
     xs: 12,
     sm: 6
   },
-  minLength: 2,
-  maxLength: 150,
   jsonPath: "Properties[0].propertyDetails.companyName"
 }
 
@@ -48,8 +53,6 @@ const companyRegNoField = {
     xs: 12,
     sm: 6
   },
-  minLength: 2,
-  maxLength: 150,
   jsonPath: "Properties[0].propertyDetails.companyRegistrationNumber"
 }
 
@@ -80,8 +83,6 @@ const companyAddressField = {
     xs: 12,
     sm: 6
   },
-  minLength: 2,
-  maxLength: 250,
   jsonPath: "Properties[0].propertyDetails.companyAddress",
   props:{
     multiline: true,
@@ -123,8 +124,6 @@ const firmNameField = {
     xs: 12,
     sm: 6
   },
-  minLength: 2,
-  maxLength: 150,
   jsonPath: "Properties[0].propertyDetails.companyName"
 }
 
@@ -198,8 +197,6 @@ const firmRegNoField = {
     xs: 12,
     sm: 6
   },
-  minLength: 2,
-  maxLength: 150,
   jsonPath: "Properties[0].propertyDetails.companyRegistrationNumber"
 }
 
@@ -230,8 +227,6 @@ const firmAddressField = {
     xs: 12,
     sm: 6
   },
-  minLength: 2,
-  maxLength: 250,
   jsonPath: "Properties[0].propertyDetails.companyAddress",
   props:{
     multiline: true,
@@ -274,9 +269,16 @@ const nameField = {
     sm: 6
   },
   required: true,
-  minLength: 2,
-  maxLength: 150,
-  jsonPath: "Properties[0].propertyDetails.owners[0].ownerDetails.ownerName"
+  pattern: _getPattern("alphabet"),
+  jsonPath: "Properties[0].propertyDetails.owners[0].ownerDetails.ownerName",
+  afterFieldChange: (action, state, dispatch) => {
+    if (action.value.length > 150) {
+        displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_150", screenName);
+    }
+    else {
+        displayDefaultErr(action.componentJsonpath, dispatch, screenName);
+    }
+  }
 }
 
 const husbandFatherNameField = {
@@ -293,9 +295,16 @@ const husbandFatherNameField = {
     sm: 6
   },
   required: true,
-  minLength: 2,
-  maxLength: 150,
-  jsonPath: "Properties[0].propertyDetails.owners[0].ownerDetails.guardianName"
+  pattern: _getPattern("alphabet"),
+  jsonPath: "Properties[0].propertyDetails.owners[0].ownerDetails.guardianName",
+  afterFieldChange: (action, state, dispatch) => {
+    if (action.value.length > 150) {
+        displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_150", screenName);
+    }
+    else {
+        displayDefaultErr(action.componentJsonpath, dispatch, screenName);
+    }
+  }
 }
 
 const addressField = {
@@ -312,9 +321,16 @@ const addressField = {
     sm: 6
   },
   required: true,
-  minLength: 2,
-  maxLength: 150,
-  jsonPath: "Properties[0].propertyDetails.owners[0].ownerDetails.address"
+  pattern: _getPattern("address"),
+  jsonPath: "Properties[0].propertyDetails.owners[0].ownerDetails.address",
+  afterFieldChange: (action, state, dispatch) => {
+    if (action.value.length > 150) {
+        displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_150", screenName);
+    }
+    else {
+        displayDefaultErr(action.componentJsonpath, dispatch, screenName);
+    }
+  }
 }
 
 const mobileNumberField = {
@@ -367,8 +383,16 @@ const cpNumberField = {
     xs: 12,
     sm: 6
   },
-  maxLength: 100,
-  jsonPath: "Properties[0].propertyDetails.owners[0].ownerDetails.cpNumber"
+  pattern: _getPattern("alphaNumeric"),
+  jsonPath: "Properties[0].propertyDetails.owners[0].ownerDetails.cpNumber",
+  afterFieldChange: (action, state, dispatch) => {
+    if (action.value.length > 100) {
+        displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_100", screenName);
+    }
+    else {
+        displayDefaultErr(action.componentJsonpath, dispatch, screenName);
+    }
+  }
 }
 
 const getRelationshipRadioButton = {
@@ -422,7 +446,7 @@ const commonPartnerInformation = () => {
         marginBottom: 18
       }
     }),
-    partnerCard: getCommonContainer({
+    ownerCard: getCommonContainer({
       name: getTextField(nameField),
       husbandFatherName: getTextField(husbandFatherNameField),
       relationship: getRelationshipRadioButton,
@@ -459,7 +483,7 @@ const commonPartnerInformation = () => {
             headerName: "Partner Information",
             headerJsonPath: "children.cardContent.children.header.children.Partner Information.props.label",
             sourceJsonPath: "Properties[0].propertyDetails.owners",
-            prefixSourceJsonPath: "children.cardContent.children.partnerCard.children"
+            prefixSourceJsonPath: "children.cardContent.children.ownerCard.children"
           },
           type: "array"
         }

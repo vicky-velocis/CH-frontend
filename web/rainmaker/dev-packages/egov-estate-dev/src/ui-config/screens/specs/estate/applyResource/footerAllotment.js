@@ -549,7 +549,7 @@ const setOwnersOrPartners = (state, dispatch, container) => {
       set(
         state.screenConfiguration.screenConfig,
         `allotment.components.div.children.formwizardFourthStepAllotment.children.ownerDocumentDetails_${i}.children.cardContent.children.header.children.key.props.labelKey`,
-        `Douments - ${ownerName}`
+        `Documents - ${ownerName}`
       )
 
       const reviewOwnerDetails = getReviewOwner(true, i);
