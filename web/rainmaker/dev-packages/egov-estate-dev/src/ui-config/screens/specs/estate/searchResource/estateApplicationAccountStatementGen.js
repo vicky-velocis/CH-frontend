@@ -110,11 +110,11 @@ export const estateApplicationAccountStatementGen = getCommonCard({
             labelName: "Category",
             labelKey: "ES_CATEGORY_LABEL"
           },
-          // placeholder: {
-          //   labelName: "Enter Category",
-          //   labelKey: "ES_CATEGORY_PLACEHOLDER"
-          // },
-          // required: false,
+          placeholder: {
+            labelName: "Enter Category",
+            labelKey: "ES_CATEGORY_PLACEHOLDER"
+          },
+          required: false,
           jsonPath: "Properties[0].category",
             optionValue: "code",
             optionLabel: "name",
@@ -342,7 +342,7 @@ export const estateApplicationAccountStatementGen = getCommonCard({
 }),
   });
 
-  const getAccountStatementProperty = async (state, dispatch) => {
+  export const getAccountStatementProperty = async (state, dispatch) => {
     try {
       const fileNumber = get(state.screenConfiguration.preparedFinalObject, "searchScreenFileNo.fileNumber")
       if(!!fileNumber) {
