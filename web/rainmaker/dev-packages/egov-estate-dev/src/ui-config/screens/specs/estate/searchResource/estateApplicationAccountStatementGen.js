@@ -13,7 +13,7 @@ import {
   import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject,toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
   import {
     searchApiCallAccountStatement
-  } from "./searchAccountStatementFunction.js";
+  } from "./searchAccountStatementFunction";
   import get from "lodash/get";
   import { getTodaysDateInYMD } from "../../utils";
 import { set } from "lodash";
