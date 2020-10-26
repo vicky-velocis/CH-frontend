@@ -24,9 +24,9 @@ import { getAccountStatementProperty } from "./estateApplicationAccountStatement
 export const getTextToLocalMapping = memoize((label) => _getTextToLocalMapping(label));
 
 export const searchApiCallAccountStatement = async (state, dispatch, onInit, offset, limit = 100, hideTable = true) => {
-  dispatch(toggleSpinner());
-  !!hideTable && showHideTable(false, dispatch);
-  // showHideTable(true, dispatch);
+  // dispatch(toggleSpinner());
+  // !!hideTable && showHideTable(false, dispatch);
+  showHideTable(false, dispatch);
   // let queryObject = [
   //   {
   //     key: "offset",
@@ -82,32 +82,32 @@ export const searchApiCallAccountStatement = async (state, dispatch, onInit, off
 
 
  // Date, fileNumber/SiteNumber, sector  needs to be there, other optional 
-var isDateValid = validateFields(
-"components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.dateContainer",
-state,
-dispatch,
-"estate-search-account-statement"
-);
-var isCategoryValid = validateFields(
-  "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.categoryContainer",
-  state,
-  dispatch,
-  "estate-search-account-statement"
-  );
+// var isDateValid = validateFields(
+// "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.dateContainer",
+// state,
+// dispatch,
+// "estate-search-account-statement"
+// );
+// var isCategoryValid = validateFields(
+//   "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.categoryContainer",
+//   state,
+//   dispatch,
+//   "estate-search-account-statement"
+//   );
 var isfileNumberValid = validateFields(
   "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.fileNumberContainer",
   state,
   dispatch,
   "estate-search-account-statement"
   );
-  var isSiteNumberValid = validateFields(
-    "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.siteContainer",
-    state,
-    dispatch,
-    "estate-search-account-statement"
-    );
+  // var isSiteNumberValid = validateFields(
+  //   "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.siteContainer",
+  //   state,
+  //   dispatch,
+  //   "estate-search-account-statement"
+  //   );
 
-    if(!!isfileNumberValid || !!isSiteNumberValid) {
+    if(!!isfileNumberValid) {
       let Criteria = {
         fromdate: !!searchScreenObject.fromDate ? convertDateToEpoch(searchScreenObject.fromDate) : "",
         todate: !!searchScreenObject.toDate ? convertDateToEpoch(searchScreenObject.toDate) : ""
@@ -131,16 +131,16 @@ var isfileNumberValid = validateFields(
               )
             );
             let data = response.RentAccountStatements.map(item => ({
-              [MONTH]: moment(new Date(item.date)).format("DD-MMM-YYYY") || "-",
-              [RENT_DUE]:  formatAmount(item.amount.toFixed(2)) || "-",
-              [RECEIPT_NO]:item.receiptNo||"-",
-              [DATE]: moment(new Date(item.date)).format("DD-MMM-YYYY") || "-",
-              [PENALTY_INTEREST]: formatAmount(item.remainingInterest.toFixed(2)) || "-",
-              [ST_GST_RATE]: formatAmount(item.remainingInterest.toFixed(2)) || "-",
-              [PAID]:  formatAmount(item.remainingInterest.toFixed(2)),
-              [DATE_OF_RECEIPT]: moment(new Date(item.date)).format("DD-MMM-YYYY") || "-",
-              [NO_OF_DAYS]: item.no_days,
-              [INT_ON_DELAYED_PAYMENT_OF_GST]: formatAmount(item.remainingBalance.toFixed(2)),
+              [getTextToLocalMapping("Month")]: moment(moment(new Date(item.date)).format("YYYY/MM/DD")).format('MMMM') || "-",
+              [getTextToLocalMapping("Rent Due")]:  formatAmount(item.dueAmount.toFixed(2)) || "-",
+              [getTextToLocalMapping("Receipt No.")]:item.receiptNo||"-",
+              [getTextToLocalMapping("Date")]: moment(new Date(item.date)).format("DD-MMM-YYYY") || "-",
+              [getTextToLocalMapping("Penalty/Interest")]: formatAmount(item.remainingInterest.toFixed(2)) || "-",
+              [getTextToLocalMapping("ST/GST rate")]: formatAmount(item.remainingInterest.toFixed(2)) || "-",
+              [getTextToLocalMapping("Paid")]:  formatAmount(item.amount.toFixed(2)) || "-",
+              [getTextToLocalMapping("Date of Receipt")]: moment(new Date(item.date)).format("DD-MMM-YYYY") || "-",
+              [getTextToLocalMapping("No. of days")]: item.no_days || "-",
+              [getTextToLocalMapping("Int. on delayed payment of GST")]: formatAmount(item.remainingBalance.toFixed(2)) || "-",
               
             }));
             let lastElement = data.pop();
@@ -150,29 +150,30 @@ var isfileNumberValid = validateFields(
             data.push(lastElement)
             dispatch(
               handleField(
-                "search-account-statement",
-                "components.div.children.accountStatementResults",
+                "estate-search-account-statement",
+                "components.div.children.searchResultsAccountStatement",
                 "visible",
                 true
               )
             );
             dispatch(
               handleField(
-                "search-account-statement",
-                "components.div.children.accountStatementResults",
+                "estate-search-account-statement",
+                "components.div.children.searchResultsAccountStatement",
                 "props.data",
                 data
               )
             );
-          dispatch(
-          handleField(
-            "search-account-statement",
-            "components.div.children.downloadButton",
-            "visible",
-            true
-        ),
-      );
+      //     dispatch(
+      //     handleField(
+      //       "estate-search-account-statement",
+      //       "components.div.children.downloadButton",
+      //       "visible",
+      //       true
+      //   ),
+      // );
           } catch (error) {
+            console.log(error)
             dispatch(toggleSnackbar(true, error.message, "error"));
           }
       }
@@ -267,7 +268,7 @@ var isfileNumberValid = validateFields(
   //         data
   //       )
   //     );
-  //     !!hideTable && showHideTable(true, dispatch);
+      !!hideTable && showHideTable(true, dispatch);
   //     // showHideTable(true, dispatch);
   //     dispatch(toggleSpinner());
   //   } catch (error) {
@@ -288,7 +289,7 @@ const showHideTable = (booleanHideOrShow, dispatch) => {
   dispatch(
     handleField(
       "estate-search-account-statement",
-      "components.div.children.searchResults",
+      "components.div.children.searchResultsAccountStatement",
       "visible",
       booleanHideOrShow
     )

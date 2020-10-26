@@ -187,10 +187,10 @@ export const estateApplicationAccountStatementGen = getCommonCard({
             labelKey: "ES_SUB_CATEGORY_PLACEHOLDER"
           },
           // required: false,
-          jsonPath: "Properties[0].subCategory",
+          jsonPath: "searchScreen.subCategory",
           optionValue: "code",
           optionLabel: "name",
-          sourceJsonPath: "Properties[0].subcatvar[0].SubCategory",
+          // sourceJsonPath: "Properties[0].subCategory",
           gridDefination: {
               xs: 12,
               sm: 6
@@ -294,10 +294,11 @@ export const estateApplicationAccountStatementGen = getCommonCard({
               labelName: "Generate Account Statement",
               labelKey: "ES_GENERATE_ACCOUNT_STATEMENT"
             })
+          },
+          onClickDefination: {
+            action: "condition",
+            callBack: searchApiCallAccountStatement
           }
-        },onClickDefination: {
-          action: "condition",
-          callBack: searchApiCallAccountStatement
         }, lastCont: {
           uiFramework: "custom-atoms",
           componentPath: "Div",
@@ -448,61 +449,61 @@ export const estateApplicationAccountStatementGen = getCommonCard({
     }
   }
 
-  function resetFields(state, dispatch) {
-    dispatch(
-      handleField(
-        "estate-search-account-statement",
-        "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.dateContainer.children.from",
-        "props.value",
-        ""
-      )
-    )
-    dispatch(
-      handleField(
-        "estate-search-account-statement",
-        "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.dateContainer.children.to",
-        "props.value",
-        ""
-      )
-    )
-    dispatch(
-      handleField(
-        "estate-search-account-statement",
-        "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.fileNumberContainer.children.fileNumber",
-        "props.value",
-        ""
-      )
-    )
-    dispatch(
-      handleField(
-        "estate-search-account-statement",
-        "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.categoryContainer.children.category",
-        "props.value",
-        ""
-      )
-    )
-    dispatch(
-      handleField(
-        "estate-search-account-statement",
-        "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.categoryContainer.children.subCategory",
-        "props.value",
-        ""
-      )
-    )
-    dispatch(
-      handleField(
-        "estate-search-account-statement",
-        "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.siteContainer.children.siteNumber",
-        "props.value",
-        ""
-      )
-    )
-    dispatch(
-      handleField(
-        "estate-search-account-statement",
-        "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.fileNumberContainer.children.sectorNumber",
-        "props.value",
-        ""
-      )
-    )
-  }
+  // function resetFields(state, dispatch) {
+  //   dispatch(
+  //     handleField(
+  //       "estate-search-account-statement",
+  //       "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.dateContainer.children.from",
+  //       "props.value",
+  //       ""
+  //     )
+  //   )
+  //   dispatch(
+  //     handleField(
+  //       "estate-search-account-statement",
+  //       "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.dateContainer.children.to",
+  //       "props.value",
+  //       ""
+  //     )
+  //   )
+  //   dispatch(
+  //     handleField(
+  //       "estate-search-account-statement",
+  //       "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.fileNumberContainer.children.fileNumber",
+  //       "props.value",
+  //       ""
+  //     )
+  //   )
+  //   dispatch(
+  //     handleField(
+  //       "estate-search-account-statement",
+  //       "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.categoryContainer.children.category",
+  //       "props.value",
+  //       ""
+  //     )
+  //   )
+  //   dispatch(
+  //     handleField(
+  //       "estate-search-account-statement",
+  //       "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.categoryContainer.children.subCategory",
+  //       "props.value",
+  //       ""
+  //     )
+  //   )
+  //   dispatch(
+  //     handleField(
+  //       "estate-search-account-statement",
+  //       "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.siteContainer.children.siteNumber",
+  //       "props.value",
+  //       ""
+  //     )
+  //   )
+  //   dispatch(
+  //     handleField(
+  //       "estate-search-account-statement",
+  //       "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.fileNumberContainer.children.sectorNumber",
+  //       "props.value",
+  //       ""
+  //     )
+  //   )
+  // }
