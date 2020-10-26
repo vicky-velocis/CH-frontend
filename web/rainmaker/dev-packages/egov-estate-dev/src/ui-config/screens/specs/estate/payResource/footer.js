@@ -185,9 +185,8 @@ const callBackForOfflinePayment = async (state, dispatch) => {
     "",
     [],
     { Applications : payload })
-    console.log("======response", response);
     if(!!response) {
-      const path = `estate/acknowledgement?purpose=${"pay"}&status=${"success"}&applicationNumber=${applicationNumber}&tenantId=${tenantId}&type=${type}`
+      const path = `/estate/acknowledgement?purpose=${"pay"}&status=${"success"}&applicationNumber=${applicationNumber}&tenantId=${tenantId}&type=${type}`
       dispatch(
         setRoute(path)
       );
