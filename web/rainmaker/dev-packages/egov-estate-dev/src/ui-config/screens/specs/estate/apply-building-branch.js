@@ -75,7 +75,7 @@ const getData = async(action, state, dispatch) => {
     dispatch(
       prepareFinalObject(
         "Properties",
-        []
+        [{"branchType": "BuildingBranch"}]
       )
     )
   }
@@ -104,7 +104,6 @@ const getData = async(action, state, dispatch) => {
 }
 
 export const setDocumentData = (action, state, dispatch, ownerIndex = 0) => {
-  debugger;
   const {
     EstateServices
   } = docsData && docsData.MdmsRes ? docsData.MdmsRes : {}

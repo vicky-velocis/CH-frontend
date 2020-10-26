@@ -81,14 +81,14 @@ const callBackForNext = async (state, dispatch) => {
       "apply-building-branch"
     )
 
-    /* if (isPropertyInfoValid) {
+    if (isPropertyInfoValid) {
       const res = await applyEstates(state, dispatch, activeStep);
       if (!res) {
         return
       }
     } else {
       isFormValid = false;
-    } */
+    }
   }
 
   if (activeStep === OWNER_DETAILS_STEP) {
