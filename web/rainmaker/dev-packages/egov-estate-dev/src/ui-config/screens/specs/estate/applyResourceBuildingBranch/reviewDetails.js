@@ -123,12 +123,6 @@ export const getReviewPropertyDetails = (isEditable = true) => {
       }
     },
     viewDetails: getCommonContainer({
-      possessionDate: getLabelWithValue(
-        possessionDateLabel,
-        {
-          jsonPath: "Properties[0].propertyDetails.possesionDate"
-        }
-      ),
       category: getLabelWithValue(
         categoryLabel, {
           jsonPath: "Properties[0].category"
@@ -261,7 +255,13 @@ export const getReviewOwner = (isEditable = true, owner = 0) => {
         isCurrentOwnerLabel, {
           jsonPath: `Properties[0].propertyDetails.owners[${owner}].ownerDetails.isCurrentOwner`
         }
-      )
+      ),
+      possessionDate: getLabelWithValue(
+        possessionDateLabel,
+        {
+          jsonPath: `Properties[0].propertyDetails.owners[${owner}].ownerDetails.possesionDate`
+        }
+      ),
     })
   })
 }

@@ -82,7 +82,7 @@ const callBackForNext = async (state, dispatch) => {
     )
 
     if (isPropertyInfoValid) {
-      const res = await applyEstates(state, dispatch, activeStep);
+      const res = await applyEstates(state, dispatch, activeStep, "apply-building-branch");
       if (!res) {
         return
       }
@@ -155,14 +155,14 @@ const callBackForNext = async (state, dispatch) => {
       }
     }
 
-    /* if (isOwnerDetailsValid) {
-      const res = await applyEstates(state, dispatch, activeStep);
+    if (isOwnerDetailsValid) {
+      const res = await applyEstates(state, dispatch, activeStep, "apply-building-branch");
       if (!res) {
         return
       }
     } else {
       isFormValid = false;
-    } */
+    }
   }
 
   if (activeStep === OWNER_DOCUMENTS_STEP) {
@@ -232,7 +232,7 @@ const callBackForNext = async (state, dispatch) => {
   }
 
   if (activeStep === SUMMARY_STEP) {
-    isFormValid = await applyEstates(state, dispatch, activeStep);
+    isFormValid = await applyEstates(state, dispatch, activeStep, "apply-building-branch");
     if (isFormValid) {
       const estatesData = get(
         state.screenConfiguration.preparedFinalObject,

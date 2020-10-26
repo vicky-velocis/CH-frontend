@@ -552,7 +552,10 @@ const getData = async (action, state, dispatch) => {
     dispatch(
       prepareFinalObject(
         "Properties",
-        [{propertyMasterOrAllotmentOfSite: "PROPERTY_MASTER"}]
+        [{
+          propertyMasterOrAllotmentOfSite: "PROPERTY_MASTER",
+          branchType: "ESTATE_BRANCH"
+        }]
       )
     )
   }

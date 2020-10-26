@@ -6,7 +6,7 @@ import {
   getCommonParagraph,
   getLabel
 } from "egov-ui-framework/ui-config/screens/specs/utils";
-// import { searchApiCall, searchApplicationApiCall} from "./functions";
+import { searchApiCall } from "../searchResource/functions";
 import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { get } from "lodash";
 
@@ -85,7 +85,7 @@ const buttonItem = {
         color: "white",
         backgroundColor: "rgba(0, 0, 0, 0.6000000238418579)",
         borderRadius: "2px",
-        width: "80%",
+        width: "70%",
         height: "48px"
       }
     },
@@ -96,6 +96,37 @@ const buttonItem = {
       })
     }
   }
+}
+
+const clearSearch = (state, dispatch) => {
+  const preparedFinalObject = get(state, "screenConfiguration.preparedFinalObject");
+    const {searchScreen = {}} = preparedFinalObject
+    if(!!searchScreen.fileNumber || !!searchScreen.state || !!searchScreen.applicationNumber) {
+      dispatch(
+        handleField(
+          "search-building-branch",
+          "components.div.children.estateApplication.children.cardContent.children.searchContainer.children.fileNumber",
+          "props.value",
+          ""
+        )
+      )
+      dispatch(
+        handleField(
+          "search-building-branch",
+          "components.div.children.estateApplication.children.cardContent.children.searchContainer.children.sectorNumber",
+          "props.value",
+          ""
+        )
+      )
+      dispatch(
+        handleField(
+          "search-building-branch",
+          "components.div.children.estateApplication.children.cardContent.children.searchContainer.children.status",
+          "props.value",
+          ""
+        )
+      )
+    }
 }
 
 export const estateApplication = getCommonCard({
@@ -110,20 +141,60 @@ export const estateApplication = getCommonCard({
   }),
   button: getCommonContainer({
     buttonContainer: getCommonContainer({
-      ...buttonItem, 
-      searchButton: {
-        ...buttonItem.searchButton, 
-        onClickDefination: {
-        // action: "condition",
-        // callBack: searchApiCall
-        }
-      }, 
-      lastCont: {
-        uiFramework: "custom-atoms",
-        componentPath: "Div",
+      resetButton: {
+        componentPath: "Button",
         gridDefination: {
-          xs: 12,
-          sm: 4
+          xs: 6,
+          sm: 6
+        },
+        props: {
+          variant: "outlined",
+          style: {
+            color: "rgba(0, 0, 0, 0.6000000238418579)",
+            borderColor: "rgba(0, 0, 0, 0.6000000238418579)",
+            width: "70%",
+            height: "48px",
+            margin: "8px",
+            float: "right"
+          }
+        },
+        children: {
+          buttonLabel: getLabel({
+            labelName: "Reset",
+            labelKey: "ES_HOME_SEARCH_RESULTS_BUTTON_RESET"
+          })
+        },
+        onClickDefination: {
+          action: "condition",
+          callBack: clearSearch
+        }
+      },
+      searchButton: {
+        componentPath: "Button",
+        gridDefination: {
+          xs: 6,
+          sm: 6
+        },
+        props: {
+          variant: "contained",
+          style: {
+            color: "white",
+            margin: "8px",
+            backgroundColor: "rgba(0, 0, 0, 0.6000000238418579)",
+            borderRadius: "2px",
+            width: "70%",
+            height: "48px"
+          }
+        },
+        children: {
+          buttonLabel: getLabel({
+            labelName: "Search",
+            labelKey: "ES_HOME_SEARCH_RESULTS_BUTTON_SEARCH"
+          })
+        },
+        onClickDefination: {
+          action: "condition",
+          callBack: (state, dispatch) => searchApiCall(state, dispatch, false, "", "", true, "BUILDING_BRANCH", "search-building-branch")
         }
       }
     })

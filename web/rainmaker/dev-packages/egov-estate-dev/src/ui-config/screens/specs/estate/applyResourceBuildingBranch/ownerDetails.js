@@ -203,6 +203,24 @@ const getIsCurrentOwnerRadioButton = {
   type: "array",
 };
 
+const possessionDateField = {
+  label: {
+    labelName: "Possession Date",
+    labelKey: "ES_POSSESSION_DATE_LABEL"
+  },
+  placeholder: {
+    labelName: "Enter Possession Date",
+    labelKey: "ES_POSSESSION_DATE_PLACEHOLDER"
+  },
+  pattern: getPattern("Date"),
+  jsonPath: "Properties[0].propertyDetails.owners[0].ownerDetails.possesionDate",
+  // props: {
+  //   inputProps: {
+  //     max: getTodaysDateInYMD()
+  //   }
+  // }
+}
+
 const ownerHeader = getCommonTitle({
   labelName: "Owner Details",
   labelKey: "ES_OWNER_DETAILS_HEADER"
@@ -230,7 +248,8 @@ const commonOwnerInformation = () => {
       address: getTextField(addressField),
       mobileNumber: getTextField(mobileNumberField),
       share: getTextField(shareField),
-      isCurrentOwner: getIsCurrentOwnerRadioButton
+      isCurrentOwner: getIsCurrentOwnerRadioButton,
+      possessionDate: getDateField(possessionDateField)
     })
   });
 };

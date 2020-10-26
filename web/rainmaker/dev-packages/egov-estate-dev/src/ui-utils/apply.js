@@ -262,6 +262,9 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
       if (screenName == "allotment") {
         tabsArr.pop();
       }
+      else if (screenName == "apply-building-branch") {
+        tabsArr = tabsArr.splice(0, tabsArr.length - 5);
+      }
       if (tabsArr.indexOf(activeIndex) !== -1) {
         set(queryObject[0], "action", "")
       } else {
@@ -302,7 +305,7 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
       ownerDocuments = [...ownerDocuments, ...removedDocs]
       set(queryObject[0], "ownerDetails.ownerDocuments", ownerDocuments) */
 
-      
+      console.log(JSON.stringify(queryObject));
 
       response = await httpRequest(
         "post",
@@ -317,8 +320,10 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
       Properties
     } = response
 
-    let ratePerSqft = (Properties[0].propertyDetails.ratePerSqft).toString();
-    let areaSqft = (Properties[0].propertyDetails.areaSqft).toString();
+    let ratePerSqft = Properties[0].propertyDetails.ratePerSqft;
+    let areaSqft = Properties[0].propertyDetails.areaSqft;
+    ratePerSqft = !!ratePerSqft ? ratePerSqft.toString() : ratePerSqft;
+    areaSqft = !!areaSqft ? areaSqft.toString() : areaSqft;
 
     let owners = get(
       Properties[0],

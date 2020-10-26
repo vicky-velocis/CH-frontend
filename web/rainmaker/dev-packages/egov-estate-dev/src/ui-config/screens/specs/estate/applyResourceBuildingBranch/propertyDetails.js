@@ -22,25 +22,6 @@ import {
 
 let screenName = "apply-building-branch";
 
-const possessionDateField = {
-  label: {
-    labelName: "Possession Date",
-    labelKey: "ES_POSSESSION_DATE_LABEL"
-  },
-  placeholder: {
-    labelName: "Enter Possession Date",
-    labelKey: "ES_POSSESSION_DATE_PLACEHOLDER"
-  },
-  pattern: getPattern("Date"),
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.possesionDate",
-  // props: {
-  //   inputProps: {
-  //     max: getTodaysDateInYMD()
-  //   }
-  // }
-}
-
 const categoryField = {
   label: {
     labelName: "Category",
@@ -205,7 +186,7 @@ const houseNumberField = {
   },
   required: true,
   pattern: _getPattern("fileNumber"),
-  jsonPath: "Properties[0].houseNumber",
+  jsonPath: "Properties[0].propertyDetails.houseNumber",
   afterFieldChange: (action, state, dispatch) => {
     if (action.value.length > 50) {
       displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_50", screenName);
@@ -230,7 +211,7 @@ const mohallaField = {
   },
   required: true,
   pattern: _getPattern("alphabet"),
-  jsonPath: "Properties[0].mohalla",
+  jsonPath: "Properties[0].propertyDetails.mohalla",
   afterFieldChange: (action, state, dispatch) => {
       if (action.value.length > 150) {
           displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_50", screenName);
@@ -256,7 +237,7 @@ const villageField = {
   },
   required: true,
   pattern: _getPattern("alphabet"),
-  jsonPath: "Properties[0].village",
+  jsonPath: "Properties[0].propertyDetails.village",
   afterFieldChange: (action, state, dispatch) => {
       if (action.value.length > 150) {
           displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_50", screenName);
@@ -298,7 +279,6 @@ export const propertyDetails = getCommonCard({
   header: propertyDetailsHeader,
   detailsContainer: getCommonContainer({
     fileNumber: getTextField(fileNumberField),
-    possessionDate: getDateField(possessionDateField),
     category: getSelectField(categoryField),
     subCategory: getSelectField(subCategoryField),
     siteNumber: getTextField(siteNumberField),

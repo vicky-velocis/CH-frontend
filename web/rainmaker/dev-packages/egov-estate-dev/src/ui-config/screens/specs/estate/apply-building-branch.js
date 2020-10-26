@@ -14,7 +14,7 @@ import {
 } from "./applyResourceBuildingBranch/footer";
 import { ESTATE_SERVICES_MDMS_MODULE } from "../../../../ui-constants";
 import {
-  httpRequest
+  httpRequest,
 } from "../../../../ui-utils";
 import {
   prepareFinalObject,
@@ -31,6 +31,8 @@ import {
 import {
   get
 } from "lodash";
+import { getSearchResults } from "../../../../ui-utils/commons"
+import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 
 export const getMdmsData = async (dispatch, body) => {
   let mdmsBody = {
@@ -69,13 +71,47 @@ const header = getCommonContainer({
   }
 })
 
+const getPMDetailsByFileNumber = async(
+  action,
+  state,
+  dispatch,
+  fileNumber
+) => {
+  let queryObject = [
+    {
+      key: "tenantId",
+      value: getTenantId()
+    },
+    { 
+      key: "fileNumber", 
+      value: fileNumber 
+    }
+  ];
+
+  const payload = await getSearchResults(queryObject);
+
+  if (payload) {
+    let properties = payload.Properties;
+    dispatch(
+      prepareFinalObject(
+        "Properties",
+        properties 
+      )
+    )
+  }
+}
+
 const getData = async(action, state, dispatch) => {
   const fileNumber = getQueryArg(window.location.href, "fileNumber");
   if (!fileNumber) {
     dispatch(
       prepareFinalObject(
         "Properties",
-        [{"branchType": "BuildingBranch"}]
+        [{
+          propertyDetails: {
+            branchType: "BUILDING_BRANCH"
+          }
+        }]
       )
     )
   }
@@ -99,6 +135,10 @@ const getData = async(action, state, dispatch) => {
 
   const response = await getMdmsData(dispatch, mdmsPayload);
   dispatch(prepareFinalObject("applyScreenMdmsData", response.MdmsRes));
+
+  if (!!fileNumber) {
+    await getPMDetailsByFileNumber(action, state, dispatch, fileNumber)
+  }
 
   setDocumentData(action, state, dispatch);
 }

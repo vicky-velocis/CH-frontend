@@ -47,7 +47,7 @@ const header = getCommonHeader({
 
 const estateSearchAndResult = {
   uiFramework: "material-ui",
-  name: "search",
+  name: "search-building-branch",
   beforeInitScreen: (action, state, dispatch) => {
     const queryObject = [{
         key: "tenantId",
@@ -59,7 +59,7 @@ const estateSearchAndResult = {
       }
     ]
     dispatch(prepareFinalObject("searchScreen", {}))
-    searchApiCall(state, dispatch, true)
+    searchApiCall(state, dispatch, true, "", "", true, "BUILDING_BRANCH", "search-building-branch")
     getStatusList( state, dispatch, queryObject, "search-building-branch", "components.div.children.estateApplication.children.cardContent.children.searchContainer.children.status", WF_ALLOTMENT_OF_SITE)
     return action
   },

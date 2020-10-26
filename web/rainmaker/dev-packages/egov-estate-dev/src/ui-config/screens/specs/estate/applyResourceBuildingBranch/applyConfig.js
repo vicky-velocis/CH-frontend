@@ -16,7 +16,10 @@ import {
 } from "./ownerDetails"
 import {
   reviewDetails
-} from "./reviewDetails"
+} from "./reviewDetails";
+import {
+  applyEstates
+} from "../../../../../ui-utils/apply"
 
 const documentCardConfig = {
   header: getCommonTitle({
@@ -43,7 +46,7 @@ export const ownerDocumentDetails_0 = getCommonCard({
       uploadedDocumentsJsonPath: "PropertiesTemp[0].propertyDetails.owners[0].ownerDetails.uploadedDocsInRedux",
       tenantIdJsonPath: "Properties[0].tenantId",
       removedJsonPath: "PropertiesTemp[0].propertyDetails.owners[0].ownerDetails.removedDocs",
-      // callBack: applyEstates,
+      callBack: applyEstates,
       activeIndex: 2
     }
   }

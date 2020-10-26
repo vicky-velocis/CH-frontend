@@ -49,11 +49,10 @@ const onRowClick = rowData => {
   console.log(rowData);
 
   if (rowData[2].toUpperCase() === ESTATE_DRAFTED_STATE) {
-    window.location.href = `apply-building-branch?filenumber=${rowData[0]}&tenantId=${tenantId}`;
+    window.location.href = `apply-building-branch?fileNumber=${rowData[0]}&tenantId=${tenantId}`;
   }
   else {
-    window.location.href = `search-preview-building-branch
-    ?filenumber=${rowData[0]}&tenantId=${tenantId}`;
+    window.location.href = `search-preview-building-branch?fileNumber=${rowData[0]}&tenantId=${tenantId}`;
   }
 };
 
