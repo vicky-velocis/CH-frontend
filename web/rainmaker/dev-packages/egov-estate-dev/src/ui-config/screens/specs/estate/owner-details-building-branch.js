@@ -54,7 +54,7 @@ export const searchResults = async (action, state, dispatch, fileNumber) => {
     
     dispatch(
       handleField(
-      "purchaser-details",
+      "owner-details-building-branch",
       "components.div.children.ownerContainer",
       "children",
       containers

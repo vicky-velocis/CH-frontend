@@ -7,6 +7,7 @@ import {
   getCommonSubHeader,
   getCommonContainer
 } from "egov-ui-framework/ui-config/screens/specs/utils";
+import { convertEpochToDate } from "../../utils";
 import {
   changeStep
 } from "./footer"
@@ -259,7 +260,8 @@ export const getReviewOwner = (isEditable = true, owner = 0) => {
       possessionDate: getLabelWithValue(
         possessionDateLabel,
         {
-          jsonPath: `Properties[0].propertyDetails.owners[${owner}].ownerDetails.possesionDate`
+          jsonPath: `Properties[0].propertyDetails.owners[${owner}].ownerDetails.possesionDate`,
+          callBack: convertEpochToDate
         }
       ),
     })

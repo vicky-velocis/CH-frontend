@@ -72,7 +72,7 @@ const EstatePurchaserDetails = {
   uiFramework: "material-ui",
   name: "purchaser-details",
   beforeInitScreen: (action, state, dispatch) => {
-    fileNumber = getQueryArg(window.location.href, "filenumber");
+    fileNumber = getQueryArg(window.location.href, "fileNumber");
     beforeInitFn(action, state, dispatch, fileNumber);
     return action;
   },

@@ -271,15 +271,17 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
         set(queryObject[0], "action", "SUBMIT")
       }
 
-      owners = owners.map(item => ({...item, ownerDetails: {...item.ownerDetails, isCurrentOwner: true}}))
-      prevOwners = prevOwners.map(item => ({...item, ownerDetails: {...item.ownerDetails, isCurrentOwner: false}}))
-      owners = [...owners, ...prevOwners];
-
-      set(
-        queryObject[0],
-        "propertyDetails.owners",
-        owners
-      )
+      if (screenName != "apply-building-branch") {
+        owners = owners.map(item => ({...item, ownerDetails: {...item.ownerDetails, isCurrentOwner: true}}))
+        prevOwners = prevOwners.map(item => ({...item, ownerDetails: {...item.ownerDetails, isCurrentOwner: false}}))
+        owners = [...owners, ...prevOwners];
+      
+        set(
+          queryObject[0],
+          "propertyDetails.owners",
+          owners
+        )
+      }
 
       if (owners) {
         owners.map((item, index) => {
@@ -340,20 +342,22 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
         Properties[0].propertyDetails.owners[index].ownerDetails.ownerDocuments = ownerDocuments;
         Properties[0].propertyDetails.owners[index].ownerDetails.removedDocs = removedDocs;
       })
-
-      let currOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == true);
-      let prevOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == false);
-
       
-      currOwners.map((item, index) => {
-        setDocsForEditFlow(state, dispatch, `Properties[0].propertyDetails.owners[${index}].ownerDetails.ownerDocuments`, `PropertiesTemp[0].propertyDetails.owners[${index}].ownerDetails.uploadedDocsInRedux`);
-      })
+      if (screenName != "apply-building-branch") {
+        let currOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == true);
+        let prevOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == false);
 
-      prevOwners.map((item, index) => {
-        setDocsForEditFlow(state, dispatch, `Properties[0].propertyDetails.purchaser[${index}].ownerDetails.ownerDocuments`, `PropertiesTemp[0].propertyDetails.purchaser[${index}].ownerDetails.uploadedDocsInRedux`);
-      })
+        
+        currOwners.map((item, index) => {
+          setDocsForEditFlow(state, dispatch, `Properties[0].propertyDetails.owners[${index}].ownerDetails.ownerDocuments`, `PropertiesTemp[0].propertyDetails.owners[${index}].ownerDetails.uploadedDocsInRedux`);
+        })
 
-      Properties = [{...Properties[0], propertyDetails: {...Properties[0].propertyDetails, owners: currOwners, purchaser: prevOwners, ratePerSqft: ratePerSqft, areaSqft: areaSqft}}]
+        prevOwners.map((item, index) => {
+          setDocsForEditFlow(state, dispatch, `Properties[0].propertyDetails.purchaser[${index}].ownerDetails.ownerDocuments`, `PropertiesTemp[0].propertyDetails.purchaser[${index}].ownerDetails.uploadedDocsInRedux`);
+        })
+
+        Properties = [{...Properties[0], propertyDetails: {...Properties[0].propertyDetails, owners: currOwners, purchaser: prevOwners, ratePerSqft: ratePerSqft, areaSqft: areaSqft}}]
+      }
     }
     // let ownerDocuments = Properties[0].propertyDetails.ownerDocuments || [];
     // const removedDocs = ownerDocuments.filter(item => !item.active)

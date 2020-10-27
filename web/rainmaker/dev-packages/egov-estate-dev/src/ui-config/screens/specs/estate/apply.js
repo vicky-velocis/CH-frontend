@@ -547,14 +547,16 @@ export const getPMDetailsByFileNumber = async (
 }
 
 const getData = async (action, state, dispatch) => {
-  const fileNumber = getQueryArg(window.location.href, "filenumber");
+  const fileNumber = getQueryArg(window.location.href, "fileNumber");
   if (!fileNumber) {
     dispatch(
       prepareFinalObject(
         "Properties",
         [{
           propertyMasterOrAllotmentOfSite: "PROPERTY_MASTER",
-          branchType: "ESTATE_BRANCH"
+          propertyDetails: {
+            branchType: "ESTATE_BRANCH"
+          }
         }]
       )
     )
