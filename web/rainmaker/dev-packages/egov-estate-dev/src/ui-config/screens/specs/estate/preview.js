@@ -1,6 +1,7 @@
 import { getStatusList } from "./searchResource/functions";
 import {
-  getTenantId
+  getTenantId,
+  getUserInfo
 } from "egov-ui-kit/utils/localStorageUtils";
 import { createEstimateData, getCommonApplyHeader, getFeesEstimateCard } from "../utils";
 import { footerReview } from "./preview-resource/reviewFooter";
@@ -12,8 +13,44 @@ const { setThirdStep } = require("../estate-citizen/applyResource/review");
 import {downloadPrintContainer} from './applyResource/footer';
 import { getApplicationConfig } from "../estate-citizen/_apply";
 
+const userInfo = JSON.parse(getUserInfo());
+const {
+  roles = []
+} = userInfo
+const findItem = roles.find(item => item.code === "ES_EB_FINANCIAL_OFFICER");
+
+const getWfDocuments = (status) => {
+  const templateDocuments = [{
+    type: status === "ES_PENDING_SO_TEMPLATE_CREATION" ? "WF_DOCS_TEMPLATE" : status === "ES_PENDING_CITIZEN_TEMPLATE_SUBMISSION" ? "WF_DOCS_TEMPLATE_SUBMISSION" : "WF_DOCS_NOTICE",
+    description: {
+      labelName: "ES_ALLTYPES",
+      labelKey: "ES_ALLTYPES",
+    },
+      formatProps :{
+        accept : "application/msword,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*",
+      }, 
+      maxFileSize: 6000,
+      moduleName: "ES",
+  statement: {
+       labelName: "UPLOAD_DOCUMENT",
+       labelKey: "UPLOAD_DOCUMENT"
+  }
+  }]
+  const documentTypes = [
+    {
+    name: status === "ES_PENDING_SO_TEMPLATE_CREATION" ? "WF_DOCS_TEMPLATE" : status === "ES_PENDING_CITIZEN_TEMPLATE_SUBMISSION" ? "WF_DOCS_TEMPLATE_SUBMISSION" : "WF_DOCS_NOTICE",
+    required: true,
+    jsonPath: `templateDocuments[0]`,
+    statement: "UPLOAD_DOCUMENT"
+    }
+  ]
+  return {templateDocuments, documentTypes}
+}
+
 const getData = async (action, state, dispatch) => {
     await dispatch(prepareFinalObject("workflow.ProcessInstances", []))
+    await dispatch(prepareFinalObject("templateDocuments", []))
+    await dispatch(prepareFinalObject("temp", []))
     const applicationNumber = getQueryArg(window.location.href, "applicationNumber");
     if(!applicationNumber) {
         return {}
@@ -22,7 +59,7 @@ const getData = async (action, state, dispatch) => {
     const queryObject = [
         {key: "applicationNumber", value: applicationNumber}
       ]
-    let footer = {},printCont = {};
+    let footer = {},printCont = {},taskStatusProps = {};
     const response = await getSearchApplicationsResults(queryObject)
     try {
        let {Applications = []} = response;
@@ -49,15 +86,20 @@ const getData = async (action, state, dispatch) => {
         "temp[0].reviewDocData",
         dispatch,'ES'
       );
+      await setDocuments(
+        response,
+        "Applications[0].wfDocuments",
+        "temp[0].reviewWfDocData",
+        dispatch, ''
+      )
        const {branchType, moduleType, applicationType} = Applications[0];
        const type = `${branchType}_${moduleType}_${applicationType}`;
-
+       const application = Applications[0]
        const headerLabel = `ES_${type.toUpperCase()}`
 
        const headerrow = getCommonApplyHeader({label: headerLabel, number: applicationNumber});
-      const {uiConfig} = await getApplicationConfig({dispatch, applicationType: type})
-       //  const dataConfig = require(`../estate-citizen/${type}.json`);
-      //  let {uiConfig} = dataConfig[type][0];
+       let {uiConfig, wfDocumentList = []} = await getApplicationConfig({dispatch, applicationType: type})
+       wfDocumentList = wfDocumentList.filter(item => eval(item.filter))
        let {preview} = uiConfig
        let reviewDetails = await setThirdStep({state, dispatch, preview, applicationType: type, data: Applications[0], isEdit: false, showHeader: false});
        const estimateResponse = await createEstimateData(Applications[0], dispatch, window.location.href)
@@ -70,7 +112,7 @@ const getData = async (action, state, dispatch) => {
           reviewDetails = {estimate, ...reviewDetails}
        }
         if(applicationState === "ES_PENDING_PAYMENT" || applicationState === "ES_PENDING_CITIZEN_TEMPLATE_SUBMISSION" || applicationState === "ES_PENDING_CITIZEN_NOTICE_DOCUMENTS") {
-          footer = process.env.REACT_APP_NAME === "Citizen" ? footerReview(
+          footer = process.env.REACT_APP_NAME === "Citizen" || (!!findItem && applicationState === "ES_PENDING_PAYMENT") ? footerReview(
             action,
             state,
             dispatch,
@@ -81,6 +123,43 @@ const getData = async (action, state, dispatch) => {
           ) : footer
         }
 
+        if(!!wfDocumentList.length) {
+          const templateDocuments = wfDocumentList.map(item => ({
+            type: item.code,
+            description: {
+              labelName: item.fileType,
+              labelKey: item.fileType,
+            },
+            formatProps :{
+              accept : item.accept,
+            }, 
+            maxFileSize: 6000,
+            moduleName: "ES",
+            statement: {
+                labelName: item.description,
+                labelKey: item.description
+            }
+          }))
+          const documentTypes = wfDocumentList.map((item, index) => ({
+            name: item.code,
+            required: item.required,
+            jsonPath: `templateDocuments[${index}]`,
+            statement: item.description
+            }))
+          dispatch(prepareFinalObject("temp[0].templateDocuments", documentTypes))
+          const documentProps = {
+                buttonLabel: {
+                  labelName: "UPLOAD FILE",
+                  labelKey: "ES_BUTTON_UPLOAD_FILE"
+                },
+                inputProps : templateDocuments,
+                documentsJsonPath: "temp[0].templateDocuments",
+                uploadedDocumentsJsonPath: "temp[0].uploadedDocsInRedux",
+                tenantIdJsonPath: "Applications[0].tenantId",
+                documentTypePrefix: ""
+              }
+          taskStatusProps = {documentProps, documentsJsonPath: "templateDocuments"}
+        }
        printCont = downloadPrintContainer(
           action,
           state,
@@ -131,7 +210,8 @@ const getData = async (action, state, dispatch) => {
                           componentPath: "WorkFlowContainer",
                           props: {
                             dataPath: "Applications",
-                            updateUrl: "/est-services/application/_update"
+                            updateUrl: "/est-services/application/_update",
+                            ...taskStatusProps
                           }
                         },
                         actionDialog: {
@@ -143,15 +223,17 @@ const getData = async (action, state, dispatch) => {
                             dataPath: "Applications",
                             updateUrl: "/est-services/application/_update",
                             data: {
-                              buttonLabel: "RESUBMIT",
+                              buttonLabel: "SUBMIT",
                               dialogHeader: {
                                 labelName: "RESUBMIT Application",
                                 labelKey: "WF_RESUBMIT_APPLICATION"
                               },
                               showEmployeeList: false,
                               roles: "CITIZEN",
-                              isDocRequired: true
-                            }
+                              isDocRequired: true,
+                              ...taskStatusProps
+                            },
+                            documentsJsonPath: "templateDocuments",
                           }
                         },
                         reviewDetails,
