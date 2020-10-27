@@ -40,10 +40,17 @@ export const searchResults = {
 };
 
 const onRowClick = rowData => {
-  const type = getQueryArg(window.location.href, "type")
+  const type = getQueryArg(window.location.href, "type");
+  const branchType = getQueryArg(window.location.href, "branchType");
+  if (branchType == "BUILDING_BRANCH") {
+    window.location.href = `_apply?propertyId=${rowData[4]}&applicationType=${type}`;
+    return;
+  }
+  
   if(type === "payment") {
     window.location.href = process.env.REACT_APP_NAME === "Citizen" ? `/estate/estate-payment?propertyId=${rowData[4]}` : `estate-payment?propertyId=${rowData[4]}`
-  } else {
+  }
+  else {
     window.location.href = process.env.REACT_APP_NAME === "Citizen" ? `estate-branch-apply?propertyId=${rowData[4]}` : `_apply?propertyId=${rowData[4]}&applicationType=${type}`
   }
 };
