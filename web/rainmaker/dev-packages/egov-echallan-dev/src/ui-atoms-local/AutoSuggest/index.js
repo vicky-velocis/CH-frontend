@@ -111,7 +111,13 @@ const handleTextChange = (e,isFilterData) => {
     if (vendorvalue) {
       console.log(e.target.value);
       if (inputValue.length >= 3) {
-        finalVendorValues = vendorvalue.filter(vendor => vendor.fullname && vendor.fullname.includes(inputValue));
+        if (isNaN(inputValue)) {
+          finalVendorValues = vendorvalue.filter(vendor =>
+            vendor.fullname && vendor.fullname.includes(inputValue));
+        } else { 
+          finalVendorValues = vendorvalue.filter(vendor =>
+            vendor.code && vendor.code.includes(inputValue));
+        }
         store.dispatch(prepareFinalObject("applyScreenMdmsData.egec.vendorList2", finalVendorValues));
       }
     }
