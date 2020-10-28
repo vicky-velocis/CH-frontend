@@ -60,6 +60,42 @@ class LandingPage extends React.Component {
     }
   };
 
+  renderCard = (item, length) => {
+    const {applicationCount, classes} = this.props
+    return (
+      !item.hide ? (
+        <Grid
+          className={classes.item}
+          item
+          xs={12}
+          sm={length > 4 ? 12 / 4 : 12 / length}
+          align="center"
+        >
+          <Card
+            className={`${classes.paper} module-card-style`}
+            onClick={() => this.onCardCLick(item.route)}
+          >
+            <CardContent classes={{ root: "card-content-style" }}>
+              {item.icon}
+              <div>
+                <LabelContainer
+                  labelKey={item.label.labelKey}
+                  labelName={item.label.labelName}
+                  style={{
+                    fontSize: 14,
+                    color: "rgba(0, 0, 0, 0.8700000047683716)"
+                  }}
+                  dynamicArray={applicationCount ? [applicationCount] : [0]}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </Grid>
+      ) : null
+    )
+  }
+
+
   render() {
     const { classes, items, applicationCount, isArray } = this.props;
     return (
@@ -68,70 +104,10 @@ class LandingPage extends React.Component {
           return (
             <React.Fragment>
               <div>{obj.branchType}</div>
-              {obj.items.map(item => {
-                return !item.hide ? (
-                  <Grid
-                    className={classes.item}
-                    item
-                    xs={12}
-                    sm={items.length > 4 ? 12 / 4 : 12 / items.length}
-                    align="center"
-                  >
-                    <Card
-                      className={`${classes.paper} module-card-style`}
-                      onClick={() => this.onCardCLick(item.route)}
-                    >
-                      <CardContent classes={{ root: "card-content-style" }}>
-                        {item.icon}
-                        <div>
-                          <LabelContainer
-                            labelKey={item.label.labelKey}
-                            labelName={item.label.labelName}
-                            style={{
-                              fontSize: 14,
-                              color: "rgba(0, 0, 0, 0.8700000047683716)"
-                            }}
-                            dynamicArray={applicationCount ? [applicationCount] : [0]}
-                          />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ) : null;
-              })}
+              {obj.items.map(item => this.renderCard(item, obj.items.length))}
             </React.Fragment>
           )
-        })  : items.map(obj => {
-          return !obj.hide ? (
-            <Grid
-              className={classes.item}
-              item
-              xs={12}
-              sm={items.length > 4 ? 12 / 4 : 12 / items.length}
-              align="center"
-            >
-              <Card
-                className={`${classes.paper} module-card-style`}
-                onClick={() => this.onCardCLick(obj.route)}
-              >
-                <CardContent classes={{ root: "card-content-style" }}>
-                  {obj.icon}
-                  <div>
-                    <LabelContainer
-                      labelKey={obj.label.labelKey}
-                      labelName={obj.label.labelName}
-                      style={{
-                        fontSize: 14,
-                        color: "rgba(0, 0, 0, 0.8700000047683716)"
-                      }}
-                      dynamicArray={applicationCount ? [applicationCount] : [0]}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            </Grid>
-          ) : null;
-        })
+        })  : items.map(obj => this.renderCard(obj, items.length))
         }
       </Grid>
     );
