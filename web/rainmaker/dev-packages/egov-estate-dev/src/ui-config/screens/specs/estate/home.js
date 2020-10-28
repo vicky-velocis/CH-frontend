@@ -71,7 +71,15 @@ const cardItems = [
     },
     icon: < FormIcon / > ,
     route: "/estate/property-search?type=payment"
-  }
+  },
+  {
+    label: {
+      labelKey: "ES_PROPERTY_MASTER_PENALTY_HEADER",
+      labelName: "Penalty"
+    },
+    icon: < FormIcon / > ,
+    route: "/estate/property-search?type=penalty"
+  },
 ]
 
 if (!!findItem) {
