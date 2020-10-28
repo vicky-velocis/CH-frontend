@@ -14,7 +14,7 @@ import {
 import { getSearchResults, getSearchApplicationsResults } from "../../../../ui-utils/commons";
 import { getOwnerDetails,getAllotmentDetails, getModeOfTransferDetailsForApprovedProperty, getCompanyDetails, getFirmDetails } from "./preview-resource/owner-properties";
 import {onTabChange, headerrow, tabs} from './search-preview'
-import { mobileNumberField } from "./applyResource/ownerDetails";
+import { mobileNumberField, addressField } from "./applyResource/ownerDetails";
 import {
   getUserInfo
 } from "egov-ui-kit/utils/localStorageUtils";
@@ -84,8 +84,9 @@ export const searchResults = async (action, state, dispatch, fileNumber) => {
     let properties = payload.Properties;
     let owners = properties[0].propertyDetails.owners;
     let currOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == true);
+    let companyOrFirm = properties[0].propertyDetails.companyOrFirm;
     properties = [{...properties[0], propertyDetails: {...properties[0].propertyDetails, owners: currOwners}}]
-    
+
     dispatch(prepareFinalObject("Properties", properties));
 
     let applicationState = properties[0].state;
@@ -171,6 +172,15 @@ export const searchResults = async (action, state, dispatch, fileNumber) => {
         containers
       )
     );
+
+    dispatch(
+      handleField(
+        "owner-details",
+        "components.div.children.entityContainer",
+        "visible",
+        !!companyOrFirm
+      )
+    )
   }
 }
 
@@ -319,27 +329,6 @@ const ownerHeader = getCommonTitle({
   }
 })
 
-const addressField = {
-  label: {
-    labelName: "Address",
-    labelKey: "ES_ADDRESS_LABEL"
-  },
-  placeholder: {
-    labelName: "Enter Address",
-    labelKey: "ES_ADDRESS_PLACEHOLDER"
-  },
-  gridDefination: {
-    xs: 12,
-    sm: 12
-  },
-  required: true,
-  props: {
-    multiline: true,
-    rows: 2
-  },
-  maxLength: 150,
-  jsonPath: "Properties[0].propertyDetails.owners[0].ownerDetails.address"
-}
 const editOwnerDetails = getCommonContainer({
   address: getTextField(addressField),
   mobileNumber: getTextField(mobileNumberField)

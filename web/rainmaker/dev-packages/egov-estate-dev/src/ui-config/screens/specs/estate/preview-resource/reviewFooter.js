@@ -6,6 +6,7 @@ import {
     getCommonApplyFooter
   } from "../../utils";
   import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
+import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 
   export const footerReview = (
     action,
@@ -78,6 +79,32 @@ import {
                 },
                 children: {
                   submitButtonLabel: getLabel({
+                    labelName: "UPLOAD DOCUMENTS",
+                    labelKey: "ES_UPLOAD_DOCUMENTS"
+                  })
+                },
+                onClickDefination: {
+                  action: "condition",
+                  callBack: () => {
+                    dispatch(prepareFinalObject("ResubmitAction", true))
+                  },
+                },
+                visible: process.env.REACT_APP_NAME === "Citizen"  && getButtonVisibility(status, "UPLOAD_DOCUMENT") ? true : false
+              },
+              offlinePayment: {
+                componentPath: "Button",
+                props: {
+                  variant: "contained",
+                  color: "primary",
+                  style: {
+                    minWidth: "180px",
+                    height: "48px",
+                    marginRight: "45px",
+                    borderRadius: "inherit"
+                  }
+                },
+                children: {
+                  submitButtonLabel: getLabel({
                     labelName: "MAKE PAYMENT",
                     labelKey: "COMMON_MAKE_PAYMENT"
                   })
@@ -85,15 +112,14 @@ import {
                 onClickDefination: {
                   action: "condition",
                   callBack: () => {
-                    // dispatch(
-                    //   setRoute(
-                    //    `/estate-citizen/pay?consumerCode=${applicationNumber}&tenantId=${tenantId}&businessService=${businessService}`
-                    //   )
-                    // );
+                    dispatch(
+                      setRoute(
+                       `/estate/pay?consumerCode=${applicationNumber}&tenantId=${tenantId}&businessService=${businessService}`
+                      )
+                    );
                   },
-  
                 },
-                visible: process.env.REACT_APP_NAME === "Citizen"  && getButtonVisibility(status, "UPLOAD_DOCUMENT") ? true : false
+                visible: process.env.REACT_APP_NAME === "Employee" && getButtonVisibility(status, "PENDINGPAYMENT") ? true : false
               }
             },
             gridDefination: {
