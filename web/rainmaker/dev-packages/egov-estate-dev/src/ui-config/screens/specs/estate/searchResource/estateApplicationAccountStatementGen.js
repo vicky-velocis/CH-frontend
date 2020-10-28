@@ -115,6 +115,9 @@ export const estateApplicationAccountStatementGen = getCommonCard({
             labelKey: "ES_CATEGORY_PLACEHOLDER"
           },
           required: false,
+          props: {
+            disabled: true
+          },
           jsonPath: "Properties[0].category",
             optionValue: "code",
             optionLabel: "name",
@@ -124,60 +127,50 @@ export const estateApplicationAccountStatementGen = getCommonCard({
                 sm: 6
             },
             errorMessage: "ES_ERR_CATEGORY_FIELD",
-            beforeFieldChange: (action, state, dispatch) => {
-              dispatch(
-                prepareFinalObject(
-                  "Properties[0].subcatvar",
-                  []
-                )
-              )
+            // beforeFieldChange: (action, state, dispatch) => {
+            //   dispatch(
+            //     prepareFinalObject(
+            //       "Properties[0].subcatvar",
+            //       ""
+            //     )
+            //   )
 
-              let categorySelected = action.value;
-              let subcatvar = get(state.screenConfiguration.preparedFinalObject,"Properties[0].subcatvar");
-              let mdmsCategory = get(state.screenConfiguration.preparedFinalObject,"searchScreenMdmsData.EstateServices.categories")
+            //   let categorySelected = action.value;
+            //   let subcatvar = get(state.screenConfiguration.preparedFinalObject,"Properties[0].subcatvar");
+            //   let mdmsCategory = get(state.screenConfiguration.preparedFinalObject,"searchScreenMdmsData.EstateServices.categories")
             
-              if(categorySelected === "CAT.RESIDENTIAL"){
-                subcatvar = mdmsCategory.filter(item => !!item.SubCategory && item.code === "CAT.RESIDENTIAL")
-                dispatch(
-                  prepareFinalObject(
-                    "Properties[0].subcatvar",
-                    subcatvar
-                  )
-                )
-                // set(state.screenConfiguration.preparedFinalObject,"Properties[0].subcatvar",subcatvar);
-              }
-              else if(categorySelected === "CAT.COMMERCIAL"){
-                subcatvar = mdmsCategory.filter(item => !!item.SubCategory && item.code === "CAT.COMMERCIAL")
-                dispatch(
-                  prepareFinalObject(
-                    "Properties[0].subcatvar",
-                    subcatvar
-                  )
-                )
-                // set(state.screenConfiguration.preparedFinalObject,"Properties[0].subcatvar",subcatvar);
-                }
-                else if(categorySelected === "CAT.INDUSTRIAL" || categorySelected === "CAT.INSTITUTIONAL" || categorySelected === "CAT.GOVPROPERTY" || categorySelected === "CAT.RELIGIOUS" || categorySelected === "CAT.HOSPITAL"){
-                  dispatch(
-                    prepareFinalObject(
-                      "Properties[0].subcatvar",
-                      ""
-                    )
-                  )
-                  // let path = "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.categoryContainer.children.subCategory"
-                  // dispatch(
-                  //   handleField(
-                  //     "estate-search-account-statement",
-                  //     path,
-                  //     "visible",
-                  //     true
-                  //   )
-                  // );
-                  // set(state.screenConfiguration.preparedFinalObject,"Properties[0].subcatvar",subcatvar);
-                }
+            //   if(categorySelected === "CAT.RESIDENTIAL"){
+            //     subcatvar = mdmsCategory.filter(item => !!item.SubCategory && item.code === "CAT.RESIDENTIAL")
+            //     dispatch(
+            //       prepareFinalObject(
+            //         "Properties[0].subcatvar",
+            //         subcatvar
+            //       )
+            //     )
+            //     // set(state.screenConfiguration.preparedFinalObject,"Properties[0].subcatvar",subcatvar);
+            //   }
+            //   else if(categorySelected === "CAT.COMMERCIAL"){
+            //     subcatvar = mdmsCategory.filter(item => !!item.SubCategory && item.code === "CAT.COMMERCIAL")
+            //     dispatch(
+            //       prepareFinalObject(
+            //         "Properties[0].subcatvar",
+            //         subcatvar
+            //       )
+            //     )
+            //     // set(state.screenConfiguration.preparedFinalObject,"Properties[0].subcatvar",subcatvar);
+            //     }
+            //     else if(categorySelected === "CAT.INDUSTRIAL" || categorySelected === "CAT.INSTITUTIONAL" || categorySelected === "CAT.GOVPROPERTY" || categorySelected === "CAT.RELIGIOUS" || categorySelected === "CAT.HOSPITAL"){
+            //       dispatch(
+            //         prepareFinalObject(
+            //           "Properties[0].subcatvar",
+            //           ""
+            //         )
+            //       )
+            //     }
                 
-            }
+            // }
         }),
-        subCategory: getSelectField({
+        subCategory: getTextField({
           label: {
             labelName: "Sub Category",
             labelKey: "ES_SUB_CATEGORY_LABEL"
@@ -187,10 +180,13 @@ export const estateApplicationAccountStatementGen = getCommonCard({
             labelKey: "ES_SUB_CATEGORY_PLACEHOLDER"
           },
           // required: false,
-          jsonPath: "searchScreen.subCategory",
-          optionValue: "code",
-          optionLabel: "name",
-          // sourceJsonPath: "Properties[0].subCategory",
+          jsonPath: "singleSubCategory",
+          props: {
+            disabled: true
+          },
+          // optionValue: "code",
+          // optionLabel: "label",
+          sourceJsonPath: "singleSubCategory",
           gridDefination: {
               xs: 12,
               sm: 6
@@ -215,6 +211,9 @@ export const estateApplicationAccountStatementGen = getCommonCard({
             gridDefination: {
                 xs: 12,
                 sm: 6
+            },
+            props: {
+              disabled: true
             },
             errorMessage: "ES_ERR_SITE_NUMBER_FIELD"
       })
@@ -356,6 +355,73 @@ export const estateApplicationAccountStatementGen = getCommonCard({
           const {Properties} = payload;
           // const {owners = []} = Properties[0]
           // const findOwner = owners.find(item => !!item.activeState) || {}
+          
+          dispatch(
+            prepareFinalObject(
+              "singleSubCategory",
+              []
+            )
+          )
+
+          let categorySelected = Properties[0].category
+          let subcatPropertyData = Properties[0].subCategory
+          let subcatvar;
+          let mdmsCategory = get(state.screenConfiguration.preparedFinalObject,"searchScreenMdmsData.EstateServices.categories")
+        
+          if(categorySelected === "CAT.RESIDENTIAL"){
+            subcatvar = mdmsCategory.filter(item => !!item.SubCategory && item.code === "CAT.RESIDENTIAL")
+            let i = 0, len = subcatvar[0].SubCategory.length;
+              while (i < len) {
+                  if(subcatvar[0].SubCategory[i].code === subcatPropertyData){
+                    dispatch(
+                      prepareFinalObject(
+                        "singleSubCategory",
+                        subcatvar[0].SubCategory[i].name
+                      )
+                    )
+                  }
+                  i++
+              }
+            // dispatch(
+            //   prepareFinalObject(
+            //     "subCategory1",
+            //     subcatvar
+            //   )
+            // )
+            // set(state.screenConfiguration.preparedFinalObject,"Properties[0].subcatvar",subcatvar);
+          }
+          else if(categorySelected === "CAT.COMMERCIAL"){
+            subcatvar = mdmsCategory.filter(item => !!item.SubCategory && item.code === "CAT.COMMERCIAL")
+            
+            let i = 0, len = subcatvar[0].SubCategory.length;
+            while (i < len) {
+                if(subcatvar[0].SubCategory[i].code === subcatPropertyData){
+                  dispatch(
+                    prepareFinalObject(
+                      "singleSubCategory",
+                      subcatvar[0].SubCategory[i].name
+                    )
+                  )
+                }
+                i++
+            }
+            // dispatch(
+            //   prepareFinalObject(
+            //     "subCategory1",
+            //     subcatvar
+            //   )
+            // )
+            // set(state.screenConfiguration.preparedFinalObject,"Properties[0].subcatvar",subcatvar);
+            }
+            else if(categorySelected === "CAT.INDUSTRIAL" || categorySelected === "CAT.INSTITUTIONAL" || categorySelected === "CAT.GOVPROPERTY" || categorySelected === "CAT.RELIGIOUS" || categorySelected === "CAT.HOSPITAL"){
+              dispatch(
+                prepareFinalObject(
+                  "singleSubCategory",
+                  ""
+                )
+              )
+            }
+
           dispatch(
             prepareFinalObject(
               "searchScreen.sectorNumber",

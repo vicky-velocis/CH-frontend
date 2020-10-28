@@ -9,35 +9,36 @@ import {
 } from "../../utils/index";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 
-export const MONTH = getTextToLocalMapping("ES_COMMON_TABLE_COL_MONTH")
-export const RENT_DUE = getTextToLocalMapping("ES_COMMON_TABLE_COL_RENT_DUE") + " (₹)"
-export const RECEIPT_NO = getTextToLocalMapping("ES_COMMON_TABLE_RECEIPT_NO")
 export const DATE = getTextToLocalMapping("ES_COMMON_TABLE_COL_DATE")
-export const PENALTY_INTEREST = getTextToLocalMapping("ES_COMMON_TABLE_COL_PENALTY_INTEREST")
-export const ST_GST_RATE = getTextToLocalMapping("ES_COMMON_TABLE_COL_ST_GST_RATE")
-export const PAID = getTextToLocalMapping("ES_COMMON_TABLE_COL_PAID") + " (₹)"
-export const DATE_OF_RECEIPT = getTextToLocalMapping("ES_COMMON_TABLE_COL_DATE_OF_RECEIPT")
-export const NO_OF_DAYS = getTextToLocalMapping("ES_COMMON_TABLE_COL_NO_OF_DAYS")
-export const INT_ON_DELAYED_PAYMENT_OF_GST = getTextToLocalMapping("ES_COMMON_TABLE_COL_INT_ON_DELAYED_PAYMENT_GST")
-
+export const AMOUNT = getTextToLocalMapping("ES_COMMON_TABLE_COL_PENALTY_INTEREST")
+export const PAYMENTTYPE = getTextToLocalMapping("ES_COMMON_TABLE_COL_ST_GST_RATE")
+export const RENTTYPE = getTextToLocalMapping("ES_COMMON_TABLE_COL_PAID") + " (₹)"
+export const PRINCIPALDUE = getTextToLocalMapping("ES_COMMON_TABLE_COL_DATE_OF_RECEIPT")
+export const GSTDUE = getTextToLocalMapping("ES_COMMON_TABLE_COL_NO_OF_DAYS")
+export const INTERESTDUE = getTextToLocalMapping("ES_COMMON_TABLE_COL_INT_ON_DELAYED_PAYMENT_GST")
+export const GSTPENALTYDUE = getTextToLocalMapping("ES_COMMON_TABLE_RECEIPT_NO")
+export const TOTALDUE = getTextToLocalMapping("ES_COMMON_TABLE_COL_INT_ON_DELAYED_PAYMENT_GST")
+export const ACCOUNTBALANCE = getTextToLocalMapping("ES_COMMON_TABLE_RECEIPT_NO")
+export const RECEIPT_NO = getTextToLocalMapping("ES_COMMON_TABLE_RECEIPT_NO")
 
 export const searchResultsAccountStatement = {
   uiFramework: "custom-molecules",
   moduleName: "egov-estate",
   componentPath: "Table",
-  visible: true,
+  visible: false,
   props: {
     columns: [
-        getTextToLocalMapping("Month"),
-        getTextToLocalMapping("Rent Due"),
-        getTextToLocalMapping("Receipt No."),
         getTextToLocalMapping("Date"),
-        getTextToLocalMapping("Penalty/Interest"),
-        getTextToLocalMapping("ST/GST rate"),
-        getTextToLocalMapping("Paid"),
-        getTextToLocalMapping("Date of Receipt"),
-        getTextToLocalMapping("No. of days"),
-        getTextToLocalMapping("Int. on delayed payment of GST"),
+        getTextToLocalMapping("Amount"),
+        getTextToLocalMapping("Type(Payment)"),
+        getTextToLocalMapping("Type(Rent)"),
+        getTextToLocalMapping("Principal Due"),
+        getTextToLocalMapping("GST Due"),
+        getTextToLocalMapping("Interest Due"),
+        getTextToLocalMapping("GST Penalty Due"),
+        getTextToLocalMapping("Total Due"),
+        getTextToLocalMapping("Account Balance"),
+        getTextToLocalMapping("Receipt No."),
       {
         name: "propertyId",
         options: {
@@ -65,27 +66,17 @@ export const accountStatementResults = {
   visible: false,
   props: {...searchResultsAccountStatement.props, 
     columns: [
-    MONTH,
-    RENT_DUE,
-    RECEIPT_NO,
-    DATE,
-    PENALTY_INTEREST,
-    ST_GST_RATE,
-    PAID,
-    DATE_OF_RECEIPT,
-    NO_OF_DAYS,
-    INT_ON_DELAYED_PAYMENT_OF_GST
-
-      // {
-      //   name: AMOUNT,
-      //   options: {
-      //     customBodyRender: value => (
-      //       <span style={{ display: 'flex', justifyContent: 'right', flexDirection: 'row-reverse',marginBottom:'none'}}>
-      //     {value}
-      //   </span> 
-      //     )
-      //   }
-      // },
+      DATE,
+      AMOUNT,
+      PAYMENTTYPE,
+      RENTTYPE,
+      PRINCIPALDUE,
+      GSTDUE,
+      INTERESTDUE,
+      GSTPENALTYDUE,
+      TOTALDUE,
+      ACCOUNTBALANCE,
+      RECEIPT_NO
     ],
     options: {...searchResultsAccountStatement.props.options,
       onRowClick: () => {},

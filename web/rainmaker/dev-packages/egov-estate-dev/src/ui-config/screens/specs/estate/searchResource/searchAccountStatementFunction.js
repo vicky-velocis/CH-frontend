@@ -24,9 +24,9 @@ import { getAccountStatementProperty } from "./estateApplicationAccountStatement
 export const getTextToLocalMapping = memoize((label) => _getTextToLocalMapping(label));
 
 export const searchApiCallAccountStatement = async (state, dispatch, onInit, offset, limit = 100, hideTable = true) => {
-  // dispatch(toggleSpinner());
-  // !!hideTable && showHideTable(false, dispatch);
-  showHideTable(false, dispatch);
+  dispatch(toggleSpinner());
+  !!hideTable && showHideTable(false, dispatch);
+  // showHideTable(false, dispatch);
   // let queryObject = [
   //   {
   //     key: "offset",
@@ -126,21 +126,22 @@ var isfileNumberValid = validateFields(
           try {
             dispatch(
               prepareFinalObject(
-                "RentAccountStatements",
-                response.RentAccountStatements
+                "EstateAccountStatement",
+                response.EstateAccountStatement
               )
             );
-            let data = response.RentAccountStatements.map(item => ({
-              [getTextToLocalMapping("Month")]: moment(moment(new Date(item.date)).format("YYYY/MM/DD")).format('MMMM') || "-",
-              [getTextToLocalMapping("Rent Due")]:  formatAmount(item.dueAmount.toFixed(2)) || "-",
-              [getTextToLocalMapping("Receipt No.")]:item.receiptNo||"-",
+            let data = response.EstateAccountStatement.map(item => ({
               [getTextToLocalMapping("Date")]: moment(new Date(item.date)).format("DD-MMM-YYYY") || "-",
-              [getTextToLocalMapping("Penalty/Interest")]: formatAmount(item.remainingInterest.toFixed(2)) || "-",
-              [getTextToLocalMapping("ST/GST rate")]: formatAmount(item.remainingInterest.toFixed(2)) || "-",
-              [getTextToLocalMapping("Paid")]:  formatAmount(item.amount.toFixed(2)) || "-",
-              [getTextToLocalMapping("Date of Receipt")]: moment(new Date(item.date)).format("DD-MMM-YYYY") || "-",
-              [getTextToLocalMapping("No. of days")]: item.no_days || "-",
-              [getTextToLocalMapping("Int. on delayed payment of GST")]: formatAmount(item.remainingBalance.toFixed(2)) || "-",
+              [getTextToLocalMapping("Amount")]: formatAmount(item.amount.toFixed(2)) || "-",
+              [getTextToLocalMapping("Type(Payment)")]:  changeTypePayment(item.type) || "-",
+              [getTextToLocalMapping("Type(Rent)")]: changePTypeRent(item.type) || "-",
+              [getTextToLocalMapping("Principal Due")]: formatAmount(item.remainingPrincipal.toFixed(2)) || "-",
+              [getTextToLocalMapping("GST Due")]:  formatAmount(item.remainingGST.toFixed(2)) || "-",
+              [getTextToLocalMapping("Interest Due")]: formatAmount(item.remainingRentPenalty.toFixed(2)) || "-",
+              [getTextToLocalMapping("GST Penalty Due")]: formatAmount(item.remainingGSTPenalty.toFixed(2)) || "-",
+              [getTextToLocalMapping("Total Due")]: formatAmount(item.dueAmount.toFixed(2)) || "-",
+              [getTextToLocalMapping("Account Balance")]: formatAmount(item.remainingBalance.toFixed(2)) || "-",
+              [getTextToLocalMapping("Receipt No.")]: item.receiptNo || "-",
               
             }));
             let lastElement = data.pop();
@@ -152,6 +153,14 @@ var isfileNumberValid = validateFields(
               handleField(
                 "estate-search-account-statement",
                 "components.div.children.searchResultsAccountStatement",
+                "visible",
+                true
+              )
+            );
+            dispatch(
+              handleField(
+                "estate-search-account-statement",
+                "components.div.children.downloadButton",
                 "visible",
                 true
               )
@@ -270,7 +279,7 @@ var isfileNumberValid = validateFields(
   //     );
       !!hideTable && showHideTable(true, dispatch);
   //     // showHideTable(true, dispatch);
-  //     dispatch(toggleSpinner());
+      dispatch(toggleSpinner());
   //   } catch (error) {
   //     dispatch(toggleSnackbar(true, error.message, "error"));
   //     console.log(error);
@@ -295,3 +304,20 @@ const showHideTable = (booleanHideOrShow, dispatch) => {
     )
   );
 };
+export const changePTypeRent =(type)=>{
+  if(type === 'D'){
+    return "Rent"
+  }else
+  {
+    return "-"
+}
+}
+
+export const changeTypePayment = (type) => {
+  if(type === 'C'){
+    return "Payment"
+    }else
+    {
+      return "-"
+}
+}

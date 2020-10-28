@@ -1459,66 +1459,109 @@ export const getTextToLocalMapping = label => {
         "ES_SEARCH_RESULTS_TABLE_HEADING",
         localisationLabels
       );
-      case "Month":
-      return getLocaleLabels(
-        "Month",
-        "ES_COMMON_TABLE_COL_MONTH",
-        localisationLabels
-      );
-      case "Rent Due":
-      return getLocaleLabels(
-        "Rent Due",
-        "ES_COMMON_TABLE_COL_RENT_DUE",
-        localisationLabels
-      );
-      case "Receipt No.":
-      return getLocaleLabels(
-        "Receipt No.",
-        "ES_COMMON_TABLE_RECEIPT_NO",
-        localisationLabels
-      );
       case "Date":
       return getLocaleLabels(
         "Date",
         "ES_COMMON_TABLE_COL_DATE",
         localisationLabels
       );
-      case "Penalty/Interest":
-      return getLocaleLabels(
-        "Penalty/Interest",
-        "ES_COMMON_TABLE_COL_PENALTY_INTEREST",
-        localisationLabels
-      );
-      case "ST/GST rate":
-      return getLocaleLabels(
-        "ST/GST rate",
-        "ES_COMMON_TABLE_COL_ST_GST_RATE",
-        localisationLabels
-      );
-      case "Paid":
-      return getLocaleLabels(
-        "Paid",
-        "ES_COMMON_TABLE_COL_PAID",
-        localisationLabels
-      );
-      case "Date of Receipt":
-      return getLocaleLabels(
-        "Date of Receipt",
-        "ES_COMMON_TABLE_COL_DATE_OF_RECEIPT",
-        localisationLabels
-      );
-      case "No. of days":
-      return getLocaleLabels(
-        "No. of days",
-        "ES_COMMON_TABLE_COL_NO_OF_DAYS",
-        localisationLabels
-      );
-      case "Int. on delayed payment of GST":
-      return getLocaleLabels(
-        "Int. on delayed payment of GST",
-        "ES_COMMON_TABLE_COL_INT_ON_DELAYED_PAYMENT_GST",
-        localisationLabels
-      );
+      case "Amount":
+        return getLocaleLabels(
+          "Amount",
+          "ES_COMMON_TABLE_COL_AMOUNT",
+          localisationLabels
+        );
+      case "Type(Payment)":
+        return getLocaleLabels(
+          "Type(Payment)",
+          "ES_COMMON_TABLE_COL_PAYMENTTYPE",
+          localisationLabels
+        );
+      case "Type(Rent)":
+        return getLocaleLabels(
+          "Type(Rent)",
+          "ES_COMMON_TABLE_COL_RENTTYPE",
+          localisationLabels
+        );
+      case "Principal Due":
+        return getLocaleLabels(
+          "Principal Due",
+          "ES_COMMON_TABLE_COL_PRINCIPALDUE",
+          localisationLabels
+        );
+      case "GST Due":
+        return getLocaleLabels(
+          "GST Due",
+          "ES_COMMON_TABLE_COL_GSTDUE",
+          localisationLabels
+        );
+      case "Interest Due":
+        return getLocaleLabels(
+          "Interest Due",
+          "ES_COMMON_TABLE_COL_INTERESTDUE",
+          localisationLabels
+        );
+      case "GST Penalty Due":
+        return getLocaleLabels(
+          "GST Penalty Due",
+          "ES_COMMON_TABLE_COL_GSTPENALTYDUE",
+          localisationLabels
+        );
+      case "Total Due":
+        return getLocaleLabels(
+          "Total Due",
+          "ES_COMMON_TABLE_COL_TOTALDUE",
+          localisationLabels
+        );
+      case "Account Balance":
+        return getLocaleLabels(
+          "Account Balance",
+          "ES_COMMON_TABLE_COL_ACCOUNTBALANCE",
+          localisationLabels
+        );
+      case "Receipt No.":
+        return getLocaleLabels(
+          "Receipt No.",
+          "ES_COMMON_TABLE_RECEIPT_NO",
+          localisationLabels
+        );
+            
+      // case "Penalty/Interest":
+      // return getLocaleLabels(
+      //   "Penalty/Interest",
+      //   "ES_COMMON_TABLE_COL_PENALTY_INTEREST",
+      //   localisationLabels
+      // );
+      // case "ST/GST rate":
+      // return getLocaleLabels(
+      //   "ST/GST rate",
+      //   "ES_COMMON_TABLE_COL_ST_GST_RATE",
+      //   localisationLabels
+      // );
+      // case "Paid":
+      // return getLocaleLabels(
+      //   "Paid",
+      //   "ES_COMMON_TABLE_COL_PAID",
+      //   localisationLabels
+      // );
+      // case "Date of Receipt":
+      // return getLocaleLabels(
+      //   "Date of Receipt",
+      //   "ES_COMMON_TABLE_COL_DATE_OF_RECEIPT",
+      //   localisationLabels
+      // );
+      // case "No. of days":
+      // return getLocaleLabels(
+      //   "No. of days",
+      //   "ES_COMMON_TABLE_COL_NO_OF_DAYS",
+      //   localisationLabels
+      // );
+      // case "Int. on delayed payment of GST":
+      // return getLocaleLabels(
+      //   "Int. on delayed payment of GST",
+      //   "ES_COMMON_TABLE_COL_INT_ON_DELAYED_PAYMENT_GST",
+      //   localisationLabels
+      // );
     case "Last Modified On":
       return getLocaleLabels(
         "Last Modified On",
