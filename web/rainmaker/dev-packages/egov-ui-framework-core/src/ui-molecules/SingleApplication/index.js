@@ -267,6 +267,14 @@ class SingleApplication extends React.Component {
               );
           }
       }
+  }  else if (moduleName == "EST") {
+    switch(item.state) {
+      case "":
+      setRoute(`/estate-citizen/_apply?applicationNumber=${item.applicationNumber}&tenantId=${item.tenantId}`)
+      break;
+      default:
+        setRoute(`/estate/preview?applicationNumber=${item.applicationNumber}&tenantId=${item.tenantId}`)
+    }
   }
   };
 

@@ -10,8 +10,8 @@ import {
 } from "egov-ui-framework/ui-utils/commons";
 import { connect } from "react-redux";
 import { prepareFinalObject, handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import { UploadSingleFile } from "../../ui-molecules-local";
-import { handleFileUpload, getXLSData } from "../../ui-utils/commons"
+import { UploadSingleFile, SimpleModal } from "../../ui-molecules-local";
+import { handleFileUpload, getXLSData, getFileSize } from "../../ui-utils/commons"
 import { LabelContainer } from "egov-ui-framework/ui-containers";
 import get from "lodash/get";
 import isUndefined from "lodash/isUndefined";
@@ -71,7 +71,8 @@ class DocumentList extends Component {
     uploadedDocIndex: 0,
     uploadedIndex: [],
     uploadedDocuments: [],
-    showLoader: false
+    showLoader: false,
+    open: false
   };
 
   componentDidMount = () => {
@@ -161,10 +162,30 @@ class DocumentList extends Component {
 
   changeFile = (key) => async (e) => {
     this.setState({showLoader: true})
+    const input = e.target;
+    const { maxFileSize } = this.props.inputProps[key]
+    if (input.files && input.files.length > 0) {
+      const files = input.files;
+      Object.keys(files).forEach(async (key, index) => {
+        const file = files[key];
+        const isSizeValid = getFileSize(file) <= maxFileSize;
+        if (!isSizeValid) {
+          // SimpleModal(true);
+          this.setState(state => ({
+            open: true,
+            maxFileSizeMsg: `Maximum file size can be ${Math.round(maxFileSize / 1000)} MB`
+          }));
+        }
+      })
+    }
     await handleFileUpload(e, this.handleDocument, 
       this.props.inputProps[key], this.stopLoading)
   }
-
+  closeModal = () => {
+    this.setState(state => ({
+      open: false
+    }));
+  }
   stopLoading = () => {
     this.setState({showLoader: false})
   }
@@ -172,7 +193,7 @@ class DocumentList extends Component {
   removeDocument = remDocIndex => {
     let { uploadedDocuments } = this.state;
     const { prepareFinalObject, documents, preparedFinalObject, uploadedDocumentsJsonPath, removedJsonPath, componentJsonPath, getUrl, handleField, screenKey } = this.props;
-    const jsonPath = documents[remDocIndex].jsonPath;
+    let jsonPath = documents[remDocIndex].jsonPath;
       uploadedDocuments[remDocIndex][0].id &&
       prepareFinalObject(removedJsonPath, [
         ...get(preparedFinalObject, removedJsonPath, []),
@@ -182,6 +203,11 @@ class DocumentList extends Component {
         }
       ]);
     uploadedDocuments[remDocIndex] = [];
+    const keys = Object.keys(uploadedDocuments);
+    const findIndex = keys.findIndex(item => Number(item) === remDocIndex)
+    if(findIndex !== -1) {
+      jsonPath = documents[findIndex].jsonPath
+    }
     prepareFinalObject(jsonPath, uploadedDocuments[remDocIndex]);
     prepareFinalObject(
       uploadedDocumentsJsonPath,
@@ -254,7 +280,7 @@ class DocumentList extends Component {
                       </div>
                     )}
                   </Grid>
-                  <Grid item={true} xs={6} sm={6} align="left">
+                  <Grid item={true} xs={10} sm={6} align="left">
                     <LabelContainer
                       labelName={documentTypePrefix + document.name}
                       labelKey={documentTypePrefix + document.name}
@@ -301,6 +327,7 @@ class DocumentList extends Component {
             );
           })}
       </div>
+      {<SimpleModal open={this.state.open} maxFileSizeMsg={this.state.maxFileSizeMsg} closeModal={this.closeModal}/>}
       {!!showLoader && <LoadingIndicator status={"loading"} />}
       </div>
     );
