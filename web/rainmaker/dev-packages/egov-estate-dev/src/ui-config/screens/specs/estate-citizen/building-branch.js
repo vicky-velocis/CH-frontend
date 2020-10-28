@@ -17,7 +17,7 @@ const cardItems = [{
       labelName: "NOC"
     },
     icon: < EstateIcon / > ,
-    route: `property-search?branchType=BUILDING_BRANCH&type=NOC`
+    route: `property-search?branchType=BUILDING_BRANCH&type=BuildingBranch_NOC`
   },
   {
     label: {
@@ -25,7 +25,7 @@ const cardItems = [{
       labelName: "My Applications/Search Applications"
     },
     icon: < EstateIcon / > ,
-    route: "estate-branch-my-applications?branchType=BUILDING_BRANCH&type=NOC"
+    route: "estate-branch-my-applications?branchType=BUILDING_BRANCH&type=BuildingBranch_NOC"
   }
 ]
 
