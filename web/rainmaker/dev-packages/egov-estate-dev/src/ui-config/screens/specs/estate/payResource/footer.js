@@ -113,7 +113,7 @@ export const callPGService = async (state, dispatch, item, _businessService) => 
         searchResponse,
         "Payments[0].paymentDetails[0].receiptNumber"
       );
-
+     
       dispatch(
         setRoute(
           `/estate/acknowledgement?purpose=${"pay"}&status=${"success"}&applicationNumber=${consumerCode}&tenantId=${tenantId}`

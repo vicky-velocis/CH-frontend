@@ -27,6 +27,8 @@ export const applicationSuccessFooter = (
   applicationNumber,
   tenant
 ) => {
+  const fileNumber = getQueryArg(window.location.href, "fileNumber");
+  const purpose  = getQueryArg(window.location.href, "purpose");
   const roleExists = ifUserRoleExists("CITIZEN");
   const redirectionURL = roleExists ? "/" : "/inbox";
   if(roleExists){
@@ -128,12 +130,38 @@ export const applicationSuccessFooter = (
         },
         onClickDefination: {
           action: "condition",
-          callBack: () => {
-            const { Applications,temp } = state.screenConfiguration.preparedFinalObject;
-            const { applicationType} = Applications[0];
-            const documents = temp[0].reviewDocData;
-            set(Applications[0],"additionalDetails.documents",documents)
-            downloadAcknowledgementForm(Applications,applicationType,'print'); 
+          callBack: async() => {
+            const purpose = getQueryArg(window.location.href, "purpose");
+            let tenantId = getQueryArg(window.location.href, "tenantId");
+            if(purpose === 'pay'){
+                let consumerCodes = getQueryArg(window.location.href, "applicationNumber");
+                const queryObject = [
+                  {
+                    key: "tenantId",
+                    value: tenantId
+                  },
+                  {
+                    key: "applicationNumber",
+                    value: consumerCodes
+                  }
+                ];
+                const response = await getSearchApplicationsResults(queryObject);
+                const Applications = get(response, "Applications");
+                
+                  const receiptQuery = [
+                    { key: "consumerCodes", value:consumerCodes},
+                    { key: "tenantId", value: tenantId }
+                ]
+                downloadPaymentReceipt(receiptQuery, Applications,[], userInfo.name,'rent-payment','print');
+              
+                  
+            }else{
+              const { Applications,temp } = state.screenConfiguration.preparedFinalObject;
+              const { applicationType} = Applications[0];
+              const documents = temp[0].reviewDocData;
+              set(Applications[0],"additionalDetails.documents",documents)
+              downloadAcknowledgementForm(Applications,applicationType,'print');
+            }
           }
         },
         visible: true
@@ -183,12 +211,38 @@ export const applicationSuccessFooter = (
         },
         onClickDefination: {
           action: "condition",
-          callBack: () => {
-            const { Properties,PropertiesTemp } = state.screenConfiguration.preparedFinalObject;
-            downloadSummary(Properties, PropertiesTemp); 
+          callBack: async() => {
+            switch(purpose){
+              case 'apply':
+                const { Properties,PropertiesTemp } = state.screenConfiguration.preparedFinalObject;
+                downloadSummary(Properties, PropertiesTemp);
+                break;
+              case 'pay': 
+                let tenantId = getQueryArg(window.location.href, "tenantId");
+                let consumerCodes = getQueryArg(window.location.href, "applicationNumber");
+                const queryObject = [
+                  {
+                    key: "tenantId",
+                    value: tenantId
+                  },
+                  {
+                    key: "applicationNumber",
+                    value: consumerCodes
+                  }
+                ];
+                const response = await getSearchApplicationsResults(queryObject);
+                const Applications = get(response, "Applications");
+                
+                  const receiptQuery = [
+                    { key: "consumerCodes", value:consumerCodes},
+                    { key: "tenantId", value: tenantId }
+                ]
+                downloadPaymentReceipt(receiptQuery, Applications,[], userInfo.name,'rent-payment');
+              break; 
+            }   
           }
         },
-        visible: false
+        visible: purpose === 'apply' ? true : purpose === 'pay' ? true : false
       },
       printFormButton: {
         componentPath: "Button",
@@ -209,12 +263,39 @@ export const applicationSuccessFooter = (
         },
         onClickDefination: {
           action: "condition",
-          callBack: () => {
-            const { Properties,PropertiesTemp } = state.screenConfiguration.preparedFinalObject;
-            downloadSummary(Properties, PropertiesTemp,'print');
+          callBack: async() => {
+            switch(purpose){
+              case 'apply':
+                const { Properties,PropertiesTemp } = state.screenConfiguration.preparedFinalObject;
+                downloadSummary(Properties, PropertiesTemp,'print');
+                break;
+              case 'pay': 
+                let tenantId = getQueryArg(window.location.href, "tenantId");
+                let consumerCodes = getQueryArg(window.location.href, "applicationNumber");
+                const queryObject = [
+                  {
+                    key: "tenantId",
+                    value: tenantId
+                  },
+                  {
+                    key: "applicationNumber",
+                    value: consumerCodes
+                  }
+                ];
+                const response = await getSearchApplicationsResults(queryObject);
+                const Applications = get(response, "Applications");
+                
+                  const receiptQuery = [
+                    { key: "consumerCodes", value:consumerCodes},
+                    { key: "tenantId", value: tenantId }
+                ]
+                downloadPaymentReceipt(receiptQuery, Applications,[], userInfo.name,'rent-payment','print');
+              break; 
+            }
+           
           }
         },
-        visible: false
+        visible: purpose === 'apply' ? true : purpose === 'pay' ? true : false
       }
     });
   }
