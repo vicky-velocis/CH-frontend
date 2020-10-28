@@ -2,10 +2,14 @@ import {
   getLabel
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import {
-  ifUserRoleExists,downloadAcknowledgementForm,downloadSummary
+  ifUserRoleExists,downloadAcknowledgementForm,downloadSummary,downloadPaymentReceipt
 } from "../../utils";
 import set from "lodash/set";
-
+import get from "lodash/get";
+const { getQueryArg } = require("egov-ui-framework/ui-utils/commons");
+import { getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
+import {getSearchApplicationsResults} from '../../../../../ui-utils/commons'
+const userInfo = JSON.parse(getUserInfo());
 const getCommonApplyFooter = children => {
   return {
     uiFramework: "custom-atoms",
@@ -69,12 +73,38 @@ export const applicationSuccessFooter = (
         },
         onClickDefination: {
           action: "condition",
-          callBack: () => {
-            const { Applications,temp } = state.screenConfiguration.preparedFinalObject;
-            const { applicationType} = Applications[0];
-            const documents = temp[0].reviewDocData;
-            set(Applications[0],"additionalDetails.documents",documents)
-            downloadAcknowledgementForm(Applications,applicationType); 
+          callBack: async() => {
+            const purpose = getQueryArg(window.location.href, "purpose");
+            let tenantId = getQueryArg(window.location.href, "tenantId");
+            if(purpose === 'pay'){
+                let consumerCodes = getQueryArg(window.location.href, "applicationNumber");
+                const queryObject = [
+                  {
+                    key: "tenantId",
+                    value: tenantId
+                  },
+                  {
+                    key: "applicationNumber",
+                    value: consumerCodes
+                  }
+                ];
+                const response = await getSearchApplicationsResults(queryObject);
+                const Applications = get(response, "Applications");
+                
+                  const receiptQuery = [
+                    { key: "consumerCodes", value:consumerCodes},
+                    { key: "tenantId", value: tenantId }
+                ]
+                downloadPaymentReceipt(receiptQuery, Applications,[], userInfo.name,'rent-payment');
+              
+                  
+            }else{
+              const { Applications,temp } = state.screenConfiguration.preparedFinalObject;
+              const { applicationType} = Applications[0];
+              const documents = temp[0].reviewDocData;
+              set(Applications[0],"additionalDetails.documents",documents)
+              downloadAcknowledgementForm(Applications,applicationType);
+            }
           }
         },
         visible: true
@@ -158,7 +188,7 @@ export const applicationSuccessFooter = (
             downloadSummary(Properties, PropertiesTemp); 
           }
         },
-        visible: true
+        visible: false
       },
       printFormButton: {
         componentPath: "Button",
@@ -184,7 +214,7 @@ export const applicationSuccessFooter = (
             downloadSummary(Properties, PropertiesTemp,'print');
           }
         },
-        visible: true
+        visible: false
       }
     });
   }
