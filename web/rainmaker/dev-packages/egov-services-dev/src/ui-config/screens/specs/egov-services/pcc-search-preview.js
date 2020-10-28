@@ -103,13 +103,16 @@ const prepareDocumentsView = async (state, dispatch) => {
     }
 };
 
-const HideshowFooter = (action, bookingStatus, fromDate) => {
+const HideshowFooter = (action, bookingStatus, fromDate, bookingObj) => {
     let bookingTimeStamp = new Date(fromDate).getTime();
     let currentTimeStamp = new Date().getTime();
     let showFooter = false;
     if (bookingStatus === "APPLIED") {
         showFooter = true;
     }
+
+    console.log(bookingTimeStamp+"============"+currentTimeStamp);
+   if(bookingTimeStamp > currentTimeStamp){
     set(
         action,
         "screenConfig.components.div.children.footer.children.cancelButton.visible",
@@ -120,6 +123,7 @@ const HideshowFooter = (action, bookingStatus, fromDate) => {
         "screenConfig.components.div.children.footer.children.editButton.visible",
         showFooter === true ? true : false
     );
+}
 };
 
 const setSearchResponse = async (
@@ -181,7 +185,8 @@ const setSearchResponse = async (
         );
 
         bookingStatus = recData[0].bkApplicationStatus;
-        if (bookingStatus === "APPLIED") {
+        console.log(recData[0], "Booking");
+        if (bookingStatus === "APPLIED" || bookingStatus === "MODIFIED") {
             await generageBillCollection(
                 state,
                 dispatch,
@@ -203,7 +208,7 @@ const setSearchResponse = async (
         // let bookingTimeStamp = new Date(recData[0].bkFromDate).getTime();
         // let currentTimeStamp = new Date().getTime();
         // if (currentTimeStamp < bookingTimeStamp) {
-        HideshowFooter(action, bookingStatus, recData[0].bkFromDat);
+        HideshowFooter(action, bookingStatus, recData[0].bkFromDate, recData[0]);
         // }
 
         prepareDocumentsView(state, dispatch);

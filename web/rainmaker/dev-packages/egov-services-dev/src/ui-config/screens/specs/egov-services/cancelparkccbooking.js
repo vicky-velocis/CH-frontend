@@ -29,6 +29,7 @@ import set from "lodash/set";
 import {
     generageBillCollection,
     generateBill,
+    getRefundDetails
 } from "../utils";
 import { pccSummary } from "./refundResource/pccSummary";
 
@@ -173,6 +174,13 @@ const setSearchResponse = async (
     } else {
         await generateBill(state, dispatch, applicationNumber, tenantId, recData[0].businessService);
     }
+
+    const refundDetailsResp = await getRefundDetails(applicationNumber, tenantId);
+    console.log(refundDetailsResp, "Neo Refund Details");
+    let refData = get(refundDetailsResp, "Transaction", []);
+    dispatch(
+        prepareFinalObject("refundData", refundDetailsResp.data[0])
+    );
 
     localStorageSet("bookingStatus", bookingStatus);
     HideshowFooter(action, bookingStatus);

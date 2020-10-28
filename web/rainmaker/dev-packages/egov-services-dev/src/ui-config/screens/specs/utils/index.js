@@ -1725,3 +1725,51 @@ export const getAvailabilityDataPCC = async (requestBody) => {
         console.log(exception);
     }
 };
+
+export const getRefundDetails = async (bookingId, tenantId) => {
+
+
+    const queryStr = [
+        {
+            key: "consumerCode",
+            value: bookingId,
+        },
+        { key: "tenantId", value: "ch.chandigarh" },
+    ];
+
+
+    try {
+        const response = await httpRequest(
+            "post",
+            "/pg-service/transaction/v1/_search",
+            "",
+            queryStr,
+            []
+        );
+        console.log(response, "Refund Details");
+        return { status: "success", data: response.Transaction };
+    } catch (exception) {
+        console.log(exception);
+    }
+};
+
+export const goForRefund = async (refundDataObj) => {
+
+
+    let requestBody = { RefundTransaction: refundDataObj };
+
+
+    try {
+        const response = await httpRequest(
+            "post",
+            "/pg-service/transaction/v1/_refund",
+            "",
+            [],
+            requestBody
+        );
+
+        return { status: "success", data: response };
+    } catch (exception) {
+        console.log(exception);
+    }
+};
