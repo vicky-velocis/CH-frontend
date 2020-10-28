@@ -3,6 +3,7 @@ import { getTodaysDateInYMD } from "../../utils";
 import get from "lodash/get";
 import { getRecoveryValueProperty} from "../../../../../ui-utils/apply";
 import { transitNumberConfig } from "./propertyDetails";
+import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 
 export const propertyHeader = getCommonTitle(
     {
@@ -65,7 +66,81 @@ const getEditorField = {
         rows: "4"
     },
     visible: true,
-    jsonPath: "Properties[0].owners[0].ownerDetails.editor"
+    //minLength: 1,
+    //maxLength: 1000,
+    pattern:getPattern("comments"),
+    jsonPath: "Properties[0].owners[0].ownerDetails.editor",
+     errorMessage: "RP_ERR_EDITOR_DESC_FIELD",
+    afterFieldChange: (action, state, dispatch) => {
+        if (action.value.length > 1000) {
+            dispatch(
+                handleField(
+                  "notice-violation",
+                  action.componentJsonpath,
+                  "errorMessage",
+                  "RP_ERR_EDITOR_DESC_FIELD_MAXLENGTH"
+                )
+            )
+            dispatch(
+                handleField(
+                  "notice-violation",
+                  action.componentJsonpath,
+                  "props.errorMessage",
+                  "RP_ERR_EDITOR_DESC_FIELD_MAXLENGTH"
+                )
+            )
+            dispatch(
+                handleField(
+                  "notice-recovry",
+                  action.componentJsonpath,
+                  "errorMessage",
+                  "RP_ERR_EDITOR_DESC_FIELD_MAXLENGTH"
+                )
+            )
+            dispatch(
+                handleField(
+                  "notice-recovry",
+                  action.componentJsonpath,
+                  "props.errorMessage",
+                  "RP_ERR_EDITOR_DESC_FIELD_MAXLENGTH"
+                )
+            )
+        }
+        else {
+            dispatch(
+                handleField(
+                  "notice-violation",
+                  action.componentJsonpath,
+                  "errorMessage",
+                  "RP_ERR_EDITOR_DESC_FIELD"
+                )
+            )
+            dispatch(
+                handleField(
+                  "notice-violation",
+                  action.componentJsonpath,
+                  "props.errorMessage",
+                  "RP_ERR_EDITOR_DESC_FIELD"
+                )
+            )
+            dispatch(
+                handleField(
+                  "notice-recovry",
+                  action.componentJsonpath,
+                  "errorMessage",
+                  "RP_ERR_EDITOR_DESC_FIELD"
+                )
+            )
+            dispatch(
+                handleField(
+                  "notice-recovry",
+                  action.componentJsonpath,
+                  "props.errorMessage",
+                  "RP_ERR_EDITOR_DESC_FIELD"
+                )
+            )
+        }
+      }
   }
 
 const originalAllotteField = {
@@ -124,9 +199,50 @@ const getViolationField = {
         multiline: true,
         rows: "4"
     },
+    minLength: 1,
+    maxLength: 1000,
     visible:true,
       required:true,
-    jsonPath: "Images[0].description" 
+      errorMessage:"RP_ERR_VIOLATION_COMMENT_FEILD_MESSAGE",
+    jsonPath: "Images[0].description",
+    afterFieldChange: (action, state, dispatch) => {
+        if (action.value.length > 1000) {
+            dispatch(
+                handleField(
+                  "notice-violation",
+                  action.componentJsonpath,
+                  "errorMessage",
+                  "RP_ERR_VIOLATION_COMMENT_MAXLENGTH"
+                )
+            )
+            dispatch(
+                handleField(
+                  "notice-violation",
+                  action.componentJsonpath,
+                  "props.errorMessage",
+                  "RP_ERR_VIOLATION_COMMENT_MAXLENGTH"
+                )
+            )
+        }
+        else {
+            dispatch(
+                handleField(
+                  "notice-violation",
+                  action.componentJsonpath,
+                  "errorMessage",
+                  "RP_ERR_VIOLATION_COMMENT_FEILD_MESSAGE"
+                )
+            )
+            dispatch(
+                handleField(
+                  "notice-violation",
+                  action.componentJsonpath,
+                  "props.errorMessage",
+                  "RP_ERR_VIOLATION_COMMENT_FEILD_MESSAGE"
+                )
+            )
+        }
+      } 
 }
 
 const transitNumberField = {

@@ -1,6 +1,7 @@
 import { getCommonCard, getSelectField, getTextField, getDateField, getCommonTitle, getPattern, getCommonContainer } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { getTodaysDateInYMD } from "../../utils";
 import { getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
+import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 
 let userInfo = JSON.parse(getUserInfo());
 
@@ -143,6 +144,44 @@ const fatherOrHusbandsNameField = {
     required: true,
     jsonPath: "Properties[0].owners[0].ownerDetails.fatherOrHusband",
     errorMessage: "RP_ERR_FATHER_OR_HUSBAND_FIELD",
+    afterFieldChange: (action, state, dispatch) => {
+        if (action.value.length > 40) {
+            dispatch(
+                handleField(
+                  "apply",
+                  action.componentJsonpath,
+                  "errorMessage",
+                  "RP_ERR_FATHER_OR_HUSBAND_FIELD_MAXLENGTH"
+                )
+            )
+            dispatch(
+                handleField(
+                  "apply",
+                  action.componentJsonpath,
+                  "props.errorMessage",
+                  "RP_ERR_FATHER_OR_HUSBAND_FIELD_MAXLENGTH"
+                )
+            )
+        }
+        else {
+            dispatch(
+                handleField(
+                  "apply",
+                  action.componentJsonpath,
+                  "errorMessage",
+                  "RP_ERR_FATHER_OR_HUSBAND_FIELD"
+                )
+            )
+            dispatch(
+                handleField(
+                  "apply",
+                  action.componentJsonpath,
+                  "props.errorMessage",
+                  "RP_ERR_FATHER_OR_HUSBAND_FIELD"
+                )
+            )
+        }
+      }
 }
 
 export const ownerNameField = {
@@ -163,6 +202,44 @@ export const ownerNameField = {
     required: true,
     jsonPath: "Properties[0].owners[0].ownerDetails.name",
     errorMessage: "RP_ERR_OWNER_NAME_FIELD",
+    afterFieldChange: (action, state, dispatch) => {
+        if (action.value.length > 40) {
+            dispatch(
+                handleField(
+                  "apply",
+                  action.componentJsonpath,
+                  "errorMessage",
+                  "RP_ERR_OWNER_NAME_FIELD_MAXLENGTH"
+                )
+            )
+            dispatch(
+                handleField(
+                  "apply",
+                  action.componentJsonpath,
+                  "props.errorMessage",
+                  "RP_ERR_OWNER_NAME_FIELD_MAXLENGTH"
+                )
+            )
+        }
+        else {
+            dispatch(
+                handleField(
+                  "apply",
+                  action.componentJsonpath,
+                  "errorMessage",
+                  "RP_ERR_OWNER_NAME_FIELD"
+                )
+            )
+            dispatch(
+                handleField(
+                  "apply",
+                  action.componentJsonpath,
+                  "props.errorMessage",
+                  "RP_ERR_OWNER_NAME_FIELD"
+                )
+            )
+        }
+      }
   }
 
 const phoneNumberConfig = {
@@ -178,11 +255,49 @@ const phoneNumberConfig = {
         xs: 12,
         sm: 6
     },
-    minLength: 1,
-    maxLength: 100,
+    minLength: 10,
+    maxLength: 10,
     required: true,
     pattern: getPattern("MobileNo"),
     errorMessage: "RP_ERR_PHONE_NUMBER_FIELD",
+    afterFieldChange: (action, state, dispatch) => {
+        if (action.value.length > 10) {
+            dispatch(
+                handleField(
+                  "apply",
+                  action.componentJsonpath,
+                  "errorMessage",
+                  "RP_ERR_PHONE_NUMBER_FIELD_MAXLENGTH"
+                )
+            )
+            dispatch(
+                handleField(
+                  "apply",
+                  action.componentJsonpath,
+                  "props.errorMessage",
+                  "RP_ERR_PHONE_NUMBER_FIELD_MAXLENGTH"
+                )
+            )
+        }
+        else {
+            dispatch(
+                handleField(
+                  "apply",
+                  action.componentJsonpath,
+                  "errorMessage",
+                  "RP_ERR_PHONE_NUMBER_FIELD"
+                )
+            )
+            dispatch(
+                handleField(
+                  "apply",
+                  action.componentJsonpath,
+                  "props.errorMessage",
+                  "RP_ERR_PHONE_NUMBER_FIELD"
+                )
+            )
+        }
+      }
   }
 
   const phoneNumberField = {
@@ -245,6 +360,7 @@ const emailConfig = {
     // maxLength: 100,
     // required: false,
     pattern: getPattern("Email"),
+    errorMessage:"RP_ERR_EMAIL_VALID_FIELD",
   }
 
 const emailField = {
@@ -273,7 +389,47 @@ const aadharFieldConfig = {
 
 const aadharField = {
     ...aadharFieldConfig,
-    jsonPath: "Properties[0].owners[0].ownerDetails.aadhaarNumber"
+    jsonPath: "Properties[0].owners[0].ownerDetails.aadhaarNumber",
+    pattern:getPattern("AdharCardNumber"),
+    errorMessage:"RP_ERR_ADHAR_CARD_VALIDATION",
+    afterFieldChange: (action, state, dispatch) => {
+        if (action.value.length > 12) {
+            dispatch(
+                handleField(
+                  "apply",
+                  action.componentJsonpath,
+                  "errorMessage",
+                  "RP_ERR_ADHAR_CARD_VALIDATION_MAXLENGTH"
+                )
+            )
+            dispatch(
+                handleField(
+                  "apply",
+                  action.componentJsonpath,
+                  "props.errorMessage",
+                  "RP_ERR_ADHAR_CARD_VALIDATION_MAXLENGTH"
+                )
+            )
+        }
+        else {
+            dispatch(
+                handleField(
+                  "apply",
+                  action.componentJsonpath,
+                  "errorMessage",
+                  "RP_ERR_ADHAR_CARD_VALIDATION"
+                )
+            )
+            dispatch(
+                handleField(
+                  "apply",
+                  action.componentJsonpath,
+                  "props.errorMessage",
+                  "RP_ERR_ADHAR_CARD_VALIDATION"
+                )
+            )
+        }
+      } 
 }
 
 const colonyField = {
@@ -332,7 +488,45 @@ const allotmentDateField = {
     maxLength: 20,
     required: true,
     errorMessage:"RP_ERR_ALLOTMENT_NUMBER_FIELD",
-    jsonPath: "Properties[0].owners[0].allotmenNumber"
+    jsonPath: "Properties[0].owners[0].allotmenNumber",
+    afterFieldChange: (action, state, dispatch) => {
+        if (action.value.length > 20) {
+            dispatch(
+                handleField(
+                  "apply",
+                  action.componentJsonpath,
+                  "errorMessage",
+                  "RP_ERR_ALLOTMENT_NUMBER_FIELD_MAXLENGTH"
+                )
+            )
+            dispatch(
+                handleField(
+                  "apply",
+                  action.componentJsonpath,
+                  "props.errorMessage",
+                  "RP_ERR_ALLOTMENT_NUMBER_FIELD_MAXLENGTH"
+                )
+            )
+        }
+        else {
+            dispatch(
+                handleField(
+                  "apply",
+                  action.componentJsonpath,
+                  "errorMessage",
+                  "RP_ERR_ALLOTMENT_NUMBER_FIELD"
+                )
+            )
+            dispatch(
+                handleField(
+                  "apply",
+                  action.componentJsonpath,
+                  "props.errorMessage",
+                  "RP_ERR_ALLOTMENT_NUMBER_FIELD"
+                )
+            )
+        }
+      }
   }
 
   const posessionDateField = {
@@ -391,7 +585,45 @@ const applicantNameField = {
     maxLength: 100,
     required: true,
     jsonPath: "Owners[0].ownerDetails.name",
-    errorMessage:"RP_ERR_APPLICANT_NAME_FIELD"
+    errorMessage:"RP_ERR_APPLICANT_NAME_FIELD",
+    afterFieldChange: (action, state, dispatch) => {
+        if (action.value.length > 100) {
+            dispatch(
+                handleField(
+                  "ownership-apply",
+                  action.componentJsonpath,
+                  "errorMessage",
+                  "RP_ERR_APPLICANT_NAME_MAXLENGTH"
+                )
+            )
+            dispatch(
+                handleField(
+                  "ownership-apply",
+                  action.componentJsonpath,
+                  "props.errorMessage",
+                  "RP_ERR_APPLICANT_NAME_MAXLENGTH"
+                )
+            )
+        }
+        else {
+            dispatch(
+                handleField(
+                  "ownership-apply",
+                  action.componentJsonpath,
+                  "errorMessage",
+                  "RP_ERR_APPLICANT_NAME_FIELD"
+                )
+            )
+            dispatch(
+                handleField(
+                  "ownership-apply",
+                  action.componentJsonpath,
+                  "props.errorMessage",
+                  "RP_ERR_APPLICANT_NAME_FIELD"
+                )
+            )
+        }
+      } 
 }
 const applicantNameFieldMortgage = {
     label: {
@@ -413,7 +645,6 @@ const applicantNameFieldMortgage = {
         disabled: true
       },
     jsonPath: "MortgageApplications[0].applicant[0].name",
-    errorMessage:"RP_ERR_APPLICANT_NAME_FIELD"
 }
 
 const applicantNameFieldname = {
@@ -664,7 +895,47 @@ const applicantEmailFieldMortgage = {
 
 const applicantAadharField = {
     ...aadharFieldConfig,
-     jsonPath: "Owners[0].ownerDetails.aadhaarNumber"
+    pattern:getPattern("AdharCardNumber"),
+    errorMessage:"RP_ERR_ADHAR_CARD_VALIDATION",
+     jsonPath: "Owners[0].ownerDetails.aadhaarNumber",
+     afterFieldChange: (action, state, dispatch) => {
+        if (action.value.length > 12) {
+            dispatch(
+                handleField(
+                  "ownership-apply",
+                  action.componentJsonpath,
+                  "errorMessage",
+                  "RP_ERR_ADHAR_CARD_VALIDATION_MAXLENGTH"
+                )
+            )
+            dispatch(
+                handleField(
+                  "ownership-apply",
+                  action.componentJsonpath,
+                  "props.errorMessage",
+                  "RP_ERR_ADHAR_CARD_VALIDATION_MAXLENGTH"
+                )
+            )
+        }
+        else {
+            dispatch(
+                handleField(
+                  "ownership-apply",
+                  action.componentJsonpath,
+                  "errorMessage",
+                  "RP_ERR_ADHAR_CARD_VALIDATION"
+                )
+            )
+            dispatch(
+                handleField(
+                  "ownership-apply",
+                  action.componentJsonpath,
+                  "props.errorMessage",
+                  "RP_ERR_ADHAR_CARD_VALIDATION"
+                )
+            )
+        }
+      } 
 }
 
 const applicantAadharFieldduplicate = {
