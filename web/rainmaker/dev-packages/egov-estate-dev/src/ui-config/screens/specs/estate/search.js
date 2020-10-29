@@ -33,18 +33,17 @@ import {
 } from "egov-ui-kit/utils/localStorageUtils";
 import { WF_ALLOTMENT_OF_SITE } from "../../../../ui-constants";
 
+const branchType = getQueryArg(window.location.href, "branchType")
 const userInfo = JSON.parse(getUserInfo());
 const {
   roles = []
 } = userInfo
 console.log(roles);
-const findItem = roles.find(item => item.code === "ES_EB_SECTION_OFFICER");
+const findItem = branchType == "BUILDING_BRANCH" ? roles.find(item => item.code === "ES_BB_DISPATCH_OFFICER") : roles.find(item => item.code === "ES_EB_SECTION_OFFICER");
 const header = getCommonHeader({
   labelName: "Search Property Master",
   labelKey: "ES_SEARCH_PROPERTY_MASTER_HEADER"
 });
-
-const branchType = getQueryArg(window.location.href, "branchType")
 
 const estateSearchAndResult = {
   uiFramework: "material-ui",
