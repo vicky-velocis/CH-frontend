@@ -44,6 +44,8 @@ const header = getCommonHeader({
   labelKey: "ES_SEARCH_PROPERTY_MASTER_HEADER"
 });
 
+const branchType = getQueryArg(window.location.href, "branchType")
+
 const estateSearchAndResult = {
   uiFramework: "material-ui",
   name: "search",
@@ -57,9 +59,10 @@ const estateSearchAndResult = {
         value: WF_ALLOTMENT_OF_SITE
       }
     ]
+    
     dispatch(prepareFinalObject("searchScreen", {}))
-      searchApiCall(state, dispatch, true)
-      getStatusList( state, dispatch, queryObject, "search", "components.div.children.estateApplication.children.cardContent.children.colonyContainer.children.status", WF_ALLOTMENT_OF_SITE)
+    searchApiCall(state, dispatch, true, "", "", true, branchType)
+    getStatusList( state, dispatch, queryObject, "search", "components.div.children.estateApplication.children.cardContent.children.colonyContainer.children.status", WF_ALLOTMENT_OF_SITE)
     return action
   },
   components: {
@@ -110,7 +113,12 @@ const estateSearchAndResult = {
               onClickDefination: {
                 action: "condition",
                 callBack: (state, dispatch) => {
-                  dispatch(setRoute(`/estate/apply?tenantId=${getTenantId()}`));
+                  if (branchType == "BUILDING_BRANCH") {
+                    dispatch(setRoute(`/estate/apply-building-branch?tenantId=${getTenantId()}`));
+                  }
+                  else {
+                    dispatch(setRoute(`/estate/apply?tenantId=${getTenantId()}`));
+                  }
                 }
               }
             }
