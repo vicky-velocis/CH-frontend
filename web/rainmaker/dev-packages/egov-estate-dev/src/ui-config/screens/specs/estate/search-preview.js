@@ -50,15 +50,15 @@ export const searchResults = async (action, state, dispatch, fileNumber) => {
     let applicationDocuments = properties[0].propertyDetails.applicationDocuments || [];
     const removedDocs = applicationDocuments.filter(item => !item.active)
     
-      let {estateRentSummary} = properties[0]
-      if(!!estateRentSummary){
+    let {estateRentSummary} = properties[0]
+    if(!!estateRentSummary){
         estateRentSummary.outstanding =  (parseInt(estateRentSummary.balanceRent) + 
         parseInt(estateRentSummary.balanceGST) + parseInt(estateRentSummary.balanceGSTPenalty) +
         parseInt(estateRentSummary.balanceRentPenalty)).toFixed(1)
-      }
-      properties = {
-        ...properties , estateRentSummary : estateRentSummary
-      }
+    }
+    properties = {
+      ...properties , estateRentSummary : estateRentSummary
+    }
   
     dispatch(
       handleField(
