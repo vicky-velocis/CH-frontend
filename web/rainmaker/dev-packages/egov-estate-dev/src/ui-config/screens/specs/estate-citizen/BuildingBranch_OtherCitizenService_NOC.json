@@ -1,7 +1,7 @@
 {
   "tenantId": "ch",
   "moduleName": "EstateServices",
-  "BuildingBranch_NOC": [
+  "BuildingBranch_OtherCitizenService_NOC": [
     {
       "fields": [
         {
@@ -32,53 +32,53 @@
           "description": "BB_SALE_DEED_DESCRIPTION"
         },
         {
-          "code": "OWNERSHIP_PROOF",
+          "code": "BB_OWNERSHIP_PROOF",
           "required": true,
           "accept": "application/msword,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*",
           "fileType": "ALLTYPES",
-          "description": "OWNERSHIP_PROOF_DESCRIPTION"
+          "description": "BB_OWNERSHIP_PROOF_DESCRIPTION"
         },
         {
-          "code": "REPORT_OF_REVENUE",
+          "code": "BB_REPORT_OF_REVENUE",
           "required": true,
           "accept": "application/msword,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*",
           "fileType": "ALLTYPES",
-          "description": "REPORT_OF_REVENUE_DESCRIPTION"
+          "description": "BB_REPORT_OF_REVENUE_DESCRIPTION"
         },
         {
-          "code": "PHOTOGRAPH_OF_OWNER_WITH_BUILDING",
+          "code": "BB_PHOTOGRAPH_OF_OWNER_WITH_BUILDING",
           "required": true,
           "accept": "application/msword,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*",
           "fileType": "ALLTYPES",
-          "description": "PHOTOGRAPH_OF_OWNER_WITH_BUILDING_DESCRIPTION"
+          "description": "BB_PHOTOGRAPH_OF_OWNER_WITH_BUILDING_DESCRIPTION"
         },
         {
-          "code": "BUILDING_PLAN",
+          "code": "BB_BUILDING_PLAN",
           "required": true,
           "accept": "application/msword,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*",
           "fileType": "ALLTYPES",
-          "description": "BUILDING_PLAN_DESCRIPTION"
+          "description": "BB_BUILDING_PLAN_DESCRIPTION"
         },
         {
-          "code": "AFFIDAVIT",
+          "code": "BB_AFFIDAVIT",
           "required": true,
           "accept": "application/msword,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*",
           "fileType": "ALLTYPES",
-          "description": "AFFIDAVIT_DESCRIPTION"
+          "description": "BB_AFFIDAVIT_DESCRIPTION"
         },
         {
-          "code": "INDEMNITY_BOND",
+          "code": "BB_INDEMNITY_BOND",
           "required": true,
           "accept": "application/msword,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*",
           "fileType": "ALLTYPES",
-          "description": "INDEMNITY_BOND_DESCRIPTION"
+          "description": "BB_INDEMNITY_BOND_DESCRIPTION"
         },
         {
-          "code": "THREE_NOS_SPECIMEN_SIGNATURE",
+          "code": "BB_THREE_NOS_SPECIMEN_SIGNATURE",
           "required": true,
           "accept": "application/msword,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*",
           "fileType": "ALLTYPES",
-          "description": "THREE_NOS_SPECIMEN_SIGNATURE_DESCRIPTION"
+          "description": "BB_THREE_NOS_SPECIMEN_SIGNATURE_DESCRIPTION"
         }
       ],
       "uiConfig": {
@@ -145,6 +145,26 @@
                 {
                   "label": "ES_VILLAGE_LABEL",
                   "jsonPath": "property.village"
+                }
+              ]
+            },
+            {
+              "header": "ES_PROPERTY_OWNER_LIST_HEADER",
+              "type": "TABLE",
+              "sourceJsonPath": "property.propertyDetails.owners",
+              "fields": [
+                {
+                  "label": "ES_OWNER_NAME_LABEL",
+                  "jsonPath": "ownerDetails.ownerName"
+                },
+                {
+                  "label": "ES_OWNER_SHARE_LABEL",
+                  "jsonPath": "share",
+                  "symbol": "%"
+                },
+                {
+                  "label": "ES_OWNER_ADDRESS_LABEL",
+                  "jsonPath": "ownerDetails.address"
                 }
               ]
             },
@@ -263,28 +283,32 @@
               ]
             },
             {
-              "header": "ES_OWNER_DETAILS_HEADER",
+              "header": "ES_APPLICANT_DETAILS_HEADER",
               "step": 0,
               "fields": [
                 {
                   "label": "ES_OWNER_NAME_LABEL",
-                  "jsonPath": "Applications[0].applicationDetails.transferor.transferorDetails.ownerName"
+                  "jsonPath": "Applications[0].applicationDetails.owner.ownerDetails.ownerName"
                 },
                 {
                   "label": "ES_FATHER_HUSBAND_NAME_LABEL",
-                  "jsonPath": "Applications[0].applicationDetails.transferor.transferorDetails.guardianName"
+                  "jsonPath": "Applications[0].applicationDetails.owner.ownerDetails.guardianName"
                 },
                 {
                   "label": "ES_ADDRESS_LABEL",
-                  "jsonPath": "Applications[0].applicationDetails.transferor.transferorDetails.address"
+                  "jsonPath": "Applications[0].applicationDetails.owner.ownerDetails.address"
                 },
                 {
-                  "label": "ES_MOBILE_NUMBER_LABEL",
-                  "jsonPath": "Applications[0].applicationDetails.transferor.transferorDetails.mobileNumber"
+                  "label": "ES_OWNER_MOBILE_NUMBER_LABEL",
+                  "jsonPath": "Applications[0].applicationDetails.owner.ownerDetails.mobileNumber"
                 },
                 {
-                  "label": "ES_OWNER_SHARE_LABEL",
-                  "jsonPath": "Applications[0].applicationDetails.transferor.share"
+                  "label": "ES_SHARE_LABEL",
+                  "jsonPath": "Applications[0].applicationDetails.owner.share"
+                },
+                {
+                  "label": "ES_CP_NUMBER_LABEL",
+                  "jsonPath": "Applications[0].applicationDetails.owner.cpNumber"
                 }
               ]
             },
