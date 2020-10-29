@@ -50,6 +50,9 @@ const onRowClick = rowData => {
   if(type === "payment") {
     window.location.href = process.env.REACT_APP_NAME === "Citizen" ? `/estate/estate-payment?propertyId=${rowData[4]}` : `estate-payment?propertyId=${rowData[4]}`
   }
+  else if (type == "penalty") {
+    window.location.href = `estate-penalty?fileNumber=${rowData[1]}`
+  }
   else {
     window.location.href = process.env.REACT_APP_NAME === "Citizen" ? `estate-branch-apply?propertyId=${rowData[4]}` : `_apply?propertyId=${rowData[4]}&applicationType=${type}`
   }
