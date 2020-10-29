@@ -33,9 +33,10 @@ import {
 } from "../utils";
 import { pccSummary } from "./refundResource/pccSummary";
 
-import { estimateSummary } from "./refundResource/estimateSummary";
-
-import { footerForParkAndCC } from "./refundResource/citizenFooter";
+import {
+    getRefundEstimateSummary
+} from "./refundResource/estimateSummary";
+import { footerForSecFeeRefundParkAndCC } from "./refundResource/citizenFooter";
 import {
     footerReviewTop,
 } from "./searchResource/footer";
@@ -50,16 +51,6 @@ import { httpRequest } from "../../../../ui-utils";
 
 let role_name = JSON.parse(getUserInfo()).roles[0].code;
 let bookingStatus = "";
-
-const confirmationStatement = getCommonGrayCard({
-
-    header: getCommonHeader({
-        labelName: "Please confirm booking cancelation by clicking confirm button",
-        labelKey: "BK_PACC_CONFIRMATION_MSG",
-    })
-
-
-})
 
 const titlebar = getCommonContainer({
     header: getCommonHeader({
@@ -134,7 +125,7 @@ const HideshowFooter = (action, bookingStatus) => {
     }
     set(
         action,
-        "screenConfig.components.div.children.footer.children.cancelButton.visible",
+        "screenConfig.components.div.children.footer.children.securityFeeButton.visible",
         role_name === "CITIZEN" ? (showFooter === true ? true : false) : false
     );
     set(
@@ -259,7 +250,7 @@ const getMdmsData = async (action, state, dispatch) => {
 
 const screenConfig = {
     uiFramework: "material-ui",
-    name: "cancelparkccbooking",
+    name: "refundsecfeeparkccbooking",
     beforeInitScreen: (action, state, dispatch) => {
         const applicationNumber = getQueryArg(
             window.location.href,
@@ -279,13 +270,15 @@ const screenConfig = {
         // });
         // Set MDMS Data
         getMdmsData(action, state, dispatch).then((response) => {
-            console.log("Hello Nero");
+
         });
         const queryObject = [
             { key: "tenantId", value: tenantId },
             { key: "businessServices", value: "PACC" },
         ];
         setBusinessServiceDataToLocalStorage(queryObject, dispatch);
+
+
 
         return action;
     },
@@ -313,12 +306,13 @@ const screenConfig = {
                 },
 
                 body: getCommonCard({
-                    estimateSummary: estimateSummary,
-                    pccSummary: pccSummary,
-                    confirmationStatement: confirmationStatement
+                    estimateSummary: getRefundEstimateSummary,
+                    pccSummary: pccSummary
 
                 }),
-                footer: footerForParkAndCC,
+                footer: footerForSecFeeRefundParkAndCC
+
+
             }
         }
     }

@@ -1746,7 +1746,7 @@ export const getRefundDetails = async (bookingId, tenantId) => {
             queryStr,
             []
         );
-        console.log(response, "Refund Details");
+
         return { status: "success", data: response.Transaction };
     } catch (exception) {
         console.log(exception);

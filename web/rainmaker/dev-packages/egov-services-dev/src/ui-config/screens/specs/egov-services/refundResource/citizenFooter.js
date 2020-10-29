@@ -22,7 +22,7 @@ export const callBackForEdit = (state, dispatch) => {
 
 export const callBackForCancelParkAndCC = async (state, dispatch) => {
 
-    console.log(state, "Nero Sate");
+
     const { screenConfiguration } = state;
     const bookingDate = get(
         screenConfiguration,
@@ -38,7 +38,7 @@ export const callBackForCancelParkAndCC = async (state, dispatch) => {
         "screenConfiguration.preparedFinalObject.Booking.businessService",
         {}
     );
-
+/*
     var billAccountDetails = get(
         screenConfiguration,
         "preparedFinalObject.ReceiptTemp[0].Bill[0].billDetails[0].billAccountDetails",
@@ -93,7 +93,7 @@ export const callBackForCancelParkAndCC = async (state, dispatch) => {
     refundObj.gatewayTxnId = refundData.txnId;
     refundObj.txnId = refundData.txnId;
     refundObj.refundAmount = refundAmount;
-    refundObj.tenantId = "ch.chandigarh";
+    refundObj.tenantId = refundData.tenantId;
 
     let refResponse = await goForRefund(refundObj);
 
@@ -119,14 +119,97 @@ export const callBackForCancelParkAndCC = async (state, dispatch) => {
             };
             dispatch(toggleSnackbar(true, errorMessage, "error"));
         }
+    }*/
+
+    let response = await createUpdatePCCApplication(
+        state,
+        dispatch,
+        "CANCEL"
+    );
+
+    let responseStatus = get(response, "status", "");
+    if (responseStatus == "SUCCESS" || responseStatus == "success" || responseStatus == "200") {
+        dispatch(
+            setRoute(
+                `/egov-services/acknowledgementrefundparkcc?purpose=confirmed&applicationNumber=${applicationNumber}&tenantId=${getTenantId().split(".")[0]
+                }&businessService=${businessService}`
+            )
+        );
+    } else {
+        let errorMessage = {
+            labelName: "Submission Falied, Try Again later!",
+            labelKey: "", //UPLOAD_FILE_TOAST
+        };
+        dispatch(toggleSnackbar(true, errorMessage, "error"));
     }
-
-
 
 };
 
 
+export const callBackForRefundSecFee = async (state, dispatch) => {
 
+    /*
+    const { screenConfiguration } = state;
+    const bookingDate = get(
+        screenConfiguration,
+        "preparedFinalObject.Booking.bkFromDate",
+        []
+    )
+    const applicationNumber = getQueryArg(
+        window.location.href,
+        "applicationNumber"
+    );
+    const businessService = get(
+        state,
+        "screenConfiguration.preparedFinalObject.Booking.businessService",
+        {}
+    );
+
+    var billAccountDetails = get(
+        screenConfiguration,
+        "preparedFinalObject.ReceiptTemp[0].Bill[0].billDetails[0].billAccountDetails",
+        []
+    );
+    let securityAmount = 0;
+    for (let i = 0; i < billAccountDetails.length; i++) {
+        if (billAccountDetails[i].taxHeadCode == "REFUNDABLE_SECURITY") {
+            securityAmount += billAccountDetails[i].amount;
+        }
+
+    }*/
+    dispatch(
+        setRoute(
+            `/egov-services/acknowledgementsecurityfeerefundparkcc?purpose=confirmed&applicationNumber=${applicationNumber}&tenantId=${getTenantId().split(".")[0]
+            }&businessService=${businessService}`
+        )
+    );
+    /*
+            let response = await createUpdatePCCApplication(
+                state,
+                dispatch,
+                "CANCEL"
+            );
+
+            let responseStatus = get(response, "status", "");
+            if (responseStatus == "SUCCESS" || responseStatus == "success" || responseStatus == "200") {
+                dispatch(
+                    setRoute(
+                        `/egov-services/acknowledgementsecurityfeerefundparkcc?purpose=confirmed&applicationNumber=${applicationNumber}&tenantId=${getTenantId().split(".")[0]
+                        }&businessService=${businessService}`
+                    )
+                );
+            } else {
+                let errorMessage = {
+                    labelName: "Submission Falied, Try Again later!",
+                    labelKey: "", //UPLOAD_FILE_TOAST
+                };
+                dispatch(toggleSnackbar(true, errorMessage, "error"));
+            }*/
+
+
+
+
+};
 
 export const footerForParkAndCC = getCommonApplyFooter({
     cancelButton: {
@@ -142,13 +225,7 @@ export const footerForParkAndCC = getCommonApplyFooter({
             },
         },
         children: {
-            // previousButtonIcon: {
-            //     uiFramework: "custom-atoms",
-            //     componentPath: "Icon",
-            //     props: {
-            //         iconName: "keyboard_arrow_left",
-            //     },
-            // },
+
             previousButtonLabel: getLabel({
                 labelName: "CONFIRM",
                 labelKey: "BK_PACC_BUTTON_CANCEL_BOOKING_CONFIRM",
@@ -157,6 +234,60 @@ export const footerForParkAndCC = getCommonApplyFooter({
         onClickDefination: {
             action: "condition",
             callBack: callBackForCancelParkAndCC,
+        },
+        visible: false,
+    },
+
+    editButton: {
+        componentPath: "Button",
+        props: {
+            variant: "outlined",
+            color: "primary",
+            style: {
+                minWidth: "180px",
+                height: "48px",
+                marginRight: "45px",
+                borderRadius: "inherit",
+            },
+        },
+        children: {
+            nextButtonLabel: getLabel({
+                labelName: "CANCEL",
+                labelKey: "BK_MY_BK_BUTTON_CANCEL",
+            }),
+
+        },
+        onClickDefination: {
+            action: "condition",
+            callBack: callBackForEdit,
+        },
+        visible: false,
+
+    },
+});
+
+export const footerForSecFeeRefundParkAndCC = getCommonApplyFooter({
+    securityFeeButton: {
+        componentPath: "Button",
+        props: {
+            variant: "outlined",
+            color: "primary",
+            style: {
+                minWidth: "180px",
+                height: "48px",
+                marginRight: "16px",
+                borderRadius: "inherit",
+            },
+        },
+        children: {
+            previousButtonLabel: getLabel({
+                labelName: "SUBMIT",
+                labelKey: "SUBMIT",
+            }),
+        },
+        onClickDefination: {
+            action: "condition",
+            callBack: callBackForRefundSecFee,
         },
         visible: false,
     },

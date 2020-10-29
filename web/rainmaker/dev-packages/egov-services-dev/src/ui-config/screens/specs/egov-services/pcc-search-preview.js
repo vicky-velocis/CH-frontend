@@ -103,7 +103,8 @@ const prepareDocumentsView = async (state, dispatch) => {
     }
 };
 
-const HideshowFooter = (action, bookingStatus, fromDate, bookingObj) => {
+const HideshowFooter = (action, bookingStatus, fromDate, bookingObj, state) => {
+    const { screenConfiguration } = state;
     let bookingTimeStamp = new Date(fromDate).getTime();
     let currentTimeStamp = new Date().getTime();
     let showFooter = false;
@@ -111,19 +112,42 @@ const HideshowFooter = (action, bookingStatus, fromDate, bookingObj) => {
         showFooter = true;
     }
 
-    console.log(bookingTimeStamp+"============"+currentTimeStamp);
-   if(bookingTimeStamp > currentTimeStamp){
-    set(
-        action,
-        "screenConfig.components.div.children.footer.children.cancelButton.visible",
-        showFooter === true ? true : false
+    console.log(bookingTimeStamp + "============" + currentTimeStamp);
+    if (bookingTimeStamp > currentTimeStamp) {
+        set(
+            action,
+            "screenConfig.components.div.children.footer.children.cancelButton.visible",
+            showFooter === true ? true : false
+        );
+        set(
+            action,
+            "screenConfig.components.div.children.footer.children.editButton.visible",
+            showFooter === true ? true : false
+        );
+    }
+
+    var billAccountDetails = get(
+        screenConfiguration,
+        "preparedFinalObject.ReceiptTemp[0].Bill[0].billDetails[0].billAccountDetails",
+        []
     );
-    set(
-        action,
-        "screenConfig.components.div.children.footer.children.editButton.visible",
-        showFooter === true ? true : false
-    );
-}
+    let refundAmount = 0;
+    for (let i = 0; i < billAccountDetails.length; i++) {
+        if (billAccountDetails[i].taxHeadCode == "REFUNDABLE_SECURITY") {
+            refundAmount += billAccountDetails[i].amount;
+        }
+
+    }
+
+    if (bookingTimeStamp < currentTimeStamp && refundAmount > 0) {
+
+        set(
+            action,
+            "screenConfig.components.div.children.footer.children.refundSecurityFeeButton.visible",
+            showFooter === true ? true : false
+        );
+    }
+
 };
 
 const setSearchResponse = async (
@@ -208,7 +232,7 @@ const setSearchResponse = async (
         // let bookingTimeStamp = new Date(recData[0].bkFromDate).getTime();
         // let currentTimeStamp = new Date().getTime();
         // if (currentTimeStamp < bookingTimeStamp) {
-        HideshowFooter(action, bookingStatus, recData[0].bkFromDate, recData[0]);
+        HideshowFooter(action, bookingStatus, recData[0].bkFromDate, recData[0], state);
         // }
 
         prepareDocumentsView(state, dispatch);
