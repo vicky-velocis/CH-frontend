@@ -47,6 +47,7 @@ import axios from 'axios';
 import {
   getSearchApplicationsResults
 } from "../../../../ui-utils/commons";
+import moment from "moment";
 
 export const getCommonApplyHeader = ({label, number}) => {
   return getCommonContainer({
@@ -557,6 +558,98 @@ export const downloadCertificateForm = (Licenses, data, mode = 'download') => {
     alert('Some Error Occured while downloading Acknowledgement form!');
   }
 }
+
+export const downloadPaymentReceipt = (receiptQueryString, Applications, data, generatedBy,type, mode = "download") => {
+  const FETCHRECEIPT = {
+    GET: {
+      URL: "/collection-services/payments/_search",
+      ACTION: "_get",
+    },
+  };
+  const DOWNLOADRECEIPT = {
+    GET: {
+      URL: "/pdf-service/v1/_create",
+      ACTION: "_get",
+    },
+  };
+  try {
+    httpRequest("post", FETCHRECEIPT.GET.URL, FETCHRECEIPT.GET.ACTION, receiptQueryString).then((payloadReceiptDetails) => {
+      const queryStr = [{
+          key: "key",
+          value: "application-payment-receipt"
+        },
+        {
+          key: "tenantId",
+          value: receiptQueryString[1].value.split('.')[0]
+        }
+      ]
+      
+      if (payloadReceiptDetails && payloadReceiptDetails.Payments && payloadReceiptDetails.Payments.length == 0) {
+        console.log("Could not find any receipts");
+        return;
+      }
+      let {
+        Payments
+      } = payloadReceiptDetails;
+      let time = Payments[0].paymentDetails[0].auditDetails.lastModifiedTime
+      let {
+        billAccountDetails
+      } = Payments[0].paymentDetails[0].bill.billDetails[0];
+      billAccountDetails = billAccountDetails.map(({
+        taxHeadCode,
+        ...rest
+      }) => ({
+        ...rest,
+        taxHeadCode: taxHeadCode.includes("_APPLICATION_FEE") ? "RP_DUE" : taxHeadCode.includes("_PENALTY") ? "RP_PENALTY" : taxHeadCode.includes("_TAX") ? "RP_TAX" : taxHeadCode.includes("_ROUNDOFF") ? "RP_ROUNDOFF" : taxHeadCode.includes("_PUBLICATION_FEE") ? "RP_CHARGES" : taxHeadCode
+      }))
+      Payments = [{
+        ...Payments[0],
+        paymentDetails: [{
+          ...Payments[0].paymentDetails[0],
+          bill: {
+            ...Payments[0].paymentDetails[0].bill,
+            billDetails: [{
+              ...Payments[0].paymentDetails[0].bill.billDetails[0],
+              billAccountDetails
+            }]
+          }
+        }]
+      }]
+      if(time){
+        time = moment(new Date(time)).format("h:mm:ss a")
+      }
+      Payments = [{
+        ...Payments[0],paymentDetails:[{
+          ...Payments[0].paymentDetails[0],auditDetails:{
+            ...Payments[0].paymentDetails[0].auditDetails,lastModifiedTime:time
+          }
+        }]
+      }]
+      httpRequest("post", DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, queryStr, {
+          Payments,
+          Applications,
+          generatedBy
+        }, {
+          'Accept': 'application/json'
+        }, {
+          responseType: 'arraybuffer'
+        })
+        .then(res => {
+          res.filestoreIds[0]
+          if (res && res.filestoreIds && res.filestoreIds.length > 0) {
+            res.filestoreIds.map(fileStoreId => {
+              downloadReceiptFromFilestoreID(fileStoreId, mode)
+            })
+          } else {
+            console.log("Error In Receipt Download");
+          }
+        });
+    })
+  } catch (exception) {
+    alert('Some Error Occured while downloading Receipt!');
+  }
+}
+
 export const downloadAmountLetter = (Applications, applicationType, mode = 'download') => {
 
   let queryStr = []
