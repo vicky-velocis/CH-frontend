@@ -108,6 +108,16 @@ const HideshowFooter = (action, bookingStatus, fromDate, bookingObj, state) => {
     let bookingTimeStamp = new Date(fromDate).getTime();
     let currentTimeStamp = new Date().getTime();
     let showFooter = false;
+    if (bookingObj.timeslots.length > 0) {
+        let [fromTime] = bookingObj.timeslots[0].slot.split("-");
+        if (fromTime == "10AM") {
+            bookingTimeStamp = new Date(`${fromDate}T10:00:00`).getTime();
+        } else if (fromTime == "2PM") {
+            bookingTimeStamp = new Date(`${fromDate}T14:00:00`).getTime();
+        } else if (fromTime == "6PM") {
+            bookingTimeStamp = new Date(`${fromDate}T18:00:00`).getTime();
+        }
+    }
     if (bookingStatus === "APPLIED") {
         showFooter = true;
     }
