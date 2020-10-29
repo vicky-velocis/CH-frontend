@@ -308,10 +308,10 @@ let ownerDocuments = PropertiesTemp[0].propertyDetails.owners[0].ownerDetails.re
   }, []);
   
   let Property = Properties[0];
-  if(Property.propertyDetails.purchaser){
-    Property.propertyDetails.purchaser[0].ownerDetails.ownerDocuments = myPDocuments
+  if(Property.propertyDetails.purchaser.length > 0){
+     Property.propertyDetails.purchaser[0].ownerDetails.ownerDocuments = myPDocuments
   }
-  if(Property.propertyDetails.owners){
+  if(Property.propertyDetails.owners.length > 0){
     Property.propertyDetails.owners[0].ownerDetails.ownerDocuments = myODocuments
   }
 
