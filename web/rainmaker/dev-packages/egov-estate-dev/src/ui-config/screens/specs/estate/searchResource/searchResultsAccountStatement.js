@@ -91,9 +91,3 @@ export const accountStatementResults = {
     }
   }
 }
-
-// const onRowClick = rowData => {
-//   const type = getQueryArg(window.location.href, "type")
-//   window.location.href = process.env.REACT_APP_NAME === "Citizen" ? `estate-branch-apply?propertyId=${rowData[4]}` : `apply?propertyId=${rowData[4]}&applicationType=${type}`
-//   // window.location.href = `apply?propertyId=${rowData[4]}&applicationType=${type}`;
-// };

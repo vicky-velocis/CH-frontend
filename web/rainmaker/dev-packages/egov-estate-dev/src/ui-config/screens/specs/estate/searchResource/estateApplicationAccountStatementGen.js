@@ -127,48 +127,6 @@ export const estateApplicationAccountStatementGen = getCommonCard({
                 sm: 6
             },
             errorMessage: "ES_ERR_CATEGORY_FIELD",
-            // beforeFieldChange: (action, state, dispatch) => {
-            //   dispatch(
-            //     prepareFinalObject(
-            //       "Properties[0].subcatvar",
-            //       ""
-            //     )
-            //   )
-
-            //   let categorySelected = action.value;
-            //   let subcatvar = get(state.screenConfiguration.preparedFinalObject,"Properties[0].subcatvar");
-            //   let mdmsCategory = get(state.screenConfiguration.preparedFinalObject,"searchScreenMdmsData.EstateServices.categories")
-            
-            //   if(categorySelected === "CAT.RESIDENTIAL"){
-            //     subcatvar = mdmsCategory.filter(item => !!item.SubCategory && item.code === "CAT.RESIDENTIAL")
-            //     dispatch(
-            //       prepareFinalObject(
-            //         "Properties[0].subcatvar",
-            //         subcatvar
-            //       )
-            //     )
-            //     // set(state.screenConfiguration.preparedFinalObject,"Properties[0].subcatvar",subcatvar);
-            //   }
-            //   else if(categorySelected === "CAT.COMMERCIAL"){
-            //     subcatvar = mdmsCategory.filter(item => !!item.SubCategory && item.code === "CAT.COMMERCIAL")
-            //     dispatch(
-            //       prepareFinalObject(
-            //         "Properties[0].subcatvar",
-            //         subcatvar
-            //       )
-            //     )
-            //     // set(state.screenConfiguration.preparedFinalObject,"Properties[0].subcatvar",subcatvar);
-            //     }
-            //     else if(categorySelected === "CAT.INDUSTRIAL" || categorySelected === "CAT.INSTITUTIONAL" || categorySelected === "CAT.GOVPROPERTY" || categorySelected === "CAT.RELIGIOUS" || categorySelected === "CAT.HOSPITAL"){
-            //       dispatch(
-            //         prepareFinalObject(
-            //           "Properties[0].subcatvar",
-            //           ""
-            //         )
-            //       )
-            //     }
-                
-            // }
         }),
         subCategory: getTextField({
           label: {
@@ -306,37 +264,6 @@ export const estateApplicationAccountStatementGen = getCommonCard({
             sm: 4
           }
         }
-        // resetButton: {
-        //   componentPath: "Button",
-        //   gridDefination: {
-        //     xs: 6,
-        //     sm: 6,
-        //     align: "center"
-        //   },
-        //   props: {
-        //     variant: "outlined",
-        //     style: {
-        //     //   color: "rgba(0, 0, 0, 0.6000000238418579)",
-        //     //   borderColor: "rgba(0, 0, 0, 0.6000000238418579)",
-        //       color: "white",
-        //       backgroundColor: "rgba(85,85,85,1)",
-        //       width: "70%",
-        //       height: "48px",
-        //       margin: "8px", 
-        //     //   float: "right"
-        //     }
-        //   },
-        //   children: {
-        //     buttonLabel: getLabel({
-        //       labelName: "Reset",
-        //       labelKey: "ES_HOME_SEARCH_RESULTS_BUTTON_RESET"
-        //     })
-        //   },
-        //   onClickDefination: {
-        //     action: "condition",
-        //     callBack: resetFields
-        //   }
-        // }
       })
     })
 }),
@@ -514,62 +441,3 @@ export const estateApplicationAccountStatementGen = getCommonCard({
       }
     }
   }
-
-  // function resetFields(state, dispatch) {
-  //   dispatch(
-  //     handleField(
-  //       "estate-search-account-statement",
-  //       "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.dateContainer.children.from",
-  //       "props.value",
-  //       ""
-  //     )
-  //   )
-  //   dispatch(
-  //     handleField(
-  //       "estate-search-account-statement",
-  //       "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.dateContainer.children.to",
-  //       "props.value",
-  //       ""
-  //     )
-  //   )
-  //   dispatch(
-  //     handleField(
-  //       "estate-search-account-statement",
-  //       "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.fileNumberContainer.children.fileNumber",
-  //       "props.value",
-  //       ""
-  //     )
-  //   )
-  //   dispatch(
-  //     handleField(
-  //       "estate-search-account-statement",
-  //       "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.categoryContainer.children.category",
-  //       "props.value",
-  //       ""
-  //     )
-  //   )
-  //   dispatch(
-  //     handleField(
-  //       "estate-search-account-statement",
-  //       "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.categoryContainer.children.subCategory",
-  //       "props.value",
-  //       ""
-  //     )
-  //   )
-  //   dispatch(
-  //     handleField(
-  //       "estate-search-account-statement",
-  //       "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.siteContainer.children.siteNumber",
-  //       "props.value",
-  //       ""
-  //     )
-  //   )
-  //   dispatch(
-  //     handleField(
-  //       "estate-search-account-statement",
-  //       "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.fileNumberContainer.children.sectorNumber",
-  //       "props.value",
-  //       ""
-  //     )
-  //   )
-  // }
