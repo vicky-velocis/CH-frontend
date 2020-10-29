@@ -238,7 +238,10 @@ const searchCard = getCommonCard({
 })
 
 const getData = async (action, state, dispatch) => {
-  const response = await getSearchApplicationsResults();
+  const queryObject = [
+    {key: "branchType", value: "BUILDING_BRANCH"}
+  ]
+  const response = await getSearchApplicationsResults(queryObject);
   console.log(response)
   if (!!response && !!response.Applications && !!response.Applications.length) {
     dispatch(prepareFinalObject("actualResults", response.Applications));
