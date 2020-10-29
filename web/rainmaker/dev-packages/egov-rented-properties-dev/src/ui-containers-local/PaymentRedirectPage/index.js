@@ -5,7 +5,6 @@ import { withRouter } from "react-router";
 
 class PaymentRedirect extends Component {
   componentDidMount = async () => {
-    debugger
     let { search } = this.props.location;
     const txnQuery=search.split('&')[0].replace('eg_pg_txnid','transactionId');
     const service=search.split('=')[6]
@@ -18,7 +17,6 @@ class PaymentRedirect extends Component {
         [],
         {}
       );
-      debugger
       let consumerCode = get(pgUpdateResponse, "Transaction[0].consumerCode");
       let tenantId = get(pgUpdateResponse, "Transaction[0].tenantId");
       const queryObject = [
