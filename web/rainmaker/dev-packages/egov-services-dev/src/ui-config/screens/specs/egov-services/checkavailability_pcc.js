@@ -150,9 +150,9 @@ const prepareEditFlow = async (
                 )
             );
             let oldAvailabilityCheckData = {
-                bkFromDate :  bookingsModelList[0].bkFromDate,
-                bkToDate :  bookingsModelList[0].bkToDate,
-                bkBookingVenue :  bookingsModelList[0].bkBookingVenue,
+                bkFromDate: bookingsModelList[0].bkFromDate,
+                bkToDate: bookingsModelList[0].bkToDate,
+                bkBookingVenue: bookingsModelList[0].bkBookingVenue,
             }
             dispatch(
                 prepareFinalObject(
@@ -224,20 +224,20 @@ const prepareEditFlow = async (
                             prepareFinalObject(
                                 "DisplayPacc.bkDisplayFromDateTime",
                                 bookingsModelList[0].bkFromDate +
-                                    ", " +
-                                    bookingsModelList[0].timeslots[0].slot.split(
-                                        "-"
-                                    )[0]
+                                ", " +
+                                bookingsModelList[0].timeslots[0].slot.split(
+                                    "-"
+                                )[0]
                             )
                         );
                         dispatch(
                             prepareFinalObject(
                                 "DisplayPacc.bkDisplayToDateTime",
                                 bookingsModelList[0].bkToDate +
-                                    ", " +
-                                    bookingsModelList[0].timeslots[0].slot.split(
-                                        "-"
-                                    )[1]
+                                ", " +
+                                bookingsModelList[0].timeslots[0].slot.split(
+                                    "-"
+                                )[1]
                             )
                         );
                     }

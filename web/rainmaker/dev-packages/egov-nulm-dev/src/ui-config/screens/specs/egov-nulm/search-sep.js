@@ -88,6 +88,26 @@ import {
         label: "CREATED"
       },
       {
+        value: "Forwarded to Task force Committee",
+        label: "Forwarded to Task force Committee"
+      },
+      {
+        value: "Approved by Task force committee",
+        label: "Approved by Task force committee"
+      },
+      {
+        value: "Rejected by Task force committee",
+        label: "Rejected by Task force committee"
+      },
+      {
+        value: "Sent to bank for processing",
+        label: "Sent to bank for processing"
+      },
+      {
+        value: "Sanctioned by Bank",
+        label: "Sanctioned by Bank"
+      },
+      {
         value: "DRAFTED",
         label: "DRAFTED"
       },
@@ -103,7 +123,9 @@ import {
     beforeInitScreen: (action, state, dispatch) => {
             // fetching MDMS data
       getData(action, state, dispatch);
-      dispatch(prepareFinalObject("NULMSEPRequest", {}));  
+      dispatch(prepareFinalObject("NULMSEPRequest", {}));
+    dispatch(prepareFinalObject(`documentsUploadRedux`,{}));
+    
       dispatch(prepareFinalObject("searchScreen", {}));
       return action;
     },
