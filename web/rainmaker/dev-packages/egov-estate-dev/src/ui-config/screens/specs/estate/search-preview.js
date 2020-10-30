@@ -11,7 +11,7 @@ import {
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getSearchResults } from "../../../../ui-utils/commons";
 import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
-import { getReviewAuction, getPropertyDetails,getAllotmentDetails,getAdditionalDetails } from "./preview-resource/preview-properties";
+import { getReviewAuction, getPropertyDetails,getAllotmentDetails,getAdditionalDetails ,getReviewRentSummary} from "./preview-resource/preview-properties";
 import { getTenantId} from "egov-ui-kit/utils/localStorageUtils";
 import { WF_ALLOTMENT_OF_SITE } from "../../../../ui-constants";
 
@@ -29,13 +29,14 @@ export const headerrow = getCommonContainer({
 const reviewPropertyDetails = getPropertyDetails(false);
 const reviewAllotmentDetails = getAllotmentDetails(false);
 const additionalDetails = getAdditionalDetails(false)
-
+const reviewRentSummary = getReviewRentSummary(false);
 
 export const propertyReviewDetails = getCommonCard({
   reviewPropertyDetails,
   // reviewAuctionDetails,
   // reviewAllotmentDetails,
-  additionalDetails
+  additionalDetails,
+  reviewRentSummary
 });
 
 export const searchResults = async (action, state, dispatch, fileNumber) => {
@@ -48,7 +49,17 @@ export const searchResults = async (action, state, dispatch, fileNumber) => {
     let propertyRegisteredTo = properties[0].propertyDetails.propertyRegisteredTo;
     let applicationDocuments = properties[0].propertyDetails.applicationDocuments || [];
     const removedDocs = applicationDocuments.filter(item => !item.active)
-
+    
+    let {estateRentSummary} = properties[0]
+    if(!!estateRentSummary){
+        estateRentSummary.outstanding =  (parseInt(estateRentSummary.balanceRent) + 
+        parseInt(estateRentSummary.balanceGST) + parseInt(estateRentSummary.balanceGSTPenalty) +
+        parseInt(estateRentSummary.balanceRentPenalty)).toFixed(1)
+    }
+    properties = {
+      ...properties , estateRentSummary : estateRentSummary
+    }
+  
     dispatch(
       handleField(
         "search-preview",
@@ -84,34 +95,34 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
 }
 
 export const onTabChange = async(tabIndex, dispatch, state) => {
-  fileNumber = getQueryArg(window.location.href, "filenumber");
+  fileNumber = getQueryArg(window.location.href, "fileNumber");
   let path = "";
   if (tabIndex === 0) {
-    path = `/estate/search-preview?filenumber=${fileNumber}&tenantId=${tenantId}`;
+    path = `/estate/search-preview?fileNumber=${fileNumber}&tenantId=${tenantId}`;
   }
   else if (tabIndex === 1) {
-    path = `/estate/auction-details?filenumber=${fileNumber}&tenantId=${tenantId}`
+    path = `/estate/auction-details?fileNumber=${fileNumber}&tenantId=${tenantId}`
   }
   else if (tabIndex === 2) {
-    path = `/estate/owner-details?filenumber=${fileNumber}&tenantId=${tenantId}`
+    path = `/estate/owner-details?fileNumber=${fileNumber}&tenantId=${tenantId}`
   }
   else if (tabIndex === 3) {
-    path = `/estate/document-details?filenumber=${fileNumber}&tenantId=${tenantId}`
+    path = `/estate/document-details?fileNumber=${fileNumber}&tenantId=${tenantId}`
   }
   else if (tabIndex === 4) {
-    path = `/estate/purchaser-details?filenumber=${fileNumber}&tenantId=${tenantId}`
+    path = `/estate/purchaser-details?fileNumber=${fileNumber}&tenantId=${tenantId}`
   }
   else if (tabIndex === 5) {
-    path = `/estate/previous-owner-document-details?filenumber=${fileNumber}&tenantId=${tenantId}`
+    path = `/estate/previous-owner-document-details?fileNumber=${fileNumber}&tenantId=${tenantId}`
   }
   else if (tabIndex === 6) {
-    path = `/estate/payment-details?filenumber=${fileNumber}&tenantId=${tenantId}`
+    path = `/estate/payment-details?fileNumber=${fileNumber}&tenantId=${tenantId}`
   }
   else if (tabIndex === 7) {
-    path = `/estate/notices?filenumber=${fileNumber}&tenantId=${tenantId}`
+    path = `/estate/notices?fileNumber=${fileNumber}&tenantId=${tenantId}`
   }
   else if (tabIndex === 8) {
-    path = `/estate/court-case?filenumber=${fileNumber}&tenantId=${tenantId}`
+    path = `/estate/court-case?fileNumber=${fileNumber}&tenantId=${tenantId}`
   }
   dispatch(setRoute(path))
 }
@@ -150,7 +161,7 @@ const estateDetailPreview = {
   uiFramework: "material-ui",
   name: "court-case",
   beforeInitScreen: (action, state, dispatch) => {
-    fileNumber = getQueryArg(window.location.href, "filenumber");
+    fileNumber = getQueryArg(window.location.href, "fileNumber");
     beforeInitFn(action, state, dispatch, fileNumber);
     return action;
   },
