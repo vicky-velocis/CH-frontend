@@ -26,8 +26,6 @@ import {
 } from "../../utils";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 
-let branchType = getQueryArg(window.location.href, "branchType") || "ESTATE_BRANCH";
-
 const searchBy = {
   uiFramework: "custom-containers",
   componentPath: "RadioGroupContainer",
@@ -373,10 +371,13 @@ export const estateApplication = getCommonCard({
         },
         onClickDefination: {
           action: "condition",
-          callBack: (state, dispatch) => searchApiCall(state, dispatch, [
-            { key: "state", value: ESTATE_APPROVED_STATE },
-            { key: "branchType", value: branchType }
-          ])
+          callBack: (state, dispatch) => {
+            const branchType = getQueryArg(window.location.href, "branchType") || "ESTATE_BRANCH";
+            searchApiCall(state, dispatch, [
+              { key: "state", value: ESTATE_APPROVED_STATE },
+              { key: "branchType", value: branchType }
+            ])
+          }
         }
       }
     })

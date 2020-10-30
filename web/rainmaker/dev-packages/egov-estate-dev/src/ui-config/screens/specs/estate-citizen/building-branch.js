@@ -25,7 +25,7 @@ const cardItems = [{
       labelName: "My Applications/Search Applications"
     },
     icon: < EstateIcon / > ,
-    route: "estate-branch-my-applications?branchType=BUILDING_BRANCH&type=BuildingBranch_OtherCitizenService_NOC"
+    route: "my-applications?branchType=BuildingBranch&type=BuildingBranch_OtherCitizenService_NOC"
   }
 ]
 
