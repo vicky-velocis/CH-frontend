@@ -96,14 +96,17 @@ function Control(props) {
       {...props.selectProps.textFieldProps}
       helperText={props.selectProps.helperText}
       error={props.selectProps.error}
-	  onChange={event => {
+      //onChange={handleTextChange}
+      onChange={event => {
         handleTextChange(event,props.selectProps.isFilterData)
       }}
+
     />
   );
 }
 
 const handleTextChange = (e,isFilterData) => {
+  debugger
   if (isFilterData) {
     let vendorvalue = get(store.getState(), 'screenConfiguration.preparedFinalObject.applyScreenMdmsData.egec.vendorList', []);
     let finalVendorValues = [];
@@ -123,8 +126,6 @@ const handleTextChange = (e,isFilterData) => {
     }
   }
 }
-
-
 function Option(props) {
   return (
     <MenuItem
