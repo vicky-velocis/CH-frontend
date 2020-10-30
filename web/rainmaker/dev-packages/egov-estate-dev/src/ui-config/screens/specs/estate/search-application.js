@@ -12,7 +12,7 @@ import {
 import { estateApplicationSearch } from './searchResource/estateApplication';
 import { getStatusList, searchApplicationApiCall } from './searchResource/functions';
 import { searchApplicationResults } from './searchResource/searchResults';
-
+import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import {
     getUserInfo
 } from "egov-ui-kit/utils/localStorageUtils";
