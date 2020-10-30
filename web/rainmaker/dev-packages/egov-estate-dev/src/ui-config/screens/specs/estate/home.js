@@ -12,7 +12,6 @@ const userInfo = JSON.parse(getUserInfo());
 const {
   roles = []
 } = userInfo
-console.log(roles);
 const findItem = roles.find(item => item.code === "ES_EB_SECTION_OFFICER");
 
 const header = getCommonHeader({
@@ -41,22 +40,6 @@ const cardItems = [
     icon: < FormIcon / > ,
     route: "search-application"
   },
-  // {
-  //   label: {
-  //     labelKey: "ES_PROPERTY_MASTER_ALLOTMENT_HEADER",
-  //     labelName: "Allotment"
-  //   },
-  //   icon: < FormIcon / > ,
-  //   route: `allotment?tenantId=${getTenantId()}`
-  // },
-  // {
-  //   label: {
-  //     labelKey: "ES_PROPERTY_MASTER_CANCELLATION_HEADER",
-  //     labelName: "Cancellation"
-  //   },
-  //   icon: < FormIcon / > ,
-  //   route: ""
-  // },
   {
     label: {
       labelKey: "ES_PROPERTY_MASTER_REFUND_HEADER",
@@ -87,7 +70,7 @@ const cardItems = [
       labelName: "Rent Payment"
     },
     icon: < FormIcon / > ,
-    route: "estate-payment"
+    route: "/estate/property-search?type=payment"
   }
 ]
 
@@ -147,6 +130,7 @@ const estateHome = {
           props: {
             items: process.env.REACT_APP_NAME === "Citizen" ? citizenCardItems : cardItems,
             history: {},
+            // isArray: process.env.REACT_APP_NAME === "Employee"
           }
         }
       }

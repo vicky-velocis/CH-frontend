@@ -13,6 +13,7 @@ import { UploadMultipleFiles } from "egov-ui-framework/ui-molecules";
 import { toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import "./index.css";
 import { get } from "lodash";
+import {DocumentListContainer} from "../../ui-containers-local";
 
 const styles = theme => ({
   root: {
@@ -41,6 +42,28 @@ const fieldConfig = {
       labelName: "Enter Comments",
       labelKey: "WF_ADD_HOC_CHARGES_POPUP_COMMENT_LABEL"
     }
+  },
+  hardCopyReceivedDate: {
+    label: {
+      labelName: "Hard Copy Received Date",
+      labelKey: "ES_HARD_COPY_RECEIVED_DATE"
+    }
+  }
+};
+
+const getEpoch = (dateString, dayStartOrEnd = "dayend") => {
+  //example input format : "2018-10-02"
+  try {
+    const parts = dateString.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+    const DateObj = new Date(Date.UTC(parts[1], parts[2] - 1, parts[3]));
+    DateObj.setMinutes(DateObj.getMinutes() + DateObj.getTimezoneOffset());
+    if (dayStartOrEnd === "dayend") {
+      DateObj.setHours(DateObj.getHours() + 24);
+      DateObj.setSeconds(DateObj.getSeconds() - 1);
+    }
+    return DateObj.getTime();
+  } catch (e) {
+    return dateString;
   }
 };
 
@@ -86,7 +109,8 @@ class ActionDialog extends React.Component {
       showEmployeeList,
       dialogHeader,
       moduleName,
-      isDocRequired
+      isDocRequired,
+      documentProps
     } = dialogData;
     const { getButtonLabelName } = this;
     let fullscreen = false;
@@ -180,9 +204,51 @@ class ActionDialog extends React.Component {
                       placeholder={fieldConfig.comments.placeholder}
                     />
                   </Grid>
+                  {buttonLabel === "FORWARD" && applicationState === "ES_PENDING_DS_VERIFICATION" && (
+                    <Grid item sm="12">
+                    <TextFieldContainer
+                    type="date"
+                    required={true}
+                    defaultValue={new Date()}
+                    InputLabelProps={{ shrink: true }}
+                    label= {fieldConfig.hardCopyReceivedDate.label}
+                    onChange={e =>
+                     handleFieldChange( `${dataPath}.hardCopyReceivedDate` , getEpoch(e.target.value))
+                   }
+                   jsonPath={`${dataPath}.hardCopyReceivedDate`}
+                    /> 
+                    </Grid>
+                  )}
 
+                  {!!documentProps && (
+                    <Grid item sm="12">
+                    <Typography
+                    component="h3"
+                    variant="subheading"
+                    style={{
+                      color: "rgba(0, 0, 0, 0.8700000047683716)",
+                      fontFamily: "Roboto",
+                      fontSize: "14px",
+                      fontWeight: 400,
+                      lineHeight: "20px",
+                      marginBottom: "8px"
+                    }}
+                  >
+                    <div className="rainmaker-displayInline">
+                      <LabelContainer
+                        labelName="Supporting Documents"
+                        labelKey="ES_WF_APPROVAL_UPLOAD_HEAD"
+                      />
+                      {isDocRequired && (
+                        <span style={{ marginLeft: 5, color: "red" }}>*</span>
+                      )}
+                    </div>
+                  </Typography>
+                  <DocumentListContainer {...documentProps}/>
+                  </Grid>
+                  )}
 
-                  {buttonLabel === "FORWARD" && applicationState === "ES_PENDING_SO_TEMPLATE_CREATION" && (<Grid item sm="12">
+                  {/* {(buttonLabel === "FORWARD" && applicationState === "ES_PENDING_SO_TEMPLATE_CREATION") && (<Grid item sm="12">
                   <Typography
                       component="h3"
                       variant="subheading"
@@ -228,7 +294,7 @@ class ActionDialog extends React.Component {
                       jsonPath={`${dataPath}.wfDocuments`}
                       maxFileSize={5000}
                     />
-                    </Grid>)}
+                    </Grid>)} */}
 
                   <Grid item sm="12">
                     <Typography

@@ -130,7 +130,7 @@ export const getFeesEstimateCard = props => {
 
 export const getButtonVisibility = (status, button) => {
   if (status === "ES_PENDING_PAYMENT" && button === "PENDINGPAYMENT") return true;
-  if ((status === "ES_PENDING_CITIZEN_TEMPLATE_SUBMISSION" || status === "ES_PENDING_CITIZEN_NOTICE_DOCUMENTS") && button === "UPLOAD_DOCUMENTS") return true
+  if ((status === "ES_PENDING_CITIZEN_TEMPLATE_SUBMISSION" || status === "ES_PENDING_CITIZEN_NOTICE_DOCUMENTS") && button === "UPLOAD_DOCUMENT") return true
   return false;
 };
 
@@ -307,8 +307,12 @@ let ownerDocuments = PropertiesTemp[0].propertyDetails.owners[0].ownerDetails.re
   }, []);
   
   let Property = Properties[0];
-  Property.propertyDetails.purchaser[0].ownerDetails.ownerDocuments = myPDocuments
-  Property.propertyDetails.owners[0].ownerDetails.ownerDocuments = myODocuments
+  if(Property.propertyDetails.purchaser){
+    Property.propertyDetails.purchaser[0].ownerDetails.ownerDocuments = myPDocuments
+  }
+  if(Property.propertyDetails.owners){
+    Property.propertyDetails.owners[0].ownerDetails.ownerDocuments = myODocuments
+  }
 
   const DOWNLOADRECEIPT = {
     GET: {
@@ -1598,7 +1602,9 @@ export const _getPattern = (type) => {
     case "fileNumber":
       return /^[a-zA-Z0-9]{1,50}$/i;
     case "alphabet":
-      return /^[a-zA-Z]{1,150}$/i;
+      return /^[a-zA-Z ]{1,150}$/i;
+    case "address":
+      return /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,150}$/i
   }
 }
 
@@ -1621,7 +1627,7 @@ export const displayDefaultErr = (componentJsonpath, dispatch, screenName) => {
   )
 }
 
-export const displayMaxLengthErr = (componentJsonpath, dispatch, errMsg, screenName) => {
+export const displayCustomErr = (componentJsonpath, dispatch, errMsg, screenName) => {
   dispatch(
       handleField(
           screenName,
