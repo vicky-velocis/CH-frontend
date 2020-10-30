@@ -15,6 +15,7 @@ import {
     getCommonCaption,
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { getFileUrlFromAPI } from "egov-ui-framework/ui-utils/commons";
+import { getBookingWorkflowHistory } from "../../../../ui-utils/commons";
 import axios from "axios";
 
 export const getCommonApplyFooter = (children) => {
@@ -973,6 +974,26 @@ export const downloadCertificate = async (
         "Booking"
     );
 
+    let bookingWfHistory = await getBookingWorkflowHistory(applicationNumber, tenantId);
+
+    let apporvedByDetail = {
+        approvedBy: "Renil Commissioner",
+        role: "Additional Commissioner",
+    };
+    if (bookingWfHistory && bookingWfHistory.length > 0) {
+        for (let i = 0; i < bookingWfHistory.length; i++) {
+            if (bookingWfHistory[i].assignee != null) {
+                apporvedByDetail.approvedBy = bookingWfHistory[i].assignee.name;
+                let filteredRole = bookingWfHistory[i].assignee.roles.filter((role) => {
+                    return role.code == "BK_OSBM_APPROVER";
+                });
+
+                apporvedByDetail.role = filteredRole[0].name;
+            }
+        }
+    }
+
+
     const DOWNLOADCERTIFICATE = {
         GET: {
             URL: "/pdf-service/v1/_create",
@@ -1077,10 +1098,7 @@ export const downloadCertificate = async (
                     categoryImage: "",
                     // categoryImage: "http://3.6.65.87:3000/static/media/cat-a.4e1bc5ec.jpeg"
                 },
-                approvedBy: {
-                    approvedBy: "Renil Commissioner",
-                    role: "Additional Commissioner",
-                },
+                approvedBy: apporvedByDetail,
                 tenantInfo: {
                     municipalityName:
                         tenantData.tenants[0].city.municipalityName,

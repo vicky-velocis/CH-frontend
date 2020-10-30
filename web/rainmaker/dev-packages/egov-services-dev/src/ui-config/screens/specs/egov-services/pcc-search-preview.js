@@ -122,7 +122,6 @@ const HideshowFooter = (action, bookingStatus, fromDate, bookingObj, state) => {
         showFooter = true;
     }
 
-    console.log(bookingTimeStamp + "============" + currentTimeStamp);
     if (bookingTimeStamp > currentTimeStamp) {
         set(
             action,

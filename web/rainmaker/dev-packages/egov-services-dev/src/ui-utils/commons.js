@@ -876,40 +876,40 @@ export const getNewLocationsSearchResults = async (queryObject) => {
 };
 
 
-// export const getBookingWorkflowHistory = async (applicationNumber, tenantId) => {
+export const getBookingWorkflowHistory = async (applicationNumber, tenantId) => {
 
 
-//     const queryObject = [
-//         { key: "businessIds", value: applicationNumber },
-//         { key: "history", value: true },
-//         { key: "tenantId", value: tenantId }
-//     ];
+    const queryObject = [
+        { key: "businessIds", value: applicationNumber },
+        { key: "history", value: true },
+        { key: "tenantId", value: tenantId }
+    ];
 
 
-//     try {
-//         const payload = await httpRequest(
-//             "post",
-//             "bookings/api/egov-workflow/process/_search",
-//             "",
-//             queryObject,
-//             []
-//         );
+    try {
+        const payload = await httpRequest(
+            "post",
+            "bookings/api/egov-workflow/process/_search",
+            "",
+            queryObject,
+            []
+        );
 
-//         if (payload && payload.ProcessInstances.length > 0) {
+        if (payload && payload.ProcessInstances.length > 0) {
 
-//                return payload.ProcessInstances;
+               return payload.ProcessInstances;
 
-//         } else {
-//             toggleSnackbar(
-//                 true,
-//                 {
-//                     labelName: "Workflow returned empty object !",
-//                     labelKey: "WRR_WORKFLOW_ERROR"
-//                 },
-//                 "error"
-//             );
-//         }
-//     } catch (exception) {
-//         console.log(exception);
-//     }
-// };
+        } else {
+            toggleSnackbar(
+                true,
+                {
+                    labelName: "Workflow returned empty object !",
+                    labelKey: "WRR_WORKFLOW_ERROR"
+                },
+                "error"
+            );
+        }
+    } catch (exception) {
+        console.log(exception);
+    }
+};
