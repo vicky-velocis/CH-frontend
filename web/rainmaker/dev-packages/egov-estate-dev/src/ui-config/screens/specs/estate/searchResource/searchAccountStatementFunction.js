@@ -209,12 +209,12 @@ export const downloadAccountStatementPdf = async(state, dispatch) => {
                 downloadReceiptFromFilestoreID(fileStoreId, mode)
               })
             } else {
-              console.log("Error In Acknowledgement form Download");
+              console.log("Error In Account Statement Pdf Download");
             }
           });
    
   } catch (exception) {
-    alert('Some Error Occured while downloading Acknowledgement form!');
+    alert('Some Error Occured while downloading Account Statement Pdf!');
   }
 }
 
