@@ -5,12 +5,14 @@ import PropTypes from "prop-types";
 import cloneDeep from "lodash/cloneDeep";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import "./index.css";
+import { connect } from "react-redux";
 
 class Table extends React.Component {
   state = {
     data: [],
     columns: [],
-    customSortOrder: "asc"
+    customSortOrder: "asc",
+    title:undefined
   };
 
   getMuiTheme = () =>
@@ -55,6 +57,7 @@ class Table extends React.Component {
         let dataRow = [];
         // Object.keys(columns).forEach(column => {
         columns.forEach(column => {
+          debugger
           // Handling the case where column name is an object with options
           column = typeof column === "object" ? get(column, "name") : column;
           let columnValue = get(curr, `${column}`, "");
@@ -70,17 +73,59 @@ class Table extends React.Component {
     );
   };
 
+  columnLocalisation = (localizationLabels, columns) => {
+    const  localisationArray = Object.values(localizationLabels);
+    const {columns : stateColumn} = this.state;
+    const { title } = this.state;
+    let columnName = []
+    columns.forEach(column => {
+      // Handling the case where column name is an object with options
+      column = typeof column === "object" ? get(column, "name") : column;
+
+      const locMessageObj =  localisationArray.find(locMessage => locMessage.code === column);
+
+      if(locMessageObj){
+      
+         columnName.push(locMessageObj.message);
+      }
+      else{
+        columnName.push(column);
+      }
+
+    });
+    console.log("columnNames",columnName);
+    
+    const checkFlag = _.isEqual(columnName.sort(), stateColumn.sort());
+    if(!checkFlag){
+      this.setState({columns : columnName});
+    }
+    const locMessageTitleObj = localisationArray.find(locMessage => locMessage.code === title);
+    
+    if (title && title != undefined && locMessageTitleObj!=undefined && locMessageTitleObj[0]!=undefined)  { 
+      this.setState({title : locMessageTitleObj[0].message});
+    }
+    
+  }
+  
+  
+    componentDidUpdate (prevProps, prevState){
+    const {localizationLabels} = this.props;
+    const { data, columns } = this.props;
+    this.columnLocalisation(localizationLabels, columns);
+  }
+
+
   componentWillReceiveProps(nextProps) {
-    const { data, columns } = nextProps;
-    this.updateTable(data, columns);
+    const { data, columns,title } = nextProps;
+    this.updateTable(data, columns,title);
   }
 
   componentDidMount() {
-    const { data, columns } = this.props;
-    this.updateTable(data, columns);
+    const { data, columns,title } = this.props;
+    this.updateTable(data, columns,title);
   }
 
-  updateTable = (data, columns) => {
+  updateTable = (data, columns,title) => {
     // const updatedData = this.formatData(data, columns);
     // Column names should be array not keys of an object!
     // This is a quick fix, but correct this in other modules also!
@@ -89,7 +134,9 @@ class Table extends React.Component {
     this.setState({
       data: updatedData,
       // columns: Object.keys(columns)
-      columns: fixedColumns
+      columns: fixedColumns,
+      title:title
+
     });
   };
 
@@ -107,8 +154,9 @@ class Table extends React.Component {
   };
 
   render() {
-    const { data, columns } = this.state;
-    const { options, title, customSortDate } = this.props;
+    const { data, columns,title } = this.state;
+    const { options, customSortDate } = this.props;
+
     return (
       <MuiThemeProvider theme={this.getMuiTheme()}>
         <MUIDataTable
@@ -133,4 +181,13 @@ Table.propTypes = {
   options: PropTypes.object.isRequired
 };
 
-export default Table;
+  
+const mapStateToProps = (state, ownProps) => {
+  let localizationLabels = get(
+      state,
+      "app.localizationLabels",
+      []
+  );
+  return { localizationLabels };
+};
+export default connect(mapStateToProps, null)(Table);
