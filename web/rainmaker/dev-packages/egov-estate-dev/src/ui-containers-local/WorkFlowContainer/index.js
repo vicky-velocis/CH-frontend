@@ -254,7 +254,7 @@ class WorkFlowContainer extends React.Component {
   getRedirectUrl = (action, businessId, moduleName) => {
     const {preparedFinalObject, dataPath} = this.props
     let data = get(preparedFinalObject, dataPath, []) || []
-    const {billingBusinessService} = data[0]
+    const {billingBusinessService} = !!data.length ? data[0] : ""
     console.log("modulenamewater", moduleName);
     const isAlreadyEdited = getQueryArg(window.location.href, "edited");
     const tenant = getQueryArg(window.location.href, "tenantId");

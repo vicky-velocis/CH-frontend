@@ -81,6 +81,12 @@ class MultipleSelect extends React.Component {
                 : item, localizationLabels)).join(', ')}
               MenuProps={MenuProps}
             >
+              <MenuItem value="" disabled>
+              <LabelContainer
+                labelName={placeholder.name}
+                labelKey={placeholder.key}
+              />
+              </MenuItem>
               {options.map((option, key) => (
                 <MenuItem key={key} value={option.code}>
                     <Checkbox checked={this.state.name.indexOf(option.code) > -1} color="primary"/>
