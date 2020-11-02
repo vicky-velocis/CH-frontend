@@ -82,12 +82,12 @@ class MultipleSelect extends React.Component {
               MenuProps={MenuProps}
             >
               {options.map((option, key) => (
-                <MenuItem key={key} value={option.value}>
-                    <Checkbox checked={this.state.name.indexOf(option.value) > -1} color="primary"/>
+                <MenuItem key={key} value={option.code}>
+                    <Checkbox checked={this.state.name.indexOf(option.code) > -1} color="primary"/>
                     <ListItemText primary={getLocaleLabels(
-                    option.value,
+                    option.code,
                     localePrefix && !isEmpty(localePrefix)
-                        ? appendModulePrefix(option.value, localePrefix)
+                        ? appendModulePrefix(option.code, localePrefix)
                         : option.label,
                     localizationLabels
                     )} />
