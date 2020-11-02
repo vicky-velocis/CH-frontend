@@ -22,7 +22,7 @@ import {
   getUserInfo
 } from "egov-ui-kit/utils/localStorageUtils";
 import orderBy from "lodash/orderBy";
-import { WF_ALLOTMENT_OF_SITE } from "../../ui-constants";
+import { WF_ALLOTMENT_OF_SITE, WF_BB_PROPERTY_MASTER } from "../../ui-constants";
 
 class WorkFlowContainer extends React.Component {
   state = {
@@ -46,6 +46,11 @@ class WorkFlowContainer extends React.Component {
     ];
     switch(this.props.moduleName) {
       case WF_ALLOTMENT_OF_SITE : 
+        queryObject = [...queryObject,
+          { key: "businessIds", value: fileNumber }
+      ]
+      break;
+      case WF_BB_PROPERTY_MASTER : 
         queryObject = [...queryObject,
           { key: "businessIds", value: fileNumber }
       ]
