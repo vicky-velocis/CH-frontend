@@ -8,9 +8,10 @@ import { Link } from "react-router-dom";
 import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 import get from "lodash/get";
 import LabelContainer from 'egov-ui-framework/ui-containers/LabelContainer'
-// import LabelContainer from "../../ui-containers/LabelContainer";
 import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import Icon from "egov-ui-kit/components/Icon";
 import "./index.css";
+import { Typography } from "@material-ui/core";
 
 const styles = theme => ({
   root: {
@@ -30,6 +31,9 @@ const styles = theme => ({
   },
   item: {
     padding: 8
+  },
+  leftIcon: {
+    marginRight: theme.spacing.unit
   }
 });
 
@@ -76,7 +80,7 @@ class LandingPage extends React.Component {
             onClick={() => this.onCardCLick(item.route)}
           >
             <CardContent classes={{ root: "card-content-style" }}>
-              {item.icon}
+            {!!item.leftIcon ? <Icon action={item.leftIcon.split(":")[0]} name={item.leftIcon.split(":")[1]} style={{ width: "48px", height: "46.02px",color:"#fe7a51" }} /> : item.icon}
               <div>
                 <LabelContainer
                   labelKey={item.label.labelKey}
@@ -103,7 +107,11 @@ class LandingPage extends React.Component {
         {!!isArray ? items.map(obj => {
           return (
             <React.Fragment>
-              <div>{obj.branchType}</div>
+              <Grid xs={12} sm={12} className={classes.item}>
+              <Typography component="h2" variant="subheading">
+                <LabelContainer labelKey={`ES_${obj.parentModule.toUpperCase()}_HEADER`} labelName={`ES_${obj.parentModule.toUpperCase()}_HEADER`} />
+              </Typography>
+              </Grid>
               {obj.items.map(item => this.renderCard(item, obj.items.length))}
             </React.Fragment>
           )
@@ -114,14 +122,54 @@ class LandingPage extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
+  let {jsonPath, items} = ownProps
+  if(!!jsonPath) {
+    const menu = get(state, jsonPath) || [];
+    const estateCards = menu.filter(item => item.url === "estate-card");
+    items = estateCards.reduce((prev, curr) => {
+      const findIndex = prev.findIndex(item => item.parentModule === curr.parentModule)
+      if(findIndex !== -1) {
+        prev = [...prev.slice(0, findIndex), 
+          {...prev[findIndex], 
+            items: [...prev[findIndex].items, 
+              { label: {
+                    labelKey: curr.displayName,
+                    labelName: curr.displayName
+                  },
+                  leftIcon: curr.leftIcon,
+                  route: curr.queryParams ? `${curr.navigationURL}?${curr.queryParams}` : curr.navigationURL 
+              }
+            ]
+          },
+          ...prev.slice(findIndex+1)
+        ]
+      } else {
+        prev = [...prev, {
+            parentModule: curr.parentModule, 
+            items: [
+              {
+                label: {
+                  labelKey: curr.displayName,
+                  labelName: curr.displayName
+                },
+                leftIcon: curr.leftIcon,
+                route: curr.queryParams ? `${curr.navigationURL}?${curr.queryParams}` : curr.navigationURL
+              }
+            ]
+          }
+        ]
+      }
+      return prev
+    }, [])
+  }
   const screenConfig = get(state.screenConfiguration, "screenConfig");
   const moduleName = get(state.screenConfiguration, "moduleName");
   const applicationCount = get(
     state.screenConfiguration.preparedFinalObject,
     "myApplicationsCount"
   );
-  return { screenConfig, moduleName, applicationCount };
+  return { screenConfig, moduleName, applicationCount, items };
 };
 
 const mapDispatchToProps = dispatch => {
