@@ -272,6 +272,10 @@ const getField = async (item, fieldData = {}, state) => {
               name: labelItem,
               key: labelItem
             },
+            placeholder: {
+              name: placeholder,
+              key: placeholder
+            },
             options,
             jsonPath: rest.jsonPath,
             required
