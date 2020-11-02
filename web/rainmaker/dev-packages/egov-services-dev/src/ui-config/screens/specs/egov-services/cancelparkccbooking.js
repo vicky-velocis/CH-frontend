@@ -279,7 +279,7 @@ const screenConfig = {
         // });
         // Set MDMS Data
         getMdmsData(action, state, dispatch).then((response) => {
-            console.log("Hello Nero");
+            console.log("Calling MDMS");
         });
         const queryObject = [
             { key: "tenantId", value: tenantId },

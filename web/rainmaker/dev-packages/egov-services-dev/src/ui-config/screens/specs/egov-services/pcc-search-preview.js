@@ -10,7 +10,8 @@ import {
     toggleSnackbar,
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import {
-    localStorageGet,
+
+    getTenantId,
     localStorageSet,
     setapplicationNumber,
     getapplicationNumber,
@@ -122,12 +123,71 @@ const HideshowFooter = (action, bookingStatus, fromDate, bookingObj, state) => {
         showFooter = true;
     }
 
-    if (bookingTimeStamp > currentTimeStamp) {
+
+
+    var billAccountDetails = get(
+        screenConfiguration,
+        "preparedFinalObject.ReceiptTemp[0].Bill[0].billDetails[0].billAccountDetails",
+        []
+    );
+
+
+    let bookingAmount = 0;
+    let refundSecAmount = 0;
+    for (let i = 0; i < billAccountDetails.length; i++) {
+        if (billAccountDetails[i].taxHeadCode == "REFUNDABLE_SECURITY") {
+            bookingAmount += billAccountDetails[i].amount;
+            refundSecAmount += billAccountDetails[i].amount;
+        }
+        if (billAccountDetails[i].taxHeadCode == "PACC") {
+            bookingAmount += billAccountDetails[i].amount;
+        }
+    }
+
+    var date1 = new Date(fromDate);
+    var date2 = new Date();
+
+    var Difference_In_Time = date1.getTime() - date2.getTime();
+
+    const refundPercent = get(
+        screenConfiguration,
+        "preparedFinalObject.cancelParkCcScreenMdmsData.Booking.bookingCancellationRefundCalc[0].MORETHAN30DAYS.refundpercentage",
+        []
+    );
+
+    // To calculate the no. of days between two dates
+    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+
+    let refundAmount = 0
+    if (Difference_In_Days > 29) {
+        const refundPercent = get(
+            screenConfiguration,
+            "preparedFinalObject.cancelParkCcScreenMdmsData.Booking.bookingCancellationRefundCalc[0].MORETHAN30DAYS.refundpercentage",
+            []
+        )
+
+        refundAmount = (parseFloat(bookingAmount) * refundPercent) / 100
+    } else if (Difference_In_Days > 15 && Difference_In_Days < 30) {
+        const refundPercent = get(
+            screenConfiguration,
+            "preparedFinalObject.cancelParkCcScreenMdmsData.Booking.bookingCancellationRefundCalc[0].LETTHAN30MORETHAN15DAYS.refundpercentage",
+            []
+        )
+        refundAmount = (parseFloat(bookingAmount) * refundPercent) / 100
+    }
+console.log(bookingTimeStamp +"========="+ currentTimeStamp+"====="+refundAmount);
+
+    if ((bookingTimeStamp > currentTimeStamp) && (refundAmount > 0)) {
         set(
             action,
             "screenConfig.components.div.children.footer.children.cancelButton.visible",
             showFooter === true ? true : false
         );
+
+    }
+
+    if (bookingTimeStamp > currentTimeStamp) {
+
         set(
             action,
             "screenConfig.components.div.children.footer.children.editButton.visible",
@@ -135,20 +195,7 @@ const HideshowFooter = (action, bookingStatus, fromDate, bookingObj, state) => {
         );
     }
 
-    var billAccountDetails = get(
-        screenConfiguration,
-        "preparedFinalObject.ReceiptTemp[0].Bill[0].billDetails[0].billAccountDetails",
-        []
-    );
-    let refundAmount = 0;
-    for (let i = 0; i < billAccountDetails.length; i++) {
-        if (billAccountDetails[i].taxHeadCode == "REFUNDABLE_SECURITY") {
-            refundAmount += billAccountDetails[i].amount;
-        }
-
-    }
-
-    if (bookingTimeStamp < currentTimeStamp && refundAmount > 0) {
+    if ((bookingTimeStamp < currentTimeStamp) && refundSecAmount > 0) {
 
         set(
             action,
@@ -289,6 +336,53 @@ const setSearchResponse = async (
 //     }
 // };
 
+const getMdmsData = async (action, state, dispatch) => {
+    let tenantId = getTenantId().split(".")[0];
+    let mdmsBody = {
+        MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+
+                {
+                    moduleName: "Booking",
+                    masterDetails: [
+                        {
+                            name: "bookingCancellationRefundCalc",
+                        }
+                    ],
+                },
+
+            ],
+        },
+    };
+    try {
+        let payload = null;
+        payload = await httpRequest(
+            "post",
+            "/egov-mdms-service/v1/_search",
+            "_search",
+            [],
+            mdmsBody
+        );
+
+        // let bookingCancellationRefundCalc = {
+        //     "MORETHAN30DAYS": {
+        //         "refundpercentage": 50
+        //     },
+        //     "LETTHAN30MORETHAN15DAYS": {
+        //         "refundpercentage": 25
+        //     },
+        //     "LESSTHAN15DAYS": {
+        //         "refundpercentage": 0
+        //     },
+        // }
+        // payload.MdmsRes.bookingCancellationRefundCalc = bookingCancellationRefundCalc;
+        dispatch(prepareFinalObject("cancelParkCcScreenMdmsData", payload.MdmsRes));
+    } catch (e) {
+        console.log(e);
+    }
+};
+
 const screenConfig = {
     uiFramework: "material-ui",
     name: "pcc-search-preview",
@@ -298,6 +392,9 @@ const screenConfig = {
             window.location.href,
             "applicationNumber"
         );
+        getMdmsData(action, state, dispatch).then((response) => {
+            console.log("Calling MDMS");
+        });
         const tenantId = getQueryArg(window.location.href, "tenantId");
         const businessService = getQueryArg(
             window.location.href,

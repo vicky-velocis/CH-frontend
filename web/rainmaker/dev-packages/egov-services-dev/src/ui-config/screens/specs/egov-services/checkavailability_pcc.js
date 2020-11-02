@@ -142,6 +142,7 @@ const prepareEditFlow = async (
         let bookingsModelList = get(response, "bookingsModelList", []);
         let documentMap = get(response, "documentMap", {});
         if (bookingsModelList !== null && bookingsModelList.length > 0) {
+
             dispatch(prepareFinalObject("Booking", bookingsModelList[0]));
             dispatch(
                 prepareFinalObject(
@@ -179,6 +180,7 @@ const prepareEditFlow = async (
                     bookingType: bookingsModelList[0].bkBookingType,
                     bookingVenue: bookingsModelList[0].bkBookingVenue,
                     sector: bookingsModelList[0].bkSector,
+                    applicationNumber: bookingsModelList[0].bkApplicationStatus == "APPLIED" ? applicationNumber : null
                 };
 
                 const availabilityData = await getAvailabilityDataPCC(
