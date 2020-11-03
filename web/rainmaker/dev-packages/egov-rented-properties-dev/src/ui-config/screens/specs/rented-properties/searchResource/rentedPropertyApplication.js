@@ -121,7 +121,46 @@ const phoneNumberField = {
   },
   required: false,
   pattern: getPattern("MobileNo"),
-  jsonPath: "searchScreen.phone"
+  jsonPath: "searchScreen.phone",
+  errorMessage: "RP_ERR_PHONE_NUMBER_FIELD",
+  afterFieldChange: (action, state, dispatch) => {
+      if (action.value.length > 10) {
+          dispatch(
+              handleField(
+                "apply",
+                action.componentJsonpath,
+                "errorMessage",
+                "RP_ERR_PHONE_NUMBER_FIELD_MAXLENGTH"
+              )
+          )
+          dispatch(
+              handleField(
+                "apply",
+                action.componentJsonpath,
+                "props.errorMessage",
+                "RP_ERR_PHONE_NUMBER_FIELD_MAXLENGTH"
+              )
+          )
+      }
+      else {
+          dispatch(
+              handleField(
+                "apply",
+                action.componentJsonpath,
+                "errorMessage",
+                "RP_ERR_PHONE_NUMBER_FIELD"
+              )
+          )
+          dispatch(
+              handleField(
+                "apply",
+                action.componentJsonpath,
+                "props.errorMessage",
+                "RP_ERR_PHONE_NUMBER_FIELD"
+              )
+          )
+      }
+    }
 }
 
 const duplicateCopyPhoneNumberField = {
@@ -206,7 +245,7 @@ const ownershipStatusField = {
 const areaField = {
   label: {
     labelName: "Area",
-    labelKey: "RP_AREA",
+    labelKey: "RP_AREA_PROPERTY_LABEL_IN_UNITS",
   },
   // placeholder: {
   //   labelName: "Enter Area",
@@ -553,6 +592,7 @@ const duplicateCopySearchForm = {
 const accountStatementTransitNumber = {
   ...transitNumberField,
   required: true,
+  errorMessage: "RP_SITE_PLOT_SEARCH_PLACEHOLDER",
   iconObj: {
     iconName: "search",
     position: "end",
@@ -583,9 +623,15 @@ const accountStatementTransitNumber = {
           ""
         )
       )
+        dispatch(
+          prepareFinalObject(
+            "searchScreen.ownername",
+            ""
+          )    
+      )
       dispatch(
         prepareFinalObject(
-          "searchScreen.ownername",
+          "searchScreen.area",
           ""
         )
       )
@@ -594,7 +640,7 @@ const accountStatementTransitNumber = {
 
 export const accountStatementFilterForm = getCommonCard({
   subParagraph: getCommonParagraph({
-    labelName: "Please Provide Transit Number",
+    labelName: "Please provide transit site/plot number and click on search icon",
     labelKey: "RP_PLEASE_TRANSIT_NUMBER_TO_SEARCH_APPLICATION_LABEL"
   }),
   applicationNoContainer: getCommonContainer({
@@ -603,12 +649,10 @@ export const accountStatementFilterForm = getCommonCard({
   }),
   statusContainer: getCommonContainer({
     pincode:getTextField(pincodeField),
-    ownername:getTextField(ownernameField)
+    ownername:getTextField(ownernameField),
+    areaField:getTextField(areaField)
   }),
-  subParagraph: getCommonParagraph({
-    labelName: "Select start date and end date to generate account statement",
-    labelKey: "RP_FILTER_CONTAINER_HEADER_LABEL"
-  }),
+ 
   dateContainer:getCommonContainer({
       from:getDateField({...fromDateField}),
       to:getDateField({...toDateField})
