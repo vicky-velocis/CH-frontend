@@ -360,12 +360,12 @@ export const createUpdatePCCApplication = async (state, dispatch, action) => {
         set(payload, "tenantId", tenantId);
         set(payload, "bkAction", action);
         set(payload, "businessService", "PACC");
-        // set(payload, "timeslots", [{
-        //     "slot" : "9:00 AM - 8:59 AM"
+        let reInitiate = true;
+        if(payload.bkApplicationStatus == "RE_INITIATED"){
+            reInitiate = false;
+        }
+        set(payload, "reInitiateStatus", reInitiate);
 
-        // }]);
-        // set(payload, "totime", "9:00 AM");
-        // set(payload, "fromtime", "8:59 AM");
         set(payload, "financialYear", `${getCurrentFinancialYear()}`);
 
         if (method === "CREATE") {

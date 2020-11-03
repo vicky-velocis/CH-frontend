@@ -186,12 +186,12 @@ console.log(bookingTimeStamp +"========="+ currentTimeStamp+"====="+refundAmount
 
     }
 
-    if (bookingTimeStamp > currentTimeStamp) {
+    if ((bookingTimeStamp > currentTimeStamp) && (bookingStatus === "APPLIED" || bookingStatus === "RE_INITIATED") ) {
 
         set(
             action,
             "screenConfig.components.div.children.footer.children.editButton.visible",
-            showFooter === true ? true : false
+            true
         );
     }
 
