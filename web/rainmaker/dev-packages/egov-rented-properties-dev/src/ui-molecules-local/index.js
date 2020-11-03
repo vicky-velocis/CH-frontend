@@ -16,6 +16,11 @@ const ActionDialog = Loadable({
   loading: () => <Loading />
 });
 
+const SimpleModal = Loadable({
+  loader: () => import("./SimpleModal"),
+  loading: () => <Loading />
+});
+
 const Tooltip = Loadable({
   loader: () => import("./Tooltip"),
   loading: () => <Loading />
@@ -82,7 +87,10 @@ const MultiDownloadCardNoticePreview = Loadable({
   loader: () => import("./MultiDownloadCardNoticePreview"),
   loading: () => <Loading />
 })
-
+const MultiDownloadCard = Loadable({
+  loader: () => import("./MultiDownloadCard"),
+  loading: () => <Loading />
+});
 export {
   TestMolecules,
   RadioButtonsGroup,
@@ -100,5 +108,7 @@ export {
   MultipleOwners,
   MultipleDocuments,
   MultiDownloadCardNoticePreview,
-  RentSummaryCard
+  RentSummaryCard,
+  MultiDownloadCard,
+  SimpleModal
 }

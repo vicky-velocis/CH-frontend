@@ -54,13 +54,13 @@ class WorkFlowContainer extends React.Component {
       ]
       switch(this.props.moduleName) {
         case "MasterRP": {
-          queryObject = [...queryObject, { key: "businessIds", value: transitNumber }]
+          queryObject = [...queryObject, { key: "businessIds", value: transitNumber },{key:"limit",value:30}]
           break
         }
         case "PermissionToMortgage":
         case WORKFLOW_BUSINESS_SERVICE_DC:
         case WORKFLOW_BUSINESS_SERVICE_OT: {
-          queryObject = [...queryObject, { key: "businessIds", value: applicationNumber }]
+          queryObject = [...queryObject, { key: "businessIds", value: applicationNumber },{key:"limit",value:30}]
           break
         }
       }
@@ -185,8 +185,8 @@ class WorkFlowContainer extends React.Component {
           toggleSnackbar(
             true,
             {
-              labelName: `We could not process your request right now. Please try after sometime` + e.message,
-              labelKey: `We could not process your request right now. Please try after sometime` + e.message
+              labelName: e.message,
+              labelKey: e.message
             },
             "error"
           );
@@ -196,7 +196,7 @@ class WorkFlowContainer extends React.Component {
             true,
             {
               labelName: "Workflow update error!",
-              labelKey: "ERR_WF_UPDATE_ERROR"
+              labelKey: "RP_ERR_WF_UPDATE_ERROR"
             },
             "error"
           );

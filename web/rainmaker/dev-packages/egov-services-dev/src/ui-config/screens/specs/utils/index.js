@@ -1957,7 +1957,6 @@ export const calculateCancelledBookingRefundAmount = async (applicationNumber, t
             "",
             queryObject
         );
-
         if (payload) {
 
             let billAccountDetails = payload.Payments[0].paymentDetails[0].bill.billDetails[0].billAccountDetails;

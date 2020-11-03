@@ -130,6 +130,44 @@ export const pincodeField = {
     maxLength: 6,
     required: true,
     errorMessage: "RP_ERR_PINCODE_FIELD",
+    afterFieldChange: (action, state, dispatch) => {
+      if (action.value.length > 6) {
+          dispatch(
+              handleField(
+                "apply",
+                action.componentJsonpath,
+                "errorMessage",
+                "RP_ERR_PINCODE_FIELD_MAXLENGTH"
+              )
+          )
+          dispatch(
+              handleField(
+                "apply",
+                action.componentJsonpath,
+                "props.errorMessage",
+                "RP_ERR_PINCODE_FIELD_MAXLENGTH"
+              )
+          )
+      }
+      else {
+          dispatch(
+              handleField(
+                "apply",
+                action.componentJsonpath,
+                "errorMessage",
+                "RP_ERR_PINCODE_FIELD"
+              )
+          )
+          dispatch(
+              handleField(
+                "apply",
+                action.componentJsonpath,
+                "props.errorMessage",
+                "RP_ERR_PINCODE_FIELD"
+              )
+          )
+      }
+    }
   }
 
 export const transitNumberConfig = {
@@ -150,6 +188,44 @@ export const transitNumberConfig = {
         required: true,
         pattern:getPattern("TransitNumberValidation"),
         errorMessage: "RP_ERR_TRANSIT_FIELD",
+        afterFieldChange: (action, state, dispatch) => {
+          if (parseInt(action.value) > 10000) {
+              dispatch(
+                  handleField(
+                    "apply",
+                    action.componentJsonpath,
+                    "errorMessage",
+                    "RP_ERR_TRANSIT_FIELD_MAXLENGTH"
+                  )
+              )
+              dispatch(
+                  handleField(
+                    "apply",
+                    action.componentJsonpath,
+                    "props.errorMessage",
+                    "RP_ERR_TRANSIT_FIELD_MAXLENGTH"
+                  )
+              )
+          }
+          else {
+              dispatch(
+                  handleField(
+                    "apply",
+                    action.componentJsonpath,
+                    "errorMessage",
+                    "RP_ERR_TRANSIT_FIELD"
+                  )
+              )
+              dispatch(
+                  handleField(
+                    "apply",
+                    action.componentJsonpath,
+                    "props.errorMessage",
+                    "RP_ERR_TRANSIT_FIELD"
+                  )
+              )
+          }
+        }
 }
 
 export const transitNumberLookUp = {
@@ -292,7 +368,7 @@ const transitNumberField = {
     required: true,
     minLength: 2,
     maxLength: 20,
-    pattern: getPattern("Numeric"),
+    pattern: getPattern("numeric-only"),
     jsonPath: "Properties[0].propertyDetails.area",
     // optionValue: "code",
     // optionLabel: "label",
@@ -302,6 +378,44 @@ const transitNumberField = {
         sm: 6
     },
     errorMessage: "RP_ERR_AREA_FIELD",
+    afterFieldChange: (action, state, dispatch) => {
+      if (action.value.length > 20) {
+          dispatch(
+              handleField(
+                "apply",
+                action.componentJsonpath,
+                "errorMessage",
+                "RP_ERR_AREA_FIELD_MAXLENGTH"
+              )
+          )
+          dispatch(
+              handleField(
+                "apply",
+                action.componentJsonpath,
+                "props.errorMessage",
+                "RP_ERR_AREA_FIELD_MAXLENGTH"
+              )
+          )
+      }
+      else {
+          dispatch(
+              handleField(
+                "apply",
+                action.componentJsonpath,
+                "errorMessage",
+                "RP_ERR_AREA_FIELD"
+              )
+          )
+          dispatch(
+              handleField(
+                "apply",
+                action.componentJsonpath,
+                "props.errorMessage",
+                "RP_ERR_AREA_FIELD"
+              )
+          )
+      }
+    }
   }
 
   const posessionDateField = {
