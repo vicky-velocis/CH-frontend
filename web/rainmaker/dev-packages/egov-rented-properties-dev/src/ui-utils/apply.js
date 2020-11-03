@@ -177,7 +177,7 @@ export const setApplicationNumberBox = (state, dispatch, applicationNumber, scre
             { Owners: queryObject }
           );
         } else {
-          if(activeIndex === 0) {
+          if(activeIndex !==2) {
             set(queryObject[0], "applicationAction", "REINITIATE")
           } else {
             set(queryObject[0], "applicationAction", "SUBMIT")
@@ -199,8 +199,13 @@ export const setApplicationNumberBox = (state, dispatch, applicationNumber, scre
         let ownershipTransferDocuments = Owners[0].ownerDetails.ownershipTransferDocuments || [];
         const removedDocs = ownershipTransferDocuments.filter(item => !item.active)
         ownershipTransferDocuments = ownershipTransferDocuments.filter(item => !!item.active)
-        Owners = [{...Owners[0],property: {...Owners[0].property, rentSummary:{...Owners[0].property.rentSummary , totalDue : (Owners[0].property.rentSummary.balancePrincipal + 
-          Owners[0].property.rentSummary.balanceInterest).toFixed(2)}}, ownerDetails: {...Owners[0].ownerDetails, ownershipTransferDocuments}}]
+        let formatter = new Intl.NumberFormat('en-IN', {
+          style: 'currency',
+          currency: 'INR',
+        });
+        Owners = [{...Owners[0],property: {...Owners[0].property, rentSummary:{...Owners[0].property.rentSummary , totalDue : formatter.format((Owners[0].property.rentSummary.balancePrincipal + 
+          Owners[0].property.rentSummary.balanceInterest).toFixed(2))
+        }}, ownerDetails: {...Owners[0].ownerDetails, ownershipTransferDocuments}}]
         dispatch(prepareFinalObject("Owners", Owners));
         dispatch(
           prepareFinalObject(
@@ -397,7 +402,7 @@ export const setApplicationNumberBox = (state, dispatch, applicationNumber, scre
             { MortgageApplications: queryObject }
           );
         } else {
-          if(activeIndex === 0) {
+          if(activeIndex !==2) {
             set(queryObject[0], "action", "REINITIATE")
           } 
           else {
@@ -478,7 +483,7 @@ export const applyDuplicateCopy = async (state, dispatch, activeIndex) => {
             { DuplicateCopyApplications: queryObject }
           );
         } else {
-          if(activeIndex === 0) {
+          if(activeIndex !==2) {
             set(queryObject[0], "action", "REINITIATE")
           } else {
             set(queryObject[0], "action", "SUBMIT")
@@ -500,8 +505,14 @@ export const applyDuplicateCopy = async (state, dispatch, activeIndex) => {
         let applicationDocuments = DuplicateCopyApplications[0].applicationDocuments || [];
         const removedDocs = applicationDocuments.filter(item => !item.active)
         applicationDocuments = applicationDocuments.filter(item => !!item.active)
-        DuplicateCopyApplications = [{...DuplicateCopyApplications[0],property: {...DuplicateCopyApplications[0].property, rentSummary:{...DuplicateCopyApplications[0].property.rentSummary , totalDue : (DuplicateCopyApplications[0].property.rentSummary.balancePrincipal + 
-          DuplicateCopyApplications[0].property.rentSummary.balanceInterest).toFixed(2)}}, applicationDocuments}]
+        let formatter = new Intl.NumberFormat('en-IN', {
+          style: 'currency',
+          currency: 'INR',
+        });
+        DuplicateCopyApplications = [{...DuplicateCopyApplications[0],property: {...DuplicateCopyApplications[0].property, rentSummary:{...DuplicateCopyApplications[0].property.rentSummary , totalDue : formatter.format((DuplicateCopyApplications[0].property.rentSummary.balancePrincipal + 
+          DuplicateCopyApplications[0].property.rentSummary.balanceInterest).toFixed(2))
+        
+        }}, applicationDocuments}]
         dispatch(prepareFinalObject("DuplicateCopyApplications", DuplicateCopyApplications));
          dispatch(
           prepareFinalObject(
@@ -545,7 +556,7 @@ const getPropertyDetails = async ({state, dispatch, transitNumber, screenKey, co
           true,
           {
             labelName: "Property is not found with this Transit Number",
-            labelKey: "ERR_PROPERTY_NOT_FOUND_WITH_PROPERTY_ID"
+            labelKey: "RP_ERR_PROPERTY_NOT_FOUND_WITH_PROPERTY_ID"
           },
           "info"
         )
@@ -627,6 +638,12 @@ export const getAccountStatementProperty = async (state, dispatch) => {
           prepareFinalObject(
             "searchScreen.pincode",
             Properties[0].propertyDetails.address.pincode
+          )
+        )
+        dispatch(
+          prepareFinalObject(
+            "searchScreen.area",
+            Properties[0].propertyDetails.area
           )
         )
         dispatch(
@@ -1075,7 +1092,7 @@ export const getOfflineRentPaymentDetailsFromProperty = async (state, dispatch) 
               true,
               {
                 labelName: "Property is not found with this Transit Number",
-                labelKey: "ERR_PROPERTY_NOT_FOUND_WITH_PROPERTY_ID"
+                labelKey: "RP_ERR_PROPERTY_NOT_FOUND_WITH_PROPERTY_ID"
               },
               "info"
             )

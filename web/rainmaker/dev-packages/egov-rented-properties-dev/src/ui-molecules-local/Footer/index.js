@@ -131,7 +131,8 @@ class Footer extends React.Component {
       dispatch,
       setRoute
     } = this.props;
-    const { open, data, employeeList } = this.state;
+    const { open, data, employeeList} = this.state;
+   
     const transitNumber = getQueryArg(
       window.location.href,
       "transitNumber"
@@ -141,16 +142,17 @@ class Footer extends React.Component {
       contractData &&
       contractData.map(item => {
         const { buttonLabel, moduleName } = item;
-        return {
-          labelName: { buttonLabel },
-          labelKey: `WF_${moduleName.toUpperCase()}_${buttonLabel}`,
-          link: moduleName === "MasterRP" && buttonLabel === "MODIFY" ? 
-            () => setRoute(`/rented-properties/apply?transitNumber=${transitNumber}&tenantId=${tenant}`)
-            : () => {
-            this.openActionDialog(item);
-          }
-        };
-      });    
+          return {
+            labelName: { buttonLabel },
+            labelKey: `WF_${moduleName.toUpperCase()}_${buttonLabel}`,
+            link: moduleName === "MasterRP" && buttonLabel === "MODIFY" ? 
+              () => setRoute(`/rented-properties/apply?transitNumber=${transitNumber}&tenantId=${tenant}`)
+              : () => {
+              this.openActionDialog(item);
+            }
+          };
+      }); 
+     
     const buttonItems = {
       label: { labelName: "Take Action", labelKey: "WF_TAKE_ACTION" },
       rightIcon: "arrow_drop_down",
