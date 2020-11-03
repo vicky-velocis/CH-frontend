@@ -218,7 +218,8 @@ const callBackForBook = async (state, dispatch) => {
         convertDateInYMD(availabilityCheckData.bkToDate) ===
         oldAvailabilityCheckData.bkToDate &&
         availabilityCheckData.bkBookingVenue ===
-        oldAvailabilityCheckData.bkBookingVenue
+        oldAvailabilityCheckData.bkBookingVenue &&
+        oldAvailabilityCheckData.bkApplicationStatus == "APPLIED"
       ) {
         let warrningMsg = {
           labelName: "Please Change Date/Venue",
