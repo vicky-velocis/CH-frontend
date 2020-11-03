@@ -9,6 +9,7 @@ import {
   import commonConfig from "config/common.js";
   import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
   import { httpRequest } from "../../../../ui-utils";
+  import {downloadAccountStatementPdf} from '../estate/searchResource/searchAccountStatementFunction'
   import {
     handleScreenConfigurationFieldChange as handleField
   } from "egov-ui-framework/ui-redux/screen-configuration/actions";
@@ -69,7 +70,7 @@ import { ESTATE_SERVICES_MDMS_MODULE } from "../../../../ui-constants";
               header: {
                 gridDefination: {
                   xs: 12,
-                  sm: 8
+                  sm: 6
                 },
                 ...header
               },
@@ -78,36 +79,77 @@ import { ESTATE_SERVICES_MDMS_MODULE } from "../../../../ui-constants";
           estateApplicationAccountStatementGen,
           breakAfterSearch: getBreak(),
           searchResultsAccountStatement,
-          searchButton: {
-            componentPath: "Button",
-             visible: false,
-            gridDefination: {
-               xs: 12,
-               sm: 12,
-              align: "right",
-            },
+          downloadButton:{
+            uiFramework: "custom-atoms",
+            componentPath: "Container",
             props: {
-              variant: "contained",
-              style: {
-                color: "white",
-                backgroundColor: "#fe7a51",
-                borderColor:"#fe7a51",
-                borderRadius: "2px",
-                width: "25%",
-                height: "48px",
-                margin:"10px"
+              style: { justifyContent: "center", marginTop: 10 }
+            },
+            visible: false,
+            children:{
+              searchButton: {
+                componentPath: "Button",
+                 visible: true,
+                gridDefination: {
+                   xs: 4,
+                   sm: 6,
+                  align: "left",
+                },
+                props: {
+                  variant: "contained",
+                  style: {
+                    color: "white",
+                    backgroundColor: "#fe7a51",
+                    borderColor:"#fe7a51",
+                    borderRadius: "2px",
+                    width: "25%",
+                    height: "48px",
+                    margin:"10px"
+                  }
+                },
+                children: {
+                  buttonLabel: getLabel({
+                    labelName: "Download",
+                    labelKey: "EST_COMMON_DOWNLOAD_PDF"
+                  })
+                },
+                onClickDefination: {
+                  action: "condition",
+                  callBack: downloadAccountStatementPdf
+                },
+              },
+              downloadXLSButton: {
+                componentPath: "Button",
+                 visible: true,
+                gridDefination: {
+                  xs: 4,
+                  sm: 6,
+                  align: "right",
+                },
+                props: {
+                  variant: "contained",
+                  style: {
+                    color: "white",
+                    backgroundColor: "#fe7a51",
+                    borderColor:"#fe7a51",
+                    borderRadius: "2px",
+                    width: "25%",
+                    height: "48px",
+                    margin:"10px"
+                  }
+                },
+                children: {
+                  buttonLabel: getLabel({
+                    labelName: "Download",
+                    labelKey: "EST_COMMON_DOWNLOAD_XLS"
+                  })
+                },
+                onClickDefination: {
+                  action: "condition",
+                  // callBack: downloadAccountStatementXLS
+                }
               }
-            },
-            children: {
-              buttonLabel: getLabel({
-                labelName: "Download",
-                labelKey: "RP_COMMON_DOWNLOAD_PDF"
-              })
-            },
-            onClickDefination: {
-              action: "condition",
-            //   callBack: downloadAccountStatementPdf
-            },
+            }
           }
         }
       }

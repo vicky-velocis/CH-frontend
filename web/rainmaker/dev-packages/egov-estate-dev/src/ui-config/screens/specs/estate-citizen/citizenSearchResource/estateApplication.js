@@ -23,7 +23,8 @@ import {
 import {
   displayCustomErr,
   displayDefaultErr
-} from "../../utils"
+} from "../../utils";
+import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 
 const searchBy = {
   uiFramework: "custom-containers",
@@ -103,6 +104,71 @@ const searchBy = {
     }
   }
 };
+
+export const resetFields = (state, dispatch) => {
+  let fileNumber = get(state.screenConfiguration.preparedFinalObject, "searchScreenFileNo.fileNumber", "");
+  let category = get(state.screenConfiguration.preparedFinalObject, "searchScreenSiteNo.category", "");
+  let subCategory = get(state.screenConfiguration.preparedFinalObject, "searchScreenSiteNo.subCategory", "");
+  let siteNumber = get(state.screenConfiguration.preparedFinalObject, "searchScreenSiteNo.siteNumber", "");
+  let sectorNumber = get(state.screenConfiguration.preparedFinalObject, "searchScreenSiteNo.sectorNumber", "");
+
+  if (fileNumber) {
+    dispatch(
+      handleField(
+        "property-search",
+        "components.div.children.estateApplication.children.cardContent.children.searchBoxContainer.children.fileNumberContainer.children.fileNumber",
+        "props.value",
+        ""
+      )
+    )
+  }
+
+  if (category) {
+    dispatch(
+      handleField(
+        "property-search",
+        "components.div.children.estateApplication.children.cardContent.children.searchBoxContainer.children.siteNumberContainer.children.category",
+        "props.value",
+        ""
+      )
+    )
+  }
+
+  if (subCategory) {
+    dispatch(
+      handleField(
+        "property-search",
+        "components.div.children.estateApplication.children.cardContent.children.searchBoxContainer.children.siteNumberContainer.children.subCategory",
+        "props.value",
+        ""
+      )
+    )
+  }
+
+  if (siteNumber) {
+    dispatch(
+      handleField(
+        "property-search",
+        "components.div.children.estateApplication.children.cardContent.children.searchBoxContainer.children.siteNumberContainer.children.siteNumber",
+        "props.value",
+        ""
+      )
+    )
+  }
+
+  if (sectorNumber) {
+    dispatch(
+      handleField(
+        "property-search",
+        "components.div.children.estateApplication.children.cardContent.children.searchBoxContainer.children.siteNumberContainer.children.sectorNumber",
+        "props.value",
+        ""
+      )
+    )
+  }
+}
+
+
 export const estateApplication = getCommonCard({
   subParagraph: getCommonParagraph({
     labelName: "Provide at least one parameter to search for a property",
@@ -305,72 +371,16 @@ export const estateApplication = getCommonCard({
         },
         onClickDefination: {
           action: "condition",
-          callBack: (state, dispatch) => searchApiCall(state, dispatch, [{key: "state",value: ESTATE_APPROVED_STATE}])
+          callBack: (state, dispatch) => {
+            const branchType = getQueryArg(window.location.href, "branchType") || "ESTATE_BRANCH";
+            searchApiCall(state, dispatch, [
+              { key: "state", value: ESTATE_APPROVED_STATE },
+              { key: "branchType", value: branchType }
+            ])
+          }
         }
       }
     })
   })
 });
 
-function resetFields(state, dispatch) {
-  let fileNumber = get(state.screenConfiguration.preparedFinalObject, "searchScreenFileNo.fileNumber", "");
-  let category = get(state.screenConfiguration.preparedFinalObject, "searchScreenSiteNo.category", "");
-  let subCategory = get(state.screenConfiguration.preparedFinalObject, "searchScreenSiteNo.subCategory", "");
-  let siteNumber = get(state.screenConfiguration.preparedFinalObject, "searchScreenSiteNo.siteNumber", "");
-  let sectorNumber = get(state.screenConfiguration.preparedFinalObject, "searchScreenSiteNo.sectorNumber", "");
-
-  if (fileNumber) {
-    dispatch(
-      handleField(
-        "property-search",
-        "components.div.children.estateApplication.children.cardContent.children.searchBoxContainer.children.fileNumberContainer.children.fileNumber",
-        "props.value",
-        ""
-      )
-    )
-  }
-
-  if (category) {
-    dispatch(
-      handleField(
-        "property-search",
-        "components.div.children.estateApplication.children.cardContent.children.searchBoxContainer.children.siteNumberContainer.children.category",
-        "props.value",
-        ""
-      )
-    )
-  }
-
-  if (subCategory) {
-    dispatch(
-      handleField(
-        "property-search",
-        "components.div.children.estateApplication.children.cardContent.children.searchBoxContainer.children.siteNumberContainer.children.subCategory",
-        "props.value",
-        ""
-      )
-    )
-  }
-
-  if (siteNumber) {
-    dispatch(
-      handleField(
-        "property-search",
-        "components.div.children.estateApplication.children.cardContent.children.searchBoxContainer.children.siteNumberContainer.children.siteNumber",
-        "props.value",
-        ""
-      )
-    )
-  }
-
-  if (sectorNumber) {
-    dispatch(
-      handleField(
-        "property-search",
-        "components.div.children.estateApplication.children.cardContent.children.searchBoxContainer.children.siteNumberContainer.children.sectorNumber",
-        "props.value",
-        ""
-      )
-    )
-  }
-}
