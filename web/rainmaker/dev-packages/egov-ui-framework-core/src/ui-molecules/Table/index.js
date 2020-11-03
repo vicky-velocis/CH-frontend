@@ -12,7 +12,8 @@ class Table extends React.Component {
     data: [],
     columns: [],
     customSortOrder: "asc",
-    title:undefined
+    title: undefined,
+    originalData: [],
   };
 
   getMuiTheme = () =>
@@ -57,7 +58,6 @@ class Table extends React.Component {
         let dataRow = [];
         // Object.keys(columns).forEach(column => {
         columns.forEach(column => {
-          debugger
           // Handling the case where column name is an object with options
           column = typeof column === "object" ? get(column, "name") : column;
           let columnValue = get(curr, `${column}`, "");
@@ -76,7 +76,8 @@ class Table extends React.Component {
   columnLocalisation = (localizationLabels, columns) => {
     const  localisationArray = Object.values(localizationLabels);
     const {columns : stateColumn} = this.state;
-    const { title } = this.state;
+    const { title,originalData } = this.state;
+
     let columnName = []
     columns.forEach(column => {
       // Handling the case where column name is an object with options
@@ -93,18 +94,21 @@ class Table extends React.Component {
       }
 
     });
-    console.log("columnNames",columnName);
+    
     
     const checkFlag = _.isEqual(columnName.sort(), stateColumn.sort());
     if(!checkFlag){
-      this.setState({columns : columnName});
+      const updatedData = this.formatData(originalData, columnName);
+      this.setState({
+        columns: columnName,
+        data:updatedData
+      });
+
     }
     const locMessageTitleObj = localisationArray.find(locMessage => locMessage.code === title);
-    
     if (title && title != undefined && locMessageTitleObj!=undefined && locMessageTitleObj[0]!=undefined)  { 
       this.setState({title : locMessageTitleObj[0].message});
     }
-    
   }
   
   
@@ -135,7 +139,8 @@ class Table extends React.Component {
       data: updatedData,
       // columns: Object.keys(columns)
       columns: fixedColumns,
-      title:title
+      title: title,
+      originalData:data
 
     });
   };
