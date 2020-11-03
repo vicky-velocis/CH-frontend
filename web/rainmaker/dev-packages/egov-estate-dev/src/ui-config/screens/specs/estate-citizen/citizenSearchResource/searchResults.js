@@ -43,7 +43,7 @@ const onRowClick = rowData => {
   const type = getQueryArg(window.location.href, "type");
   const branchType = getQueryArg(window.location.href, "branchType");
   if (branchType == "BUILDING_BRANCH") {
-    window.location.href = `_apply?propertyId=${rowData[4]}&applicationType=${type}`;
+    window.location.href = `_apply?propertyId=${rowData[4]}&applicationType=${type}&fileNumber=${rowData[1]}`;
     return;
   }
   
