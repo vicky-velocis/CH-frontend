@@ -48,6 +48,7 @@ import {
   getSearchApplicationsResults
 } from "../../../../ui-utils/commons";
 import moment from "moment";
+import { ESTATE_PROPERTY_MASTER_BILLING_BUSINESS_SERVICE } from "../../../../ui-constants";
 
 export const getCommonApplyHeader = ({label, number}) => {
   return getCommonContainer({
@@ -66,6 +67,22 @@ export const getCommonApplyHeader = ({label, number}) => {
     }
   })
 }
+
+export const getRentSummaryCard = props => {
+  const {
+    sourceJsonPath,
+    ...rest
+  } = props;
+  return {
+    uiFramework: "custom-containers-local",
+    moduleName: "egov-estate",
+    componentPath: "RentSummaryCardContainer",
+    props: {
+      sourceJsonPath,
+      ...rest
+    }
+  };
+};
 
 export const getCommonApplyFooter = children => {
   return {
@@ -1234,10 +1251,10 @@ export const createEstimateData = async (
   const workflowCode = get(applicationData, "workFlowBusinessService")
   const applicationNo =
     get(applicationData, "applicationNumber") ||
-    getQueryArg(href, "applicationNumber");
+    getQueryArg(href, "applicationNumber") || getQueryArg(href, "consumerCode");
   const tenantId =
     get(applicationData, "tenantId") || getQueryArg(href, "tenantId");
-  const businessService = get(applicationData, "billingBusinessService", "");
+  const businessService = get(applicationData, "billingBusinessService", "") || getQueryArg(href, "businessService");
   const queryObj = [
     { key: "tenantId", value: tenantId },
     {
@@ -1364,6 +1381,7 @@ export const getNextMonthDateInYMD = () => {
 export const fetchBill = async (action, state, dispatch) => {
   //For Adhoc
   // Search License
+  const businessService = getQueryArg(window.location.href, "businessService");
   let queryObject = [{
       key: "tenantId",
       value: getQueryArg(window.location.href, "tenantId")
@@ -1377,21 +1395,32 @@ export const fetchBill = async (action, state, dispatch) => {
       value: getQueryArg(window.location.href, "consumerCode")
     }
   ];
-  const applicationPayload = await getSearchApplicationsResults(queryObject);
-  //get bill and populate estimate card
-  const payload =
+  let payload;
+  if(businessService === ESTATE_PROPERTY_MASTER_BILLING_BUSINESS_SERVICE) {
+    const propertyPayload = get(state.screenConfiguration.preparedFinalObject, "Properties[0]")
+    payload =
+      propertyPayload &&
+      (await createEstimateData(
+        propertyPayload,
+        dispatch,
+        window.location.href
+      ));
+  } else {
+    const applicationPayload = await getSearchApplicationsResults(queryObject);
+    //get bill and populate estimate card
+    payload =
+      applicationPayload &&
+      applicationPayload.Applications &&
+      (await createEstimateData(
+        applicationPayload.Applications[0],
+        dispatch,
+        window.location.href
+      ));
+    //set in redux to be used for adhoc
     applicationPayload &&
-    applicationPayload.Applications &&
-    (await createEstimateData(
-      applicationPayload.Applications[0],
-      dispatch,
-      window.location.href
-    ));
-  //set in redux to be used for adhoc
-  applicationPayload &&
-    applicationPayload.Applications &&
-    dispatch(prepareFinalObject("Applications[0]", applicationPayload.Applications[0]));
-
+      applicationPayload.Applications &&
+      dispatch(prepareFinalObject("Applications[0]", applicationPayload.Applications[0]));
+  }
   //initiate receipt object
   payload &&
     payload.billResponse &&
