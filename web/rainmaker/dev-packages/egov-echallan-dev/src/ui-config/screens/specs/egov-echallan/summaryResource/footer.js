@@ -558,6 +558,7 @@ export const footer = getCommonApplyFooter({
       //callBack: returnandClosePayment
       callBack: (state, dispatch) =>{
         showHideChallanReturnAndCloseConfirmation(state, dispatch, "search-preview")
+        //showHideAdhocPopup(state, dispatch, "search-preview")
       }
     },
     visible: false,

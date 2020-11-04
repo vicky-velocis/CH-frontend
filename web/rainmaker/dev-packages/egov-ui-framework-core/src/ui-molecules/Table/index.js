@@ -52,6 +52,7 @@ class Table extends React.Component {
     });
 
   formatData = (data, columns) => {
+    
     return (
       data &&
       [...data].reduce((acc, curr) => {
@@ -78,12 +79,14 @@ class Table extends React.Component {
     const {columns : stateColumn} = this.state;
     const { title,originalData } = this.state;
 
+    let tempColumnName = "";
     let columnName = []
     columns.forEach(column => {
       // Handling the case where column name is an object with options
-      column = typeof column === "object" ? get(column, "name") : column;
 
-      const locMessageObj =  localisationArray.find(locMessage => locMessage.code === column);
+      tempColumnName = typeof column === "object" ? get(column, "name") : column;
+
+      const locMessageObj =  localisationArray.find(locMessage => locMessage.code === tempColumnName);
 
       if(locMessageObj){
       
@@ -96,7 +99,9 @@ class Table extends React.Component {
     });
     
     
-    const checkFlag = _.isEqual(columnName.sort(), stateColumn.sort());
+    let oldColumnData = [...stateColumn];
+    let newColumnData = [...columnName];
+    const checkFlag = _.isEqual(newColumnData.sort(), oldColumnData.sort());
     if(!checkFlag){
       const updatedData = this.formatData(originalData, columnName);
       this.setState({
@@ -105,6 +110,7 @@ class Table extends React.Component {
       });
 
     }
+    
     const locMessageTitleObj = localisationArray.find(locMessage => locMessage.code === title);
     if (title && title != undefined && locMessageTitleObj!=undefined && locMessageTitleObj[0]!=undefined)  { 
       this.setState({title : locMessageTitleObj[0].message});
@@ -120,11 +126,13 @@ class Table extends React.Component {
 
 
   componentWillReceiveProps(nextProps) {
+    
     const { data, columns,title } = nextProps;
     this.updateTable(data, columns,title);
   }
 
   componentDidMount() {
+    
     const { data, columns,title } = this.props;
     this.updateTable(data, columns,title);
   }
@@ -135,6 +143,7 @@ class Table extends React.Component {
     // This is a quick fix, but correct this in other modules also!
     let fixedColumns = Array.isArray(columns) ? columns : Object.keys(columns);
     const updatedData = this.formatData(data, fixedColumns);
+    
     this.setState({
       data: updatedData,
       // columns: Object.keys(columns)

@@ -96,12 +96,13 @@ class CustomizeTable extends React.Component {
     const  localisationArray = Object.values(localizationLabels);
     const {columns : stateColumn} = this.state;
     const { title } = this.state;
-    let columnName = []
+    let columnName = [];
+    let tempColumnName = "";
     columns.forEach(column => {
       // Handling the case where column name is an object with options
-      column = typeof column === "object" ? get(column, "name") : column;
+      tempColumnName = typeof column === "object" ? get(column, "name") : column;
 
-      const locMessageObj =  localisationArray.find(locMessage => locMessage.code === column);
+      const locMessageObj =  localisationArray.find(locMessage => locMessage.code === tempColumnName);
 
       if(locMessageObj){
       
@@ -112,9 +113,10 @@ class CustomizeTable extends React.Component {
       }
 
     });
-    console.log("columnNames",columnName);
     
-    const checkFlag = _.isEqual(columnName.sort(), stateColumn.sort());
+    let oldColumnData = [...stateColumn];
+    let newColumnData = [...columnName];
+    const checkFlag = _.isEqual(newColumnData.sort(), oldColumnData.sort());
     if(!checkFlag){
       this.setState({columns : columnName});
     }
