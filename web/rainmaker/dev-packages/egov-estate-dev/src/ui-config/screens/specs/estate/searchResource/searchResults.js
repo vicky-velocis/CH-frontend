@@ -108,14 +108,7 @@ export const searchApplicationResults = {
 };
 
 const onApplicationRowClick = rowData => {
-  // JE verification
-  const applicationState = rowData[2];
-  if (applicationState == "ES_PENDING_JE_VERIFICATION") {
-    window.location.href = `noc-verification?applicationNumber=${rowData[1]}&tenantId=${tenantId}`
-  }
-  else {
-    window.location.href = `preview?applicationNumber=${rowData[1]}&tenantId=${tenantId}`
-  }
+  window.location.href = `preview?applicationNumber=${rowData[1]}&tenantId=${tenantId}`
 }
 
 const onRowClick = rowData => {
