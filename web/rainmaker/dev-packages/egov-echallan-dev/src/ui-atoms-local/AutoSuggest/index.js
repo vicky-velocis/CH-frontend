@@ -106,7 +106,6 @@ function Control(props) {
 }
 
 const handleTextChange = (e,isFilterData) => {
-  debugger
   if (isFilterData) {
     let vendorvalue = get(store.getState(), 'screenConfiguration.preparedFinalObject.applyScreenMdmsData.egec.vendorList', []);
     let finalVendorValues = [];

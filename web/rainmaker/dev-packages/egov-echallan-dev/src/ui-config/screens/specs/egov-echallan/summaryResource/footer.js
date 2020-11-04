@@ -2,7 +2,7 @@ import { getLabel, getTodaysDateInYMD, convertEpochToDate } from "egov-ui-framew
 import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 import get from "lodash/get";
 import { createUpdateNocApplication, UpdateChallanStatus, addToStoreViolationData, addToStoreReturnCloseData } from "../../../../../ui-utils/commons";
-import { getCommonApplyFooter, showHideAdhocPopupReceivePayment, showHideAdhocPopupForwardUploadDocs, callbackforsearchPreviewAction, getDiffernceBetweenTodayDate, getTextToLocalSeizedItemDetailHeader, showHideChallanConfirmation,showHideChallanReturnAndCloseConfirmation,showHideAdhocPopup } from "../../utils";
+import { getCommonApplyFooter, showHideAdhocPopupReceivePayment, showHideAdhocPopupForwardUploadDocs, callbackforsearchPreviewAction, getDiffernceBetweenTodayDate, getTextToLocalSeizedItemDetailHeader, showHideChallanConfirmation,showHideChallanReturnAndCloseConfirmation } from "../../utils";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import {
   toggleSnackbar, prepareFinalObject, handleScreenConfigurationFieldChange as handleField,
