@@ -12,7 +12,7 @@ import {
   getPattern,
   getCommonGrayCard,
   getCommonTitle,
-  getLabel, 
+  getLabel,
   getCommonSubHeader,
   getLabelWithValue,
   getDateField,
@@ -27,16 +27,65 @@ import {
   WF_ALLOTMENT_OF_SITE
 } from "../../../../ui-constants";
 import {
-  getSearchResults
+  getSearchApplicationsResults
 } from "../../../../ui-utils/commons";
 import {
   getQueryArg
 } from "egov-ui-framework/ui-utils/commons";
-import { _getPattern } from "../utils"
-import { size } from "lodash";
+import {
+  _getPattern
+} from "../utils"
+import {
+ getStatusList
+} from "./searchResource/functions";
+import {
+  getTenantId
+} from "egov-ui-kit/utils/localStorageUtils";
 
-const beforeInitFn = (action, state, dispatch) => {
+const beforeInitFn = async (action, state, dispatch) => {
+  dispatch(prepareFinalObject("workflow.ProcessInstances", []))
+  const applicationNumber = getQueryArg(window.location.href, "applicationNumber");
 
+  if (!applicationNumber) {
+    return;
+  }
+  const queryObject = [{
+    key: "applicationNumber",
+    value: applicationNumber
+  }]
+  const response = await getSearchApplicationsResults(queryObject);
+  try {
+    let {
+      Applications = []
+    } = response;
+    let {
+      applicationDocuments,
+      workFlowBusinessService,
+      state: applicationState,
+      billingBusinessService: businessService
+    } = Applications[0];
+    applicationDocuments = applicationDocuments || [];
+    const statusQueryObject = [{
+        key: "tenantId",
+        value: getTenantId()
+      },
+      {
+        key: "businessServices",
+        value: workFlowBusinessService
+      }
+    ]
+    getStatusList(state, dispatch, statusQueryObject);
+    const removedDocs = applicationDocuments.filter(item => !item.isActive)
+    applicationDocuments = applicationDocuments.filter(item => !!item.isActive)
+    Applications = [{
+      ...Applications[0],
+      applicationDocuments
+    }]
+    dispatch(prepareFinalObject("Applications", Applications))
+    dispatch(prepareFinalObject("temp[0].removedDocs", removedDocs))
+  } catch (error) {
+    return false;
+  }
 }
 
 
@@ -60,19 +109,13 @@ const hardCopyDocumentsReceivedDateField = {
     labelKey: "ES_HARD_COPY_DOCUMENTS_RECEIVED_DATE_PLACEHOLDER"
   },
   pattern: getPattern("Date"),
-  jsonPath: "Properties[0].propertyDetails.hardCopyDocumentsReceivedDate",
+  jsonPath: "Applications[0].applicationDetails.hardCopyDocumentsReceivedDate",
   props: {
     inputProps: {
       max: getTodaysDateInYMD()
     }
   }
 }
-
-export const documentReceivedDate = getCommonCard({
-  detailsContainer: getCommonContainer({
-    hardCopyDocumentsReceivedDate: getDateField(hardCopyDocumentsReceivedDateField)
-  })
-})
 
 const houseNumberLabel = {
   labelName: "House Number",
@@ -106,17 +149,17 @@ const propertyInfo = () => ({
   viewFour: getCommonContainer({
     houseNumber: getLabelWithValue(
       houseNumberLabel, {
-        jsonPath: "Properties[0].propertyDetails.houseNumber"
+        jsonPath: "Applications[0].property.propertyDetails.houseNumber"
       }
     ),
     mohalla: getLabelWithValue(
       mohallaLabel, {
-        jsonPath: "Properties[0].propertyDetails.mohalla"
+        jsonPath: "Applications[0].property.propertyDetails.mohalla"
       }
     ),
     village: getLabelWithValue(
       villageLabel, {
-        jsonPath: "Properties[0].propertyDetails.village"
+        jsonPath: "Applications[0].property.propertyDetails.village"
       }
     )
   })
@@ -131,36 +174,36 @@ const header = getCommonHeader({
 
 const ownedByField = {
   label: {
-      labelName: "Owned By",
-      labelKey: "ES_OWNED_BY_LABEL"
+    labelName: "Owned By",
+    labelKey: "ES_OWNED_BY_LABEL"
   },
   placeholder: {
-      labelName: "Enter Owned By",
-      labelKey: "ES_OWNED_BY_PLACEHOLDER"
+    labelName: "Enter Owned By",
+    labelKey: "ES_OWNED_BY_PLACEHOLDER"
   },
   gridDefination: {
-      xs: 12,
-      sm: 6
+    xs: 12,
+    sm: 6
   },
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.ownedBy"
+  // required: true,
+  jsonPath: "Applications[0].applicationDetails.ownedBy"
 }
 
 const soField = {
   label: {
-      labelName: "S/O",
-      labelKey: "ES_SO_LABEL"
+    labelName: "S/O",
+    labelKey: "ES_SO_LABEL"
   },
   placeholder: {
-      labelName: "Enter S/O",
-      labelKey: "ES_SO_PLACEHOLDER"
+    labelName: "Enter S/O",
+    labelKey: "ES_SO_PLACEHOLDER"
   },
   gridDefination: {
-      xs: 12,
-      sm: 6
+    xs: 12,
+    sm: 6
   },
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.so"
+  // required: true,
+  jsonPath: "Applications[0].applicationDetails.so"
 }
 
 const getWhetherWholeHouseHasBeenPurchasedRadioButton = {
@@ -170,7 +213,7 @@ const getWhetherWholeHouseHasBeenPurchasedRadioButton = {
     xs: 12,
     sm: 6,
   },
-  jsonPath: "Properties[0].propertyDetails.whetherWholeHouseHasBeenPurchased",
+  jsonPath: "Applications[0].applicationDetails.whetherWholeHouseHasBeenPurchased",
   props: {
     label: {
       name: "Whether whole house has been purchased",
@@ -187,199 +230,199 @@ const getWhetherWholeHouseHasBeenPurchasedRadioButton = {
         value: "false",
       }
     ],
-    jsonPath: "Properties[0].propertyDetails.whetherWholeHouseHasBeenPurchased",
-    required: true,
+    jsonPath: "Applications[0].applicationDetails.whetherWholeHouseHasBeenPurchased",
+    // required: true,
   },
-  required: true,
+  // required: true,
   type: "array",
 };
 
 const sizeOfAreaPurchasedField = {
   label: {
-      labelName: "The size of area purchased",
-      labelKey: "ES_SIZE_OF_AREA_PURCHASED_LABEL"
+    labelName: "The size of area purchased",
+    labelKey: "ES_SIZE_OF_AREA_PURCHASED_LABEL"
   },
   placeholder: {
-      labelName: "Enter the size of area purchased",
-      labelKey: "ES_SIZE_OF_AREA_PURCHASED_PLACEHOLDER"
+    labelName: "Enter the size of area purchased",
+    labelKey: "ES_SIZE_OF_AREA_PURCHASED_PLACEHOLDER"
   },
   gridDefination: {
-      xs: 12,
-      sm: 6
+    xs: 12,
+    sm: 6
   },
   pattern: _getPattern("areaOfProperty"),
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.areaSqft"
+  // required: true,
+  jsonPath: "Applications[0].applicationDetails.areaSqft"
 }
 
 const khasraNoField = {
   label: {
-      labelName: "Khasra No.",
-      labelKey: "ES_KHASRA_NO_LABEL"
+    labelName: "Khasra No.",
+    labelKey: "ES_KHASRA_NO_LABEL"
   },
   placeholder: {
-      labelName: "Enter Khasra No.",
-      labelKey: "ES_KHASRA_NO_PLACEHOLDER"
+    labelName: "Enter Khasra No.",
+    labelKey: "ES_KHASRA_NO_PLACEHOLDER"
   },
   gridDefination: {
-      xs: 12,
-      sm: 6
+    xs: 12,
+    sm: 6
   },
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.khasraNumber"
+  // required: true,
+  jsonPath: "Applications[0].applicationDetails.khasraNumber"
 }
 
 const hadbastNoField = {
   label: {
-      labelName: "Hadbast No.",
-      labelKey: "ES_HADBAST_NO_LABEL"
+    labelName: "Hadbast No.",
+    labelKey: "ES_HADBAST_NO_LABEL"
   },
   placeholder: {
-      labelName: "Enter Hadbast No.",
-      labelKey: "ES_HADBAST_NO_PLACEHOLDER"
+    labelName: "Enter Hadbast No.",
+    labelKey: "ES_HADBAST_NO_PLACEHOLDER"
   },
   gridDefination: {
-      xs: 12,
-      sm: 6
+    xs: 12,
+    sm: 6
   },
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.hadbastNumber"
+  // required: true,
+  jsonPath: "Applications[0].applicationDetails.hadbastNumber"
 }
 
 const mutationNoField = {
   label: {
-      labelName: "Mutation No.",
-      labelKey: "ES_MUTATION_NO_LABEL"
+    labelName: "Mutation No.",
+    labelKey: "ES_MUTATION_NO_LABEL"
   },
   placeholder: {
-      labelName: "Enter Mutation No.",
-      labelKey: "ES_MUTATION_NO_PLACEHOLDER"
+    labelName: "Enter Mutation No.",
+    labelKey: "ES_MUTATION_NO_PLACEHOLDER"
   },
   gridDefination: {
-      xs: 12,
-      sm: 6
+    xs: 12,
+    sm: 6
   },
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.mutationNumber"
+  // required: true,
+  jsonPath: "Applications[0].applicationDetails.mutationNumber"
 }
 
 const khewatNoField = {
   label: {
-      labelName: "Khewat No.",
-      labelKey: "ES_KHEWAT_NO_LABEL"
+    labelName: "Khewat No.",
+    labelKey: "ES_KHEWAT_NO_LABEL"
   },
   placeholder: {
-      labelName: "Enter Khewat No.",
-      labelKey: "ES_KHEWAT_NO_PLACEHOLDER"
+    labelName: "Enter Khewat No.",
+    labelKey: "ES_KHEWAT_NO_PLACEHOLDER"
   },
   gridDefination: {
-      xs: 12,
-      sm: 6
+    xs: 12,
+    sm: 6
   },
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.khewatNumber"
+  // required: true,
+  jsonPath: "Applications[0].applicationDetails.khewatNumber"
 }
 
 const housesOfEastField = {
   label: {
-      labelName: "Area/ House under consideration is bounded by the houses of East",
-      labelKey: "ES_HOUSES_OF_EAST_LABEL"
+    labelName: "Area/ House under consideration is bounded by the houses of East",
+    labelKey: "ES_HOUSES_OF_EAST_LABEL"
   },
   placeholder: {
-      labelName: "Enter Area/ House under consideration is bounded by the houses of East",
-      labelKey: "ES_HOUSES_OF_EAST_PLACEHOLDER"
+    labelName: "Enter Area/ House under consideration is bounded by the houses of East",
+    labelKey: "ES_HOUSES_OF_EAST_PLACEHOLDER"
   },
   gridDefination: {
-      xs: 12,
-      sm: 6
+    xs: 12,
+    sm: 6
   },
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.housesOfEast"
+  // required: true,
+  jsonPath: "Applications[0].applicationDetails.housesOfEast"
 }
 
 const housesOfWestField = {
   label: {
-      labelName: "Area/ House under consideration is bounded by the houses of West",
-      labelKey: "ES_HOUSES_OF_WEST_LABEL"
+    labelName: "Area/ House under consideration is bounded by the houses of West",
+    labelKey: "ES_HOUSES_OF_WEST_LABEL"
   },
   placeholder: {
-      labelName: "Enter Area/ House under consideration is bounded by the houses of West",
-      labelKey: "ES_HOUSES_OF_WEST_PLACEHOLDER"
+    labelName: "Enter Area/ House under consideration is bounded by the houses of West",
+    labelKey: "ES_HOUSES_OF_WEST_PLACEHOLDER"
   },
   gridDefination: {
-      xs: 12,
-      sm: 6
+    xs: 12,
+    sm: 6
   },
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.housesOfWest"
+  // required: true,
+  jsonPath: "Applications[0].applicationDetails.housesOfWest"
 }
 
 const housesOfNorthField = {
   label: {
-      labelName: "Area/ House under consideration is bounded by the houses of North",
-      labelKey: "ES_HOUSES_OF_NORTH_LABEL"
+    labelName: "Area/ House under consideration is bounded by the houses of North",
+    labelKey: "ES_HOUSES_OF_NORTH_LABEL"
   },
   placeholder: {
-      labelName: "Enter Area/ House under consideration is bounded by the houses of North",
-      labelKey: "ES_HOUSES_OF_NORTH_PLACEHOLDER"
+    labelName: "Enter Area/ House under consideration is bounded by the houses of North",
+    labelKey: "ES_HOUSES_OF_NORTH_PLACEHOLDER"
   },
   gridDefination: {
-      xs: 12,
-      sm: 6
+    xs: 12,
+    sm: 6
   },
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.housesOfNorth"
+  // required: true,
+  jsonPath: "Applications[0].applicationDetails.housesOfNorth"
 }
 
 const housesOfSouthField = {
   label: {
-      labelName: "Area/ House under consideration is bounded by the houses of South",
-      labelKey: "ES_HOUSES_OF_SOUTH_LABEL"
+    labelName: "Area/ House under consideration is bounded by the houses of South",
+    labelKey: "ES_HOUSES_OF_SOUTH_LABEL"
   },
   placeholder: {
-      labelName: "Enter Area/ House under consideration is bounded by the houses of South",
-      labelKey: "ES_HOUSES_OF_SOUTH_PLACEHOLDER"
+    labelName: "Enter Area/ House under consideration is bounded by the houses of South",
+    labelKey: "ES_HOUSES_OF_SOUTH_PLACEHOLDER"
   },
   gridDefination: {
-      xs: 12,
-      sm: 6
+    xs: 12,
+    sm: 6
   },
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.housesOfSouth"
+  // required: true,
+  jsonPath: "Applications[0].applicationDetails.housesOfSouth"
 }
 
 const widthOfFrontElevationOfHouseField = {
   label: {
-      labelName: "Width of the front elevation of house (in ft.)",
-      labelKey: "ES_WIDTH_OF_FRONT_ELEVATION_OF_HOUSE_LABEL"
+    labelName: "Width of the front elevation of house (in ft.)",
+    labelKey: "ES_WIDTH_OF_FRONT_ELEVATION_OF_HOUSE_LABEL"
   },
   placeholder: {
-      labelName: "Enter width of the front elevation of house (in ft.)",
-      labelKey: "ES_WIDTH_OF_FRONT_ELEVATION_OF_HOUSE_PLACEHOLDER"
+    labelName: "Enter width of the front elevation of house (in ft.)",
+    labelKey: "ES_WIDTH_OF_FRONT_ELEVATION_OF_HOUSE_PLACEHOLDER"
   },
   gridDefination: {
-      xs: 12,
-      sm: 6
+    xs: 12,
+    sm: 6
   },
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.widthOfFrontElevationOfHouse"
+  // required: true,
+  jsonPath: "Applications[0].applicationDetails.widthOfFrontElevationOfHouse"
 }
 
 const totalWidthOfPublicStreetField = {
   label: {
-      labelName: "Total width of the public street (in ft.)",
-      labelKey: "ES_TOTAL_WIDTH_OF_PUBLIC_STREET_LABEL"
+    labelName: "Total width of the public street (in ft.)",
+    labelKey: "ES_TOTAL_WIDTH_OF_PUBLIC_STREET_LABEL"
   },
   placeholder: {
-      labelName: "Enter total width of the public street (in ft.)",
-      labelKey: "ES_TOTAL_WIDTH_OF_PUBLIC_STREET_PLACEHOLDER"
+    labelName: "Enter total width of the public street (in ft.)",
+    labelKey: "ES_TOTAL_WIDTH_OF_PUBLIC_STREET_PLACEHOLDER"
   },
   gridDefination: {
-      xs: 12,
-      sm: 6
+    xs: 12,
+    sm: 6
   },
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.totalWidthOfPublicStreet"
+  // required: true,
+  jsonPath: "Applications[0].applicationDetails.totalWidthOfPublicStreet"
 }
 
 const getWhetherThereIsStreetOnOtherSideOfHouseRadioButton = {
@@ -389,7 +432,7 @@ const getWhetherThereIsStreetOnOtherSideOfHouseRadioButton = {
     xs: 12,
     sm: 6,
   },
-  jsonPath: "Properties[0].propertyDetails.whetherThereIsStreetOnOtherSideOfHouse",
+  jsonPath: "Applications[0].applicationDetails.whetherThereIsStreetOnOtherSideOfHouse",
   props: {
     label: {
       name: "Whether there is street on the other side of house?",
@@ -406,28 +449,39 @@ const getWhetherThereIsStreetOnOtherSideOfHouseRadioButton = {
         value: "false",
       }
     ],
-    jsonPath: "Properties[0].propertyDetails.whetherThereIsStreetOnOtherSideOfHouse",
-    required: true,
+    jsonPath: "Applications[0].applicationDetails.whetherThereIsStreetOnOtherSideOfHouse",
+    // required: true,
   },
-  required: true,
+  // required: true,
   type: "array",
+  afterFieldChange: (action, state, dispatch) => {
+    dispatch(
+      handleField(
+        "noc-verification",
+        "components.div.children.detailsContainer.children.nocVerificationDetails.children.cardContent.children.detailsContainer.children.widthOfStreetWithLengthOfHouse",
+        "visible",
+        !!(action.value == "true")
+      )
+    )
+  }
 };
 
 const widthOfStreetWithLengthOfHouseField = {
   label: {
-      labelName: "Width of the same with the length of house adjoining to that side of street",
-      labelKey: "ES_WIDTH_OF_THE_STREET_WITH_LENGTH_OF_HOUSE_LABEL"
+    labelName: "Width of the same with the length of house adjoining to that side of street",
+    labelKey: "ES_WIDTH_OF_THE_STREET_WITH_LENGTH_OF_HOUSE_LABEL"
   },
   placeholder: {
-      labelName: "Enter width of the same with the length of house adjoining to that side of street",
-      labelKey: "ES_WIDTH_OF_THE_STREET_WITH_LENGTH_OF_HOUSE_PLACEHOLDER"
+    labelName: "Enter width of the same with the length of house adjoining to that side of street",
+    labelKey: "ES_WIDTH_OF_THE_STREET_WITH_LENGTH_OF_HOUSE_PLACEHOLDER"
   },
   gridDefination: {
-      xs: 12,
-      sm: 6
+    xs: 12,
+    sm: 6
   },
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.widthOfStreetWithLengthOfHouse"
+  // required: true,
+  visible: false,
+  jsonPath: "Applications[0].applicationDetails.widthOfStreetWithLengthOfHouse"
 }
 
 const getWhetherAreaOfHouseAtSiteIsSameRadioButton = {
@@ -437,7 +491,7 @@ const getWhetherAreaOfHouseAtSiteIsSameRadioButton = {
     xs: 12,
     sm: 6,
   },
-  jsonPath: "Properties[0].propertyDetails.whetherThereIsStreetOnOtherSideOfHouse",
+  jsonPath: "Applications[0].applicationDetails.whetherThereIsStreetOnOtherSideOfHouse",
   props: {
     label: {
       name: "Whether the area of the house at site is the same",
@@ -454,28 +508,28 @@ const getWhetherAreaOfHouseAtSiteIsSameRadioButton = {
         value: "false",
       }
     ],
-    jsonPath: "Properties[0].propertyDetails.whetherAreaOfHouseAtSiteIsSame",
-    required: true,
+    jsonPath: "Applications[0].applicationDetails.whetherAreaOfHouseAtSiteIsSame",
+    // required: true,
   },
-  required: true,
+  // required: true,
   type: "array",
 };
 
 const variationDetailField = {
   label: {
-      labelName: "If there are any variations given, detail thereof",
-      labelKey: "ES_VARIATION_DETAIL_LABEL"
+    labelName: "If there are any variations given, detail thereof",
+    labelKey: "ES_VARIATION_DETAIL_LABEL"
   },
   placeholder: {
-      labelName: "Enter If there are any variations given, detail thereof",
-      labelKey: "ES_VARIATION_DETAIL_PLACEHOLDER"
+    labelName: "Enter If there are any variations given, detail thereof",
+    labelKey: "ES_VARIATION_DETAIL_PLACEHOLDER"
   },
   gridDefination: {
-      xs: 12,
-      sm: 6
+    xs: 12,
+    sm: 6
   },
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.variationDetail"
+  // required: true,
+  jsonPath: "Applications[0].applicationDetails.variationDetail"
 }
 
 const getWhetherHouseWithinLalLakirRadioButton = {
@@ -485,7 +539,7 @@ const getWhetherHouseWithinLalLakirRadioButton = {
     xs: 12,
     sm: 6,
   },
-  jsonPath: "Properties[0].propertyDetails.houseWithinLalLakir",
+  jsonPath: "Applications[0].applicationDetails.houseWithinLalLakir",
   props: {
     label: {
       name: "Whether the house/ plot is within the Lal Lakir or within the unacquired abadi area?",
@@ -502,10 +556,10 @@ const getWhetherHouseWithinLalLakirRadioButton = {
         value: "false",
       }
     ],
-    jsonPath: "Properties[0].propertyDetails.houseWithinLalLakir",
-    required: true,
+    jsonPath: "Applications[0].applicationDetails.houseWithinLalLakir",
+    // required: true,
   },
-  required: true,
+  // required: true,
   type: "array",
 };
 
@@ -516,7 +570,7 @@ const getElectricityMeterExistRadioButton = {
     xs: 12,
     sm: 6,
   },
-  jsonPath: "Properties[0].propertyDetails.electricityMeterExist",
+  jsonPath: "Applications[0].applicationDetails.electricityMeterExist",
   props: {
     label: {
       name: "Whether electricity meter exists?",
@@ -533,10 +587,10 @@ const getElectricityMeterExistRadioButton = {
         value: "false",
       }
     ],
-    jsonPath: "Properties[0].propertyDetails.electricityMeterExist",
-    required: true,
+    jsonPath: "Applications[0].applicationDetails.electricityMeterExist",
+    // required: true,
   },
-  required: true,
+  // required: true,
   type: "array",
 };
 
@@ -547,7 +601,7 @@ const getWaterMeterExistRadioButton = {
     xs: 12,
     sm: 6,
   },
-  jsonPath: "Properties[0].propertyDetails.waterMeterExist",
+  jsonPath: "Applications[0].applicationDetails.waterMeterExist",
   props: {
     label: {
       name: "Whether water meter exists?",
@@ -564,45 +618,45 @@ const getWaterMeterExistRadioButton = {
         value: "false",
       }
     ],
-    jsonPath: "Properties[0].propertyDetails.waterMeterExist",
-    required: true,
+    jsonPath: "Applications[0].applicationDetails.waterMeterExist",
+    // required: true,
   },
-  required: true,
+  // required: true,
   type: "array",
 };
 
 const heightOfBuildingField = {
   label: {
-      labelName: "The height of the building excluding mumty",
-      labelKey: "ES_HEIGHT_OF_BUILDING_LABEL"
+    labelName: "The height of the building excluding mumty",
+    labelKey: "ES_HEIGHT_OF_BUILDING_LABEL"
   },
   placeholder: {
-      labelName: "Enter The height of the building excluding mumty",
-      labelKey: "ES_HEIGHT_OF_BUILDING_PLACEHOLDER"
+    labelName: "Enter The height of the building excluding mumty",
+    labelKey: "ES_HEIGHT_OF_BUILDING_PLACEHOLDER"
   },
   gridDefination: {
-      xs: 12,
-      sm: 6
+    xs: 12,
+    sm: 6
   },
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.heightOfBuilding"
+  // required: true,
+  jsonPath: "Applications[0].applicationDetails.heightOfBuilding"
 }
 
 const heightOfMumtyField = {
   label: {
-      labelName: "The height of mumty",
-      labelKey: "ES_HEIGHT_OF_MUMTY_LABEL"
+    labelName: "The height of mumty",
+    labelKey: "ES_HEIGHT_OF_MUMTY_LABEL"
   },
   placeholder: {
-      labelName: "Enter The height of mumty",
-      labelKey: "ES_HEIGHT_OF_MUMTY_PLACEHOLDER"
+    labelName: "Enter The height of mumty",
+    labelKey: "ES_HEIGHT_OF_MUMTY_PLACEHOLDER"
   },
   gridDefination: {
-      xs: 12,
-      sm: 6
+    xs: 12,
+    sm: 6
   },
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.heightOfMumty"
+  // required: true,
+  jsonPath: "Applications[0].applicationDetails.heightOfMumty"
 }
 
 const getCattleKeptInPremisesRadioButton = {
@@ -612,7 +666,7 @@ const getCattleKeptInPremisesRadioButton = {
     xs: 12,
     sm: 6,
   },
-  jsonPath: "Properties[0].propertyDetails.cattleKeptInPremises",
+  jsonPath: "Applications[0].applicationDetails.cattleKeptInPremises",
   props: {
     label: {
       name: "Are any milk cattle kept in the premises?",
@@ -629,10 +683,10 @@ const getCattleKeptInPremisesRadioButton = {
         value: "false",
       }
     ],
-    jsonPath: "Properties[0].propertyDetails.cattleKeptInPremises",
-    required: true,
+    jsonPath: "Applications[0].applicationDetails.cattleKeptInPremises",
+    // required: true,
   },
-  required: true,
+  // required: true,
   type: "array",
 };
 
@@ -643,7 +697,7 @@ const getAnyCantileverRadioButton = {
     xs: 12,
     sm: 6,
   },
-  jsonPath: "Properties[0].propertyDetails.anyCantilever",
+  jsonPath: "Applications[0].applicationDetails.anyCantilever",
   props: {
     label: {
       name: "Is there any cantilever/ projection more than 3 feet over hanging structure existing at site falling over the Govt. land public street?",
@@ -660,28 +714,39 @@ const getAnyCantileverRadioButton = {
         value: "false",
       }
     ],
-    jsonPath: "Properties[0].propertyDetails.anyCantilever",
-    required: true,
+    jsonPath: "Applications[0].applicationDetails.anyCantilever",
+    // required: true,
   },
-  required: true,
+  // required: true,
   type: "array",
+  afterFieldChange: (action, state, dispatch) => {
+    dispatch(
+      handleField(
+        "noc-verification",
+        "components.div.children.detailsContainer.children.nocVerificationDetails.children.cardContent.children.detailsContainer.children.cantileverDetails",
+        "visible", 
+        !!(action.value == "true")
+      )
+    )
+  }
 };
 
 const cantileverDetailsField = {
   label: {
-      labelName: "Cantilever Details",
-      labelKey: "ES_CANTILEVER_DETAILS_LABEL"
+    labelName: "Cantilever Details",
+    labelKey: "ES_CANTILEVER_DETAILS_LABEL"
   },
   placeholder: {
-      labelName: "Enter Cantilever Details",
-      labelKey: "ES_CANTILEVER_DETAILS_PLACEHOLDER"
+    labelName: "Enter Cantilever Details",
+    labelKey: "ES_CANTILEVER_DETAILS_PLACEHOLDER"
   },
   gridDefination: {
-      xs: 12,
-      sm: 6
+    xs: 12,
+    sm: 6
   },
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.cantileverDetails"
+  // required: true,
+  visible: false,
+  jsonPath: "Applications[0].applicationDetails.cantileverDetails"
 }
 
 const getAnyCommercialActivityGoingOnRadioButton = {
@@ -691,7 +756,7 @@ const getAnyCommercialActivityGoingOnRadioButton = {
     xs: 12,
     sm: 6,
   },
-  jsonPath: "Properties[0].propertyDetails.anyCommercialActivityGoingOn",
+  jsonPath: "Applications[0].applicationDetails.anyCommercialActivityGoingOn",
   props: {
     label: {
       name: "Whether any commercial activity is going on Ground/ 1st floor/ 2nd floor of the house?",
@@ -708,10 +773,10 @@ const getAnyCommercialActivityGoingOnRadioButton = {
         value: "false",
       }
     ],
-    jsonPath: "Properties[0].propertyDetails.anyCommercialActivityGoingOn",
-    required: true,
+    jsonPath: "Applications[0].applicationDetails.anyCommercialActivityGoingOn",
+    // required: true,
   },
-  required: true,
+  // required: true,
   type: "array",
 };
 
@@ -722,7 +787,7 @@ const getAnyBasementsOnRadioButton = {
     xs: 12,
     sm: 6,
   },
-  jsonPath: "Properties[0].propertyDetails.anyBasements",
+  jsonPath: "Applications[0].applicationDetails.anyBasements",
   props: {
     label: {
       name: "Whether there exist any basements to the house?",
@@ -739,28 +804,28 @@ const getAnyBasementsOnRadioButton = {
         value: "false",
       }
     ],
-    jsonPath: "Properties[0].propertyDetails.anyBasements",
-    required: true,
+    jsonPath: "Applications[0].applicationDetails.anyBasements",
+    // required: true,
   },
-  required: true,
+  // required: true,
   type: "array",
 };
 
 const otherViolationDetailsField = {
   label: {
-      labelName: "Other violation, if any, give details thereof",
-      labelKey: "ES_OTHER_VIOLATION_DETAILS_LABEL"
+    labelName: "Other violation, if any, give details thereof",
+    labelKey: "ES_OTHER_VIOLATION_DETAILS_LABEL"
   },
   placeholder: {
-      labelName: "Enter other violation",
-      labelKey: "ES_OTHER_VIOLATION_DETAILS_PLACEHOLDER"
+    labelName: "Enter other violation",
+    labelKey: "ES_OTHER_VIOLATION_DETAILS_PLACEHOLDER"
   },
   gridDefination: {
-      xs: 12,
-      sm: 6
+    xs: 12,
+    sm: 6
   },
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.otherViolation"
+  // required: true,
+  jsonPath: "Applications[0].applicationDetails.otherViolation"
 }
 
 const getRecommendedForIssueOfNocOnRadioButton = {
@@ -770,7 +835,7 @@ const getRecommendedForIssueOfNocOnRadioButton = {
     xs: 12,
     sm: 6,
   },
-  jsonPath: "Properties[0].propertyDetails.recommendedForIssueOfNoc",
+  jsonPath: "Applications[0].applicationDetails.recommendedForIssueOfNoc",
   props: {
     label: {
       name: "Whether recommended for issue of NOC or not?",
@@ -787,28 +852,38 @@ const getRecommendedForIssueOfNocOnRadioButton = {
         value: "false",
       }
     ],
-    jsonPath: "Properties[0].propertyDetails.recommendedForIssueOfNoc",
-    required: true,
+    jsonPath: "Applications[0].applicationDetails.recommendedForIssueOfNoc",
+    // required: true,
   },
-  required: true,
+  // required: true,
   type: "array",
+  afterFieldChange: (action, state, dispatch) => {
+    dispatch(
+      handleField(
+        "noc-verification",
+        "components.div.children.detailsContainer.children.nocVerificationDetails.children.cardContent.children.detailsContainer.children.reasonForNotIssuingNoc",
+        "visible",
+        !!(action.value == "false")
+      )
+    )
+  }
 };
 
 const reasonForNotIssuingNocField = {
   label: {
-      labelName: "Reason for not issuing NOC",
-      labelKey: "ES_REASON_FOR_NOT_ISSUING_NOC_LABEL"
+    labelName: "Reason for not issuing NOC",
+    labelKey: "ES_REASON_FOR_NOT_ISSUING_NOC_LABEL"
   },
   placeholder: {
-      labelName: "Enter reason for not issuing NOC",
-      labelKey: "ES_REASON_FOR_NOT_ISSUING_NOC_PLACEHOLDER"
+    labelName: "Enter reason for not issuing NOC",
+    labelKey: "ES_REASON_FOR_NOT_ISSUING_NOC_PLACEHOLDER"
   },
   gridDefination: {
-      xs: 12,
-      sm: 6
+    xs: 12,
+    sm: 6
   },
-  required: true,
-  jsonPath: "Properties[0].propertyDetails.reasonForNotIssuingNoc"
+  // required: true,
+  jsonPath: "Applications[0].applicationDetails.reasonForNotIssuingNoc"
 }
 
 const getArchitectsReportRadioButton = {
@@ -818,7 +893,7 @@ const getArchitectsReportRadioButton = {
     xs: 12,
     sm: 6,
   },
-  jsonPath: "Properties[0].propertyDetails.architectsReport",
+  jsonPath: "Applications[0].applicationDetails.architectsReport",
   props: {
     label: {
       name: "Architect’s report, whether recommended for NOC or not?",
@@ -835,10 +910,10 @@ const getArchitectsReportRadioButton = {
         value: "false",
       }
     ],
-    jsonPath: "Properties[0].propertyDetails.architectsReport",
-    required: true,
+    jsonPath: "Applications[0].applicationDetails.architectsReport",
+    // required: true,
   },
-  required: true,
+  // required: true,
   type: "array",
 };
 
@@ -849,7 +924,7 @@ const getFireNocRadioButton = {
     xs: 12,
     sm: 6,
   },
-  jsonPath: "Properties[0].propertyDetails.fireNoc",
+  jsonPath: "Applications[0].applicationDetails.fireNoc",
   props: {
     label: {
       name: "Fire NOC for commercial buildings?",
@@ -866,10 +941,10 @@ const getFireNocRadioButton = {
         value: "false",
       }
     ],
-    jsonPath: "Properties[0].propertyDetails.fireNoc",
-    required: true,
+    jsonPath: "Applications[0].applicationDetails.fireNoc",
+    // required: true,
   },
-  required: true,
+  // required: true,
   type: "array",
 };
 
@@ -883,7 +958,7 @@ const dateOfVisitField = {
     labelKey: "ES_DATE_OF_VISIT_PLACEHOLDER"
   },
   pattern: getPattern("Date"),
-  jsonPath: "Properties[0].propertyDetails.dateOfVisit",
+  jsonPath: "Applications[0].applicationDetails.dateOfVisit",
   props: {
     inputProps: {
       max: getTodaysDateInYMD()
@@ -904,13 +979,13 @@ export const commentField = {
     xs: 12,
     sm: 6
   },
-  required: true,
+  // required: true,
   props: {
     multiline: true,
     rows: 2
   },
   pattern: _getPattern("alphabet"),
-  jsonPath: "Properties[0].propertyDetails.comment"
+  jsonPath: "Applications[0].applicationDetails.comment"
 }
 
 export const auditTrailDetailsField = {
@@ -926,18 +1001,19 @@ export const auditTrailDetailsField = {
     xs: 12,
     sm: 6
   },
-  required: true,
+  // required: true,
   props: {
     multiline: true,
     rows: 2
   },
   pattern: _getPattern("alphabet"),
-  jsonPath: "Properties[0].propertyDetails.auditTrailDetails"
+  jsonPath: "Applications[0].applicationDetails.auditTrailDetails"
 }
 
 
 export const nocVerificationDetails = getCommonCard({
   detailsContainer: getCommonContainer({
+    hardCopyDocumentsReceivedDate: getDateField(hardCopyDocumentsReceivedDateField),
     ownedBy: getTextField(ownedByField),
     so: getTextField(soField),
     houseHasBeenPurchased: getWhetherWholeHouseHasBeenPurchasedRadioButton,
@@ -984,7 +1060,6 @@ const detailsContainer = {
     id: "apply_form1"
   },
   children: {
-    documentReceivedDate,
     propertyDetails,
     nocVerificationDetails
   },
@@ -993,7 +1068,7 @@ const detailsContainer = {
 
 const nocVerification = {
   uiFramework: "material-ui",
-  name: "noc-verfication",
+  name: "noc-verification",
   beforeInitScreen: (action, state, dispatch) => {
     beforeInitFn(action, state, dispatch);
     return action
@@ -1024,9 +1099,9 @@ const nocVerification = {
           moduleName: "egov-estate",
           componentPath: "WorkFlowContainer",
           props: {
-            dataPath: "Properties",
-            moduleName: WF_ALLOTMENT_OF_SITE,
-            updateUrl: "/est-services/property-master/_update",
+            dataPath: "Applications",
+            // moduleName: WF_ALLOTMENT_OF_SITE,
+            updateUrl: "/est-services/application/_update",
             style: {
               wordBreak: "break-word"
             }
