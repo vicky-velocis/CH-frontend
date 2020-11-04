@@ -168,6 +168,10 @@ const getMdmsData = async (action, state, dispatch) => {
       [],
       mdmsBody
     );
+    
+    let sectorData = get(payload.MdmsRes,"egpm.sector", []);
+    let immunizationSector = [...sectorData, {name:"NA",code:"NA"}]
+    set(payload.MdmsRes, "egpm.immunizationSector", immunizationSector);
     dispatch(prepareFinalObject("applyScreenMdmsData", payload.MdmsRes));
   } catch (e) {
     console.log(e);

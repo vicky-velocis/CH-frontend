@@ -23,7 +23,7 @@ import { getSearchResultsView, getSearchResultsForNocCretificate, getSearchResul
 import { setEncroachmentType, getAccessToken, setapplicationType, getTenantId, getLocale, getUserInfo, localStorageGet, localStorageSet, setapplicationNumber } from "egov-ui-kit/utils/localStorageUtils";
 import store from "ui-redux/store";
 import "./index.css";
-import { adhocPopupReceivePayment, adhocPopupStockViolationForwardHOD, challanDeletionPopup, returnAndCloseConfirmationPopup } from "./payResource/adhocPopup";
+import { adhocPopupReceivePayment, adhocPopupStockViolationForwardHOD, challanDeletionPopup,challanDeletionPopup1, returnAndCloseConfirmationPopup } from "./payResource/adhocPopup";
 
 let roles = JSON.parse(getUserInfo()).roles;
 
