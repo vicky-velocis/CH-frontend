@@ -306,7 +306,6 @@ let ownerDocuments = PropertiesTemp[0].propertyDetails.owners[0].ownerDetails.re
     const lastArray = splits[length - 1] || [];
     return lastArray.length < 4 ? [...rest, [...lastArray, i]] : [...splits, [i]]
   }, []);
-  debugger
   let Property = Properties[0];
   if(Property.propertyDetails.purchaser.length > 0){
      Property = {
