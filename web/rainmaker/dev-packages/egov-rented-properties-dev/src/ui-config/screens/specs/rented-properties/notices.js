@@ -105,7 +105,7 @@ const findItem = roles.find(item => item.code === "RP_CLERK");
 const buttonComponent = (label, route) => ({
   componentPath: "Button",
   gridDefination: {
-    xs: 12,
+    xs: 6,
     sm: 2
   },
   props: {

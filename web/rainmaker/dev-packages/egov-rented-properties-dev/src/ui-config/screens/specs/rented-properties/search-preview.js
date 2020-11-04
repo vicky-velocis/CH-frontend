@@ -2,7 +2,7 @@ import {
     getCommonHeader,
     getCommonContainer,
     getLabel,
-    getCommonCard,getTextField
+    getCommonCard,getTextField,getPattern
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { getQueryArg, setDocuments } from "egov-ui-framework/ui-utils/commons";
 import { getSearchResults } from "../../../../ui-utils/commons";
@@ -17,8 +17,10 @@ import { editFooter,footerReviewTop } from "./applyResource/reviewFooter";
 import { httpRequest } from "egov-ui-framework/ui-utils/api.js";
 import{formatAmount} from "./searchResource/functions"
 import set from "lodash/set"
+import { get } from "lodash";
 import {applicationNumber} from './apply'
 import { setApplicationNumberBox } from "../../../../ui-utils/apply";
+import { setBusinessServiceDataToLocalStorage } from "egov-ui-framework/ui-utils/commons";
 const userInfo = JSON.parse(getUserInfo());
 const tenantId = getTenantId();
 const {roles = []} = userInfo
@@ -270,7 +272,7 @@ const buttonComponent = (label) => ({
   }
 })
 
-const handleClose = (state,dispatch) => {
+const handleClose = async (state,dispatch,action) => {
   dispatch(
     handleField(
       "search-preview",
@@ -279,10 +281,53 @@ const handleClose = (state,dispatch) => {
       false
   ),
 )
+let transitNo = getQueryArg(window.location.href, "transitNumber");
+await searchResults(action, state, dispatch, transitNo)
+let area=get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.address.area")
+let phone=get(state.screenConfiguration.preparedFinalObject,"Properties[0].owners[0].ownerDetails.phone")
+let pincode=get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.address.pincode")
+dispatch(
+  handleField(
+    "search-preview",
+    "components.div.children.adhocDialog.children.popup.children.area.children.rateField",
+    "props.value",
+    area
+),
+)
+dispatch(
+  handleField(
+    "search-preview",
+    "components.div.children.adhocDialog.children.popup.children.phoneNumber.children.phone",
+    "props.value",
+    phone
+),
+)
+dispatch(
+  handleField(
+    "search-preview",
+    "components.div.children.adhocDialog.children.popup.children.pinCode.children.rateField",
+    "props.value",
+    pincode
+),
+)
 };
 
 const update = async (state, dispatch) => {
   const {Properties} = state.screenConfiguration.preparedFinalObject
+  const locality=Properties[0].propertyDetails.address.area
+  const pincode=Properties[0].propertyDetails.address.pincode
+  const phone=Properties[0].owners[0].ownerDetails.phone
+  if(!locality || !pincode || !phone){
+    dispatch(
+    toggleSnackbar(
+      true,
+      { labelName: "Please enter the mandatory feilds", labelKey: "RP_ERR_FILL_RENTED_MANDATORY_FIELDS"},
+      "error"
+    )
+    );
+  return
+  }
+  else{
   try {
   const response = await httpRequest(
     "post",
@@ -298,7 +343,17 @@ const update = async (state, dispatch) => {
     false
   ))
   if(!!response && !!response.Properties.length) {
-    dispatch(prepareFinalObject("Properties", response.Properties))
+    let properties = response.Properties;
+    //dispatch(prepareFinalObject("Properties", response.Properties))
+    let {rentSummary} = properties[0]
+    let formatrentSummary = {
+      balancePrincipal: !!rentSummary ? formatAmount(rentSummary.balancePrincipal.toFixed(2)) : 0,
+      balanceInterest: !!rentSummary ? formatAmount(rentSummary.balanceInterest.toFixed(2)) : 0,
+      balanceAmount: !!rentSummary ? formatAmount(rentSummary.balanceAmount.toFixed(2)) : 0
+    }
+properties=[{...properties[0],formatrentSummary}]
+    dispatch(prepareFinalObject("Properties", properties))
+   // dispatch(prepareFinalObject("Properties", response.Properties))
   }
 } catch (error) {
   dispatch(
@@ -308,6 +363,7 @@ const update = async (state, dispatch) => {
       "error"
     )
   );
+}
 }
 }
 
@@ -326,7 +382,49 @@ const phoneField = {
     sm: 12
   },
   jsonPath: "Properties[0].owners[0].ownerDetails.phone",
-  // pattern: getPattern("Amount")
+  minLength:10,
+  maxLength:10,
+  required: true,
+  pattern: getPattern("MobileNo"),
+  errorMessage: "RP_ERR_PHONE_NUMBER_FIELD",
+  afterFieldChange: (action, state, dispatch) => {
+    if (action.value.length > 10) {
+        dispatch(
+            handleField(
+              "search-preview",
+              action.componentJsonpath,
+              "errorMessage",
+              "RP_ERR_PHONE_NUMBER_FIELD_MAXLENGTH"
+            )
+        )
+        dispatch(
+            handleField(
+              "search-preview",
+              action.componentJsonpath,
+              "props.errorMessage",
+              "RP_ERR_PHONE_NUMBER_FIELD_MAXLENGTH"
+            )
+        )
+    }
+    else {
+        dispatch(
+            handleField(
+              "search-preview",
+              action.componentJsonpath,
+              "errorMessage",
+              "RP_ERR_PHONE_NUMBER_FIELD"
+            )
+        )
+        dispatch(
+            handleField(
+              "search-preview",
+              action.componentJsonpath,
+              "props.errorMessage",
+              "RP_ERR_PHONE_NUMBER_FIELD"
+            )
+        )
+    }
+  }
 }
 
 const pincodeField = {
@@ -343,7 +441,48 @@ const pincodeField = {
     sm: 12
   },
   jsonPath: "Properties[0].propertyDetails.address.pincode",
-  // pattern: getPattern("Amount")
+  minLength: 6,
+  maxLength: 6,
+  required: true,
+  errorMessage: "RP_ERR_PINCODE_FIELD",
+  afterFieldChange: (action, state, dispatch) => {
+    if (action.value.length > 6) {
+        dispatch(
+            handleField(
+              "search-preview",
+              action.componentJsonpath,
+              "errorMessage",
+              "RP_ERR_PINCODE_FIELD_MAXLENGTH"
+            )
+        )
+        dispatch(
+            handleField(
+              "search-preview",
+              action.componentJsonpath,
+              "props.errorMessage",
+              "RP_ERR_PINCODE_FIELD_MAXLENGTH"
+            )
+        )
+    }
+    else {
+        dispatch(
+            handleField(
+              "search-preview",
+              action.componentJsonpath,
+              "errorMessage",
+              "RP_ERR_PINCODE_FIELD"
+            )
+        )
+        dispatch(
+            handleField(
+              "search-preview",
+              action.componentJsonpath,
+              "props.errorMessage",
+              "RP_ERR_PINCODE_FIELD"
+            )
+        )
+    }
+  }
 }
 
 const areaField = {
@@ -360,7 +499,48 @@ placeholder: {
     sm: 12
   },
   jsonPath: "Properties[0].propertyDetails.address.area",
-  // pattern: getPattern("Amount")
+  minLength: 3,
+  maxLength: 100,
+  required: true,
+  errorMessage: "RP_ERR_AREA_FIELD",
+  afterFieldChange: (action, state, dispatch) => {
+    if (action.value.length > 100) {
+        dispatch(
+            handleField(
+              "search-preview",
+              action.componentJsonpath,
+              "errorMessage",
+              "RP_ERR_AREA_LOCALITY_FIELD_MAXLENGTH"
+            )
+        )
+        dispatch(
+            handleField(
+              "search-preview",
+              action.componentJsonpath,
+              "props.errorMessage",
+              "RP_ERR_AREA_LOCALITY_FIELD_MAXLENGTH"
+            )
+        )
+    }
+    else {
+        dispatch(
+            handleField(
+              "search-preview",
+              action.componentJsonpath,
+              "errorMessage",
+              "RP_ERR_AREA_FIELD"
+            )
+        )
+        dispatch(
+            handleField(
+              "search-preview",
+              action.componentJsonpath,
+              "props.errorMessage",
+              "RP_ERR_AREA_FIELD"
+            )
+        )
+    }
+  }
 }
 
 export const editPopup = getCommonContainer({
@@ -435,8 +615,8 @@ export const editPopup = getCommonContainer({
             },
             onClickDefination: {
               action: "condition",
-              callBack: (state, dispatch) => {
-                handleClose(state, dispatch);
+              callBack: (state, dispatch,action) => {
+                handleClose(state, dispatch,action);
               }
             }
           }
@@ -489,13 +669,18 @@ export const editPopup = getCommonContainer({
       }
     }
 })
-
+const getData = async (action, state, dispatch) => {
+  const queryObject = [{ key: "tenantId", value: getTenantId() }, 
+                      { key: "businessServices", value: "MasterRP" }]
+  await setBusinessServiceDataToLocalStorage(queryObject, dispatch);
+}
 const rentedPropertiesDetailPreview = {
   uiFramework: "material-ui",
   name: "search-preview",
   beforeInitScreen: (action, state, dispatch) => {
     transitNumber = getQueryArg(window.location.href, "transitNumber");
     beforeInitFn(action, state, dispatch, transitNumber);
+    getData(action, state, dispatch)
     return action;
   },
   components: {
