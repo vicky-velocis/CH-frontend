@@ -13,7 +13,8 @@ import {
   handleScreenConfigurationFieldChange as handleField
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import {
-  getTodaysDateInYMD
+  getTodaysDateInYMD,
+  _getPattern
 } from "../../utils";
 import get from "lodash/get";
 import { set } from "lodash";
@@ -838,6 +839,7 @@ const percentageOfInterestField = {
       xs: 12,
       sm: 6
   },
+  pattern: _getPattern("float"),
   jsonPath: "Properties[0].propertyDetails.paymentDetails[0].percentageOfInterest"
 }
 
@@ -854,7 +856,7 @@ const interestDetailsHeader = getCommonTitle({
 export const interestDetails = getCommonCard({
   header: interestDetailsHeader,
   detailsContainer: getCommonContainer({
-      interestFixed: getInterestFixedRadioButton,
-      percentageOfInterest: getTextField(percentageOfInterestField),
+    interestFixed: getInterestFixedRadioButton,
+    percentageOfInterest: getTextField(percentageOfInterestField)
   })
 })
