@@ -19,6 +19,13 @@ import {
 import get from "lodash/get";
 import { set } from "lodash";
 
+let screenName = "apply";
+let paymentStep = "formwizardEighthStep"
+if ((window.location.href).includes("allotment")) {
+    screenName = "allotment";
+    paymentStep = "formwizardSixthStepAllotment";
+}
+
 var data = []
 new Array(28).fill(undefined).map((val,idx) => {
   data.push({ code: idx + 1 })
@@ -219,16 +226,16 @@ const getDemandRadioButton = {
     if (action.value == "GROUNDRENT") {
       dispatch(
         handleField(
-          "allotment",
-          "components.div.children.formwizardSixthStepAllotment.children.groundRentDetails",
+          screenName,
+          `components.div.children.${paymentStep}.children.groundRentDetails`,
           "visible",
           true
         )
       )
       dispatch(
         handleField(
-          "allotment",
-          "components.div.children.formwizardSixthStepAllotment.children.licenseFeeDetails",
+          screenName,
+          `components.div.children.${paymentStep}.children.licenseFeeDetails`,
           "visible",
           false
         )
@@ -237,16 +244,16 @@ const getDemandRadioButton = {
     else {
       dispatch(
         handleField(
-          "allotment",
-          "components.div.children.formwizardSixthStepAllotment.children.licenseFeeDetails",
+          screenName,
+          `components.div.children.${paymentStep}.children.licenseFeeDetails`,
           "visible",
           true
         )
       )
       dispatch(
         handleField(
-          "allotment",
-          "components.div.children.formwizardSixthStepAllotment.children.groundRentDetails",
+          screenName,
+          `components.div.children.${paymentStep}.children.groundRentDetails`,
           "visible",
           false
         )
