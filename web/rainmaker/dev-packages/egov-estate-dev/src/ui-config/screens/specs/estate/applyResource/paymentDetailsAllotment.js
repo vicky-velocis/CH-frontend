@@ -792,3 +792,69 @@ export const securityDetails = getCommonCard({
       
   })
 })
+
+/******************** Interest Details ********************/
+const getInterestFixedRadioButton = {
+  uiFramework: "custom-containers",
+  componentPath: "RadioGroupContainer",
+  gridDefination: {
+    xs: 12,
+    sm: 6,
+  },
+  jsonPath: "Properties[0].propertyDetails.paymentDetails[0].interestFixed",
+  props: {
+    label: {
+      name: "Interest fixed?",
+      key: "ES_INTEREST_FIXED_LABEL"
+    },
+    buttons: [{
+        labelName: "Yes",
+        labelKey: "ES_COMMON_YES",
+        value: "true"
+      },
+      {
+        label: "No",
+        labelKey: "ES_COMMON_NO",
+        value: "false"
+      }
+    ],
+    jsonPath: "Properties[0].propertyDetails.paymentDetails[0].interestFixed",
+    // required: true
+  },
+  // required: true,
+  type: "array"
+}
+
+const percentageOfInterestField = {
+  label: {
+      labelName: "Percentage of interest",
+      labelKey: "ES_PERCENTAGE_OF_INTEREST_LABEL"
+  },
+  placeholder: {
+      labelName: "Enter percentage of interest",
+      labelKey: "ES_PERCENTAGE_OF_INTEREST_PLACEHOLDER"
+  },
+  gridDefination: {
+      xs: 12,
+      sm: 6
+  },
+  jsonPath: "Properties[0].propertyDetails.paymentDetails[0].percentageOfInterest"
+}
+
+const interestDetailsHeader = getCommonTitle({
+  labelName: "Interest Details",
+  labelKey: "ES_INTEREST_DETAILS_HEADER"
+}, {
+  style: {
+      marginBottom: 18,
+      marginTop: 18
+  }
+})
+
+export const interestDetails = getCommonCard({
+  header: interestDetailsHeader,
+  detailsContainer: getCommonContainer({
+      interestFixed: getInterestFixedRadioButton,
+      percentageOfInterest: getTextField(percentageOfInterestField),
+  })
+})
