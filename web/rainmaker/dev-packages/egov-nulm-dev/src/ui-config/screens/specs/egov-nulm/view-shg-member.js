@@ -161,12 +161,12 @@ import {
       
         radioButtonValue.forEach(value => {
           if(NulmShgMemberRequest[value] && NulmShgMemberRequest[value]=== true ){
-            dispatch(prepareFinalObject(`NulmShgMemberRequest[${value}]`, "YES" ));
+            dispatch(prepareFinalObject(`NulmShgMemberRequest[${value}]`, "Yes" ));
           }else{
-            dispatch(prepareFinalObject(`NulmShgMemberRequest[${value}]`, "NO" ));
+            dispatch(prepareFinalObject(`NulmShgMemberRequest[${value}]`, "No" ));
           }
         })
-  
+        if(NulmShgMemberRequest.dob !== null)
         dispatch(prepareFinalObject(`NulmShgMemberRequest.dob`, NulmShgMemberRequest.dob.split(" ")[0] ));
       }
     }

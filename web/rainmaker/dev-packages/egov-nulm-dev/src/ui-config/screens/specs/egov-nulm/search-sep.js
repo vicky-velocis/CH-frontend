@@ -63,20 +63,20 @@ import {
       label: "CREATED"
     },
     {
-      value: "Forwarded to Task force Committee",
-      label: "Forwarded to Task force Committee"
+      value: "Forwarded to Task Force Committee",
+      label: "Forwarded to Task Force Committee"
     },
     {
-      value: "Approved by Task force committee",
-      label: "Approved by Task force committee"
+      value: "Approved by Task Force Committee",
+      label: "Approved by Task Force Committee"
     },
     {
-      value: "Rejected by Task force committee",
-      label: "Rejected by Task force committee"
+      value: "Rejected by Task Force Committee",
+      label: "Rejected by Task Force Committee"
     },
     {
-      value: "Sent to bank for processing",
-      label: "Sent to bank for processing"
+      value: "Sent to Bank for Processing",
+      label: "Sent to Bank for Processing"
     },
     {
       value: "Sanctioned by Bank",
@@ -85,23 +85,23 @@ import {
    ]:[
       {
         value: "CREATED",
-        label: "CREATED"
+        label: "Created"
       },
       {
-        value: "Forwarded to Task force Committee",
-        label: "Forwarded to Task force Committee"
+        value: "Forwarded to Task Force Committee",
+        label: "Forwarded to Task Force Committee"
       },
       {
-        value: "Approved by Task force committee",
-        label: "Approved by Task force committee"
+        value: "Approved by Task Force committee",
+        label: "Approved by Task Force committee"
       },
       {
-        value: "Rejected by Task force committee",
-        label: "Rejected by Task force committee"
+        value: "Rejected by Task Force committee",
+        label: "Rejected by Task Force committee"
       },
       {
-        value: "Sent to bank for processing",
-        label: "Sent to bank for processing"
+        value: "Sent to Bank for Processing",
+        label: "Sent to Bank for Processing"
       },
       {
         value: "Sanctioned by Bank",
@@ -109,7 +109,7 @@ import {
       },
       {
         value: "DRAFTED",
-        label: "DRAFTED"
+        label: "Created"
       },
      
     ];

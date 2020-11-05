@@ -228,7 +228,7 @@ export const createUpdatePO = async (state, dispatch, action ,status) => {
   const radioButtonValue = ["isUrbanPoor","isPwd","isMinority","isInsurance","isStreetVendor","isHomeless"];
     
   radioButtonValue.forEach(value => {
-    if(NulmShgMemberRequest[value] && NulmShgMemberRequest[value]==="YES" ){
+    if(NulmShgMemberRequest[value] && NulmShgMemberRequest[value]==="Yes" ){
       set( NulmShgMemberRequest, value, true );
     }else{
       set( NulmShgMemberRequest, value, false );

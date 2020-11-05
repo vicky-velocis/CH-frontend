@@ -163,7 +163,7 @@ export const createUpdatePO = async (state, dispatch, action ,status) => {
   const radioButtonValue = ["isDisability"];
     
   radioButtonValue.forEach(value => {
-    if(NulmSusvRequest[value] && NulmSusvRequest[value]==="YES" ){
+    if(NulmSusvRequest[value] && NulmSusvRequest[value]==="Yes" ){
       set( NulmSusvRequest, value, true );
     }else{
       set( NulmSusvRequest, value, false );

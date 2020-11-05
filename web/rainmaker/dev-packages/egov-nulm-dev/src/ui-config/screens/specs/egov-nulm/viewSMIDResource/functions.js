@@ -173,13 +173,16 @@ export const createUpdatePO = async (state, dispatch, action ,status) => {
   const radioButtonValue = ["isUrbanPoor","isPwd","isMinority","isInsurance","isStreetVendor","isHomeless","isRegistered"];
     
   radioButtonValue.forEach(value => {
-    if(NULMSMIDRequest[value] && NULMSMIDRequest[value]==="YES" ){
+    if(NULMSMIDRequest[value] && NULMSMIDRequest[value]==="Yes" ){
       set( NULMSMIDRequest, value, true );
     }else{
       set( NULMSMIDRequest, value, false );
     }
   })
-  
+  // const datefieldvalue =["dob"]
+  // datefieldvalue.forEach(value => {
+  //   set( NULMSMIDRequest, value, convertDateToEpoch(NULMSMIDRequest[value]) );
+  // })
 
   const requestBody = {NULMSMIDRequest};
   console.log("requestbody", requestBody);
