@@ -746,6 +746,33 @@ const dateOfPaymentField = {
   // }
 }
 
+const getMonthsOfRentRadioButton = {
+  uiFramework: "custom-containers",
+  componentPath: "RadioGroupContainer",
+  gridDefination: {
+    xs: 12,
+    sm: 6,
+  },
+  jsonPath: "Properties[0].propertyDetails.paymentDetails[0].monthsOfRent",
+  props: {
+    buttons: [{
+        labelName: "2 months of rent",
+        labelKey: "ES_TWO_MONTHS_RENT_LABEL",
+        value: "TWOMONTHSRENT"
+      },
+      {
+        label: "3 months rent",
+        labelKey: "ES_THREE_MONTHS_RENT_LABEL",
+        value: "THREEMONTHSRENT"
+      }
+    ],
+    jsonPath: "Properties[0].propertyDetails.paymentDetails[0].monthsOfRent",
+    // required: true
+  },
+  // required: true,
+  type: "array"
+}
+
 const securityDetailsHeader = getCommonTitle({
   labelName: "Security Details",
   labelKey: "ES_SECURITY_DETAILS_HEADER"
@@ -760,6 +787,8 @@ export const securityDetails = getCommonCard({
   header: securityDetailsHeader,
   detailsContainer: getCommonContainer({
       securityFeeAmount: getTextField(securityFeeAmountField),
-      securityFeeDateOfPayment: getDateField(dateOfPaymentField)
+      monthsOfRent: getMonthsOfRentRadioButton,
+      securityFeeDateOfPayment: getDateField(dateOfPaymentField),
+      
   })
 })
