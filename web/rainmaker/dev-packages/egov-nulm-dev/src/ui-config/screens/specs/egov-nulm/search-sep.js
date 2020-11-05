@@ -59,8 +59,8 @@ import {
 
    const  data =  process.env.REACT_APP_NAME === "Employee" ?  [
     {
-      value: "CREATED",
-      label: "CREATED"
+      value: "Created",
+      label: "Created"
     },
     {
       value: "Forwarded to Task Force Committee",
@@ -84,7 +84,7 @@ import {
     },
    ]:[
       {
-        value: "CREATED",
+        value: "Created",
         label: "Created"
       },
       {
@@ -108,8 +108,8 @@ import {
         label: "Sanctioned by Bank"
       },
       {
-        value: "DRAFTED",
-        label: "Created"
+        value: "Drafted",
+        label: "Drafted"
       },
      
     ];

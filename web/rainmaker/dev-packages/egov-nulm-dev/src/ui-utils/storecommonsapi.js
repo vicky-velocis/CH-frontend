@@ -50,6 +50,13 @@ export const prepareDocumentsUploadData = async (state, dispatch, type) => {
       []
     );
   }
+  else if(type === "SVRUApplication"){
+    documents = get(
+      state,
+      "screenConfiguration.preparedFinalObject.applyScreenMdmsData.NULM.SUSVRDocuments",
+      []
+    );
+  }
 
   documents = documents.filter(item => {
     return item.active;
@@ -72,7 +79,7 @@ export const prepareDocumentsUploadData = async (state, dispatch, type) => {
     let card = {};
     card["name"] = doc.code;
     card["code"] = doc.code;
-    if(isHandicapped ==='YES'&& isDisabilityCertificateAvailable==="YES" && doc.code ==='NULM_DISABILITY_CERTIFICATE')
+    if(isHandicapped ==='Yes'&& isDisabilityCertificateAvailable==="Yes" && doc.code ==='NULM_DISABILITY_CERTIFICATE')
     {
       card["required"] = true ;
     }
