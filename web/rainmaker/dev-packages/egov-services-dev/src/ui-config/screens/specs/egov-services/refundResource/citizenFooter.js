@@ -282,7 +282,7 @@ export const footerForSecFeeRefundParkAndCC = getCommonApplyFooter({
         children: {
             previousButtonLabel: getLabel({
                 labelName: "SUBMIT",
-                labelKey: "SUBMIT",
+                labelKey: "BK_COMMON_BUTTON_SUBMIT",
             }),
         },
         onClickDefination: {

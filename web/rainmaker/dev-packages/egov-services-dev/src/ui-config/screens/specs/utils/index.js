@@ -1849,6 +1849,11 @@ export const downloadCancelledBookingReceipt = async (
     tenantId,
     mode = "download"
 ) => {
+
+
+     tenantId = process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId();
+
+
     let applicationData = get(
         state.screenConfiguration.preparedFinalObject,
         "Booking"
@@ -1857,7 +1862,7 @@ export const downloadCancelledBookingReceipt = async (
         { key: "consumerCodes", value: applicationNumber },
         {
             key: "tenantId",
-            value: tenantId.length > 2 ? tenantId.split('.')[0] : tenantId,
+            value: tenantId,
         },
     ];
     const FETCHRECEIPT = {
@@ -1874,6 +1879,7 @@ export const downloadCancelledBookingReceipt = async (
     };
     let tenantData = await getMdmsTenantsData();
     let refundAmount = await calculateCancelledBookingRefundAmount(applicationNumber, tenantId, applicationData.bkFromDate);
+    let bookingCancelledDate = await getBookingCancelledDate(applicationNumber, tenantId);
     try {
         httpRequest(
             "post",
@@ -1887,7 +1893,7 @@ export const downloadCancelledBookingReceipt = async (
                     { key: "key", value: "bk-cancel-receipt" },
                     {
                         key: "tenantId",
-                        value: tenantId.length > 2 ? tenantId.split('.')[0] : tenantId,
+                        value: tenantId,
                     },
                 ];
 
@@ -1944,7 +1950,7 @@ export const downloadCancelledBookingReceipt = async (
                         bkApplicationNumber:
                             payloadReceiptDetails.Payments[0].paymentDetails[0]
                                 .bill.consumerCode,
-                        bookingCancellationDate: "12-03-2020",
+                        bookingCancellationDate: bookingCancelledDate,
                         bookingVenue: applicationData.bkLocation,
                         bookingDuration: getDurationDate(
                             applicationData.bkFromDate,
@@ -2002,7 +2008,6 @@ export const calculateCancelledBookingRefundAmount = async (applicationNumber, t
             "",
             queryObject
         );
-        console.log(payload, "Payment Details");
         if (payload) {
 
             let billAccountDetails = payload.Payments[0].paymentDetails[0].bill.billDetails[0].billAccountDetails;
@@ -2078,4 +2083,33 @@ export const calculateCancelledBookingRefundAmount = async (applicationNumber, t
     }
 
 
+}
+
+export const getBookingCancelledDate = async(applicationNumber, tenantId) => {
+    if (applicationNumber && tenantId) {
+        let queryObject = [
+            { key: "tenantId", value: tenantId },
+            { key: "businessIds", value: applicationNumber },
+        ];
+        const payload = await httpRequest(
+            "post",
+            "/egov-workflow-v2/egov-wf/process/_search",
+            "",
+            queryObject
+        );
+
+        if (payload) {
+
+            let cancelledTimeStamp = payload.ProcessInstances[0].auditDetails.createdTime;
+
+            let date2 = new Date(cancelledTimeStamp);
+
+            let gdate = ('0' + date2.getDate()).slice(-2) + '/'
+             + ('0' + (date2.getMonth()+1)).slice(-2) + '/'
+             + date2.getFullYear();
+            return gdate;
+
+
+        }
+    }
 }
