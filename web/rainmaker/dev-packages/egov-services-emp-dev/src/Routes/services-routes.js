@@ -39,6 +39,10 @@ const OsujmFeeMasterData = Loadable({
   loader: () => import("../Screens/MasterData/OsujmFeeMasterData"),
   loading: Loading
 });
+const PaccMasterData = Loadable({
+  loader: () => import("../Screens/MasterData/PaccMasterData"),
+  loading: Loading
+});
 const ApproverMasterData = Loadable({
   loader: () => import("../Screens/MasterData/ApproverMasterData"),
   loading: Loading
@@ -268,12 +272,12 @@ const routes = [
   needsAuthentication: true,
   options: {
     hideFooter: true,
-    title: "ES_OPEN_APPLICAION_HEADER",
+    title: "BK_MYBK_ADMIN_OSBM_FEE_HEADER",
     hideTitle: false,
     redirectionUrl,
     hideFor: "ao",
     customFor: "employee",
-    customTitle: "MYBK_ALL_APPLICAION_HEADER"
+    customTitle: "BK_MYBK_ADMIN_OSBM_FEE_HEADER"
   }
 },
 {
@@ -282,12 +286,12 @@ const routes = [
   needsAuthentication: true,
   options: {
     hideFooter: true,
-    title: "ES_OPEN_APPLICAION_HEADER",
+    title: "BK_MYBK_ADMIN_APPROVER_FEE_HEADER",
     hideTitle: false,
     redirectionUrl,
     hideFor: "ao",
     customFor: "employee",
-    customTitle: "MYBK_ALL_APPLICAION_HEADER"
+    customTitle: "BK_MYBK_ADMIN_APPROVER_FEE_HEADER"
   }
 },
 {
@@ -296,12 +300,12 @@ const routes = [
   needsAuthentication: true,
   options: {
     hideFooter: true,
-    title: "ES_OPEN_APPLICAION_HEADER",
+    title: "BK_MYBK_ADMIN_CG_FEE_HEADER",
     hideTitle: false,
     redirectionUrl,
     hideFor: "ao",
     customFor: "employee",
-    customTitle: "MYBK_ALL_APPLICAION_HEADER"
+    customTitle: "BK_MYBK_ADMIN_CG_FEE_HEADER"
   }
 },
 {
@@ -310,14 +314,29 @@ const routes = [
   needsAuthentication: true,
   options: {
     hideFooter: true,
-    title: "ES_OPEN_APPLICAION_HEADER",
+    title: "BK_MYBK_ADMIN_OSUJM_FEE_HEADER",
     hideTitle: false,
     redirectionUrl,
     hideFor: "ao",
     customFor: "employee",
-    customTitle: "MYBK_ALL_APPLICAION_HEADER"
+    customTitle: "BK_MYBK_ADMIN_OSUJM_FEE_HEADER"
   }
 },
+{
+  path: "egov-services/admin/pacc",
+  component: PaccMasterData,
+  needsAuthentication: true,
+  options: {
+    hideFooter: true,
+    title: "BK_MYBK_ADMIN_PACC_FEE_HEADER",
+    hideTitle: false,
+    redirectionUrl,
+    hideFor: "ao",
+    customFor: "employee",
+    customTitle: "BK_MYBK_ADMIN_PACC_FEE_HEADER"
+  }
+},
+
   {
     path: "egov-services/applywatertanker",
     component: ApplyWaterTanker,

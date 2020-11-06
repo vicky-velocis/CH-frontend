@@ -1,50 +1,20 @@
 import { Button,  TextField } from "components";
 import { httpRequest } from "egov-ui-kit/utils/api";
 import LoadingIndicator from "egov-ui-kit/components/LoadingIndicator";
-import React, { Component } from 'react'
-import { Toast } from "components";
+import React, { Component } from 'react';
 import { toggleSnackbarAndSetText } from "egov-ui-kit/redux/app/actions";
-//import Button from "@material-ui/core/Button";
-//import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Grid from "@material-ui/core/Grid";
-//import MenuItem from '@material-ui/core/MenuItem'
 import SelectField from "material-ui/SelectField";
-import MenuItem from "material-ui/MenuItem";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { withStyles } from "@material-ui/core/styles";
-import {
-  MuiThemeProvider,createMuiTheme
-} from "@material-ui/core/styles";
 import { connect } from "react-redux";
+import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import TextFieldContainer from 'egov-ui-framework/ui-containers/TextFieldContainer'
 
-
-const theme = createMuiTheme({
-  
-  
-  typography: {
-    
-    fontSize: 20,
-  },
- 
-  palette: {
-    primary:{
-      main : "#fe7a51"
-    },
-    secondary:{
-      main : "#fe7a51"
-    },
-    
-    textColor: "#5f5c62",
-    canvasColor: "#F7F7F7",
-    borderColor: "#e6e6e6"
-  },
-
- 
-});
 
 
 
@@ -54,6 +24,9 @@ const useStyle= theme=>({
     minWidth: '960px',
   },
  
+  text: {
+   padding: '0px' 
+  },
   
   [theme.breakpoints.down('sm')]: {
 
@@ -70,37 +43,44 @@ const useStyle= theme=>({
 class DialogComponent extends Component {
 
 
-    async componentDidMount(){
+
+  async componentDidMount(){
+    this.setState({mdmsRes: this.props.mdmsResCg})
+    this.props.prepareFinalObject('mdmsRes', this.props.mdmsResCg)
+
+    if(this.props.updateData!=={})
+    {
+        this.setState({updateData: this.props.updateData})
+        this.props.prepareFinalObject('updateData', this.props.updateData)
+    }else 
+    {   
+        this.setState({updateData: {}})
+        this.props.prepareFinalObject('updateData', {})
+    }
+
+ 
+}
+
+componentDidUpdate(prevProps){
+
+    
+    if(this.props.updateData !== prevProps.updateData){
+
         this.setState({mdmsRes: this.props.mdmsResCg})
-
-        if(this.props.updateData!=={})
-        {
-            this.setState({updateData: this.props.updateData})
-        }else 
-        {   
-            this.setState({updateData: {}})
-            
+        this.props.prepareFinalObject('mdmsRes', this.props.mdmsResCg)
+        this.setState({updateData: this.props.updateData, errors: {}})
+        this.props.prepareFinalObject('updateData', this.props.updateData)
+        if(Object.keys(this.props.updateData).length === 0){
+            this.setState({create: true})
+        }else{
+            this.setState({create: false})
         }
-    
-     
     }
 
-    componentDidUpdate(prevProps){
-    
-        
-        if(this.props.updateData !== prevProps.updateData){
+}
 
-            this.setState({mdmsRes: this.props.mdmsResCg})
-            this.setState({updateData: this.props.updateData, errors: {}})
 
-            if(Object.keys(this.props.updateData).length === 0){
-                this.setState({create: true})
-            }else{
-                this.setState({create: false})
-            }
-        }
 
-    }
     
 
 
@@ -118,11 +98,11 @@ class DialogComponent extends Component {
 
         let temp= {}
         const submitData= this.state.updateData
-        temp.locality=submitData.locality? "": "This field is required"
-        temp.category=submitData.category? "": "This field is required"
-        temp.ratePerDay=submitData.ratePerDay? "": "This field is required"
-        temp.bookingVenue=submitData.bookingVenue? "": "This field is required"
-        
+        //temp.locality=submitData.locality? false: true
+        temp.category=submitData.category? false: true
+        temp.ratePerDay=submitData.ratePerDay?false: true
+        temp.bookingVenue=submitData.bookingVenue? false: true
+        temp.fromDate=submitData.fromDate? false: true
 
         this.setState({errors: temp})
 
@@ -130,18 +110,30 @@ class DialogComponent extends Component {
     }
 
     async handleSubmit  (){
+    
         if(this.validate()){
 
            if(this.state.create===true)
            {
+             
+            let today = new Date();
+            let time =
+              today.getHours() +
+              ":" +
+              today.getMinutes() +
+              ":" +
+              today.getSeconds();
+
+
             var reqBody =  {
               
               "GfcpFeeDetails":[
                 {
-                    locality: this.state.updateData.locality,
+                    locality: null,
                     category:this.state.updateData.category,
                     ratePerDay:this.state.updateData.ratePerDay,
-                    bookingVenue:this.state.updateData.bookingVenue
+                    bookingVenue:this.state.updateData.bookingVenue,
+                    fromDate : `${this.state.updateData.fromDate} ${time}`
                 }
              ],
             }
@@ -167,7 +159,7 @@ class DialogComponent extends Component {
                 "error"
               );
               }
-              this.props.fetchTableData()
+              
               this.props.handleClose()
 
             console.log(responseStatus, "createresponse")
@@ -179,15 +171,26 @@ class DialogComponent extends Component {
            else
            
            {
+             
+            let today = new Date();
+            let time =
+              today.getHours() +
+              ":" +
+              today.getMinutes() +
+              ":" +
+              today.getSeconds();
+
+
 
               var reqBody =  {
                 "GfcpFeeDetails":[
                   {
-                      id: this.state.updateData.locality,
+                      id: this.state.updateData.id,
                       locality: this.state.updateData.locality,
                       category:this.state.updateData.category,
                       ratePerDay:this.state.updateData.ratePerDay,
-                      bookingVenue:this.state.updateData.bookingVenue
+                      bookingVenue:this.state.updateData.bookingVenue,
+                      fromDate : `${this.state.updateData.fromDate} ${time}`
                   }
                 ]
                 }
@@ -213,12 +216,20 @@ class DialogComponent extends Component {
                 "error"
               );
               }
-              this.props.fetchTableData()
+             
               this.props.handleClose()
               console.log(responseStatus, "createresponse")
             }
   
            
+        }
+        else{
+          this.props.toggleSnackbarAndSetText(
+            true,
+            {labelName: "Please Fill All Required Fields",
+            labelKey: `Please Fill All Required Fields`} ,
+            "warning"
+          );
         }
         
     }
@@ -226,14 +237,13 @@ class DialogComponent extends Component {
     render() {
         console.log(this.state.mdmsRes, "owl")
        
-        const {classes} =this.props
+        const {classes, prepareFinalObject} =this.props
         return (
 
       
-        Object.keys(this.state.mdmsRes).length === 0?<LoadingIndicator status="loading" loadingColor="#fe7a51" /> :
+        Object.keys(this.state.mdmsRes).length === 0?<div > <CircularProgress style={{position: "fixed" , top: '50%', left: '50%'}} /> </div>:
         
-        <MuiThemeProvider theme={theme}>
-        <div> <LoadingIndicator status="hide" /> 
+       
         <div>
 
         <Dialog
@@ -246,143 +256,170 @@ class DialogComponent extends Component {
         <DialogTitle id="form-dialog-title">Edit Commercial Ground Fee Master</DialogTitle>
          
         <DialogContent>
-          <DialogContentText>
+          <DialogContentText style={{margin : '15px '}}>
             Please fill the form to update fee master of Commercial Ground
           </DialogContentText>
-          <Grid container spacing={2}>
-            <Grid item sm={6}>
+          
+          <div className="col-xs-12 col-sm-12"   > 
+          <div className="col-xs-12 col-sm-6"   >
 
-            <SelectField
-           //id="villageCity"
-            hintText={"Booking Venue"}
-            underlineDisabledStyle={{ background: "blue" }}
-            dropDownMenuProps={{
-              targetOrigin: { horizontal: "left", vertical: "top" }
+            
+          <TextFieldContainer 
+            error={this.state.errors.bookingVenue }
+            select="true"
+            optionValue="code"
+            optionLabel="code"
+            label={{
+                labelName : "Booking Venue",
+                labelKey: "BK_CG_ADMIN_BOOKING_VENUE_LABEL",
             }}
-            floatingLabelFixed={true}
-            floatingLabelText={
-              <span style={{fontSize:17, fontWeight: 200}}>
-                {"Booking Venue"}{" "}
-                <span style={{ color: "#FF0000" }}>{true ? " *" : ""}</span>
-              </span>
-            }
-            value={this.state.updateData.bookingVenue} 
-            onChange={(event, key, value)=> { 
+            placeholder= {{
+                labelName: "Booking Venue",
+                labelKey: "BK_CG_ADMIN_BOOKING_VENUE_LABEL",
+            }}
+            onChange={(e, key, value)=> { 
             
               let updateData =this.state.updateData
-              updateData.bookingVenue= value
+              updateData.bookingVenue= e.target.value
               let errors= {...this.state.errors}
               errors.bookingVenue=""
               this.setState({updateData: updateData, errors: errors})
-
-            }}
-            fullWidth={true}
-            maxHeight={200}
-            errorText={ this.state.errors && this.state.errors.bookingVenue}
-          >
-            {this.state.mdmsRes.Booking_Vanue.map((dd, index)=>{
+              prepareFinalObject('updateData.bookingVenue', e.target.value)
               
-              return <MenuItem value={dd.code} key={index} primaryText={dd.name} />
-             })}
-          
-          </SelectField>
-          
-          <TextField
-                    id="ratePerDay"
-                    name="ratePerDay"
-                    type="number"
-                    floatingLabelFixed={true}
-                    
-                    value={this.state.updateData.ratePerDay}
-                    hintText={"Rate Per Day"}
-                    floatingLabelText={
-                      <span style={{fontSize:14, fontWeight: 200}}>
-                      {"Rate Per Day"}{" "}
-                      <span style={{ color: "#FF0000" }}>{true ? " *" : ""}</span>
-                    </span>
-                    }
-                    onChange={(e, value) => {
-                      let updateData = {...this.state.updateData}
-                      let errors= {...this.state.errors}
-                      errors.ratePerDay=""
-                      updateData.ratePerDay= value
-                      this.setState({updateData:updateData, errors:errors})
-                    }}
-                    underlineStyle={{ bottom: 7 }}
-                    underlineFocusStyle={{ bottom: 7 }}
-                    hintStyle={{ width: "100%", color: "rgb(150, 150, 150)", fontSize: 14 }}
-                    errorText={ this.state.errors && this.state.errors.ratePerDay}
-                  />
-          
-                    
-            </Grid>
-            <Grid item sm={6}>
-          
-            <SelectField
-           //id="villageCity"
-            hintText={"Category"}
-            underlineDisabledStyle={{ background: "blue" }}
-            dropDownMenuProps={{
-              targetOrigin: { horizontal: "left", vertical: "top" }
             }}
-            floatingLabelFixed={true}
-            floatingLabelText={
-              <span style={{fontSize:17, fontWeight: 200}}>
-                {"Category"}{" "}
-                <span style={{ color: "#FF0000" }}>{true ? " *" : ""}</span>
-              </span>
-            }
-            value={this.state.updateData.category} 
-            onChange={(event, key, value)=> { 
+            required= "true" 
+            sourceJsonPath= "mdmsRes.Booking_Vanue"
+            jsonPath="updateData.bookingVenue"
+             
+            gridDefination= {{
+                xs: 12,
+                sm: 6
+            }}
+         />
+           
+                
+            </div> 
+          <div className="col-xs-12 col-sm-6"   >
+
+        <TextFieldContainer 
+            error={this.state.errors.category }
+            select="true"
+            optionValue="code"
+            optionLabel="code"
+            label={{
+                labelName : "Category",
+                labelKey: "BK_CG_ADMIN_CATEGORY_LABEL",
+            }}
+            placeholder= {{
+                labelName: "Category",
+                labelKey: "BK_CG_ADMIN_CATEGORY_LABEL",
+            }}
+            onChange={(e, key, value)=> { 
             
               let updateData =this.state.updateData
-              updateData.category= value
+              updateData.category= e.target.value
               let errors= {...this.state.errors}
               errors.category=""
               this.setState({updateData: updateData, errors: errors})
-
+              prepareFinalObject('updateData.category', e.target.value)
             }}
-            fullWidth={true}
-            maxHeight={200}
-            errorText={ this.state.errors && this.state.errors.category}
-          >
-            {this.state.mdmsRes.Commerical_Ground_Cat.map((dd, index)=>{
-              
-              return <MenuItem value={dd.code} key={index} primaryText={dd.name} />
-             })}
-          
-          </SelectField>  
+            required= "true" 
+            sourceJsonPath= "mdmsRes.Commerical_Ground_Cat"
+            jsonPath="updateData.category"
+            
+            gridDefination= {{
+                xs: 12,
+                sm: 6
+            }}
+         />
+         </div> 
+          </div> 
+          <div className="col-xs-12 col-sm-12"   > 
+         
+        <div className="col-xs-12 col-sm-6"   > 
+         <TextFieldContainer
 
-                  
-          <TextField
-                    id="locality"
-                    name="locality"
-                    type="string"
-                    floatingLabelFixed={true}
-                    
-                    value={this.state.updateData.locality}
-                    hintText={"Locality"}
-                    floatingLabelText={
-                      <span style={{fontSize:14, fontWeight: 200}}>
-                      {"Locality"}{" "}
-                      <span style={{ color: "#FF0000" }}>{true ? " *" : ""}</span>
-                    </span>
-                    }
-                    onChange={(e, value) => {
-                      let updateData = {...this.state.updateData}
-                      let errors= {...this.state.errors}
-                      errors.locality=""
-                      updateData.locality= value
-                      this.setState({updateData:updateData, errors:errors})
-                    }}
-                    underlineStyle={{ bottom: 7 }}
-                    underlineFocusStyle={{ bottom: 7 }}
-                    hintStyle={{ width: "100%", color: "rgb(150, 150, 150)", fontSize: 14 }}
-                    errorText={ this.state.errors && this.state.errors.locality}
-                  />
-          
-            </Grid>
-          </Grid>
+            type= {"number"}
+            error={this.state.errors.ratePerDay }
+            label={{
+            labelName : "Rate Per Day",
+            labelKey: "BK_CG_ADMIN_RATE_PER_DAY_LABEL",
+            }}
+            onChange={(e, value) => {
+              let updateData = {...this.state.updateData}
+              let errors= {...this.state.errors}
+              errors.ratePerDay=""
+              updateData.ratePerDay= e.target.value
+              this.setState({updateData:updateData, errors:errors})
+              prepareFinalObject('updateData.ratePerDay', e.target.value)
+            }}
+            
+            fullWidth="true"
+            placeholder= {{
+            labelName: "Rate Per Day",
+            labelKey: "BK_CG_ADMIN_RATE_PER_DAY_LABEL",
+             }}
+            jsonPath="updateData.ratePerDay"
+             
+            InputLabelProps={{
+            shrink: true,
+           }}
+          /> 
+          </div>
+          <div className="col-xs-12 col-sm-6">
+          <TextFieldContainer 
+            error={this.state.errors.fromDate }
+            
+            optionValue="code"
+            optionLabel="code"
+            label={{
+                labelName : "Valid From Date",
+                labelKey: "BK_CG_ADMIN_VALID_FROM_DATE_LABEL",
+            }}
+            placeholder= {{
+                labelName: "Valid From Date",
+                labelKey: "BK_CG_ADMIN_VALID_FROM_DATE_LABEL",
+            }}
+            type= "date"
+            onChange={(e, key, value)=> { 
+
+              
+              let date = new Date(e.target.value);
+              let oldDate = new Date(this.props.validFromDate)
+              if (date.getTime() > oldDate.getTime()) {
+                
+                
+                let updateData =this.state.updateData
+                updateData.fromDate= e.target.value
+                
+                let errors= {...this.state.errors}
+                errors.fromDate=""
+                this.setState({updateData: updateData, errors: errors})
+                prepareFinalObject('updateData.fromDate', e.target.value)
+
+              } else {
+                
+                this.props.toggleSnackbarAndSetText(
+                  true,
+                  {labelName: "New From Date Should Be Greater then Selected Date",
+                  labelKey: `New From Date Should Be Greater then Selected Date`} ,
+                  "error"
+                );
+              
+
+                }
+              
+            }}
+            required= "true" 
+            
+            jsonPath="updateData.fromDate"
+            gridDefination= {{
+                xs: 12,
+                sm: 6
+            }}
+         />
+          </div>
+          </div> 
         </DialogContent>
         <DialogActions>
           <Button label="Cancel" onClick={()=>{ this.props.handleClose()
@@ -394,20 +431,31 @@ class DialogComponent extends Component {
     
       </Dialog>
                 
-            </div>
+        
         
         </div>
        
-        </MuiThemeProvider>
+        
         )
     }
 }
 
+
+const mapStateToProps = (state, ownProps) => {
+  const { screenConfiguration } = state;
+  const { preparedFinalObject } = screenConfiguration;
+  return {preparedFinalObject}
+}
+
+
+
 const mapDispatchToProps = dispatch => {
   return {
+    prepareFinalObject: (jsonPath, value) =>
+    dispatch(prepareFinalObject(jsonPath, value)),
    
     toggleSnackbarAndSetText: (open, message, error) =>
-      dispatch(toggleSnackbarAndSetText(open, message, error)),
+    dispatch(toggleSnackbarAndSetText(open, message, error)),
     
   };
 };
@@ -415,6 +463,6 @@ const mapDispatchToProps = dispatch => {
 
 
 export default withStyles(useStyle)(connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )( DialogComponent) )

@@ -1,196 +1,273 @@
-
+import { Button,  TextField } from "components";
 import { httpRequest } from "egov-ui-kit/utils/api";
 import LoadingIndicator from "egov-ui-kit/components/LoadingIndicator";
-import React, { Component } from 'react'
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
+import React, { Component } from 'react';
+import { toggleSnackbarAndSetText } from "egov-ui-kit/redux/app/actions";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Grid from "@material-ui/core/Grid";
-import MenuItem from '@material-ui/core/MenuItem'
+import SelectField from "material-ui/SelectField";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { withStyles } from "@material-ui/core/styles";
-import {
-  MuiThemeProvider,createMuiTheme
-} from "@material-ui/core/styles";
-
-
-const theme = createMuiTheme({
-  
-  
-  typography: {
-    
-    fontSize: 20,
-  },
- 
-  palette: {
-    primary:{
-      main : "#fe7a51"
-    },
-    secondary:{
-      main : "#ffffff"
-    },
-    
-    textColor: "#5f5c62",
-    canvasColor: "#F7F7F7",
-    borderColor: "#e6e6e6"
-  },
-
- 
-});
+import { connect } from "react-redux";
+import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import TextFieldContainer from 'egov-ui-framework/ui-containers/TextFieldContainer'
 
 
 
 const useStyle= theme=>({
 
+  dialogStyle: {
+    minWidth: '960px',
+  },
+ 
+  text: {
+   padding: '0px' 
+  },
+  
+  [theme.breakpoints.down('sm')]: {
+
+   
     dialogStyle: {
-
-        minWidth : '800px',
-        maxWidth : '800px',
-      
-
+      minWidth: '0px',
+      maxWidth: '960px'
     }
+  }
 })
+
 
 
 
 class DialogComponent extends Component {
 
 
-    async componentDidMount(){
-        this.setState({sectorList: this.props.sectorList})
+  
 
-        if(this.props.updateData!=={})
-        {
-            this.setState({updateData: this.props.updateData})
-
-        }else 
-        {   
-            this.setState({updateData: {}})
-            
-        }
+  async componentDidMount(){
     
+    this.props.prepareFinalObject('mdmsRes.sectorList', this.props.sectorList) 
+    this.setState({roleCode: this.props.roleCode})
+    this.props.prepareFinalObject('mdmsRes.roleCode', this.props.roleCode)
+ 
+}
+
+ async componentDidUpdate(prevProps){
+
+
+
+    if(this.props.updateData !== prevProps.updateData){
+
+        this.props.prepareFinalObject('mdmsRes.sectorList', this.props.sectorList)
+        this.props.prepareFinalObject('mdmsRes.roleCode', this.props.roleCode)
+        this.props.prepareFinalObject('updateData', this.props.updateData)
+        this.setState({errors: {}})
+        
      
-    }
-
-     componentDidUpdate(prevProps){
-    
-        
-        if(this.props.updateData !== prevProps.updateData){
-
-            this.setState({sectorList: this.props.sectorList})
-            this.setState({updateData: this.props.updateData, errors: {}})
-
-            if(Object.keys(this.props.updateData).length === 0){
-                this.setState({create: true})
-            }else{
-                this.setState({create: false})
-                let uuid = this.props.updateData.uuid
-                this.fectchApproverRoleCode(uuid)
-            }
-        }
-
-    }
-    
-
-    async fectchApproverRoleCode (uuid){
-
-        let reqBody={
-            "uuid": uuid
-        }
-        
-        const responseStatus = await httpRequest(
-                  
-            "bookings/master/roles/_search",
-            "_search",
-            [],
-            reqBody
-          );
-      
-
-          console.log(responseStatus, "rolecode")
-        
+        if(Object.keys(this.props.updateData).length === 0){
             
+            this.setState({create: true})
+            
+        }
+        else if(Object.keys(this.props.updateData).length > 3)
+        {
+            this.setState({create: false})
+            
+            
+        }
+        if(this.props.updateData.roleCode )
+        {
+         
+          this.props.roleCode.map(async dt=>{
+           
+            if(dt.name===this.props.updateData.roleCode){
+            
+              this.props.prepareFinalObject('updateData.roleCode', dt.code)
+              
+              
+              let updateData ={
+                ...this.props.updateData, 
+                roleCode: dt.code
+                
 
+              }
+              this.setState({updateData: updateData})
+              
+              await this.fetchApproverFromRoleCode(dt.code)
+              this.setState({hideUuid: false})
+              this.state.approverList.map(dt=> {
+            
+                if(dt.name===this.props.updateData.name){
+              
+                  this.props.prepareFinalObject('updateData.uuid', dt.code)
+                        
+                  let updateDataNew ={
+                    ...this.state.updateData, 
+                    uuid: dt.code, 
+
+
+                  }
+                  
+                  this.setState({updateData: updateDataNew})
+                  
+                }
+              })
+      
+            }
+          })
+        }
+      
     }
-    state={
+    
+  
+  }
 
+    state={
+        hideUuid : true, 
         updateData: {}, 
         errors: {},
         create: true, 
-        sectorList: []
+        mdmsRes: {}, 
+        sectorList: [], 
+        roleCode :[], 
+        approverList : [], 
+        
     }
 
+     
+    async fetchApproverFromRoleCode (role){
+
+      let reqBody =  {
+              
+        "roleCode": role
+
+      }
+    
+      const responseStatus = await httpRequest(
+                
+          'bookings/master/user/_search',
+          "_search",
+          [],
+          reqBody
+          
+      );
+        
+       console.log(responseStatus, "res")
+       let approverList=[]
+       responseStatus.data.map((dt)=>{
+         approverList.push({  code: `${dt.uuid}+${dt.id}`, name : dt.userName})
+       })
+       this.props.prepareFinalObject('approverList', approverList)
+       this.setState({ approverList })
+          
+  }
 
     validate (){
 
         let temp= {}
         const submitData= this.state.updateData
-        temp.sector=submitData.sector? "": "This field is required"
-       
+        temp.sector=submitData.sector? false: true
+        temp.uuid=submitData.uuid? false: true
+        temp.roleCode=submitData.roleCode?false: true
+        
+        
+
         this.setState({errors: temp})
 
         return Object.values(temp).every(x => x=="")
     }
 
     async handleSubmit  (){
+
         if(this.validate()){
 
            if(this.state.create===true)
            {
+            let requesetBodyParam= this.state.updateData.uuid.split('+')
             var reqBody =  {
               
-                "ApproverDetails":[
-                    {
-                        "sector": this.updateData.sector,
-                        "uuid": this.updateData.uuid,
-                        "roleCode": "OSBM_APPROVER"
-                    }
-                 ],
-             
-              }
+              "ApproverDetails":[
+                  {
+                   
+                      "sector": this.state.updateData.sector,
+                      "uuid": requesetBodyParam[0],
+                      "roleCode": this.state.updateData.roleCode,
+                      "userId": requesetBodyParam[1]
+                  }
+               ],
+           
+            }
             const responseStatus = await httpRequest(
-                  
-              "bookings/master/approver/_create",
-              "_search",
-              [],
-              reqBody
+                
+            "bookings/master/approver/_create",
+            "_search",
+            [],
+            reqBody
             );
-        
+
+            if(responseStatus.status== '200'){
+              this.props.toggleSnackbarAndSetText(
+                true,
+                {labelName: "Create Successfull",
+                labelKey: `Create Successfull`} ,
+                "success"
+              );
+              }else{
+              this.props.toggleSnackbarAndSetText(
+                true,
+                {labelName: "Create Failed.Try Again",
+                labelKey: `Create Failed.Try Again`} ,
+                "error"
+              );
+              }
+             
+              this.props.handleClose()
 
             console.log(responseStatus, "createresponse")
           
-              
-
-    
            }
            else
-           
            {
-
-              var reqBody =  {
+            let requesetBodyParam= this.state.updateData.uuid.split('+')
+            var reqBody =  {
               
-                "ApproverDetails":[
-                    {
-                        "id": "2d19651c-ae74-4726-91e3-a8ce5812ff97",
-                        "sector": "SECTOR-17",
-                        "uuid": "10e1a649-c4b5-4a48-a184-267cee3f45c2",
-                        "roleCode": "OSBM_APPROVER"
-                    }
-                 ],
+              "ApproverDetails":[
+                  {
+                      "id": this.state.updateData.id,   
+                      "sector": this.state.updateData.sector,
+                      "uuid": requesetBodyParam[0],
+                      "roleCode": this.state.updateData.roleCode,
+                      "userId": requesetBodyParam[1]
+                  }
+               ],
 
-                }
+              }
               const responseStatus = await httpRequest(
-                    
-                "bookings/master/approver/_update",
-                "_search",
-                [],
-                reqBody
+                  
+              "bookings/master/approver/_update",
+              "_search",
+              [],
+              reqBody
               );
+      
+              if(responseStatus.status== '200'){
+              this.props.toggleSnackbarAndSetText(
+                true,
+                {labelName: "Update Successfull",
+                labelKey: `Update Successfull`} ,
+                "success"
+              );
+              }else{
+              this.props.toggleSnackbarAndSetText(
+                true,
+                {labelName: "Update Failed.Try Again",
+                labelKey: `Update Failed.Try Again`} ,
+                "error"
+              );
+              }
            
-
+              this.props.handleClose()
               console.log(responseStatus, "createresponse")
             }
   
@@ -202,15 +279,15 @@ class DialogComponent extends Component {
     render() {
         
        
-        const {classes} =this.props
+        const {classes, prepareFinalObject} =this.props
         return (
 
-       this.state.sectorList.length === 0  ?<LoadingIndicator status="loading"  /> :
+      
+        Object.keys(this.props.sectorList).length === 0?<div > <CircularProgress style={{position: "fixed" , top: '50%', left: '50%'}} /> </div>:
         
-        <MuiThemeProvider theme={theme}>
-        <div> <LoadingIndicator status="hide" /> 
+        
         <div>
-
+         
         <Dialog
             classes={{ paper :classes.dialogStyle}}
             maxWidth="md"
@@ -218,96 +295,175 @@ class DialogComponent extends Component {
             onClose={this.props.handleClose}
             aria-labelledby="form-dialog-title"
          >
-        <DialogTitle id="form-dialog-title">Edit Open Space Fee Master</DialogTitle>
+        <DialogTitle id="form-dialog-title">Edit Approver Master</DialogTitle>
          
         <DialogContent>
-          <DialogContentText>
-            Please fill the form to update fee master of OSBM
+          <DialogContentText style={{margin : '15px '}}>
+            Please fill the form to update Approver Details
           </DialogContentText>
-          <Grid container spacing={2}>
-            <Grid item sm={6}>
-                <h1> heelo</h1> 
-              {/* <TextField
-                p={"2rem"} 
-                select
-                margin="dense"
-                id="villageCity"
-                label="Village/City"
-                type="string"
-                fullWidth
-                variant="outlined"
-                value={this.state.updateData.villageCity}
-                onChange={e=> { 
-                    let updateData = {...this.state.updateData}
-                    updateData.villageCity= e.target.value
-                    let errors= {...this.state.errors}
-                    errors.villageCity=""
-                    this.setState({updateData, errors})
-                    
+          
+          <div className="col-xs-12 col-sm-12"   > 
+          <div className="col-xs-12 col-sm-6"   >
 
-                }}
-                error={ this.state.errors && this.state.errors.villageCity}
-                helperText={this.state.errors.villageCity}
+            
+          <TextFieldContainer 
+            error={this.state.errors.roleCode }
+            select="true"
+            optionValue="code"
+            optionLabel="name"
+            label={{
+                labelName : "Role Code",
+                labelKey: "BK_APPROVER_ADMIN_ROLE_CODE_LABEL",
+            }}
+            placeholder= {{
+                labelName: "Role Code",
+                labelKey: "BK_APPROVER_ADMIN_ROLE_CODE_LABEL",
+            }}
+            onChange={(e, key, value)=> { 
               
-              >
-                {this.state.mdmsRes.VillageCity.map((value)=>{
-                    return (<MenuItem value={value.code}>{value.name}</MenuItem>)
-                 })}
-              </TextField>
-               */}
-            </Grid>
-            <Grid item sm={6}>
-              <TextField
+              let updateData =this.state.updateData
+              updateData.roleCode= e.target.value
+              let errors= {...this.state.errors}
+              errors.roleCode=""
+              this.setState({updateData: updateData, errors: errors})
+              prepareFinalObject('updateData.roleCode', e.target.value)
+
+              this.fetchApproverFromRoleCode(e.target.value)
+              this.setState({hideUuid: false})
+            }}
+            required= "true" 
+            sourceJsonPath= "mdmsRes.roleCode"
+            jsonPath="updateData.roleCode"
+             
+            gridDefination= {{
+                xs: 12,
+                sm: 6
+            }}
+         />
+         </div> 
+         <div className="col-xs-12 col-sm-6"   >
+
+        <TextFieldContainer 
+            error={this.state.errors.sector }
+            select="true"
+            optionValue="code"
+            optionLabel="code"
+            label={{
+                labelName : "Sector",
+                labelKey: "BK_APPROVER_ADMIN_ADMIN_SECTOR_LABEL",
+            }}
+            placeholder= {{
+                labelName: "Sector",
+                labelKey: "BK_APPROVER_ADMIN_ADMIN_SECTOR_LABEL",
+            }}
+            onChange={(e, key, value)=> { 
+            
+              let updateData =this.state.updateData
+              updateData.sector= e.target.value
+              let errors= {...this.state.errors}
+              errors.sector=""
+              this.setState({updateData: updateData, errors: errors})
+              prepareFinalObject('updateData.sector', e.target.value)
+            }}
+            required= "true" 
+            sourceJsonPath= "mdmsRes.sectorList"
+            jsonPath="updateData.sector"
+            
+            gridDefination= {{
+                xs: 12,
+                sm: 6
+            }}
+         />
+         </div> 
+          
+            
+      </div>      
+     <div className="col-xs-12 col-sm-12"   >   
+     
+     {this.state.hideUuid===true ?<div> </div> : 
+      <div className="col-xs-12 col-sm-6"   >
+
+        
+            <TextFieldContainer 
+              error={this.state.errors.uuid }
+              select="true"
+              optionValue="code"
+              optionLabel="name"
+              label={{
+                  labelName : "User",
+                  labelKey: "BK_APPROVER_ADMIN_UUID_LABEL",
+              }}
+              placeholder= {{
+                  labelName: "User",
+                  labelKey: "BK_APPROVER_ADMIN_UUID_LABEL",
+              }}
+              onChange={(e, key, value)=> { 
+              
+                let updateData =this.state.updateData
+                updateData.uuid= e.target.value
+                let errors= {...this.state.errors}
+                errors.uuid=""
+                this.setState({updateData: updateData, errors: errors})
+                prepareFinalObject('updateData.uuid', e.target.value)
                 
-                select
-                margin="dense"
-                id="sector"
-                label="Area"
-                type="string"
-                fullWidth
-                variant="outlined"
-                value={this.state.updateData.sector}
-                onChange={e=> { 
-                    let updateData = {...this.state.updateData}
-                    updateData.sector= e.target.value
-                    let errors= {...this.state.errors}
-                    errors.sector=""
-                    this.setState({updateData, errors})
-                    
-
-                }}
-                error={ this.state.errors && this.state.errors.sector}
-                helperText={this.state.errors.sector}
-              >
-                    { this.state.sectorList && this.state.sectorList.map((value)=>{
-                    return (<MenuItem value={value.code}>{value.name}</MenuItem>)
-                 })}
-              </TextField>
-           
-                    
+               
+              }}
+              required= "true" 
+              sourceJsonPath= "approverList"
+              jsonPath="updateData.uuid"
               
-            </Grid>
-          </Grid>
+              gridDefination= {{
+                  xs: 12,
+                  sm: 6
+              }}
+            />
+            </div> 
+        }
+        </div>   
         </DialogContent>
+        
         <DialogActions>
-          <Button onClick={()=>{ this.props.handleClose()
-            this.setState({errors : {}})}} color="primary">
-            Cancel
-          </Button>
-          <Button  onClick={()=>{ this.handleSubmit() }} color="primary">
-            Update
-          </Button>
+          <Button label="Cancel" onClick={()=>{ this.props.handleClose()
+            this.setState({errors : {}})}} color="secondary"/>
+           
+          <Button label={this.state.create===true? "Create":"Update"} onClick={()=>{ this.handleSubmit() }} primary={true} />
+            
         </DialogActions>
     
       </Dialog>
                 
-            </div>
+        
         
         </div>
        
-        </MuiThemeProvider>
+        
         )
     }
 }
 
-export default withStyles(useStyle)( DialogComponent) 
+
+const mapStateToProps = (state, ownProps) => {
+  const { screenConfiguration } = state;
+  const { preparedFinalObject } = screenConfiguration;
+  return {preparedFinalObject}
+}
+
+
+
+const mapDispatchToProps = dispatch => {
+  return {
+    prepareFinalObject: (jsonPath, value) =>
+    dispatch(prepareFinalObject(jsonPath, value)),
+   
+    toggleSnackbarAndSetText: (open, message, error) =>
+    dispatch(toggleSnackbarAndSetText(open, message, error)),
+    
+  };
+};
+
+
+
+export default withStyles(useStyle)(connect(
+  mapStateToProps,
+  mapDispatchToProps
+)( DialogComponent) )

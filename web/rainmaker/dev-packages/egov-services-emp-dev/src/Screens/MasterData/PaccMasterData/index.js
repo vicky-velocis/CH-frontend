@@ -1,7 +1,8 @@
 
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { httpRequest } from "egov-ui-kit/utils/api";
-import TableUi from '../Table/index'
+//import TableUi from './Table'
+import TableUi from './NewTable'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import { Paper } from '@material-ui/core';
 import React from "react";
@@ -11,8 +12,13 @@ import Label from "egov-ui-kit/utils/translationNode";
 import   DialogComponent from './DialogComponent'
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from "material-ui/svg-icons/action/search";
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import {getDateInEpoch, epochToYmd} from "egov-ui-framework/ui-utils/commons"
 import { connect } from "react-redux";
+
+//import TableUi from '../Table/index'
 
 const styles=theme=>({
 
@@ -30,63 +36,37 @@ const styles=theme=>({
 class SimpleTable extends React.Component {
 
   
+
+  
   async componentDidMount(){
     
-    let mdmsBody = {
-
-        MdmsCriteria: {
-            tenantId: "ch",
-            moduleDetails: [
-                {
-                    moduleName: "tenant",
-                    masterDetails: [
-                        {
-                            name: "tenants",
-                        },
-                    ],
-                },
-                {
-                    moduleName: "Booking",
-                    masterDetails: [
-                      
-                        {
-                            name: "CityType",
-                        },
-                       
-                        {
-                          name: "Area",
-                      },
-                       
-                        {
-                            name: "Duration",
-                        },
-                        {
-                            name: "VillageCity",
-                        },
-                        {
-                            name: "Type_of_Construction",
-                        },
-                        
-                    ],
-                },
+    
+    let requestBody = {
+      MdmsCriteria: {
+        tenantId: "ch",
+        moduleDetails: [
+          {
+            moduleName: "Booking",
+            masterDetails: [
+              {
+                name: "Sector",
+              },
             ],
-        },
+          },
+        ],
+      },
     };
-    
   
-      
-      const {MdmsRes:{Booking}} = await httpRequest(
-            
-        "/egov-mdms-service/v1/_search",
-        "_search",
-        [],
-        mdmsBody
-      );
-  
-    
-       this.setState({mdmsResOsbm: Booking})
-       console.log(this.state.mdmsResOsbm, "stateresponse")
-  
+    try {
+      const payload = await httpRequest("egov-mdms-service/v1/_search", "_search", [], requestBody);
+        
+        const {MdmsRes : {Booking: { Sector}}}= payload
+        this.setState({sectorList: Sector})
+        
+    } catch (error) {
+        alert("error")
+    }
+
 
     this.setState({updateData: {}})
     
@@ -98,43 +78,61 @@ class SimpleTable extends React.Component {
 
   async fetchTableData(){
     this.setState({isLoading: true})
-    
     const headers=[   
+
       "Id",
-      "Village/City",
-      "Residential / Commercial",
-      "Storage",
-      "Duration In Months",
-      "Construction Type",
-      "Amount In Rs.",
+      "Sccid",
+      "Scid",
+      "X",
+      "Y",
+      "Amount",
+      "Dimension Sqr Yards",
+      "Rent",
+      "Cleaning Charges",
+      "Surcharge",
+      "Lxury Tax",
+      "Name",
+      "Radius",
+      "Location Change Amount",
+      "IsActive",
+      "Utgst Rate",
+      "Cgst Rate",
+      "Refundabel Security",
+      "Normal Type",
+      "Revise Rate 1",
+      "Old Rent 1",
+      "Rent Next Session",
+      "Image Path",
+      "Venue Type",
+      "Booking Allowed For",
+      "Sector",
       "Last Modified Date",
       "Created Date",
       "Valid From Date", 
       "Valid To Date", 
-      "Action"
+      "Action"       
+      
     ]
-
     const foundUser = this.props.userInfo && this.props.userInfo.roles.some(el => el.code === 'BK_MCC_HELPDESK_USER');
     if(foundUser)
     {
-
     let feeResponse = await httpRequest(
-        "bookings/master/osbm/fee/_fetch",
+        "bookings/master/pacc/fee/_fetch",
         "_search",
         [],[]
       );
-      let  feeData=this.state.data
+      let  feeData={}
       let feeDataRes=feeResponse.data
-      
-      feeData.headers=headers  
-      feeData.rows= feeDataRes.reverse()
-      this.setState({data: feeData})
-    }  
-    else{
-        let feeData={}
-        feeData.headers=headers
+      feeData.rows= feeDataRes
+     // feeData.rows= feeDataRes.reverse()
+      feeData.headers =headers
+      this.setState({tableData: feeData})
+
+    }else{
+        let  feeData={}
+        feeData.headers =headers
         feeData.rows= []
-        this.setState({data: feeData})
+        this.setState({tableData: feeData})
       }
       
       this.setState({isLoading: false})
@@ -143,7 +141,12 @@ class SimpleTable extends React.Component {
 
   state = {
     
+    
     searchValue : '',
+    tableData: {
+      rows: [],
+      headers: []
+    }, 
     data:{
       rows: [],
       headers: []
@@ -161,31 +164,32 @@ class SimpleTable extends React.Component {
       fn: (item) => {
         return item;
       }
-    }, 
+    },
     validFromDate :''
 
   };
   
   handleEditClick (row) {
      
-     let fromDateData= new Date(row.fromDate)
-     
-     fromDateData.setDate(fromDateData.getDate() + 1);
-     
-     fromDateData= epochToYmd(fromDateData)
-     
-   
-     let updateData =row
-     updateData.fromDate= fromDateData
-
-     this.setState({updateData})
-     this.setState({validFromDate: fromDateData})
-     this.handleClickOpen();
-   }
+    let fromDateData= new Date(row.fromDate)
+    
+    fromDateData.setDate(fromDateData.getDate() + 1);
+    
+    fromDateData= epochToYmd(fromDateData)
+    
   
+    let updateData =row
+    updateData.fromDate= fromDateData
+
+    this.setState({updateData})
+    this.setState({validFromDate: fromDateData})
+    this.handleClickOpen();
+  }
  
 
+
   handleClickOpen() {
+    
     this.setState({ open: true });
   }
 
@@ -193,6 +197,9 @@ class SimpleTable extends React.Component {
     this.setState({ open: false });
     this.setState({ updateData: {} });
     this.fetchTableData()
+    
+
+    
   }
 
     
@@ -203,13 +210,22 @@ class SimpleTable extends React.Component {
       if (target.value === "") return item;
       else {
         return item.filter(
-          (x) =>
-          x.villageCity.toLowerCase().includes(target.value.toLowerCase()) ||
-          x.residentialCommercial.toLowerCase().includes(target.value.toLowerCase()) ||
-          x.storage.toLowerCase().includes(target.value.toLowerCase()) ||
-          x.durationInMonths.toString().includes(target.value) ||
-          x.constructionType.toLowerCase().includes(target.value.toLowerCase()) ||
-          x.amount.toString().includes(target.value) 
+          (x) =>     
+          x.sccid.toString().includes(target.value) ||
+          x.scid.toString().includes(target.value) ||
+          x.x.toString().includes(target.value) ||
+          x.y.toString().includes(target.value) ||
+          x.dimensionSqrYards.toString().includes(target.value) ||
+          x.cleaningCharges.toString().includes(target.value) ||
+          x.surcharge.toString().includes(target.value) ||
+          x.rent.toString().includes(target.value) ||  
+          x.amount.toString().includes(target.value) ||
+          x.sector.toLowerCase().includes(target.value.toLowerCase()) ||
+          x.bookingAllowedFor.toLowerCase().includes(target.value.toLowerCase()) ||
+          x.venueType.toLowerCase().includes(target.value.toLowerCase()) ||
+          x.imagePath.toLowerCase().includes(target.value.toLowerCase()) ||
+          x.rentNextSession.toString().includes(target.value) ||
+          x.oldrent1.toString().includes(target.value) 
         );
       }
     };
@@ -223,20 +239,16 @@ class SimpleTable extends React.Component {
   }
 
   render() {
-    
-   const emptyRows =
-   this.state.rowsPerPage - Math.min(this.state.rowsPerPage, this.state.data.length - this.state.page * this.state.rowsPerPage);
    const {classes}= this.props
     return (
-      this.state.isLoading===true ? <div > <CircularProgress style={{position: "fixed" , top: '50%', left: '50%'}} /> </div>:
+      this.state.isLoading===true? <div > <CircularProgress style={{position: "fixed" , top: '50%', left: '50%'}} /> </div>:
+     <div>
      <div> 
         <div align ="right"  >
          <Button primary={true}  label="Create New" style={{margin: '15px'}} onClick={()=>{ this.handleCreateNew() }}/>
         
           
       </div>  
-      
-      
       
       
       <div class="col-xs-12 " style={{ wordBreak: "break-word"}}>
@@ -278,23 +290,25 @@ class SimpleTable extends React.Component {
                                 </IconButton>
          </div>
         
-        <TableUi data={this.state.data}    columnHideIndex={this.state.columnHideIndex} filterfun={this.state.filterfun} handleEditClick={this.handleEditClick.bind(this)} />
+        <TableUi data={this.state.tableData}  columnHideIndex={this.state.columnHideIndex} filterfun={this.state.filterfun} handleEditClick={this.handleEditClick.bind(this)} />
         </div>
         
         </Paper>
         <div>
-         <DialogComponent  mdmsResOsbm ={ this.state.mdmsResOsbm} validFromDate={ this.state.validFromDate} open={this.state.open}   handleClose={this.handleClose.bind(this)} updateMasterData={this.state.updateData} /> 
+
+
+         <DialogComponent  sectorList={this.state.sectorList} open={this.state.open}  validFromDate={ this.state.validFromDate}   handleClose={this.handleClose.bind(this)} updateData={this.state.updateData} /> 
         </div>
         </div> 
     
           
       </div> 
+      
+      
+      </div>
     );
   }
 }
-
-
-
 
 
 const mapStateToProps = state => {
@@ -310,3 +324,8 @@ export default withStyles(styles)(connect(
   mapStateToProps,
   null
 )(SimpleTable))
+
+
+
+
+

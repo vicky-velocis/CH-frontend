@@ -1,52 +1,17 @@
 import { Button,  TextField } from "components";
 import { httpRequest } from "egov-ui-kit/utils/api";
-import LoadingIndicator from "egov-ui-kit/components/LoadingIndicator";
 import React, { Component } from 'react'
-import { Toast } from "components";
 import { toggleSnackbarAndSetText } from "egov-ui-kit/redux/app/actions";
-//import Button from "@material-ui/core/Button";
-//import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Grid from "@material-ui/core/Grid";
-//import MenuItem from '@material-ui/core/MenuItem'
-import SelectField from "material-ui/SelectField";
-import MenuItem from "material-ui/MenuItem";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { withStyles } from "@material-ui/core/styles";
-import {
-  MuiThemeProvider,createMuiTheme
-} from "@material-ui/core/styles";
+import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import TextFieldContainer from 'egov-ui-framework/ui-containers/TextFieldContainer'
 import { connect } from "react-redux";
-
-
-const theme = createMuiTheme({
-  
-  
-  typography: {
-    
-    fontSize: 20,
-  },
- 
-  palette: {
-    primary:{
-      main : "#fe7a51"
-    },
-    secondary:{
-      main : "#fe7a51"
-    },
-    
-    textColor: "#5f5c62",
-    canvasColor: "#F7F7F7",
-    borderColor: "#e6e6e6"
-  },
-
- 
-});
-
-
 
 const useStyle= theme=>({
   dialogStyle: {
@@ -70,14 +35,19 @@ class DialogComponent extends Component {
 
 
     async componentDidMount(){
+
       this.setState({sectorList: this.props.sectorList})
+      this.props.prepareFinalObject('mdmsRes.sectorList', this.props.sectorList)
+      this.props.prepareFinalObject('mdmsRes.slabList', [{code: "1st"},{code: "2nd"},{code: "3rd"},{code: "4th"},{code: "5th"},])
 
         if(this.props.updateData!=={})
         {
             this.setState({updateData: this.props.updateData})
+            this.props.prepareFinalObject('updateDataObject', this.props.updateData)
         }else 
         {   
             this.setState({updateData: {}})
+            this.props.prepareFinalObject('updateDataObject', {})
             
         }
     
@@ -90,7 +60,12 @@ class DialogComponent extends Component {
         if(this.props.updateData !== prevProps.updateData){
 
           this.setState({sectorList: this.props.sectorList})
+          this.props.prepareFinalObject('mdmsRes.sectorList', this.props.sectorList)
+          this.props.prepareFinalObject('mdmsRes.slabList', [{code: "1st"},{code: "2nd"},{code: "3rd"},{code: "4th"},{code: "5th"},])
+
             this.setState({updateData: this.props.updateData, errors: {}})
+            this.props.prepareFinalObject('updateDataObject', this.props.updateData)
+
 
             if(Object.keys(this.props.updateData).length === 0){
                 this.setState({create: true})
@@ -108,7 +83,8 @@ class DialogComponent extends Component {
         updateData: {}, 
         errors: {},
         create: true, 
-        sectorList: [] 
+        sectorList: [] , 
+        mdmsRes:{}
       
     }
 
@@ -117,12 +93,12 @@ class DialogComponent extends Component {
 
         let temp= {}
         const submitData= this.state.updateData
-        temp.sector=submitData.sector? "": "This field is required"
-        temp.slab=submitData.slab? "": "This field is required"
-        temp.areaFrom=submitData.areaFrom? "": "This field is required"
-        temp.areaTo=submitData.areaTo? "": "This field is required"
-        temp.ratePerSqrFeetPerDay=submitData.ratePerSqrFeetPerDay? "": "This field is required"
-        
+        temp.sector=submitData.sector? false: true
+        temp.slab=submitData.slab? false: true
+        temp.areaFrom=submitData.areaFrom? false: true
+        temp.areaTo=submitData.areaTo? false: true
+        temp.ratePerSqrFeetPerDay=submitData.ratePerSqrFeetPerDay? false: true
+        temp.fromDate=submitData.fromDate? false: true
 
         this.setState({errors: temp})
 
@@ -134,6 +110,16 @@ class DialogComponent extends Component {
 
            if(this.state.create===true)
            {
+             
+            let today = new Date();
+            let time =
+              today.getHours() +
+              ":" +
+              today.getMinutes() +
+              ":" +
+              today.getSeconds();
+
+
             var reqBody =  {
               
               "OsujmFeeDetails":[
@@ -142,7 +128,8 @@ class DialogComponent extends Component {
                     "slab":this.state.updateData.slab,
                     "areaFrom":this.state.updateData.areaFrom,
                     "areaTo":this.state.updateData.areaTo,
-                    "ratePerSqrFeetPerDay":this.state.updateData.ratePerSqrFeetPerDay
+                    "ratePerSqrFeetPerDay":this.state.updateData.ratePerSqrFeetPerDay,
+                    "fromDate" : `${this.state.updateData.fromDate} ${time}`
                     
                 }
               ]
@@ -169,7 +156,7 @@ class DialogComponent extends Component {
                 "error"
               );
               }
-              this.props.fetchTableData()
+              
               this.props.handleClose()
 
             console.log(responseStatus, "createresponse")
@@ -181,6 +168,16 @@ class DialogComponent extends Component {
            else
            
            {
+             
+            let today = new Date();
+            let time =
+              today.getHours() +
+              ":" +
+              today.getMinutes() +
+              ":" +
+              today.getSeconds();
+
+
 
               var reqBody =  {
               
@@ -193,7 +190,8 @@ class DialogComponent extends Component {
                     "slab":this.state.updateData.slab,
                     "areaFrom":this.state.updateData.areaFrom,
                     "areaTo":this.state.updateData.areaTo,
-                    "ratePerSqrFeetPerDay":this.state.updateData.ratePerSqrFeetPerDay
+                    "ratePerSqrFeetPerDay":this.state.updateData.ratePerSqrFeetPerDay,
+                    "fromDate" : `${this.state.updateData.fromDate} ${time}`
                     
   
                   }
@@ -222,12 +220,20 @@ class DialogComponent extends Component {
                 "error"
               );
               }
-              this.props.fetchTableData()
+              
               this.props.handleClose()
               console.log(responseStatus, "createresponse")
             }
   
            
+        }
+        else{
+          this.props.toggleSnackbarAndSetText(
+            true,
+            {labelName: "Please Fill All Required Fields",
+            labelKey: `Please Fill All Required Fields`} ,
+            "warning"
+          );
         }
         
     }
@@ -235,14 +241,14 @@ class DialogComponent extends Component {
     render() {
         
        
-        const {classes} =this.props
+        const {classes, prepareFinalObject} =this.props
         return (
 
       
-          this.state.sectorList.length === 0 ?<LoadingIndicator status="loading" loadingColor="#fe7a51" /> :
+          this.state.sectorList.length === 0 ?<div > <CircularProgress style={{position: "fixed" , top: '50%', left: '50%'}} /> </div>  :
         
-        <MuiThemeProvider theme={theme}>
-        <div> <LoadingIndicator status="hide" /> 
+        
+        <div> 
         <div>
 
         <Dialog
@@ -254,163 +260,224 @@ class DialogComponent extends Component {
          >
         <DialogTitle id="form-dialog-title">Edit Open Space Under MCC Juridiction Fee Master</DialogTitle>
          
-        <DialogContent style={{overflow:'hidden'}}>
-          <DialogContentText>
+        <DialogContent style={{overflow : 'auto'}}>
+          <DialogContentText style={{margin : '15px '}}>
             Please fill the form to update fee master of Open Space Under MCC Juridiction
           </DialogContentText>
-          <Grid container spacing={2}>
-            <Grid item sm={6} xs={12}>
-            <SelectField
-           //id="villageCity"
-            hintText={"Sector"}
-            underlineDisabledStyle={{ background: "blue" }}
-            dropDownMenuProps={{
-              targetOrigin: { horizontal: "left", vertical: "top" }
+          <div className="col-xs-12 col-sm-12">
+          <div className="col-xs-12 col-sm-6">
+          <TextFieldContainer 
+            error={this.state.errors.slab }
+            select="true"
+            optionValue="code"
+            optionLabel="code"
+            label={{
+                labelName : "Slab",
+                labelKey: "BK_OSUJM_ADMIN_SLAB_LABEL",
             }}
-            floatingLabelFixed={true}
-            floatingLabelText={
-              <span style={{fontSize:17, fontWeight: 200}}>
-                {"Sector"}{" "}
-                <span style={{ color: "#FF0000" }}>{true ? " *" : ""}</span>
-              </span>
-            }
-            value={this.state.updateData.sector} 
-            onChange={(event, key, value)=> { 
+            placeholder= {{
+                labelName: "Slab",
+                labelKey: "BK_OSUJM_ADMIN_SLAB_LABEL",
+            }}
+            onChange={(e, key, value)=> { 
             
               let updateData =this.state.updateData
-              updateData.sector= value
+              updateData.slab= e.target.value
+              let errors= {...this.state.errors}
+              errors.slab=""
+              this.setState({updateData: updateData, errors: errors})
+              prepareFinalObject('updateDataObject.slab', e.target.value)
+            }}
+            required= "true" 
+            sourceJsonPath= "mdmsRes.slabList"
+            jsonPath="updateDataObject.slab"
+            
+            gridDefination= {{
+                xs: 12,
+                sm: 6
+            }}
+         />
+         
+            </div> 
+          
+          <div className="col-xs-12 col-sm-6">
+          <TextFieldContainer 
+            error={this.state.errors.sector }
+            select="true"
+            optionValue="code"
+            optionLabel="code"
+            label={{
+                labelName : "Sector",
+                labelKey: "BK_OSUJM_ADMIN_SECTOR_LABEL",
+            }}
+            placeholder= {{
+                labelName: "Sector",
+                labelKey: "BK_OSUJM_ADMIN_SECTOR_LABEL",
+            }}
+            onChange={(e, key, value)=> { 
+            
+              let updateData =this.state.updateData
+              updateData.sector= e.target.value
               let errors= {...this.state.errors}
               errors.sector=""
               this.setState({updateData: updateData, errors: errors})
-
+              prepareFinalObject('updateDataObject.sector', e.target.value)
             }}
-            fullWidth={true}
-            maxHeight={200}
-            errorText={ this.state.errors && this.state.errors.sector}
-          >
-            {this.state.sectorList.map((dd, index)=>{
+            required= "true" 
+            sourceJsonPath= "mdmsRes.sectorList"
+            jsonPath="updateDataObject.sector"
+            
+            gridDefination= {{
+                xs: 12,
+                sm: 6
+            }}
+         />
+          </div>
+          </div>
+          <div className="col-xs-12 col-sm-12">
+          <div className="col-xs-12 col-sm-6">
+          <TextFieldContainer
+            error={this.state.errors.areaFrom }
+            label={{
+            labelName : "Area From",
+            labelKey: "BK_OSUJM_ADMIN_AREA_FROM_LABEL",
+            }}
+            onChange={(e, value) => {
+              let updateData = {...this.state.updateData}
+              let errors= {...this.state.errors}
+              errors.areaFrom=""
+              updateData.areaFrom= e.target.value
+              this.setState({updateData:updateData, errors:errors})
+              prepareFinalObject('updateDataObject.areaFrom', e.target.value)
+            }}
+            fullWidth="true"
+            placeholder= {{
+            labelName: "Area From",
+            labelKey: "BK_OSUJM_ADMIN_AREA_FROM_LABEL",
+             }}
+            jsonPath="updateDataObject.areaFrom"
+             
+            InputLabelProps={{
+            shrink: true,
+           }}
+           type="number"
+          />
+          </div>
+          <div className="col-xs-12 col-sm-6">  
+          <TextFieldContainer
+            error={this.state.errors.areaTo }
+            type="number"
+            label={{
+            labelName : "Area To",
+            labelKey: "BK_OSUJM_ADMIN_AREA_TO_LABEL",
+            }}
+            onChange={(e, value) => {
+              let updateData = {...this.state.updateData}
+              let errors= {...this.state.errors}
+              errors.areaTo=""
+              updateData.areaTo= e.target.value
+              this.setState({updateData:updateData, errors:errors})
+              prepareFinalObject('updateDataObject.areaTo', e.target.value)
+            }}
+            fullWidth="true"
+            placeholder= {{
+            labelName: "Area To",
+            labelKey: "BK_OSUJM_ADMIN_AREA_TO_LABEL",
+             }}
+            jsonPath="updateDataObject.areaTo"
+             
+            InputLabelProps={{
+            shrink: true,
+           }}
+           
+          />
+
+          </div>
+          </div>
+          <div className="col-xs-12 col-sm-12">
+          <div className="col-xs-12 col-sm-6">
+          <TextFieldContainer
+            type="number"
+            error={this.state.errors.ratePerSqrFeetPerDay }
+            label={{
+            labelName : "Rate Per SqrFeet Per Day",
+            labelKey: "BK_OSUJM_ADMIN_RATE_LABEL",
+            }}
+            onChange={(e, value) => {
+              let updateData = {...this.state.updateData}
+              let errors= {...this.state.errors}
+              errors.ratePerSqrFeetPerDay=""
+              updateData.ratePerSqrFeetPerDay= e.target.value
+              this.setState({updateData:updateData, errors:errors})
+              prepareFinalObject('updateDataObject.ratePerSqrFeetPerDay', e.target.value)
+            }}
+            fullWidth="true"
+            placeholder= {{
+            labelName: "Rate Per SqrFeet Per Day",
+            labelKey: "BK_OSUJM_ADMIN_RATE_LABEL",
+             }}
+            jsonPath="updateDataObject.ratePerSqrFeetPerDay"
+             
+            InputLabelProps={{
+            shrink: true,
+           }}
+           
+          />
+        </div>
+        <div className="col-xs-12 col-sm-6">
+          <TextFieldContainer 
+            error={this.state.errors.fromDate }
+            
+            optionValue="code"
+            optionLabel="code"
+            label={{
+                labelName : "Valid From Date",
+                labelKey: "BK_OSUJM_ADMIN_VALID_FROM_DATE_LABEL",
+            }}
+            placeholder= {{
+                labelName: "Valid From Date",
+                labelKey: "BK_OSUJM_ADMIN_VALID_FROM_DATE_LABEL",
+            }}
+            type= "date"
+            onChange={(e, key, value)=> { 
+
               
-              return <MenuItem value={dd.code} key={index} primaryText={dd.name} />
-             })}
-          
-          </SelectField>
-          <TextField
-                    id="slab"
-                    name="slab"
-                    type="string"
-                    floatingLabelFixed={true}
-                    
-                    value={this.state.updateData.slab}
-                    hintText={"Slab"}
-                    floatingLabelText={
-                      <span style={{fontSize:12, fontWeight: 200}}>
-                      {"Slab"}{" "}
-                      <span style={{ color: "#FF0000" }}>{true ? " *" : ""}</span>
-                    </span>
-                    }
-                    onChange={(e, value) => {
-                      let updateData = {...this.state.updateData}
-                      let errors= {...this.state.errors}
-                      errors.slab=""
-                      updateData.slab= value
-                      this.setState({updateData:updateData, errors:errors})
-                    }}
-                    underlineStyle={{ bottom: 7 }}
-                    underlineFocusStyle={{ bottom: 7 }}
-                    hintStyle={{ width: "100%", color: "rgb(150, 150, 150)", fontSize: 12 }}
-                    errorText={ this.state.errors && this.state.errors.slab}
-                  />
-          
+              let date = new Date(e.target.value);
+              let oldDate = new Date(this.props.validFromDate)
+              if (date.getTime() > oldDate.getTime()) {
+                
+                
+                let updateData =this.state.updateData
+                updateData.fromDate= e.target.value
+                
+                let errors= {...this.state.errors}
+                errors.fromDate=""
+                this.setState({updateData: updateData, errors: errors})
+                prepareFinalObject('updateData.fromDate', e.target.value)
 
-                  
-          <TextField
-                    id="areaTo"
-                    name="areaTo"
-                    type="number"
-                    floatingLabelFixed={true}
-                    
-                    value={this.state.updateData.areaTo}
-                    hintText={"Area To"}
-                    floatingLabelText={
-                      <span style={{fontSize:12, fontWeight: 200}}>
-                      {"Area To"}{" "}
-                      <span style={{ color: "#FF0000" }}>{true ? " *" : ""}</span>
-                    </span>
-                    }
-                    onChange={(e, value) => {
-                      let updateData = {...this.state.updateData}
-                      let errors= {...this.state.errors}
-                      errors.areaTo=""
-                      updateData.areaTo= value
-                      this.setState({updateData:updateData, errors:errors})
-                    }}
-                    underlineStyle={{ bottom: 7 }}
-                    underlineFocusStyle={{ bottom: 7 }}
-                    hintStyle={{ width: "100%", color: "rgb(150, 150, 150)", fontSize: 12 }}
-                    errorText={ this.state.errors && this.state.errors.areaTo}
-                  />
+              } else {
+                
+                this.props.toggleSnackbarAndSetText(
+                  true,
+                  {labelName: "New From Date Should Be Greater then Selected Date",
+                  labelKey: `New From Date Should Be Greater then Selected Date`} ,
+                  "error"
+                );
+              
 
-
-          
-            </Grid>
-            <Grid item sm={6} xs={12}>
-            <TextField
-                    id="areaFrom"
-                    name="areaFrom"
-                    type="number"
-                    floatingLabelFixed={true}
-                    
-                    value={this.state.updateData.areaFrom}
-                    hintText={"Area From"}
-                    floatingLabelText={
-                      <span style={{fontSize:12, fontWeight: 200}}>
-                      {"Area From"}{" "}
-                      <span style={{ color: "#FF0000" }}>{true ? " *" : ""}</span>
-                    </span>
-                    }
-                    onChange={(e, value) => {
-                      let updateData = {...this.state.updateData}
-                      let errors= {...this.state.errors}
-                      errors.areaFrom=""
-                      updateData.areaFrom= value
-                      this.setState({updateData:updateData, errors:errors})
-                    }}
-                    underlineStyle={{ bottom: 7 }}
-                    underlineFocusStyle={{ bottom: 7 }}
-                    hintStyle={{ width: "100%", color: "rgb(150, 150, 150)", fontSize: 12 }}
-                    errorText={ this.state.errors && this.state.errors.areaFrom}
-                  />
-          
-        
-          <TextField
-                    id="ratePerSqrFeetPerDay"
-                    name="ratePerSqrFeetPerDay"
-                    type="number"
-                    floatingLabelFixed={true}
-                    
-                    value={this.state.updateData.ratePerSqrFeetPerDay}
-                    hintText={"Rate"}
-                    floatingLabelText={
-                      <span style={{fontSize:12, fontWeight: 200}}>
-                      {"Rate Per Sq Feet Per Day"}{" "}
-                      <span style={{ color: "#FF0000" }}>{true ? " *" : ""}</span>
-                    </span>
-                    }
-                    onChange={(e, value) => {
-                      let updateData = {...this.state.updateData}
-                      let errors= {...this.state.errors}
-                      errors.ratePerSqrFeetPerDay=""
-                      updateData.ratePerSqrFeetPerDay= value
-                      this.setState({updateData:updateData, errors:errors})
-                    }}
-                    underlineStyle={{ bottom: 7 }}
-                    underlineFocusStyle={{ bottom: 7 }}
-                    hintStyle={{ width: "100%", color: "rgb(150, 150, 150)", fontSize: 12 }}
-                    errorText={ this.state.errors && this.state.errors.ratePerSqrFeetPerDay}
-                  />
-          
-            </Grid>
-          </Grid>
+                }
+              
+            }}
+            required= "true" 
+            
+            jsonPath="updateDataObject.fromDate"
+            gridDefination= {{
+                xs: 12,
+                sm: 6
+            }}
+         />
+          </div> 
+          </div>  
         </DialogContent>
         <DialogActions>
           <Button label="Cancel" onClick={()=>{ this.props.handleClose()
@@ -426,16 +493,26 @@ class DialogComponent extends Component {
         
         </div>
        
-        </MuiThemeProvider>
+        
         )
     }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  const { screenConfiguration } = state;
+  const { preparedFinalObject } = screenConfiguration;
+  return {preparedFinalObject}
+}
+
+
+
 const mapDispatchToProps = dispatch => {
   return {
+    prepareFinalObject: (jsonPath, value) =>
+    dispatch(prepareFinalObject(jsonPath, value)),
    
     toggleSnackbarAndSetText: (open, message, error) =>
-      dispatch(toggleSnackbarAndSetText(open, message, error)),
+    dispatch(toggleSnackbarAndSetText(open, message, error)),
     
   };
 };
@@ -443,6 +520,6 @@ const mapDispatchToProps = dispatch => {
 
 
 export default withStyles(useStyle)(connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )( DialogComponent) )

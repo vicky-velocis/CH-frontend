@@ -128,11 +128,11 @@ class InboxData extends React.Component {
       );
     const { formatDate } = this;
     const { isSorting } = this.state;
-    let rest={disabled: false}
+    
    
     return (
       <div>
-        <Hidden only={["xs"]}>
+        
         <div className="Container Flipped">
           <Table className="Content" size="small">
             <TableHead
@@ -160,12 +160,12 @@ class InboxData extends React.Component {
               <TableBody className={classes.body}>
                 {console.log(data.rows, 'ooooo')}
                 {filterfun
-                  .fn(data.rows)
-                  .slice(
+                  .fn(data.rows.slice(
                     this.state.page * this.state.rowsPerPage,
                     this.state.page * this.state.rowsPerPage +
                       this.state.rowsPerPage
-                  )
+                  ))
+                  
                   .map((row, i) => {
                     var size = Object.keys(row).length - 1;
 
@@ -178,7 +178,7 @@ class InboxData extends React.Component {
                           else if(columnHideIndex.includes(i) && i===size) {
                             return(
                               <TableCell>
-                                    <IconButton {...rest} onClick={()=> {
+                                    <IconButton onClick={()=> {
                                   
                                     this.props.handleEditClick(row)
                                     
@@ -194,12 +194,6 @@ class InboxData extends React.Component {
                           }
                           else {
                           if (key.toLowerCase().includes("date")) {
-                            if(key.toLowerCase().includes("todate"))
-                            {
-                                if(value!==null) rest={disabled: true}
-                                else rest={disabled: false}
-                            }
-                          
                             if (i === size) {
                               return (
                                 <React.Fragment> 
@@ -207,7 +201,7 @@ class InboxData extends React.Component {
                                     {formatDate(value)}{" "}
                                   </TableCell>
                                   <TableCell>
-                                    <IconButton {...rest} onClick={()=> {
+                                    <IconButton onClick={()=> {
                                   
                                     this.props.handleEditClick(row)
                                     
@@ -236,7 +230,7 @@ class InboxData extends React.Component {
                                     {value}{" "}
                                   </TableCell>
                                   <TableCell>
-                                    <IconButton {...rest} onClick={()=>this.props.handleEditClick(row)}>
+                                    <IconButton onClick={()=>this.props.handleEditClick(row)}>
                                       <EditIcon
                                         size="small"
                                         style={{ fontSize: "20px" }}
@@ -280,7 +274,7 @@ class InboxData extends React.Component {
               this.handleChangeRowsPerPage(e);
             }}
           />
-        </Hidden>
+     
 {/* 
         <Hidden only={["sm", "md", "lg", "xl"]} implementation="css">
         

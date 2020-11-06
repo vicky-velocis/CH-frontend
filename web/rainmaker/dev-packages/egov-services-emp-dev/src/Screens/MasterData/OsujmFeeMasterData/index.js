@@ -1,69 +1,19 @@
 
 
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { httpRequest } from "egov-ui-kit/utils/api";
-import { SortDialog, Screen } from "modules/common";
 import TableUi from '../Table/index'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import { Paper } from '@material-ui/core';
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import Search from "@material-ui/icons/Search";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import { Button } from "components";
-import Typography from "@material-ui/core/Typography";
-import LoadingIndicator from "egov-ui-kit/components/LoadingIndicator";
+import { Button, TextFieldIcon } from "components";
 import Label from "egov-ui-kit/utils/translationNode";
 import   DialogComponent from './DialogComponent'
-import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
-import {
-  MuiThemeProvider,createMuiTheme
-} from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment";
-//import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-const theme = createMuiTheme({
-  
-  
-  typography: {
-    
-    fontSize: 20,
-    fontWeight: 400,
-    lineHeight: '17px',
-    letterSpacing: '.3px',
-    color: "#FF5733"
-
-  },
- 
-  palette: {
-    primary:{
-      main : "#fe7a51"
-    },
-    secondary:{
-      main : "#ffffff"
-    },
-    
-    textColor: "#5f5c62",
-    canvasColor: "#F7F7F7",
-    borderColor: "#e6e6e6"
-  },
-
- 
-});
-
-
-
+import SearchIcon from "material-ui/svg-icons/action/search";
+import {getDateInEpoch, epochToYmd} from "egov-ui-framework/ui-utils/commons"
+import { connect } from "react-redux";
 const styles=theme=>({
 
  
@@ -102,7 +52,7 @@ const styles=theme=>({
   
     try {
       const payload = await httpRequest("egov-mdms-service/v1/_search", "_search", [], requestBody);
-        console.log(payload, "payload")
+        
         const {MdmsRes : {Booking: { Sector}}}= payload
         this.setState({sectorList: Sector})
         
@@ -121,22 +71,32 @@ const styles=theme=>({
 
   async fetchTableData(){
     this.setState({isLoading: true})
+    
+    const headers=['Id','Sector','Slab','Area From','Area To','Rate In Rupees','Last Modified Date','Created Date',"Valid From Date", "Valid To Date", ,'Action']
+  
+    const foundUser = this.props.userInfo && this.props.userInfo.roles.some(el => el.code === 'BK_MCC_HELPDESK_USER');
+    if(foundUser)
+    {
+
     let feeResponse = await httpRequest(
       "bookings/master/osujm/fee/_fetch",
       "_search",
       [],[]
     );
-      let  feeData=this.state.data
+      let  feeData={}
       let feeDataRes=feeResponse.data
-      
-     feeData.rows= feeDataRes.reverse()
-
-      feeData.headers=['Id','Sector','Slab','Area From','Area To','Rate','Last Modified Date','Created Date','Action']
-  
-     
-
+      feeData.headers= headers
+      feeData.rows= feeDataRes
+      //feeData.rows= feeDataRes.reverse()
       this.setState({data: feeData})
-      console.log(feeData, "feeData")
+
+    }else{
+        let  feeData={}
+        feeData.headers= headers
+        feeData.rows= []
+        this.setState({data: feeData})
+      }
+      
       this.setState({isLoading: false})
      
   }
@@ -162,15 +122,29 @@ const styles=theme=>({
       fn: (item) => {
         return item;
       }
-    }
+    },
+    validFromDate :''
 
   };
   
-  async handleEditClick (row) {
-    await this.setState({updateData: row})
-     this.handleClickOpen();
-   }
+  handleEditClick (row) {
+     
+    let fromDateData= new Date(row.fromDate)
+    
+    fromDateData.setDate(fromDateData.getDate() + 1);
+    
+    fromDateData= epochToYmd(fromDateData)
+    
   
+    let updateData =row
+    updateData.fromDate= fromDateData
+
+    this.setState({updateData})
+    this.setState({validFromDate: fromDateData})
+    this.handleClickOpen();
+  }
+ 
+
  
 
   handleClickOpen() {
@@ -180,7 +154,7 @@ const styles=theme=>({
   handleClose() {
     this.setState({ open: false });
     this.setState({ updateData: {} });
-    
+    this.fetchTableData()
   }
 
     
@@ -194,7 +168,9 @@ const styles=theme=>({
           (x) =>
             x.sector.toLowerCase().includes(target.value.toLowerCase()) ||
             x.slab.includes(target.value) ||
-            x.areaTo.toString().includes(target.value)
+            x.areaTo.toString().includes(target.value)||
+            x.areaFrom.toString().includes(target.value)||
+            x.ratePerSqrFeetPerDay.toString().includes(target.value)
         );
       }
     };
@@ -203,17 +179,16 @@ const styles=theme=>({
 
   handleCreateNew(){
     this.setState({updateData: {}})
+    this.setState({validFromDate: new Date()})
     this.setState({open: true})
   }
 
   render() {
     
-const emptyRows =
-this.state.rowsPerPage - Math.min(this.state.rowsPerPage, this.state.data.length - this.state.page * this.state.rowsPerPage);
 const {classes}= this.props
     return (
-      this.state.isLoading===true ?<Screen  loading={"loading"}></Screen>:
-      <MuiThemeProvider theme={theme}>
+      this.state.isLoading===true ? <div > <CircularProgress style={{position: "fixed" , top: '50%', left: '50%'}} /> </div>:
+      <div> 
         <div align ="right"  >
          <Button primary={true}  label="Create New" style={{margin: '15px'}} onClick={()=>{ 
                this.handleCreateNew()
@@ -227,45 +202,69 @@ const {classes}= this.props
       
       <div class="col-xs-12 " style={{ wordBreak: "break-word"}}>
 
-        <Paper>
-        <div>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <TextField
-            style={{ width: "75%", margin: "20px", marginLeft: '10px' }}
-            id="outlined-search"
-            label="Search field"
-            type="search"
-            placeholder="search any field"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search />
-                </InputAdornment>
-              )
-            }}
-            onChange={(e) => this.handleSearch(e)}
-            variant="outlined"
-          />
-           {/* <Fab color="white" style={{margin: '15px'}} className={classes.addIcon} size="small" aria-label="add" onClick={()=>this.handleCreateNew()}>
-            <AddIcon />
-          </Fab>
-     */}
-        </div>
+      <Paper style={{overflowX: 'auto'}}>
+        <div> 
+        <div  style={{display: "flex", justifyContent: "space-between" }}>
+        <div style={{width: '75%', margin: '10px' }}>
+        <TextFieldIcon
+                textFieldStyle={{ height: "48px" , width: '100%'}}
+                inputStyle={{
+                  marginTop: "4px",
+                  left: 0,
+                  position: "absolute",
+                }}
+                iconPosition="after"
+                onChange={(e) => {   
+                  this.setState({searchValue: e.target.value}) 
+                  this.handleSearch(e)}}
+                underlineShow={true}
+                fullWidth={false}
+                hintText={<Label label="ES_MYCOMPLAINTS_SEARCH_BUTTON" />}
+                Icon={SearchIcon}
+                value={this.state.searchValue}
+                id="search-mdms"
+                iconStyle={{
+                  height: "20px",
+                  width: "35px",
+                  fill: "#767676",
+                }}
+              />
+              </div>
+              
+              <IconButton  style={{margin: '10px'}} className={classes.addIcon} size="small" aria-label="add" onClick={()=>this.handleCreateNew()}>
+                                  <AddCircleOutlineIcon
+                  
+                  
+                  size="small"
+                                    style={{ fontSize: "20px" }}
+                                  />
+                                </IconButton>
+         </div>
+        
         <TableUi data={this.state.data}    columnHideIndex={this.state.columnHideIndex} filterfun={this.state.filterfun} handleEditClick={this.handleEditClick.bind(this)} />
         </div>
         
         </Paper>
         <div>
-         <DialogComponent  sectorList={this.state.sectorList} open={this.state.open}    fetchTableData={this.fetchTableData.bind(this)}  handleClose={this.handleClose.bind(this)} updateData={this.state.updateData} /> 
+         <DialogComponent  sectorList={this.state.sectorList} open={this.state.open} validFromDate={ this.state.validFromDate}    handleClose={this.handleClose.bind(this)} updateData={this.state.updateData} /> 
         </div>
         </div> 
     
           
-      </MuiThemeProvider>
+      </div> 
     );
   }
 }
+const mapStateToProps = state => {
+  console.log('state in all app', state)
+  
+  const { userInfo } = state.auth;
 
-export default withStyles(styles)(SimpleTable)
+  return {userInfo}
+};
 
 
+export default withStyles(styles)(connect(
+  mapStateToProps,
+  null
+)(SimpleTable))
