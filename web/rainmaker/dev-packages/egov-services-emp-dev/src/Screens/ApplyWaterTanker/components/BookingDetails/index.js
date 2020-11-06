@@ -10,7 +10,8 @@ import { toggleSnackbarAndSetText } from "egov-ui-kit/redux/app/actions";
 import { connect } from "react-redux";
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import { fetchApplicaionSector } from "../../../../redux/bookings/actions";
+import { fetchApplicaionSector } from "egov-ui-kit/redux/bookings/actions";
+// import { fetchApplicaionSector } from "../../../../redux/bookings/actions";
 import "./index.css";
 class BookingsDetails extends Component {
 
@@ -90,8 +91,8 @@ class BookingsDetails extends Component {
               id="houseNo"
               name="houseNo"
               type="text"
-
               value={houseNo}
+              required = {true}
               hintText={
                 <Label
                   label="BK_MYBK_CITIZEN_HOUSE_NUMBER_PLACEHOLDER"
@@ -120,6 +121,7 @@ class BookingsDetails extends Component {
               id="address"
               name="address"
               type="text"
+              required = {true}
               value={address}
               hintText={
                 <Label
@@ -155,6 +157,7 @@ class BookingsDetails extends Component {
                 open={this.state.SetOpen}
                 onClose={() => this.handleClose()}
                 onOpen={() => this.handleOpen()}
+                required = {true}
                 value={locality}
                 displayEmpty
                 onChange={handleChange('locality')}
@@ -171,7 +174,12 @@ class BookingsDetails extends Component {
 
           <div className="col-sm-6 col-xs-6">
             <FormControl style={{ width: '100%' }}>
-              <InputLabel shrink style={{ width: '100%' }} id="demo-controlled-open-select-label">Residentials/Commercials</InputLabel>
+              {/* <InputLabel shrink style={{ width: '100%' }} id="demo-controlled-open-select-label" >Residentials/Commercials</InputLabel> */}
+              <InputLabel shrink style={{ width: '100%' }} id="demo-controlled-open-select-label"><Label
+                required={true}
+                label="BK_MYBK_NORMAL_RESIDENTIAL"
+              /></InputLabel>
+              
               <Select
                 maxWidth={false}
                 labelId="demo-controlled-open-select-label"
@@ -180,6 +188,7 @@ class BookingsDetails extends Component {
                 displayEmpty
                 onClose={() => this.handleClose()}
                 onOpen={() => this.handleOpen()}
+                required = {true}
                 value={residenials}
                 onChange={handleChange('residenials')}
               >
@@ -198,7 +207,7 @@ class BookingsDetails extends Component {
               id="approver-name"
               name="approver-name"
               type="text"
-
+              required = {true}
               value={approverName}
               hintText={
                 <Label
@@ -228,7 +237,7 @@ class BookingsDetails extends Component {
               id="comemnt"
               name="comment"
               type="text"
-
+              required = {true}
               value={comment}
               hintText={
                 <Label
@@ -280,8 +289,6 @@ class BookingsDetails extends Component {
 }
 const mapStateToProps = state => {
   const { bookings, common, auth, form } = state;
-  console.log('state in bookdetails==', state)
-
   let { complaintSector, applicationSector } = bookings;
 
   return {

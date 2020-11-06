@@ -100,6 +100,7 @@ class ApplicatInfo extends Component {
             id="email"
             name="email"
             type="string"
+            required = {true}
             value={email}
             hintText={
               <Label
@@ -130,6 +131,7 @@ class ApplicatInfo extends Component {
             id="mobile-no"
             name="mobile-no"
             type="text"
+            required = {true}
             value={mobileNo}
             hintText={
               <Label

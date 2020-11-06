@@ -10,7 +10,6 @@ class CGBookingDetails extends Component {
 
   render() {
     const { firstName, email, mobileNo } = this.props;
-      console.log("propsInSummaryUSERDetails--",this.props)
 return (
       <div>
         <Card

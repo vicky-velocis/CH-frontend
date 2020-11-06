@@ -331,7 +331,8 @@ class ApplicationDetails extends Component {
 
 	downloadApplicationFunction = async (e) => {
 		
-		const { transformedComplaint, paymentDetailsForReceipt, downloadApplication,paymentDetails,userInfo } = this.props;
+		const { transformedComplaint, paymentDetailsForReceipt, downloadApplication,paymentDetails,userInfo,documentMap } = this.props;
+		let fdocname = Object.entries(documentMap)[0][1]
 		const { complaint } = transformedComplaint;
 		let bookingDataOsbm = {
             applicationNumber: complaint.applicationNo,
@@ -387,7 +388,11 @@ class ApplicationDetails extends Component {
 				},
 				generatedBy: {
 					generatedBy: userInfo.name,
+				},
+				documentDetail:{
+					documentName: fdocname
 				}
+
             },
         ];
 
@@ -409,10 +414,12 @@ class ApplicationDetails extends Component {
 					fileStoreId: documentsPreviewData,
 					linkText: "View",
 				});
+				
 				let fileStoreIds = jp.query(documentsPreview, "$.*.fileStoreId");
+				
 				let fileUrls =
 					fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds,userInfo.tenantId) : {};
-			
+			   
 					
 				documentsPreview = documentsPreview.map(function (doc, index) {
 					doc["link"] =
@@ -613,9 +620,10 @@ downloadPermissionLetterFunction = async (e) => {
 				fileStoreId: id,
 				linkText: "View",
 			});
+			let changetenantId = userInfo.tenantId ? userInfo.tenantId.split(".")[0] : "ch";
 			let fileStoreIds = jp.query(documentsPreview, "$.*.fileStoreId");
 			let fileUrls =
-				fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds,userInfo.tenantId) : {};
+				fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds,changetenantId) : {};
 		
 
 			documentsPreview = documentsPreview.map(function (doc, index) {
@@ -917,10 +925,7 @@ const roleFromUserInfo = (roles = [], role) => {
 
 const mapStateToProps = (state, ownProps) => {
 	const { bookings, common, auth, form } = state;
-	console.log('state in all applications details',state)
 	const { applicationData } = bookings;
-
-	console.log('applicationData in all applications details',applicationData)
 	const { DownloadPaymentReceiptDetails,DownloadApplicationDetails,DownloadPermissionLetterDetails } = bookings;
 	const { id } = auth.userInfo;
 	const { citizenById } = common || {};
@@ -1018,7 +1023,7 @@ const mapStateToProps = (state, ownProps) => {
 			serviceRequestId,
 			isAssignedToEmployee,
 			complaintTypeLocalised,
-			
+			userInfo
 		};
 	} else {
 		return {
@@ -1032,7 +1037,7 @@ const mapStateToProps = (state, ownProps) => {
 			role,
 			serviceRequestId,
 			isAssignedToEmployee,
-			
+			userInfo
 		};
 	}
 };
