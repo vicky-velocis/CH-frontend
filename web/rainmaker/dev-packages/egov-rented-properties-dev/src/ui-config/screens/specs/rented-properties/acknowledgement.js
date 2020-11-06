@@ -108,7 +108,7 @@ const getAcknowledgementCard = (
         labelKey: "RP_MASTER_ENTRY_APPROVAL_SUCCESS_MESSAGE_HEAD"
       } : purpose === "submit" ? {
         labelName: "Rented Property Master Entry is Submitted Successfully",
-        labelKey: "RP_SUBMISSION_SUCCESS_MESSAGE_HEAD"
+        labelKey: "RP_MASTER_ENTRY_SUCCESS_MESSAGE_MAIN"
       } : {
         labelName: "Payment is collected successfully",
         labelKey: "RP_PAYMENT_SUCCESS_MESSAGE_HEAD"
@@ -203,9 +203,8 @@ const getAcknowledgementCard = (
                 labelKey: "RP_PAYMENT_FAILED_MESSAGE_HEAD"
               },
               body: {
-                labelName:
-                  "A notification regarding Application Submission has been sent to trade owner at registered Mobile No.",
-                labelKey: "RP_APPLICATION_SUCCESS_MESSAGE_SUB"
+                labelName:"",
+                labelKey: ""
               },
               tailText: !!transitNumber?{
                 labelName: "Transit Number",

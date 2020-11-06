@@ -202,14 +202,14 @@ export const getOpeningBalanceSearchResults = async queryObject => {
   }
 
 };
-export const createOpeningBalance = async (queryObject, payload, dispatch) => {
+export const createOpeningBalance = async (queryObject, payload, dispatch,wfobject) => {
   try {
     const response = await httpRequest(
       "post",
       "/store-asset-services/openingbalance/_create",
       "",
       queryObject,
-      { materialReceipt: payload }
+      { materialReceipt: payload,workFlowDetails: wfobject }
     );
     return response;
   } catch (error) {
@@ -836,6 +836,9 @@ export const ValidateCardUserQty = (state,dispatch,cardJsonPath,pagename,jasonpa
     CardItem[index].isDeleted !== false)
     {
     let code = get(state.screenConfiguration.preparedFinalObject,`${jasonpath}[${index}].${value}`,'') 
+    if(pagename==='createopeningbalence')
+    code = GetMdmsNameBycode(state, dispatch,"searchScreenMdmsData.store-asset.Material",code)  
+    else
     code = GetMdmsNameBycode(state, dispatch,"createScreenMdmsData.store-asset.Material",code)  
     let InputQtyValue_ = Number( get(state.screenConfiguration.preparedFinalObject,`${jasonpath}[${index}].${InputQtyValue}`,0))
     let CompareQtyValue_ = Number(get(state.screenConfiguration.preparedFinalObject,`${jasonpath}[${index}].${CompareQtyValue}`,0)) 
@@ -1016,12 +1019,35 @@ export const ValidateCardUserQty = (state,dispatch,cardJsonPath,pagename,jasonpa
           }
           else
           {
-            matcode.push(
-              {
-                code:code,
-                InputQtyValue:1
-              }
-            )
+            let isAdHoc = get(
+              state.screenConfiguration.preparedFinalObject,
+              `materialReceipt[0].isAdHoc`,
+              ''
+            ); 
+            if(pagename ==='createMaterialReceiptNoteMisc' && isAdHoc ==="YES" )
+            {
+              matcode.push(
+                {
+                  code:code,
+                  InputQtyValue:1
+                }
+              )
+
+            }
+            else if(pagename ==='createMaterialReceiptNoteMisc' && isAdHoc ==="NO" )
+            {
+              matcode =[];
+            }
+            else
+            {
+              matcode.push(
+                {
+                  code:code,
+                  InputQtyValue:1
+                }
+              )
+            }
+           
           }
 
         } 
@@ -1267,7 +1293,7 @@ export const GetTotalQtyValue = (state,cardJsonPath,pagename,jasonpath,InputQtyV
     }
   }
   //Material Indent Issue Note: For engineering Dept. 3% amount should be deducted from Total amount
-  if(pagename ==='createMaterialIndentNote')
+  if(pagename ==='createMaterialIndentNote' || pagename ==="createMaterialNonIndentNote")
   {
     // if deptCategory is "Engineering"
     let store = get(state, "screenConfiguration.preparedFinalObject.store.stores",[]) 
@@ -1275,11 +1301,24 @@ export const GetTotalQtyValue = (state,cardJsonPath,pagename,jasonpath,InputQtyV
     let fromstore = store.filter(x=> x.code === storecode)
     if(fromstore[0].department.deptCategory.toUpperCase() ==='ENGINEERING')
     {
-      let deduction = TotalValue_ - (TotalValue_*3)/100;
+      let deduction = TotalValue_ + (TotalValue_*3)/100;
       TotalValue_ = deduction 
     }
     
   }
+  // else if( pagename ==="createMaterialNonIndentNote")
+  // {
+  //   // if deptCategory is "Engineering"
+  //   let store = get(state, "screenConfiguration.preparedFinalObject.store.stores",[]) 
+  //   let storecode = get(state.screenConfiguration.preparedFinalObject,`materialIssues[0].fromStore.code`,'')
+  //   let fromstore = store.filter(x=> x.code === storecode)
+  //   if(fromstore[0].department.deptCategory.toUpperCase() ==='ENGINEERING')
+  //   {
+  //     let deduction = TotalValue_ - (TotalValue_*3)/100;
+  //     TotalValue_ = deduction 
+  //   }
+    
+  // }
   CardTotalQty.push(
     {
       InputQtyValue: InputQtyValue_,

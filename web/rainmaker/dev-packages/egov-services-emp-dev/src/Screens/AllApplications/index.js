@@ -120,7 +120,7 @@ class AllRequests extends Component {
     });
   };
   gotoPArkAndCommunityTanker = () => {
-    this.props.history.push(`/egov-services/applyPark-community-center`);
+    this.props.history.push(`/egov-services/checkavailability_pcc`);
   };
   gotoMcc = () => {
     this.props.history.push(`/egov-services/all-MccApplications`);
@@ -146,6 +146,14 @@ class AllRequests extends Component {
     if (bookingType && bookingType == "JURISDICTION") {
 
       this.props.history.push(`/egov-services/osmcc-application-details/${complaintNo}`);
+    }
+    if (bookingType && bookingType == "Parks") {
+
+      this.props.history.push(`/egov-services/park-and-community-center-appDetails-details/${complaintNo}`);
+    }
+    if (bookingType && bookingType == "Community Center") {
+
+      this.props.history.push(`/egov-services/park-and-community-center-appDetails-details/${complaintNo}`);
     }
   };
 
@@ -209,61 +217,61 @@ class AllRequests extends Component {
 
     if (complaintNo) {
       queryObj.applicationNumber = complaintNo;
-      queryObj.applicationStatus = "";
-      queryObj.mobileNumber = "";
-      queryObj.bookingType = "";
+      queryObj.applicationStatus =applicationStatus?applicationStatus:"";
+      queryObj.mobileNumber =  mobileNo?mobileNo:"";
+      queryObj.bookingType =  bookingType?bookingType:"";
       queryObj.tenantId = userInfo.tenantId;
 
     }
 
     if (applicationStatus) {
       queryObj.applicationStatus = applicationStatus
-      queryObj.applicationNumber = '';
-      queryObj.mobileNumber = "";
-      queryObj.bookingType = "";
+      queryObj.applicationNumber =  applicationStatus?applicationStatus:"";
+      queryObj.mobileNumber = mobileNo?mobileNo:"";
+      queryObj.bookingType = bookingType?bookingType:"";
       queryObj.tenantId = userInfo.tenantId;
 
     }
 
     if (mobileNo) {
       queryObj.mobileNumber = mobileNo;
-      queryObj.applicationNumber = "";
-      queryObj.applicationStatus = "";
-      queryObj.bookingType = "";
+      queryObj.applicationNumber = complaintNo?complaintNo:"";
+      queryObj.applicationStatus = applicationStatus?applicationStatus:"";
+      queryObj.bookingType = bookingType?bookingType:"";
       queryObj.tenantId = userInfo.tenantId;
 
     }
     if (bookingType) {
       queryObj.bookingType = bookingType;
-      queryObj.mobileNumber = "";
-      queryObj.applicationNumber = "";
-      queryObj.applicationStatus = "";
+      queryObj.mobileNumber =  mobileNo?mobileNo:"";
+      queryObj.applicationNumber = complaintNo?complaintNo:"";
+      queryObj.applicationStatus =applicationStatus?applicationStatus:"";
       queryObj.tenantId = userInfo.tenantId;
     }
 
     if (bookingType&&applicationStatus) {
       queryObj.bookingType = bookingType;
-      queryObj.mobileNumber = "";
-      queryObj.applicationNumber = "";
+      queryObj.mobileNumber = mobileNo?mobileNo:"";
+      queryObj.applicationNumber = complaintNo?complaintNo:"";
       queryObj.applicationStatus =applicationStatus;
       queryObj.tenantId = userInfo.tenantId;
     }
 
     if (fromDate) {
-      queryObj.bookingType = "";
-      queryObj.mobileNumber = "";
-      queryObj.applicationNumber = "";
-      queryObj.applicationStatus = "";
+    queryObj.bookingType = bookingType?bookingType:"";
+     queryObj.mobileNumber = mobileNo?mobileNo:"";
+      queryObj.applicationNumber = complaintNo?complaintNo:"";
+      queryObj.applicationStatus = applicationStatus?applicationStatus:"";
       queryObj.fromDate = fromDate;
       queryObj.tenantId = userInfo.tenantId;
 
 
     }
     if (toDate) {
-      queryObj.bookingType = "";
-      queryObj.mobileNumber = "";
-      queryObj.applicationNumber = "";
-      queryObj.applicationStatus = "";
+      queryObj.bookingType = bookingType?bookingType:"";
+      queryObj.mobileNumber = mobileNo?mobileNo:"";
+      queryObj.applicationNumber = complaintNo?complaintNo:"";
+      queryObj.applicationStatus = applicationStatus?applicationStatus:"";
       queryObj.toDate = toDate;
       queryObj.tenantId = userInfo.tenantId;
 
@@ -744,15 +752,15 @@ class AllRequests extends Component {
             onClick={() => this.gotoMcc()}
           /> : ''
         }
-        {/* 
+      
           <Button
             className="responsive-action-button"
-            label={<Label buttonLabel={true} label="BK_MYBK_WATER_TANKER_APPLY" />}
+            label={<Label buttonLabel={true} label="Apply E-Sampark" />}
             fullWidth={true}
             primary={true}
             style={{ float: 'right', marginRight: '50px', marginTop: '40px' }}
             onClick={() => this.gotoPArkAndCommunityTanker()
-            } /> : '' */}
+            } /> : '' 
 
 
 

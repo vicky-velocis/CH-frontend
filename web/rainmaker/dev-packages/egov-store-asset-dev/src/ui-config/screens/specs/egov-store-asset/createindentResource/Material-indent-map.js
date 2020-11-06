@@ -12,6 +12,7 @@ import {
   import get from "lodash/get";
   import{GetMdmsNameBycode,GetTotalQtyValue} from '../../../../../ui-utils/storecommonsapi'
   import set from "lodash/set";
+  import { getSTOREPattern} from "../../../../../ui-utils/commons";
   import { handleScreenConfigurationFieldChange as handleField , prepareFinalObject} from "egov-ui-framework/ui-redux/screen-configuration/actions";
   
   const arrayCrawler = (arr, n) => {
@@ -127,36 +128,36 @@ import {
                 },
               })
             },
-            AssestCode: {
-              ...getTextField({
-                label: {
-                  labelName: "Assest Code",
-                  labelKey: "STORE_MATERIAL_INDENT_NOTE_ASSEST_CODE"
-                },
-                placeholder: {
-                  labelName: "Assest Code",
-                  labelKey: "STORE_MATERIAL_INDENT_NOTE_ASSEST_CODE"
-                },
-                props:{
-                  disabled:true
-                },
-                required: false,
-                pattern: getPattern("Name") || null,
-                jsonPath: "indents[0].indentDetails[0].asset.code",
-               // sourceJsonPath: "createScreenMdmsData.common-masters.UOM",
-                props: {
-                  data: [
-                    {
-                      value: "Code1",
-                      label: "Code1"
-                    },
+            // AssestCode: {
+            //   ...getTextField({
+            //     label: {
+            //       labelName: "Assest Code",
+            //       labelKey: "STORE_MATERIAL_INDENT_NOTE_ASSEST_CODE"
+            //     },
+            //     placeholder: {
+            //       labelName: "Assest Code",
+            //       labelKey: "STORE_MATERIAL_INDENT_NOTE_ASSEST_CODE"
+            //     },
+            //     props:{
+            //       disabled:true
+            //     },
+            //     required: false,
+            //     pattern: getPattern("Name") || null,
+            //     jsonPath: "indents[0].indentDetails[0].asset.code",
+            //    // sourceJsonPath: "createScreenMdmsData.common-masters.UOM",
+            //     props: {
+            //       data: [
+            //         {
+            //           value: "Code1",
+            //           label: "Code1"
+            //         },
                     
-                  ],
-                  optionValue: "value",
-                  optionLabel: "label"
-                },
-              })
-            },
+            //       ],
+            //       optionValue: "value",
+            //       optionLabel: "label"
+            //     },
+            //   })
+            // },
             ProjectCode: {
               ...getTextField({
                 label: {
@@ -203,7 +204,8 @@ import {
                 },
                 required: true,
                 visible:false,
-                pattern: getPattern("Amount") || null,
+               // pattern: getPattern("Amount") || null,
+                pattern: getSTOREPattern("Quantity") || null,
                 jsonPath: "indents[0].indentDetails[0].indentQuantity"
               })
             },
@@ -223,8 +225,9 @@ import {
                 required: true,
                 errorMessage: "STORE_VALIDATION_QUANTITY",
                 minValue:1,
-                pattern: getPattern("Amount") || null,
-                jsonPath: "indents[0].indentDetails[0].userQuantity"
+               // pattern: getPattern("Amount") || null,
+               pattern: getSTOREPattern("Quantity") || null,
+                jsonPath: "indents[0].indentDetails[0].indentQuantity"
               }),
               beforeFieldChange: (action, state, dispatch) => {
                 let cardIndex = action.componentJsonpath.split("items[")[1].split("]")[0];
@@ -276,41 +279,41 @@ import {
           set(preparedFinalObject.indents[0],`indentDetails[${cardIndex}].indentPurpose` , indentPurpose);
         }      
   
-          Object.keys(muliItemContent).forEach(key => {
-            if(indentPurpose ==='Revenue')
-            {
-              if ( key === "AssestCode") {
-                //set(muliItemContent[key], "props.visible", true);
-                muliItemContent[key].props.style = {display:"inline-block"};
-                muliItemContent["AssestCode"].props.disabled = false;
-                //set(muliItemContent[key], "props.value", indentNumber);
-              }
-              if ( key === "ProjectCode") {
-                //set(muliItemContent[key], "props.visible", false);
-                muliItemContent[key].props.style = {display:"inline-block"};
-                muliItemContent["ProjectCode"].props.disabled = true;
+          // Object.keys(muliItemContent).forEach(key => {
+          //   if(indentPurpose ==='Revenue')
+          //   {
+          //     if ( key === "AssestCode") {
+          //       //set(muliItemContent[key], "props.visible", true);
+          //       muliItemContent[key].props.style = {display:"inline-block"};
+          //       muliItemContent["AssestCode"].props.disabled = false;
+          //       //set(muliItemContent[key], "props.value", indentNumber);
+          //     }
+          //     if ( key === "ProjectCode") {
+          //       //set(muliItemContent[key], "props.visible", false);
+          //       muliItemContent[key].props.style = {display:"inline-block"};
+          //       muliItemContent["ProjectCode"].props.disabled = true;
                 
-              }
-            }
+          //     }
+          //   }
 
-            else if(indentPurpose ==='Capital')
-            {
-              if ( key === "AssestCode") {
-                //set(muliItemContent[key], "props.visible", false);
-                muliItemContent[key].props.style = {display:"inline-block"};
-                muliItemContent["AssestCode"].props.disabled = true;
-                //set(muliItemContent[key], "props.value", indentNumber);
-              }
-              if ( key === "ProjectCode") {
-                //set(muliItemContent[key], "props.visible", true);
-                muliItemContent[key].props.style = {display:"inline-block"};
-                muliItemContent["ProjectCode"].props.disabled = false;
+          //   else if(indentPurpose ==='Capital')
+          //   {
+          //     if ( key === "AssestCode") {
+          //       //set(muliItemContent[key], "props.visible", false);
+          //       muliItemContent[key].props.style = {display:"inline-block"};
+          //       muliItemContent["AssestCode"].props.disabled = true;
+          //       //set(muliItemContent[key], "props.value", indentNumber);
+          //     }
+          //     if ( key === "ProjectCode") {
+          //       //set(muliItemContent[key], "props.visible", true);
+          //       muliItemContent[key].props.style = {display:"inline-block"};
+          //       muliItemContent["ProjectCode"].props.disabled = false;
                 
-              }
+          //     }
 
-            }
+          //   }
              
-          });  
+          // });  
   
         }
           //console.log("click on add");

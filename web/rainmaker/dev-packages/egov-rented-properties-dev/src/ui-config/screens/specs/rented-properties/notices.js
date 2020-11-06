@@ -52,7 +52,7 @@ const findItem = roles.find(item => item.code === "RP_CLERK");
 
   let properties = get(state.screenConfiguration.preparedFinalObject, "Properties[0]")
   let approvedflagdata = properties.masterDataState
-  if(approvedflagdata === "PM_APPROVED"){
+  if(approvedflagdata === "PM_APPROVED" && !!findItem){
     let pathtoggle = "components.div.children.rightdiv"
     dispatch(
       handleField(
@@ -105,7 +105,7 @@ const findItem = roles.find(item => item.code === "RP_CLERK");
 const buttonComponent = (label, route) => ({
   componentPath: "Button",
   gridDefination: {
-    xs: 12,
+    xs: 6,
     sm: 2
   },
   props: {

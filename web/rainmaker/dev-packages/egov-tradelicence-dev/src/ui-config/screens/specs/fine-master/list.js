@@ -7,6 +7,7 @@ import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 import { httpRequest } from "../../../../ui-utils";
 import { getTextField, getCommonContainer, getCommonHeader, getLabel, getPattern } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { getLocaleLabels } from "egov-ui-framework/ui-utils/commons";
+import { validateFields } from "../utils"
 
 
 const APPLICATION_TYPE = getLocaleLabels("Application Type","TL_TABLE_COL_APP_TYPE")
@@ -31,33 +32,46 @@ const showOrHidePopup = (state, dispatch) => {
 const updateRate = async (state, dispatch) => {
   const {fineMasterEditData} = state.screenConfiguration.preparedFinalObject
   const {rate} = fineMasterEditData;
-  if(!!Number(rate)) {
-  try {
-  await httpRequest(
-    "post",
-    "/tl-calculator/ctlbillingslab/_update",
-    "",
-    [],
-    {"CTLBillingSlabs": [fineMasterEditData]}
-  );
-  const screenKey = fineMasterEditData.businessService.replace(".", "_")
-  dispatch(handleField(
-    screenKey,
-    "components.adhocDialog",
-    "props.open",
-    false
-  ))
-  getFineMasterList(state, dispatch, fineMasterEditData.businessService, screenKey)
-} catch (error) {
-  dispatch(
-    toggleSnackbar(
-      true,
-      { labelName: error.message, labelKey: error.message },
-      "error"
-    )
-  );
-}
-}
+  let isRateFormValid = true;
+  let href = (window.location.href).split("/");
+  let screen = href[href.length - 1];
+
+  if(rate !== 0) {
+    isRateFormValid = validateFields(
+      "components.adhocDialog.children.popup.children.rateCard.children",
+      state,
+      dispatch,
+      screen
+    );
+  }
+
+  if(!!isRateFormValid) {
+    try {
+      await httpRequest(
+        "post",
+        "/tl-calculator/ctlbillingslab/_update",
+        "",
+        [],
+        {"CTLBillingSlabs": [fineMasterEditData]}
+      );
+      const screenKey = fineMasterEditData.businessService.replace(".", "_")
+      dispatch(handleField(
+        screenKey,
+        "components.adhocDialog",
+        "props.open",
+        false
+      ))
+      getFineMasterList(state, dispatch, fineMasterEditData.businessService, screenKey)
+    } catch (error) {
+      dispatch(
+        toggleSnackbar(
+          true,
+          { labelName: error.message, labelKey: error.message },
+          "error"
+        )
+      );
+    }
+  }
 }
 
 const rateField = {
@@ -336,7 +350,7 @@ const onRowClick = (row, businessService, screenKey, state, dispatch) => {
       fromUom:row[2],
       toUom:row[3],
       uom:row[4],
-      rate:row[5],
+      rate:row[5] + "",
       id: row[7],
       tenantId: row[6]
   }

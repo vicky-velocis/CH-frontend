@@ -321,7 +321,7 @@ export const createUpdatePCCApplication = async (state, dispatch, action) => {
     let response = "";
     let tenantId = process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId();
 
-    let method = action === "INITIATE" ? "CREATE" : "UPDATE";
+    let method = action === "INITIATE" || action === "RE_INITIATE" ? "CREATE" : "UPDATE";
     try {
         let payload = get(
             state.screenConfiguration.preparedFinalObject,
@@ -362,7 +362,7 @@ export const createUpdatePCCApplication = async (state, dispatch, action) => {
         set(payload, "businessService", "PACC");
         // set(payload, "timeslots", [{
         //     "slot" : "9:00 AM - 8:59 AM"
-           
+
         // }]);
         // set(payload, "totime", "9:00 AM");
         // set(payload, "fromtime", "8:59 AM");
@@ -872,5 +872,44 @@ export const getNewLocationsSearchResults = async (queryObject) => {
                 "error"
             )
         );
+    }
+};
+
+
+export const getBookingWorkflowHistory = async (applicationNumber, tenantId) => {
+
+
+    const queryObject = [
+        { key: "businessIds", value: applicationNumber },
+        { key: "history", value: true },
+        { key: "tenantId", value: tenantId }
+    ];
+
+
+    try {
+        const payload = await httpRequest(
+            "post",
+            "bookings/api/egov-workflow/process/_search",
+            "",
+            queryObject,
+            []
+        );
+
+        if (payload && payload.ProcessInstances.length > 0) {
+
+               return payload.ProcessInstances;
+
+        } else {
+            toggleSnackbar(
+                true,
+                {
+                    labelName: "Workflow returned empty object !",
+                    labelKey: "WRR_WORKFLOW_ERROR"
+                },
+                "error"
+            );
+        }
+    } catch (exception) {
+        console.log(exception);
     }
 };

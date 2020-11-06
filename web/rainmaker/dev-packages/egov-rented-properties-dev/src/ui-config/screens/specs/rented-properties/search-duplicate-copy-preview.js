@@ -17,7 +17,8 @@ import {downloadPrintContainer} from "./applyResource/footer"
 import { WORKFLOW_BUSINESS_SERVICE_DC, BILLING_BUSINESS_SERVICE_DC } from "../../../../ui-constants";
 import { setApplicationNumberBox } from "../../../../ui-utils/apply";
 import {applicationNumber} from './apply'
-
+import { setBusinessServiceDataToLocalStorage } from "egov-ui-framework/ui-utils/commons";
+import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 const headerrow = getCommonContainer({
     header: getCommonHeader({
       labelName: "Duplicate Copy Application",
@@ -56,13 +57,20 @@ const duplicateReviewDetails = getCommonCard({
         setApplicationNumberBox(state, dispatch, applicationNumber, "search-duplicate-copy-preview")
         if (response && response.DuplicateCopyApplications) {
         let {DuplicateCopyApplications} = response
+        let billingBuisinessService=DuplicateCopyApplications[0].billingBusinessService
         let applicationDocuments = DuplicateCopyApplications[0].applicationDocuments|| [];
         const removedDocs = applicationDocuments.filter(item => !item.active)
         applicationDocuments = applicationDocuments.filter(item => !!item.active)
+        let formatter = new Intl.NumberFormat('en-IN', {
+          style: 'currency',
+          currency: 'INR',
+        });
         DuplicateCopyApplications = [{...DuplicateCopyApplications[0], applicationDocuments}]
         if(DuplicateCopyApplications[0].property.rentSummary){
-          DuplicateCopyApplications = [{...DuplicateCopyApplications[0], property: {...DuplicateCopyApplications[0].property, rentSummary:{...DuplicateCopyApplications[0].property.rentSummary , totalDue : (DuplicateCopyApplications[0].property.rentSummary.balancePrincipal + 
-            DuplicateCopyApplications[0].property.rentSummary.balanceInterest).toFixed(2)}}}]
+          DuplicateCopyApplications = [{...DuplicateCopyApplications[0], property: {...DuplicateCopyApplications[0].property, rentSummary:{...DuplicateCopyApplications[0].property.rentSummary , totalDue : formatter.format((DuplicateCopyApplications[0].property.rentSummary.balancePrincipal + 
+            DuplicateCopyApplications[0].property.rentSummary.balanceInterest).toFixed(2))
+          }}
+          }]
         }      
         const status = DuplicateCopyApplications[0].state
         dispatch(prepareFinalObject("DuplicateCopyApplications", DuplicateCopyApplications))
@@ -84,7 +92,6 @@ const duplicateReviewDetails = getCommonCard({
           "DuplicateTemp[0].estimateCardData",
           dispatch,
           window.location.href,
-          BILLING_BUSINESS_SERVICE_DC,
           WORKFLOW_BUSINESS_SERVICE_DC
         );
      
@@ -110,7 +117,7 @@ const duplicateReviewDetails = getCommonCard({
           status,
           applicationNumber,
           tenantId,
-          BILLING_BUSINESS_SERVICE_DC
+          billingBuisinessService
         );
 
         process.env.REACT_APP_NAME === "Citizen"
@@ -150,12 +157,17 @@ dispatch(
         }
       }
     }
-  
+  const getData = async (action, state, dispatch) => {
+      const queryObject = [{ key: "tenantId", value: getTenantId() }, 
+                          { key: "businessServices", value: WORKFLOW_BUSINESS_SERVICE_DC }]
+      await setBusinessServiceDataToLocalStorage(queryObject, dispatch);
+    }
 const duplicateCopySearchPreview = {
     uiFramework: "material-ui",
     name: "search-duplicate-copy-preview",
     beforeInitScreen: (action, state, dispatch) => {
         beforeInitFn(action, state, dispatch)
+        getData(action, state, dispatch)
         return action
     },
     components: {

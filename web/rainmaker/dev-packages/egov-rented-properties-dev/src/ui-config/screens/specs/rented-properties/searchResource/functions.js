@@ -72,7 +72,7 @@ export const searchTransferProperties = async (state, dispatch, onInit, offset, 
         true,
         {
           labelName: "Please fill valid fields to start search",
-          labelKey: "ERR_FILL_VALID_FIELDS"
+          labelKey: "RP_ERR_FILL_VALID_FIELDS"
         },
         "warning"
       )
@@ -86,7 +86,7 @@ export const searchTransferProperties = async (state, dispatch, onInit, offset, 
         true,
         {
           labelName: "Please fill at least one field to start search",
-          labelKey: "ERR_FILL_ONE_FIELDS"
+          labelKey: "RP_ERR_FILL_ONE_FIELDS"
         },
         "warning"
       )
@@ -162,7 +162,7 @@ export const searchMortgage = async (state, dispatch, onInit, offset, limit , hi
         true,
         {
           labelName: "Please fill valid fields to start search",
-          labelKey: "ERR_FILL_VALID_FIELDS"
+          labelKey: "RP_ERR_FILL_VALID_FIELDS"
         },
         "warning"
       )
@@ -176,7 +176,7 @@ export const searchMortgage = async (state, dispatch, onInit, offset, limit , hi
         true,
         {
           labelName: "Please fill at least one field to start search",
-          labelKey: "ERR_FILL_ONE_FIELDS"
+          labelKey: "RP_ERR_FILL_ONE_FIELDS"
         },
         "warning"
       )
@@ -237,6 +237,7 @@ export const changePType=(type)=>{
 }
 }
 export const searchAccountStatement = async (state, dispatch) => {
+  let isDateValid =true
   let searchScreenObject = get(
     state.screenConfiguration.preparedFinalObject,
     "searchScreen",
@@ -249,8 +250,10 @@ export const searchAccountStatement = async (state, dispatch) => {
     dispatch,
     "search-account-statement"
   );
-
-  if(!!isSearchBoxFirstRowValid) {
+if(convertDateToEpoch(searchScreenObject.toDate)-convertDateToEpoch(searchScreenObject.fromDate)<0){
+  isDateValid=false;
+}
+  if(!!isSearchBoxFirstRowValid && !!isDateValid) {
     let Criteria = {
       fromdate: !!searchScreenObject.fromDate ? convertDateToEpoch(searchScreenObject.fromDate) : "",
       todate: !!searchScreenObject.toDate ? convertDateToEpoch(searchScreenObject.toDate) : ""
@@ -265,7 +268,32 @@ export const searchAccountStatement = async (state, dispatch) => {
           [],
           {Criteria}
         )
+if(response.RentAccountStatements.length===1){
+  let errorMessage = {
+    labelName:
+        "No records found",
+    labelKey: "RP_ERR_NO_RECORDS_FOUND"
+};
 
+dispatch(toggleSnackbar(true, errorMessage, "warning"));
+dispatch(
+  handleField(
+    "search-account-statement",
+    "components.div.children.accountStatementResults",
+    "visible",
+    false
+  )
+);
+dispatch(
+  handleField(
+    "search-account-statement",
+    "components.div.children.downloadButton",
+    "visible",
+    false
+),
+);
+}
+else{
         try {
           dispatch(
             prepareFinalObject(
@@ -285,8 +313,9 @@ export const searchAccountStatement = async (state, dispatch) => {
             [RECIEPT_NO]:item.receiptNo||"-"
           }));
           let lastElement = data.pop();
-          lastElement.Date = "Total as on "+lastElement.Date
-          lastElement.Type = 0
+          lastElement.Date = "Balance as on "+lastElement.Date
+          lastElement["Type(Payment)"] = "-"
+          lastElement["Type(Rent)"]= "-"
           data.push(lastElement)
           dispatch(
             handleField(
@@ -315,7 +344,17 @@ export const searchAccountStatement = async (state, dispatch) => {
         } catch (error) {
           dispatch(toggleSnackbar(true, error.message, "error"));
         }
+      }
     }
+  }
+  if(!isDateValid){
+    let errorMessage = {
+      labelName:
+          "From date cannot be greater than To date!",
+      labelKey: "RP_ERR_FROM_DATE_GREATER_THAN_TO_DATE"
+  };
+  
+  dispatch(toggleSnackbar(true, errorMessage, "warning"));
   }
 }
 
@@ -323,7 +362,7 @@ export const downloadAccountStatementPdf = async(state, dispatch) => {
   const { RentAccountStatements } = state.screenConfiguration.preparedFinalObject;
   const {Properties} = state.screenConfiguration.preparedFinalObject;
   let properties = Properties
-  properties[0].demands[0].remainingPrincipal = properties[0].demands[0].remainingPrincipal.toFixed(2)
+  properties[0].demands[0].remainingPrincipal = parseInt(properties[0].demands[0].remainingPrincipal).toFixed(2)
   const data = RentAccountStatements.map(item =>
     ({
       ...item,
@@ -338,10 +377,10 @@ export const downloadAccountStatementPdf = async(state, dispatch) => {
       remainingBalance : formatAmount(item.remainingBalance.toFixed(2))
     })
   )
-
   let lastElement = data.pop();
-  lastElement.date = "Total as on "+ lastElement.date
-  lastElement.type = '-'
+  lastElement.date = "Balance as on "+ lastElement.date
+  lastElement.typeP = '-'
+  lastElement.typeR = '-'
   lastElement.amount = '-'
   data.push(lastElement)
   const mode = "download"
@@ -518,7 +557,7 @@ export const searchDuplicateCopy = async (state, dispatch, onInit, offset, limit
         true,
         {
           labelName: "Please fill valid fields to start search",
-          labelKey: "ERR_FILL_VALID_FIELDS"
+          labelKey: "RP_ERR_FILL_VALID_FIELDS"
         },
         "warning"
       )
@@ -532,7 +571,7 @@ export const searchDuplicateCopy = async (state, dispatch, onInit, offset, limit
         true,
         {
           labelName: "Please fill at least one field to start search",
-          labelKey: "ERR_FILL_ONE_FIELDS"
+          labelKey: "RP_ERR_FILL_ONE_FIELDS"
         },
         "warning"
       )
@@ -608,7 +647,7 @@ export const searchApiCall = async (state, dispatch, onInit, relations = "owner"
         true,
         {
           labelName: "Please fill valid fields to start search",
-          labelKey: "ERR_FILL_VALID_FIELDS"
+          labelKey: "RP_ERR_FILL_VALID_FIELDS"
         },
         "warning"
       )
@@ -622,7 +661,7 @@ export const searchApiCall = async (state, dispatch, onInit, relations = "owner"
         true,
         {
           labelName: "Please fill at least one field to start search",
-          labelKey: "ERR_FILL_ONE_FIELDS"
+          labelKey: "RP_ERR_FILL_ONE_FIELDS"
         },
         "warning"
       )

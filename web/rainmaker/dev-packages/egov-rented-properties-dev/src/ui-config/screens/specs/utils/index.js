@@ -49,6 +49,7 @@ import {
   getOwnershipSearchResults,
   getDuplicateCopySearchResults
 } from "../../../../ui-utils/commons";
+import moment from "moment";
 import { BILLING_BUSINESS_SERVICE_DC, BILLING_BUSINESS_SERVICE_OT, WORKFLOW_BUSINESS_SERVICE_OT, WORKFLOW_BUSINESS_SERVICE_DC, BILLING_BUSINESS_SERVICE_RENT } from "../../../../ui-constants";
 
 export const getCommonApplyFooter = children => {
@@ -773,6 +774,8 @@ export const download = (receiptQueryString, Properties, data, generatedBy,type,
       let {
         Payments
       } = payloadReceiptDetails;
+      let time = Payments[0].paymentDetails[0].auditDetails.lastModifiedTime
+
       let {
         billAccountDetails
       } = Payments[0].paymentDetails[0].bill.billDetails[0];
@@ -796,6 +799,18 @@ export const download = (receiptQueryString, Properties, data, generatedBy,type,
           }
         }]
       }]
+
+      if(time){
+        time = moment(new Date(time)).format("h:mm:ss a")
+      }
+      Payments = [{
+        ...Payments[0],paymentDetails:[{
+          ...Payments[0].paymentDetails[0],auditDetails:{
+            ...Payments[0].paymentDetails[0].auditDetails,lastModifiedTime:time
+          }
+        }]
+      }]
+      
       httpRequest("post", DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, queryStr, {
           Payments,
           Properties,
@@ -921,14 +936,13 @@ export const createEstimateData = async (
   jsonPath,
   dispatch,
   href = {},
-  _businessService,
   _workflow
 ) => {
   const workflowCode = get(data, "workflowCode") ? get(data, "workflowCode") : _workflow
   const applicationNo = getQueryArg(href, "applicationNumber") || getQueryArg(href, "consumerCode");
   const tenantId =
     get(data, "tenantId") || getQueryArg(href, "tenantId");
-  const businessService = get(data, "businessService", "") || _businessService
+  const businessService = get(data, "billingBusinessService", "") || getQueryArg(href, "businessService")
   const queryObj = [{
       key: "tenantId",
       value: tenantId
@@ -1081,9 +1095,10 @@ export const fetchBill = async (action, state, dispatch, businessService) => {
   // const response = await getSearchResults(queryObject);
   //get bill and populate estimate card
   let payload;
-
-  switch (businessService) {
-    case BILLING_BUSINESS_SERVICE_OT: {
+  let consumerCode = getQueryArg(window.location.href, "consumerCode");
+  let consumerNumber=consumerCode.split("-")[2]
+  switch (consumerNumber) {
+    case "OT": {
       const response = await getOwnershipSearchResults(queryObject)
       payload = response &&
         response.Owners &&
@@ -1092,7 +1107,6 @@ export const fetchBill = async (action, state, dispatch, businessService) => {
           "OwnersTemp[0].estimateCardData",
           dispatch,
           window.location.href,
-          businessService,
           WORKFLOW_BUSINESS_SERVICE_OT
         ));
       //set in redux to be used for adhoc
@@ -1101,7 +1115,7 @@ export const fetchBill = async (action, state, dispatch, businessService) => {
         dispatch(prepareFinalObject("Owners[0]", response.Owners[0]));
       break
     }
-    case BILLING_BUSINESS_SERVICE_DC: {
+    case "DC": {
       const response = await getDuplicateCopySearchResults(queryObject)
       payload = response && response.DuplicateCopyApplications && (
         await createEstimateData(
@@ -1109,7 +1123,6 @@ export const fetchBill = async (action, state, dispatch, businessService) => {
           "DuplicateTemp[0].estimateCardData",
           dispatch,
           window.location.href,
-          businessService,
           WORKFLOW_BUSINESS_SERVICE_DC
         )
       )
@@ -1118,7 +1131,6 @@ export const fetchBill = async (action, state, dispatch, businessService) => {
         dispatch(prepareFinalObject("DuplicateCopyApplications[0]", response.DuplicateCopyApplications[0]));
       break
     }
-    case BILLING_BUSINESS_SERVICE_RENT:
     default:  
     {
       const response = get(state.screenConfiguration.preparedFinalObject, "Properties[0]")
@@ -1127,7 +1139,6 @@ export const fetchBill = async (action, state, dispatch, businessService) => {
         "PropertiesTemp[0].estimateCardData",
         dispatch,
         window.location.href,
-        BILLING_BUSINESS_SERVICE_RENT
       )
       break
     }

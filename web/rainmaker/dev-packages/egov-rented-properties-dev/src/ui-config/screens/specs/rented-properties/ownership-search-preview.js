@@ -17,6 +17,8 @@ import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-fra
 import { BILLING_BUSINESS_SERVICE_OT, WORKFLOW_BUSINESS_SERVICE_OT } from "../../../../ui-constants";
 import {applicationNumber} from './apply'
 import { setApplicationNumberBox } from "../../../../ui-utils/apply";
+import { setBusinessServiceDataToLocalStorage } from "egov-ui-framework/ui-utils/commons";
+import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 let NoticedetailsId
 const headerrow = getCommonContainer({
     header: getCommonHeader({
@@ -68,14 +70,21 @@ const tenantId = getQueryArg(window.location.href, "tenantId")
     if (response && response.Owners) {
     let {Owners} = response
     let allotmentnumber=Owners[0].allotmenNumber
+    let billingBuisinessService=Owners[0].billingBusinessService
     let ownershipTransferDocuments = Owners[0].ownerDetails.ownershipTransferDocuments || [];
     const removedDocs = ownershipTransferDocuments.filter(item => !item.active)
     ownershipTransferDocuments = ownershipTransferDocuments.filter(item => !!item.active)
+    let formatter = new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+    });
     Owners = [{...Owners[0], ownerDetails: {...Owners[0].ownerDetails, ownershipTransferDocuments}}]
     const status = Owners[0].applicationState
     if(Owners[0].property.rentSummary){
-      Owners = [{...Owners[0], property: {...Owners[0].property, rentSummary:{...Owners[0].property.rentSummary , totalDue : (Owners[0].property.rentSummary.balancePrincipal + 
-        Owners[0].property.rentSummary.balanceInterest).toFixed(2)}}}]
+      Owners = [{...Owners[0], property: {...Owners[0].property, rentSummary:{...Owners[0].property.rentSummary , totalDue : formatter.format((Owners[0].property.rentSummary.balancePrincipal + 
+        Owners[0].property.rentSummary.balanceInterest).toFixed(2))
+      }}
+      }]
     }
   
     dispatch(prepareFinalObject("Owners", Owners))
@@ -96,7 +105,6 @@ const tenantId = getQueryArg(window.location.href, "tenantId")
       "OwnersTemp[0].estimateCardData",
       dispatch,
       window.location.href,
-      BILLING_BUSINESS_SERVICE_OT,
       WORKFLOW_BUSINESS_SERVICE_OT
     );
 
@@ -165,7 +173,7 @@ const tenantId = getQueryArg(window.location.href, "tenantId")
       status,
       applicationNumber,
       tenantId,
-      BILLING_BUSINESS_SERVICE_OT
+      billingBuisinessService
     );
     process.env.REACT_APP_NAME === "Citizen"
         ? set(action, "screenConfig.components.div.children.footer", footer)
@@ -206,12 +214,17 @@ dispatch(
     }
   }
 }
-
+const getData = async (action, state, dispatch) => {
+  const queryObject = [{ key: "tenantId", value: getTenantId() }, 
+                      { key: "businessServices", value: WORKFLOW_BUSINESS_SERVICE_OT }]
+  await setBusinessServiceDataToLocalStorage(queryObject, dispatch);
+}
 const ownerShipDetailsPreview = {
     uiFramework: "material-ui",
     name: "ownership-search-preview",
     beforeInitScreen: (action, state, dispatch) => {
         beforeInitFn(action, state, dispatch)
+        getData(action, state, dispatch)
         return action
     },
     components: {

@@ -40,6 +40,24 @@ const transitNumberField = {
       "visible",
       false
     ))
+    dispatch(
+      prepareFinalObject(
+        "Properties[0].propertyDetails.address.colony",
+        ""
+      )
+    )
+    dispatch(
+      prepareFinalObject(
+        "Properties[0].propertyDetails.address.pincode",
+        ""
+      )
+    )
+    dispatch(
+      prepareFinalObject(
+        "Properties[0].owners[0].ownerDetails.name",
+        ""
+      )
+    )
   }
 }
 
@@ -138,12 +156,50 @@ const amountField = {
     xs: 12,
     sm: 6
   },
-  pattern: getPattern("numeric-only"),
+  pattern: getPattern("AmountFeild"),
   required: true,
   minLength: 3,
   maxLength: 7,
   jsonPath: "paymentInfo.amount",
   errorMessage: "RP_ERR_AMOUNT_FIELD",
+  afterFieldChange: (action, state, dispatch) => {
+    if (action.value.length > 7) {
+        dispatch(
+            handleField(
+              "payment",
+              action.componentJsonpath,
+              "errorMessage",
+              "RP_ERR_AMOUNT_FIELD_MAXLENGTH"
+            )
+        )
+        dispatch(
+            handleField(
+              "payment",
+              action.componentJsonpath,
+              "props.errorMessage",
+              "RP_ERR_AMOUNT_FIELD_MAXLENGTH"
+            )
+        )
+    }
+    else {
+        dispatch(
+            handleField(
+              "payment",
+              action.componentJsonpath,
+              "errorMessage",
+              "RP_ERR_AMOUNT_FIELD"
+            )
+        )
+        dispatch(
+            handleField(
+              "payment",
+              action.componentJsonpath,
+              "props.errorMessage",
+              "RP_ERR_AMOUNT_FIELD"
+            )
+        )
+    }
+  }
 }
 
 const bankNameField = {
@@ -160,9 +216,50 @@ const bankNameField = {
     sm: 6
   },
   required: true,
+  errorMessage:"RP_ERR_BANK_NAME_FIELD",
+  minLength: 1,
   maxLength: 40,
   jsonPath: "paymentInfo.bankName",
-  visible: process.env.REACT_APP_NAME !== "Citizen"
+  visible: process.env.REACT_APP_NAME !== "Citizen",
+  afterFieldChange: (action, state, dispatch) => {
+    if (action.value.length > 40) {
+        dispatch(
+            handleField(
+              "payment",
+              action.componentJsonpath,
+              "errorMessage",
+              "RP_ERR_BANK_NAME_MAXLENGTH"
+            )
+        )
+        dispatch(
+            handleField(
+              "payment",
+              action.componentJsonpath,
+              "props.errorMessage",
+              "RP_ERR_BANK_NAME_MAXLENGTH"
+            )
+        )
+     }
+    else {
+        dispatch(
+            handleField(
+              "payment",
+              action.componentJsonpath,
+              "errorMessage",
+              "RP_ERR_BANK_NAME_FIELD"
+            )
+        )
+        dispatch(
+            handleField(
+              "payment",
+              action.componentJsonpath,
+              "props.errorMessage",
+              "RP_ERR_BANK_NAME_FIELD"
+            )
+        )
+    }
+  
+}
 }
 
 const transactionNumberField = {
@@ -179,9 +276,49 @@ const transactionNumberField = {
     sm: 6
   },
   required: true,
+  errorMessage:"RP_ERR_TRANSACTION_NUMBER_FIELD",
+  minLength: 1,
   maxLength: 40,
   jsonPath: "paymentInfo.transactionNumber",
-  visible: process.env.REACT_APP_NAME !== "Citizen"
+  visible: process.env.REACT_APP_NAME !== "Citizen",
+  afterFieldChange: (action, state, dispatch) => {
+    if (action.value.length > 40) {
+        dispatch(
+            handleField(
+              "payment",
+              action.componentJsonpath,
+              "errorMessage",
+              "RP_ERR_TRANSACTION_NUMBER_MAXLENGTH"
+            )
+        )
+        dispatch(
+            handleField(
+              "payment",
+              action.componentJsonpath,
+              "props.errorMessage",
+              "RP_ERR_TRANSACTION_NUMBER_MAXLENGTH"
+            )
+        )
+    }
+    else {
+        dispatch(
+            handleField(
+              "payment",
+              action.componentJsonpath,
+              "errorMessage",
+              "RP_ERR_TRANSACTION_NUMBER_FIELD"
+            )
+        )
+        dispatch(
+            handleField(
+              "payment",
+              action.componentJsonpath,
+              "props.errorMessage",
+              "RP_ERR_TRANSACTION_NUMBER_FIELD"
+            )
+        )
+    }
+  }
 }
 
 const paymentInfo = getCommonCard({
@@ -255,13 +392,14 @@ const goToPayment = async (state, dispatch, type) => {
       const response = await getConsumerCode(state, dispatch, payload)
       if(!!response && !!response.Properties.length){
         const {rentPaymentConsumerCode, tenantId} = response.Properties[0]
+        let billingBuisnessService=response.Properties[0].billingBusinessService
         type === ONLINE ? dispatch(
             setRoute(
-             `/rented-properties-citizen/pay?consumerCode=${rentPaymentConsumerCode}&tenantId=${tenantId}&businessService=${BILLING_BUSINESS_SERVICE_RENT}`
+             `/rented-properties-citizen/pay?consumerCode=${rentPaymentConsumerCode}&tenantId=${tenantId}&businessService=${billingBuisnessService}`
             )
           ) : dispatch(
             setRoute(
-            `/rented-properties/acknowledgement?purpose=pay&applicationNumber=${rentPaymentConsumerCode}&status=success&tenantId=${tenantId}&type=${BILLING_BUSINESS_SERVICE_RENT}`
+            `/rented-properties/acknowledgement?purpose=pay&applicationNumber=${rentPaymentConsumerCode}&status=success&tenantId=${tenantId}&type=${billingBuisnessService}`
              
             )
           )
@@ -269,7 +407,7 @@ const goToPayment = async (state, dispatch, type) => {
       }
     }
   } else {
-    dispatch(toggleSnackbar(true, {labelName: "ERR_FILL_RENTED_MANDATORY_FIELDS", labelKey: "ERR_FILL_RENTED_MANDATORY_FIELDS"}, "warning"))
+    dispatch(toggleSnackbar(true, {labelName: "RP_ERR_FILL_RENTED_MANDATORY_FIELDS", labelKey: "RP_ERR_FILL_RENTED_MANDATORY_FIELDS"}, "warning"))
   }
 }
 

@@ -51,32 +51,53 @@ class PaymentRedirect extends Component {
                     { key: "applicationNumber", value: consumerCode },
                 ]);
 
+                let paymentStatus = get(
+                    response.bookingsModelList[0],
+                    "bkPaymentStatus",
+                    ""
+                );
                 let payload = response.bookingsModelList[0];
+
+                let bkAction = ""
                 set(
                     payload,
                     "bkAction",
-                    bookingType === "OSBM" || bookingType === "OSUJM" 
+                    bookingType === "OSBM" || bookingType === "OSUJM"
                         ? "PAY"
-                        : bookingType === "GFCP" || bookingType === "PACC"
-                        ? "APPLY"
-                        : "PAIDAPPLY"
+                        : bookingType === "GFCP"
+                            ? "APPLY"
+                            : bookingType === "PACC"
+                                ? paymentStatus === "SUCCESS" || paymentStatus === "succes" ? "MODIFY" : "APPLY"
+                                : "PAIDAPPLY"
                 );
-                set(payload, "bk_payment_status", transactionStatus);
-                response = await httpRequest(
-                    "post",
-                    "/bookings/api/_update",
-                    "",
-                    [],
-                    {
-                        Booking: payload,
-                    }
-                );
+                set(payload, "bkPaymentStatus", transactionStatus);
+                if (bookingType === "PACC") {
+                    response = await httpRequest(
+                        "post",
+                        "/bookings/park/community/_update",
+                        "",
+                        [],
+                        {
+                            Booking: payload,
+                        }
+                    );
+                } else {
+                    response = await httpRequest(
+                        "post",
+                        "/bookings/api/_update",
+                        "",
+                        [],
+                        {
+                            Booking: payload,
+                        }
+                    );
+                }
                 this.props.setRoute(
                     `/egov-services/acknowledgement?purpose=${"pay"}&status=${"success"}&applicationNumber=${consumerCode}&tenantId=${tenantId}&secondNumber=${transactionId}&businessService=${bookingType}`
                 );
             }
         } catch (e) {
-            console.log(e)
+            console.log(e);
         }
     };
     render() {

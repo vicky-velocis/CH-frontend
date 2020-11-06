@@ -34,7 +34,7 @@ export const getReviewApplicantDetails = (isEditable = true) => {
             children: {
                 header: {
                     gridDefination: {
-                        xs: 12,
+                        xs: 8,
                         sm: 10
                     },
                     ...getCommonSubHeader({
@@ -52,6 +52,13 @@ export const getReviewApplicantDetails = (isEditable = true) => {
                     labelKey: "RP_APPLICANT_NAME_LABEL"
                 },
                 { jsonPath: "Owners[0].ownerDetails.name" }
+            ),
+            fatherOrHusband: getLabelWithValue(
+                {
+                    labelName: "Father/ Husband's Name",
+                    labelKey: "RP_FATHER_OR_HUSBANDS_NAME_LABEL"
+                },
+                { jsonPath: "Owners[0].ownerDetails.fatherOrHusband" }
             ),
             relationship: getLabelWithValue(
                 {
@@ -107,7 +114,7 @@ export const getreviewPropertyAddressDetails = (isEditable = true) => {
             children: {
                 header: {
                     gridDefination: {
-                        xs: 12,
+                        xs: 8,
                         sm: 10
                     },
                     ...getCommonSubHeader({
@@ -132,13 +139,6 @@ export const getreviewPropertyAddressDetails = (isEditable = true) => {
                     labelKey: "RP_SITE_PLOT_LABEL"
                 },
                 { jsonPath: "Owners[0].property.transitNumber" }
-            ),
-            allotmentNumber: getLabelWithValue(
-                {
-                    labelName: "Allotment Number",
-                    labelKey: "RP_ALLOTMENT_NUMBER"
-                },
-                {jsonPath: "Owners[0].allotmenNumber"}
             ),
             area: getLabelWithValue(
                 colonyLabel,
@@ -279,7 +279,7 @@ export const getDuplicateCopyPreviewApplicantDetails = (isEditable = true) => {
             children: {
                 header: {
                     gridDefination: {
-                        xs: 12,
+                        xs: 8,
                         sm: 10
                     },
                     ...getCommonSubHeader({

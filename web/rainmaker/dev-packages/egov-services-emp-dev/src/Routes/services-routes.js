@@ -89,11 +89,21 @@ const ApplicationBWTSummary = Loadable({
   loader: () => import("../Screens/BwtApplicationDetails"),
   loading: Loading
 });
+//Successpagepcc
+const CreateSuccessForPCC= Loadable({
+  loader: () => import("../Screens/CreateSuccessForPCC"),
+  loading: Loading
+});
 //NewLocationApplicationDetails
 const NewLocationApplicationDetails = Loadable({
   loader: () => import("../Screens/NewLocationApplicationDetails"),
   loading: Loading
 });
+
+const CheckAvailabilityPcc= Loadable({
+  loader: () => import("../Screens/ApplyParkAndCommunity/components/CheckAvailability"),
+  loading: Loading
+})
 
 const ServiceHome = Loadable({
   loader: () => import("../Screens/ApplicationDetails"),
@@ -251,6 +261,20 @@ const routes = [
       customTitle: "BK_MYBK_ALL_APPLICAION_HEADER"
     }
   },
+//successPageForPCC
+{
+  path: "egov-services/create-success-pcc",
+  component: CreateSuccessForPCC,
+  needsAuthentication: true,
+  options: {
+    hideBackButton: true,
+    hideFooter: true,
+    title: "CS_COMPLAINT_DETAILS_COMPLAINT_RESOLVED",
+    hideTitle: true,
+    redirectionUrl
+  }
+},
+
 //newMasterData
 {
   path: "egov-services/MasterData",
@@ -267,12 +291,25 @@ const routes = [
   }
 },
 {
+  path: "egov-services/checkavailability_pcc",
+  component: CheckAvailabilityPcc,
+  needsAuthentication: true,
+  options: {
+    hideFooter: true,
+    title: "BK_MYBK_APPLY_PACC_REQUEST_HEADER",
+    
+    customTitle: "BK_MYBK_CHECK_AVAILABILITY_HEADER"
+  }
+},
+  
+{
   path: "egov-services/admin/osbmFee",
   component: OsbmFeeMasterData,
   needsAuthentication: true,
   options: {
     hideFooter: true,
     title: "BK_MYBK_ADMIN_OSBM_FEE_HEADER",
+  
     hideTitle: false,
     redirectionUrl,
     hideFor: "ao",

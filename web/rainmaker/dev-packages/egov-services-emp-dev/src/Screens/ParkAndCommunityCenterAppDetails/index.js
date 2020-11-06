@@ -17,11 +17,14 @@ import PaymentDetails from "./components/PaymentDetails"
 // import ApproveBooking from "../ApplicationResolved";
 // import RejectBooking from "../RejectComplaint";
 import Label from "egov-ui-kit/utils/translationNode";
-
-import jp from "jsonpath";
 import {
-	getFileUrlFromAPI,
-} from "egov-ui-framework/ui-utils/commons";
+	downloadEsamparkApp,downloadEsamparkPL
+} from "egov-ui-kit/redux/bookings/actions";
+import jp from "jsonpath";
+// import {
+// 	getFileUrlFromAPI,
+// } from "egov-ui-framework/ui-utils/commons";
+import {getFileUrlFromAPI} from '../../modules/commonFunction'
 import {
 	getDateFromEpoch,
 	mapCompIDToName,
@@ -283,80 +286,62 @@ class ApplicationDetails extends Component {
 	}
 
 	downloadApplicationFunction = async (e) => {
-		
-		const { transformedComplaint, paymentDetailsForReceipt, downloadAppForPCC,paymentDetails,userInfo } = this.props;
-		const { complaint } = transformedComplaint;
-		let bookingDataOsbm = {
-            applicationNumber: complaint.applicationNo,
-            houseNo: complaint.houseNo,
-            locality: complaint.sector,
-            completeAddress: complaint.address,
-            applicationDate: complaint.dateCreated,
-            villageOrCity: complaint.villageCity,
-            propertyType: complaint.residentialCommercial,
-            storageAreaRequired: complaint.areaRequired,
-            category: complaint.bkCategory,
-            typeOfConstruction: complaint.bkConstructionType,
-            
-            duration:
-                complaint.bkDuration == "1"
-                    ? `${complaint.bkDuration} Month`
-                    : `${complaint.bkDuration} Months`,
-            categoryImage: "",
-        };
-		const queryStr = [
-            {
-                key: "key",
-                value:"bk-osbm-app-form"
-            },
-            { key: "tenantId", value: "ch" },
-		];
-		
-		let appData = [
-            {
-                applicantDetail: {
-                    name: complaint.applicantName,
-                    mobileNumber: complaint.bkMobileNumber,
-                    houseNo: complaint.houseNo,
-                    permanentAddress: complaint.address,
-                    
-                    sector: complaint.sector,
-                    email: complaint.bkEmail,
-                },
-                bookingDetail:bookingDataOsbm,
-                feeDetail: {
-                    baseCharge:
-                        paymentDetails === undefined
-                            ? null
-                            : paymentDetails.billDetails[0].billAccountDetails.filter(el => !el.taxHeadCode.includes("TAX"))[0].amount,
-                    taxes:
-                        paymentDetails === undefined
-                            ? null
-                            : paymentDetails.billDetails[0].billAccountDetails.filter(el => el.taxHeadCode.includes("TAX"))[0].amount,
-                    totalAmount:
-                        paymentDetails === undefined
-                            ? null
-                            : paymentDetails.totalAmount,
-				},
-				generatedBy: {
-					generatedBy: userInfo.name,
-				}
-            },
-        ];
-
-
-		downloadAppForPCC( { BookingInfo: appData })
-		
-
-	}
+		const { downloadEsamparkApp, userInfo,createPACCApplicationData} = this.props;
+		console.log("createPACCApplicationData--this.props--",this.props)
+		let applicationDetails = createPACCApplicationData ? createPACCApplicationData.data : '';
+	   let BookingInfo = [
+		  {
+			  "applicantDetail": {
+				  "name": applicationDetails.bkApplicantName,
+				  "mobileNumber":applicationDetails.bkMobileNumber,
+				  "email": applicationDetails.bkEmail,
+				  "permanentAddress": "",
+				  "permanentCity": "Chandigarh",
+				  "sector": applicationDetails.bkSector,
+				  "fatherName": " "
+			  },
+			  "bookingDetail": {
+				  "applicationNumber": applicationDetails.bkApplicationNumber,
+				  "applicationDate": "",
+				  "bookingPeriod": getDurationDate(
+					applicationDetails.bkFromDate,
+					applicationDetails.bkToDate
+				  ),
+				  "venueName": applicationDetails.bkLocation,
+				  "sector": applicationDetails.bkSector,
+				  "bookingPurpose": applicationDetails.bkBookingPurpose,
+				  "parkDim": applicationDetails.bkDimension
+			  },
+			  "feeDetail": {
+				  "baseCharge": applicationDetails.bkRent,
+				  "cleaningCharge": applicationDetails.bkCleansingCharges,
+				  "surcharges": applicationDetails.bkSurchargeRent,
+				  "facilitationCharge": "100",
+				  "utgst": applicationDetails.bkUtgst,
+				  "cgst": applicationDetails.bkCgst,
+				  "gst": applicationDetails.bkCgst,
+				  "totalAmount": applicationDetails.bkRent
+			  },
+			  "generatedBy":{
+				"generatedBy": userInfo.name,
+				"generatedDateTime": userInfo.createdDate
+			},
+			"documentDetail":{
+				"documentName": "neero_adharcard.pdf"
+			}
+		  }
+	  ]
+	
+	  downloadEsamparkApp({ BookingInfo: BookingInfo })
+	  };
 	
 	downloadApplicationButton = async (e) => {
 		await this.downloadApplicationFunction();
-		const { DownloadApplicationDetails } = this.props;
+		const { DownloadApplicationDetails,userInfo,Downloadesamparkdetails } = this.props;
 		var documentsPreview = [];
 		let documentsPreviewData;
-		if (DownloadApplicationDetails && DownloadApplicationDetails.filestoreIds.length > 0) {	
-			documentsPreviewData = DownloadApplicationDetails.filestoreIds[0];
+		if (Downloadesamparkdetails && Downloadesamparkdetails.filestoreIds.length > 0) {	
+			documentsPreviewData = Downloadesamparkdetails.filestoreIds[0];
 				documentsPreview.push({
 					title: "DOC_DOC_PICTURE",
 					fileStoreId: documentsPreviewData,
@@ -364,7 +349,7 @@ class ApplicationDetails extends Component {
 				});
 				let fileStoreIds = jp.query(documentsPreview, "$.*.fileStoreId");
 				let fileUrls =
-					fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds) : {};
+					fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds,userInfo.tenantId) : {};
 				
 					
 				documentsPreview = documentsPreview.map(function (doc, index) {
@@ -401,10 +386,14 @@ class ApplicationDetails extends Component {
 downloadPermissionLetterButton = async (e) => {
 	await this.downloadPermissionLetterFunction();
 	let documentsPreviewData;
-	const { DownloadPermissionLetterDetails } = this.props;
+	const { DownloadPermissionLetterDetails,userInfo,Downloadesamparkdetailspl
+	} = this.props;
 	var documentsPreview = [];
-	if (DownloadPermissionLetterDetails && DownloadPermissionLetterDetails.filestoreIds.length > 0) {
-		 documentsPreviewData=DownloadPermissionLetterDetails.filestoreIds[0];
+	if (Downloadesamparkdetailspl
+		&& Downloadesamparkdetailspl
+		.filestoreIds.length > 0) {
+		 documentsPreviewData=Downloadesamparkdetailspl
+		 .filestoreIds[0];
 		documentsPreview.push({
 			title: "DOC_DOC_PICTURE",
 			fileStoreId: documentsPreviewData,
@@ -412,7 +401,7 @@ downloadPermissionLetterButton = async (e) => {
 		});
 		let fileStoreIds = jp.query(documentsPreview, "$.*.fileStoreId");
 		let fileUrls =
-			fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds) : {};
+			fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds,userInfo.tenantId) : {};
 	
 
 		documentsPreview = documentsPreview.map(function (doc, index) {
@@ -445,30 +434,36 @@ downloadPermissionLetterButton = async (e) => {
 }
 
 downloadPermissionLetterFunction = async (e) => {
-	const { transformedComplaint,paymentDetails,downloadPLForPCC ,userInfo} = this.props;
+	const { transformedComplaint,paymentDetails,downloadPLForPCC ,userInfo,createPACCApplicationData,downloadEsamparkPL,Downloadesamparkdetailspl
+	} = this.props;
+	let applicationDetails = createPACCApplicationData ? createPACCApplicationData.data : '';
 	const {complaint} = transformedComplaint;
 	let receiptData = [
 		{
 			"applicantDetail": {
-                "name": "Sumit Kumar",
-                "mobileNumber": "9138912806",
-                "email": "nero@gmail.com",
+                "name": applicationDetails.bkApplicantName,
+                "mobileNumber": applicationDetails.bkMobileNumber,
+                "email":applicationDetails.bkEmail,
                 "permanentAddress": "Royal Building",
                 "permanentCity": "Chandigarh",
-                "sector": "7",
-                "fatherName": "RamLal"
-            },
+                "sector": applicationDetails.bkSector,
+                "fatherName": ""
+			},
+			
 			"bookingDetail": {
-                "applicationNumber": "CH-GH-2020-07-25-000183",
-                "applicationDate": "20th Dec 2020",
-                "bookingPeriod": "21th Dec 2020 to 25th Dec 2020",
-                "bookingType": "Park",
-                "venueName": "PARK NO 3 INFRONT OF H NO 53 SEC 9 CHD",
-                "sector": "sector 17",
-                "bookingPupose": "Family Gathering"
-            },
-			"generatedBy": {
-                "generatedBy": "Anil Clerk"
+				"applicationNumber": applicationDetails.bkApplicationNumber,
+				"applicationDate": "",
+				"bookingPeriod": getDurationDate(
+				  applicationDetails.bkFromDate,
+				  applicationDetails.bkToDate
+				),
+				"venueName": applicationDetails.bkLocation,
+				"sector": applicationDetails.bkSector,
+				"bookingPurpose": applicationDetails.bkBookingPurpose,
+				"parkDim": applicationDetails.bkDimension
+			},
+			"generatedBy":{
+				"generatedBy": userInfo.name,
 			},
 			"approvedBy": {
                 "approvedBy": "Renil Commissioner",
@@ -483,13 +478,13 @@ downloadPermissionLetterFunction = async (e) => {
             }
 		}]
 
-		downloadPLForPCC({BookingInfo:receiptData})
+		downloadEsamparkPL({BookingInfo:receiptData})
 }
 
 	downloadPaymentReceiptButton = async (e) => {
 		this.downloadPaymentReceiptFunction();
 		let documentsPreviewData;
-		const { DownloadPaymentReceiptDetails } = this.props;
+		const { DownloadPaymentReceiptDetails,userInfo } = this.props;
 		var documentsPreview = [];
 		if (DownloadPaymentReceiptDetails && DownloadPaymentReceiptDetails.filestoreIds.length > 0) {	
 		documentsPreviewData = DownloadPaymentReceiptDetails.filestoreIds[0];
@@ -500,7 +495,7 @@ downloadPermissionLetterFunction = async (e) => {
 			});
 			let fileStoreIds = jp.query(documentsPreview, "$.*.fileStoreId");
 			let fileUrls =
-				fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds) : {};
+				fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds,userInfo.tenantId) : {};
 		
 
 			documentsPreview = documentsPreview.map(function (doc, index) {
@@ -532,7 +527,7 @@ downloadPermissionLetterFunction = async (e) => {
 	}
 
 	callApiForDocumentData = async (e) => {
-		const { documentMap } = this.props;
+		const { documentMap,userInfo } = this.props;
 		var documentsPreview = [];
 		if (documentMap && Object.keys(documentMap).length > 0) {
 			let keys = Object.keys(documentMap);
@@ -547,7 +542,7 @@ downloadPermissionLetterFunction = async (e) => {
 			});
 			let fileStoreIds = jp.query(documentsPreview, "$.*.fileStoreId");
 			let fileUrls =
-				fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds) : {};
+				fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds,userInfo.tenantId) : {};
 		
 
 			documentsPreview = documentsPreview.map(function (doc, index) {
@@ -837,7 +832,7 @@ let gro = "";
 
 const mapStateToProps = (state, ownProps) => {
 	const { bookings, common, auth, form } = state;
-	const { applicationData } = bookings;
+	const { applicationData,createPACCApplicationData,Downloadesamparkdetails,Downloadesamparkdetailspl } = bookings;
 	const { DownloadPaymentReceiptDetails,DownloadApplicationDetails,DownloadPermissionLetterDetails } = bookings;
 	const { id } = auth.userInfo;
 
@@ -937,7 +932,9 @@ console.log('paymentDetails===>>>',paymentDetails)
 			serviceRequestId,
 			isAssignedToEmployee,
 			complaintTypeLocalised,
-			
+			createPACCApplicationData,
+			Downloadesamparkdetails,
+			Downloadesamparkdetailspl
 		};
 	} else {
 		return {
@@ -951,7 +948,9 @@ console.log('paymentDetails===>>>',paymentDetails)
 			role,
 			serviceRequestId,
 			isAssignedToEmployee,
-			
+			createPACCApplicationData,
+			Downloadesamparkdetailspl,
+			Downloadesamparkdetails
 		};
 	}
 };
@@ -972,7 +971,12 @@ const mapDispatchToProps = dispatch => {
 		prepareFormData: (jsonPath, value) =>
 			dispatch(prepareFormData(jsonPath, value)),
 		prepareFinalObject: (jsonPath, value) =>
-			dispatch(prepareFinalObject(jsonPath, value))
+			dispatch(prepareFinalObject(jsonPath, value)),
+			downloadEsamparkApp: criteria => dispatch(downloadEsamparkApp(criteria)),  //downloadEsamparkPL
+			downloadEsamparkPL: criteria => dispatch(downloadEsamparkPL(criteria)),
+
+
+			
 	};
 };
 

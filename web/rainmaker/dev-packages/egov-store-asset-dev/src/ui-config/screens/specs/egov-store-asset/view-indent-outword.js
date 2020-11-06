@@ -94,6 +94,9 @@ const createMatrialIndentOutwordHandle=async (state, dispatch) => {
 };
 //print function UI start SE0001
 /** MenuButton data based on status */
+const printPdf = async (state, dispatch) => {
+  downloadAcknowledgementForm("Indent Outward");
+}
 let printMenu = [];
 let receiptPrintObject = {
   label: { labelName: "Receipt", labelKey: "STORE_PRINT_INDENT_OUTWORD" },
@@ -155,7 +158,43 @@ const getMdmsData = async (action, state, dispatch, tenantId) => {
     console.log(e);
   }
 };
+const getData = async (action, state, dispatch) => {
+   
+  await getEmployeeData(action, state, dispatch);
+}
+const getEmployeeData = async (action, state, dispatch) => {
+  //fecthing employee details 
+  const queryParams = [{ key: "roles", value: "EMPLOYEE" },{ key: "tenantId", value:  getTenantId() }];
+  const payload = await httpRequest(
+    "post",
+    "/egov-hrms/employees/_search",
+    "_search",
+    queryParams,
+  );
+  if(payload){
+    if (payload.Employees) {
+      const empDetails =
+      payload.Employees.map((item, index) => {
+          const deptCode = item.assignments[0] && item.assignments[0].department;
+          const designation =   item.assignments[0] && item.assignments[0].designation;
+          const empCode = item.code;
+          const empName = `${item.user.name}`;
+        return {
+                code : empCode,
+                name : empName,
+                dept : deptCode,
+                designation:designation,
+        };
+      });
+    
+      if(empDetails){
+        dispatch(prepareFinalObject("createScreenMdmsData.employee",empDetails));  
+      }
+      
+    }
+  }
 
+}
 const screenConfig = {
   uiFramework: "material-ui",
   name: "view-indent-outword",
@@ -167,6 +206,7 @@ const screenConfig = {
    // showHideAdhocPopup(state, dispatch);
     getMdmsData(action, state, dispatch, tenantId);
     getIndentOutwordData(state, dispatch, id, tenantId,applicationNumber);
+    getData(action, state, dispatch);
     return action;
   },
   components: {
@@ -277,29 +317,48 @@ const screenConfig = {
             },
                          //print function UI start SE0001
                          printMenu: {
-                          uiFramework: "custom-atoms-local",
-                          moduleName: "egov-tradelicence",
-                          componentPath: "MenuButton",
+                          componentPath: "Button", 
                           gridDefination: {
                             xs: 12,
                             sm: 4,
                             md:3,
                             lg:3,
-                            align: "right",
-                          },  
-                          visible:  true,
+                            // align: "right",
+                          },             
+                          visible: true,
                           props: {
-                            data: {
-                              label: {
-                                labelName:"PRINT",
-                                labelKey:"STORE_PRINT"
+                            variant: "contained",
+                            color: "primary",
+                            style: {
+                              color: "white",
+                              borderRadius: "2px",
+                              // width: "250px",
+                              height: "48px",
+                            },
+                          },
+            
+                          children: {
+                            plusIconInsideButton: {
+                              uiFramework: "custom-atoms",
+                              componentPath: "Icon",
+                              props: {
+                                iconName: "print",
+                                style: {
+                                  fontSize: "24px",
+                                },
                               },
-                              leftIcon: "print",
-                              rightIcon: "arrow_drop_down",
-                              props: { variant: "outlined", style: { marginLeft: 10 } },
-                              menu: printMenu
-                            }
-                          }
+                            },
+            
+                            buttonLabel: getLabel({
+                              labelName: "Indent note",
+                              labelKey: "STORE_PRINT_INDENT_OUTWORD",
+                            }),
+                          },
+                          onClickDefination: {
+                            action: "condition",
+                            callBack: printPdf,
+                          },
+                         
                         }
                         //print function UI End SE0001
           }

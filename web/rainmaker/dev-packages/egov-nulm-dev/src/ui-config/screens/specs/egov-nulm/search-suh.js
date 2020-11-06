@@ -96,7 +96,8 @@ import {
     uiFramework: "material-ui",
     name: "search-suh",
     beforeInitScreen: (action, state, dispatch) => {
-      dispatch(prepareFinalObject("NulmSuhRequest", {}));  
+      dispatch(prepareFinalObject("NulmSuhRequest", {})); 
+      dispatch(prepareFinalObject(`documentsUploadRedux`,{})); 
       dispatch(prepareFinalObject("searchScreen", {}));
             // fetching MDMS data
       getData(action, state, dispatch);
@@ -130,7 +131,7 @@ import {
                   sm: 6,
                   align: "right",
                 },
-                visible: process.env.REACT_APP_NAME === "Employee"? false : true,
+                visible: process.env.REACT_APP_NAME === "Employee"? true : false,
                 props: {
                   variant: "contained",
                   color: "primary",

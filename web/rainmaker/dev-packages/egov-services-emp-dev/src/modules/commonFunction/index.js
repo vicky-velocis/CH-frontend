@@ -1,3 +1,4 @@
+import { httpRequest } from "egov-ui-kit/utils/api";
 export const convertEpochToDate = (dateEpoch) => {
     const dateFromApi = new Date(dateEpoch);
     let month = dateFromApi.getMonth() + 1;
@@ -109,3 +110,20 @@ export const NumInWords = (number) => {
     }
     return word + "Rupees Only";
 };
+export const getFileUrlFromAPI = async (fileStoreId,tenantId) => {
+
+
+    const queryObject = [
+      { key: "tenantId", value: tenantId},
+      { key: "fileStoreIds", value: fileStoreId }
+    ];
+    try {
+      const fileUrl = await httpRequest(
+        "/filestore/v1/files/url","_search",
+        queryObject,{},[],{},true,true
+      );
+      return fileUrl;
+    } catch (e) {
+      console.log(e);
+    }
+  };

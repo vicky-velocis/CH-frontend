@@ -156,24 +156,6 @@ import {
                 jsonPath: "materialReceipt[0].receiptDetails[0].uom.name"
               })
             },
-            qtyIssued: {
-              ...getTextField({
-                label: {
-                  labelName: "Qty.  Issued",
-                  labelKey: "STORE_MATERIAL_RECEIPT_QTY_ISSUED"
-                },
-                placeholder: {
-                  labelName: "Qty.  Issued",
-                  labelKey: "STORE_MATERIAL_RECEIPT_QTY_ISSUED"
-                },
-                props:{
-                  disabled:true
-                },
-                required: false,
-                pattern: getPattern("Name") || null,
-                jsonPath: "materialReceipt[0].receiptDetails[0].qtyIssued"
-              })
-            },
             receivedQty: {
               ...getTextField({
                 label: {
@@ -189,7 +171,8 @@ import {
                 },
                 required: true,
                 errorMessage:"STORE_VALIDATION_RECEIVED_QUANTITY",
-                pattern: getPattern("Amount") || null,
+                 //pattern: getPattern("Amount") || null,
+              pattern: getSTOREPattern("Quantity"),
                 jsonPath: "materialReceipt[0].receiptDetails[0].receivedQty"
               }),
               beforeFieldChange: (action, state, dispatch) => {
@@ -216,6 +199,25 @@ import {
                }
                      }
             },
+            qtyIssued: {
+              ...getTextField({
+                label: {
+                  labelName: "Qty.  Issued",
+                  labelKey: "STORE_MATERIAL_RECEIPT_QTY_ISSUED"
+                },
+                placeholder: {
+                  labelName: "Qty.  Issued",
+                  labelKey: "STORE_MATERIAL_RECEIPT_QTY_ISSUED"
+                },
+                props:{
+                  disabled:true
+                },
+                required: false,
+                pattern: getPattern("Name") || null,
+                jsonPath: "materialReceipt[0].receiptDetails[0].qtyIssued"
+              })
+            },
+           
             unitRate: {
               ...getTextField({
                 label: {
@@ -282,6 +284,28 @@ import {
       items: [],
       onMultiItemDelete:(state, dispatch)=>{       
 
+      },
+      onMultiItemAdd: (state, muliItemContent) => {
+        let issueNumberExist = get(
+          state.screenConfiguration.preparedFinalObject,
+          `materialReceipt[0].isAdHoc`,
+          ''
+        ); 
+        if(issueNumberExist ==='NO')
+                {
+                  muliItemContent["unitRate"].props.disabled = false;
+                 // muliItemContent["qtyIssued"].props.visible = false;
+                  muliItemContent["qtyIssued"].props.style = {display:"none"};
+
+                }
+                else{
+                  muliItemContent["unitRate"].props.disabled = true;
+                  //muliItemContent["qtyIssued"].props.visible = true;
+                  muliItemContent["qtyIssued"].props.style = {display:"inline-block"};
+
+                }
+
+        return muliItemContent;
       },
       addItemLabel: {
         labelName: "Add ",

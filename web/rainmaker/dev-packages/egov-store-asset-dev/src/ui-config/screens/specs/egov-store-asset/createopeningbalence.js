@@ -3,15 +3,16 @@ import {
     getCommonHeader,
     getLabel,
   } from "egov-ui-framework/ui-config/screens/specs/utils";
-  import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+  import { prepareFinalObject ,handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
   import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
   import set from "lodash/set";
   import { httpRequest,getsto } from "../../../../ui-utils";
   import { getstoreTenantId,getMaterialMasterSearchResults,getStoresSearchResults,getOpeningBalanceSearchResults } from "../../../../ui-utils/storecommonsapi";
   import { OpeningBalanceDetails } from "./createopeningbalenceResource/OpeningBalance-Details";
   import { footer } from "./createopeningbalenceResource/footer";
-  import { getTenantId , getOPMSTenantId} from "egov-ui-kit/utils/localStorageUtils";
+  import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
   import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
+  import get from "lodash/get";
   
   const hasButton = getQueryArg(window.location.href, "hasButton");
   let enableButton = true;
@@ -42,6 +43,12 @@ import {
             moduleName: "egf-master",
             masterDetails: [{ name: "FinancialYear" }]
           },
+          {
+            moduleName: "store-asset",
+            masterDetails: [
+              { name: "businessService" },
+            ]
+          }
         ],
       },
     };
@@ -57,7 +64,35 @@ import {
     } catch (e) {
       console.log(e);
     }
+};
+  
+const getMDMSWorkflowData = async (action, state, dispatch) => {
+  let mdmsBody = {
+    MdmsCriteria: {
+      tenantId: getstoreTenantId(),
+      moduleDetails: [
+        {
+          moduleName: "store-asset",
+          masterDetails: [
+            { name: "businessService" },
+          ]
+        }
+      ]
+    }
   };
+  try {
+    const response = await httpRequest(
+      "post",
+      "/egov-mdms-service/v1/_search",
+      "_search",
+      [],
+      mdmsBody
+    );
+    dispatch(prepareFinalObject("businessServiceTypeData", get(response, "MdmsRes")));
+  } catch (e) {
+    console.log(e);
+  }
+};
   const getstoreData = async (action, state, dispatch) => {
     const tenantId = getTenantId();
     let queryObject = [
@@ -89,8 +124,24 @@ import {
     try {
       let response = await getOpeningBalanceSearchResults(queryObject, dispatch);        
      let  materialReceipt = response.materialReceipt
-     materialReceipt = materialReceipt.filter(x=>x.mrnNumber === mrnNumber)
-      dispatch(prepareFinalObject("materialReceipt", materialReceipt));
+    // materialReceipt = materialReceipt.filter(x=>x.mrnNumber === mrnNumber)
+     response = response.materialReceipt.filter(x => x.mrnNumber === mrnNumber)
+     if(response && response[0])
+  {
+  for (let index = 0; index < response[0].receiptDetails.length; index++) {
+    const element = response[0].receiptDetails[index];
+   
+       set(response[0], `receiptDetails[${index}].lotNo`, element.receiptDetailsAddnInfo[0].lotNo);
+       set(response[0], `receiptDetails[${index}].expiryDate`, element.receiptDetailsAddnInfo[0].expiryDate);
+       set(response[0], `receiptDetails[${index}].receivedDate`, element.receiptDetailsAddnInfo[0].receivedDate);
+       set(response[0], `receiptDetails[${index}].userAcceptedQty`, element.receiptDetailsAddnInfo[0].userQuantity);       
+       set(response[0], `receiptDetails[${index}].oldReceiptNumber`, element.receiptDetailsAddnInfo[0].oldReceiptNumber);
+      
+       
+  }
+  dispatch(prepareFinalObject("materialReceipt", response));
+}
+     // dispatch(prepareFinalObject("materialReceipt", materialReceipt));
        
     } catch (e) {
       console.log(e);
@@ -99,17 +150,38 @@ import {
   
   const getData = async (action, state, dispatch) => {
     await getMDMSData(action, state, dispatch);
+    await getMDMSWorkflowData(action, state, dispatch);
     await getstoreData(action,state, dispatch);
-    const mrnNumber = getQueryArg(
+    const applicationNumber = getQueryArg(
       window.location.href,
-      "mrnNumber"
+      "applicationNumber"
     );
-    if(mrnNumber)
+    if(applicationNumber)
     {
-      await getOpeningBalanceData(action,state, dispatch,mrnNumber);
+      await getOpeningBalanceData(action,state, dispatch,applicationNumber);
     }
     else{
-      dispatch(prepareFinalObject("materialReceipt", null));
+      //dispatch(prepareFinalObject("materialReceipt[0]", null));
+     
+      const textFields = ["remarks", "oldReceiptNumber", "unitRate","userReceivedQty","lotNo"];
+      let MaterialDetailsCardPath =
+    "components.div.children.OpeningBalanceDetails.children.cardContent.children.View2.children.cardContent.children.OpeningbalenceDetailsCard.props.items";
+      for (let i = 0; i < textFields.length; i++) {
+      let j =0;
+          // dispatch(
+          //   handleField(
+          //     "createopeningbalence",
+          //     `${MaterialDetailsCardPath}[${j}].item${j}.children.cardContent.children.rltnDetailsCardContainer.children${textFields[i]}`,
+          //     "props.value",
+          //     ""
+          //   )
+          // );
+       
+      }
+      dispatch(prepareFinalObject("materialReceipt[0]", null));
+      for (let i = 0; i < textFields.length; i++) {
+     dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[0].${textFields[i]}`, ''));
+      }
     }
   };
   
