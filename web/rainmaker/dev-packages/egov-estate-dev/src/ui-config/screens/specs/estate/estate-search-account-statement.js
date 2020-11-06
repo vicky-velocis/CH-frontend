@@ -40,77 +40,50 @@ import get from "lodash/get";
     let queryObject = [
       { key: "fileNumber", value: fileNumber }
     ];
+    dispatch(
+      prepareFinalObject(
+        "singleSubCategory",
+        []
+      )
+    )
     let mdmsCategory = get(state.screenConfiguration.preparedFinalObject,"searchScreenMdmsData.EstateServices.categories")
-    setTimeout(() => { console.log("World!"); }, 2000);
+    let singleSubCategory = get(state.screenConfiguration.preparedFinalObject,"singleSubCategory")
     let payload = await getSearchResults(queryObject);
     if (payload) {
       let properties = payload.Properties;
-      dispatch(prepareFinalObject("Properties", properties));
-      dispatch(
-        prepareFinalObject(
-          "singleSubCategory",
-          []
-        )
-      )
+      let value;
 
-      // let categorySelected = properties[0].category
-      // let subcatPropertyData = properties[0].subCategory
-      // let subcatvar;
-      
-    
-      // if(categorySelected === "CAT.RESIDENTIAL"){
-      //   subcatvar = mdmsCategory.filter(item => !!item.SubCategory && item.code === "CAT.RESIDENTIAL")
-      //   let i = 0, len = subcatvar[0].SubCategory.length;
-      //     while (i < len) {
-      //         if(subcatvar[0].SubCategory[i].code === subcatPropertyData){
-      //           dispatch(
-      //             prepareFinalObject(
-      //               "singleSubCategory",
-      //               subcatvar[0].SubCategory[i].name
-      //             )
-      //           )
-      //         }
-      //         i++
-      //     }
-        // dispatch(
-        //   prepareFinalObject(
-        //     "subCategory1",
-        //     subcatvar
-        //   )
-        // )
-        // set(state.screenConfiguration.preparedFinalObject,"Properties[0].subcatvar",subcatvar);
-      // }
-      // else if(categorySelected === "CAT.COMMERCIAL"){
-      //   subcatvar = mdmsCategory.filter(item => !!item.SubCategory && item.code === "CAT.COMMERCIAL")
-        
-      //   let i = 0, len = subcatvar[0].SubCategory.length;
-      //   while (i < len) {
-      //       if(subcatvar[0].SubCategory[i].code === subcatPropertyData){
-      //         dispatch(
-      //           prepareFinalObject(
-      //             "singleSubCategory",
-      //             subcatvar[0].SubCategory[i].name
-      //           )
-      //         )
-      //       }
-      //       i++
-      //   }
-        // dispatch(
-        //   prepareFinalObject(
-        //     "subCategory1",
-        //     subcatvar
-        //   )
-        // )
-        // set(state.screenConfiguration.preparedFinalObject,"Properties[0].subcatvar",subcatvar);
-        // }
-        // else if(categorySelected === "CAT.INDUSTRIAL" || categorySelected === "CAT.INSTITUTIONAL" || categorySelected === "CAT.GOVPROPERTY" || categorySelected === "CAT.RELIGIOUS" || categorySelected === "CAT.HOSPITAL"){
-        //   dispatch(
-        //     prepareFinalObject(
-        //       "singleSubCategory",
-        //       ""
-        //     )
-        //   )
-        // }
+      if(properties[0].subCategory === "SUBCAT.HOUSE"){
+        value = "House"
+        dispatch(prepareFinalObject("singleSubCategory", value));
+      }
+      else if(properties[0].subCategory === "SUBCAT.DWELLINGS"){
+        value = "Dwellings"
+        dispatch(prepareFinalObject("singleSubCategory", value));
+      }
+      else if(properties[0].subCategory === "SUBCAT.FLAT"){
+        value = "Flat"
+        dispatch(prepareFinalObject("singleSubCategory", value));
+      }
+      else if(properties[0].subCategory === "SUBCAT.SCF"){
+        value = "SCF"
+        dispatch(prepareFinalObject("singleSubCategory", value));
+      }
+      else if(properties[0].subCategory === "SUBCAT.SCO"){
+        value = "SCO"
+        dispatch(prepareFinalObject("singleSubCategory", value));
+      }
+      else if(properties[0].subCategory === "SUBCAT.BOOTH"){
+        value = "Booth"
+        dispatch(prepareFinalObject("singleSubCategory", value));
+      }
+      else if(properties[0].subCategory === "SUBCAT.SHOP"){
+        value = "Shop"
+        dispatch(prepareFinalObject("singleSubCategory", value));
+      }
+
+      dispatch(prepareFinalObject("Properties", properties));
+  
     }
   }
 

@@ -95,7 +95,7 @@ export const estateApplicationAccountStatementGen = getCommonCard({
             labelKey: "ES_SUB_CATEGORY_PLACEHOLDER"
           },
           // required: false,
-          jsonPath: "Properties[0].subCategory",
+          jsonPath: "singleSubCategory",
           props: {
             disabled: true
           },
