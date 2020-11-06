@@ -168,7 +168,8 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
     )
     
     if (prevOwners.length) {
-      prevOwners = prevOwners.filter(item => item.ownerDetails.previousOwnerRequired == "true");prevOwners.map((item, index) => {
+      prevOwners = prevOwners.filter(item => item.ownerDetails.isPreviousOwnerRequired == "true");
+      prevOwners.map((item, index) => {
         if (typeof item.isDeleted === "undefined") {
           set(queryObject[0], `propertyDetails.purchaser[${index}].ownerDetails.dob`, convertDateToEpoch(queryObject[0].propertyDetails.purchaser[index].ownerDetails.dob))
         }
