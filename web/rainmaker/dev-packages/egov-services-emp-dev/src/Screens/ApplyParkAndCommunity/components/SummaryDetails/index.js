@@ -338,9 +338,10 @@ let payloadfund = await httpRequest(
         const { firstName, fCharges,result, email, mobileNo, locality, surcharge, fromDate, toDate, facilationChargesSuccess,
             onFromDateChange, onToDateChange, utGST, cGST, GSTnumber, handleChange, bankName, amount, transactionDate, transactionNumber, paymentMode,
             dimension, location, facilitationCharges, cleaningCharges, rent, approverName, comment, houseNo, type, purpose, residenials, documentMap,
-            BK_FEE_HEAD_PACC,LUXURY_TAX,REFUNDABLE_SECURITY,PACC_TAX,totalAmountSuPage,
+            BK_FEE_HEAD_PACC,LUXURY_TAX,REFUNDABLE_SECURITY,PACC_TAX,totalAmountSuPage,one,two,three,four,five,six,
             PACPACC_ROUND_OFFC_TAX,FACILITATION_CHARGE
             } = this.props;
+            console.log(",one,two,three,four,five,six--",one,two,three,four,five,six)
             console.log("propsInRendersummary--",this.props)
             let fc = fCharges?fCharges.facilitationCharge:'100';
             console.log("stateofBooking--",this.state.createPACCApp)
@@ -438,6 +439,44 @@ const mapStateToProps = state => {
     let checkBillLength =  paymentDataOne != "wrong" ? paymentDataOne.Bill.length > 0 : "";
     let totalAmountSuPage = checkBillLength ? paymentDataOne.Bill[0].totalAmount: "notfound";
     console.log("totalAmountSuPage-",totalAmountSuPage)
+
+    let billAccountDetailsArray =  checkBillLength ? paymentDataOne.Bill[0].billDetails[0].billAccountDetails : "NOt found Any Array"
+    console.log("billAccountDetailsArray--",billAccountDetailsArray)
+    let one = 0;
+    let two = 0;
+    let three = 0;
+    let four = 0;
+    let five = 0;
+    let six = 0;
+for(let i = 0; i < billAccountDetailsArray.length ; i++ ){
+
+    if(billAccountDetailsArray[i].taxHeadCode == "PACC"){
+        one = billAccountDetailsArray[i].amount
+    }
+    else if(billAccountDetailsArray[i].taxHeadCode == "LUXURY_TAX"){
+        two = billAccountDetailsArray[i].amount
+    }
+    else if(billAccountDetailsArray[i].taxHeadCode == "REFUNDABLE_SECURITY"){
+        three = billAccountDetailsArray[i].amount
+    }
+    else if(billAccountDetailsArray[i].taxHeadCode == "PACC_TAX"){
+        four = billAccountDetailsArray[i].amount
+    }
+    else if(billAccountDetailsArray[i].taxHeadCode == "PACC_ROUND_OFF"){
+        five = billAccountDetailsArray[i].amount
+    }
+    else if(billAccountDetailsArray[i].taxHeadCode == "FACILITATION_CHARGE"){
+        six = billAccountDetailsArray[i].amount
+    }
+}
+
+console.log("one--",one)
+console.log("two--",two)
+console.log("three--",three)
+console.log("four--",four)
+console.log("five--",five)
+console.log("six--",six)
+
     //1
     let BK_FEE_HEAD_PACC = checkBillLength ? paymentDataOne.Bill[0].billDetails[0].billAccountDetails[0].amount: "notFound";
     console.log("BK_FEE_HEAD_PACC--",BK_FEE_HEAD_PACC)
@@ -490,7 +529,7 @@ const mapStateToProps = state => {
         createPACCApplicationData,userInfo,
         documentMap, bkLocation, facilationChargesSuccess,
         fCharges,myLocationtwo,BK_FEE_HEAD_PACC,LUXURY_TAX,REFUNDABLE_SECURITY,PACC_TAX,
-        PACPACC_ROUND_OFFC_TAX,FACILITATION_CHARGE,totalAmountSuPage
+        PACPACC_ROUND_OFFC_TAX,FACILITATION_CHARGE,totalAmountSuPage,one,two,three,four,five,six
     }
 
 }
