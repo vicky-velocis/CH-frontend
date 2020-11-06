@@ -548,12 +548,7 @@ const routes = [
     needsAuthentication: true,
     options: {
       hideFooter: true,
-<<<<<<< HEAD
-      customFor: "employee",
-      // title: "BK_CS_HEADER_APPLICATION_SUMMARY",
-=======
       title: "BK_CS_HEADER_APPLICATION_SUMMARY",
->>>>>>> c8644ead48bc6c47abd34ee2daf565df42fb978f
       redirectionUrl
     }
   },
@@ -783,7 +778,6 @@ const routes = [
     }
   },
 
-<<<<<<< HEAD
   {
     path: "/egov-services/testing",
     component: testing,
@@ -836,74 +830,6 @@ const routes = [
     }
   },
 
-=======
-
-  
-  {
-    path: "request-reassign/:serviceRequestId?",
-    component: RequestReAssign,
-    needsAuthentication: true,
-    options: {
-      title: "CS_HEADER_REQUEST_REASSIGN",
-      titleBackground: true, // Use this if you need white background for title in web version
-      hideFooter: true,
-      redirectionUrl
-    }
-  },
-  // {
-  //   path: "create-complaint",
-  //   component: CreateComplaint,
-  //   needsAuthentication: true,
-  //   options: {
-  //     title: "CS_ADD_COMPLAINT_COMPLAINT_SUBMISSION",
-  //     hideFooter: true,
-  //     redirectionUrl,
-  //     isHomeScreen: true
-  //   }
-  // },
-  // {
-  //   path: "complaint-submitted",
-  //   component: ComplaintCreated,
-  //   needsAuthentication: true,
-  //   options: {
-  //     hideFooter: true,
-  //     title: "CS_HEADER_COMPLAINT_SUBMITTED",
-  //     hideTitle: true,
-  //     hideBackButton: true
-  //   }
-  // },
-  {
-    path: "reopen-complaint/:serviceRequestId?",
-    component: ReOpenComplaint,
-    needsAuthentication: true,
-    options: {
-      title: "CS_HEADER_REOPEN_COMPLAINT",
-      titleBackground: true // Use this if you need white background for title in web version
-    }
-  },
-  {
-    path: "reopen-acknowledgement",
-    component: ReopenAcknowledgement,
-    needsAuthentication: true,
-    options: {
-      hideFooter: true,
-      hideBackButton: true,
-      title: "CS_COMMON_COMPLAINT_REOPENED",
-      hideTitle: true
-    }
-  }
-  // {
-  //   path: "create-employee",
-  //   component: CreateEmployee,
-  //   needsAuthentication: true,
-  //   options: {
-  //     hideFooter: true,
-  //     title: "Create Employee",
-  //     hideTitle: true,
-  //     hideBackButton: true
-  //   }
-  // }
->>>>>>> c8644ead48bc6c47abd34ee2daf565df42fb978f
 ];
 
 export default routes;
