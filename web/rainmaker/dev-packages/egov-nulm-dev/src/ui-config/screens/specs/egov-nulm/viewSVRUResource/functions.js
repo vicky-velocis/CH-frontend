@@ -135,14 +135,14 @@ export const handleSubmitSEP = (state, dispatch) =>{
 
   if(process.env.REACT_APP_NAME === "Employee"){
       if(status === FORWARD_TO_TASK_FORCE_COMMITTEE){
-      const tfcStatus =  get(state, 'screenConfiguration.preparedFinalObject.NULMSEPRequest.taskCommitteeStatus');
+      const tfcStatus =  get(state, 'screenConfiguration.preparedFinalObject.NulmSusvRenewRequest.taskCommitteeStatus');
         if(tfcStatus === "Approved by Task Force Committee")
             handleCreateUpdateSEP(state, dispatch,APPROVED_BY_TASK_FORCE_COMMITTEE);
         else 
           handleCreateUpdateSEP(state, dispatch,REJECTED_BY_TASK_FORCE_COMMITTEE); 
       }
     else if (status === APPROVED_BY_TASK_FORCE_COMMITTEE){
-      const tfcStatus =  get(state, 'screenConfiguration.preparedFinalObject.NULMSEPRequest.taskCommitteeStatus');
+      const tfcStatus =  get(state, 'screenConfiguration.preparedFinalObject.NulmSusvRenewRequest.taskCommitteeStatus');
       if(tfcStatus === "Approved by Task Force Committee")
           handleCreateUpdateSEP(state, dispatch,SENT_TO_BANK_FOR_PROCESSING);
       else 
@@ -155,7 +155,7 @@ export const handleSubmitSEP = (state, dispatch) =>{
     window.localStorage.removeItem("SEP_Status");
   }
   else{
-    handleCreateUpdateSEP(state, dispatch,"Created");
+    handleCreateUpdateSEP(state, dispatch,"Drafted");
   }
   
 };
@@ -170,20 +170,20 @@ export const handleApproveSEP = async(state, dispatch) =>{
  const tenantId = process.env.REACT_APP_NAME === "Employee" ?  getTenantId() : JSON.parse(getUserInfo()).permanentCity;
  let uuid = get(
   state.screenConfiguration.preparedFinalObject,
-  "NULMSEPRequest.applicationUuid",
+  "NulmSusvRenewRequest.applicationUuid",
   null
 );
 let applicationId = get(
   state.screenConfiguration.preparedFinalObject,
-  "NULMSEPRequest.applicationId",
+  "NulmSusvRenewRequest.applicationId",
   null
 );
-// let NULMSEPRequest ={}
-// NULMSEPRequest.applicationUuid = uuid;
-// NULMSEPRequest.tenantId = tenantId;
-// NULMSEPRequest.applicationStatus = "Approved";
+// let NulmSusvRenewRequest ={}
+// NulmSusvRenewRequest.applicationUuid = uuid;
+// NulmSusvRenewRequest.tenantId = tenantId;
+// NulmSusvRenewRequest.applicationStatus = "Approved";
 
-// const requestBody = {NULMSEPRequest}
+// const requestBody = {NulmSusvRenewRequest}
 // try {
 //   const response = await httpRequest(
 //     "post",
@@ -206,7 +206,7 @@ let applicationId = get(
 export const handleCreateUpdateSEP = (state, dispatch,status) => {
   let uuid = get(
     state.screenConfiguration.preparedFinalObject,
-    "NULMSEPRequest.applicationUuid",
+    "NulmSusvRenewRequest.applicationUuid",
     null
   );
   if (uuid) {
@@ -218,46 +218,38 @@ export const handleCreateUpdateSEP = (state, dispatch,status) => {
 
 export const createUpdatePO = async (state, dispatch, action,status) => {
 
-  let NULMSEPRequest = get(
+  let NulmSusvRenewRequest = get(
     state.screenConfiguration.preparedFinalObject,
-    "NULMSEPRequest",
+    "NulmSusvRenewRequest",
     []
   );
   const tenantId = process.env.REACT_APP_NAME === "Employee" ?  getTenantId() : JSON.parse(getUserInfo()).permanentCity;
   
-  NULMSEPRequest.tenantId = tenantId;
+  NulmSusvRenewRequest.tenantId = tenantId;
   let queryObject = [{ key: "tenantId", value: tenantId }];
  //setting status
-   NULMSEPRequest.applicationStatus = status;
+   NulmSusvRenewRequest.applicationStatus = status;
 
-let dob = get(NULMSEPRequest, "dob");
-  // const formattedDOB = dob.split("-").reverse().join("-");
 
-  // set(
-  //   NULMSEPRequest,
-  //   "dob",
-  //   formattedDOB
-  // );
 
-  const radioButtonValue = ["isUrbanPoor","isMinority","isHandicapped","isRepaymentMade","isLoanFromBankinginstitute","isDisabilityCertificateAvailable"];
+  const radioButtonValue = ["changeOfLocation"];
     
   radioButtonValue.forEach(value => {
-    if(NULMSEPRequest[value] && NULMSEPRequest[value]==="Yes" ){
-      set( NULMSEPRequest, value, true );
+    if(NulmSusvRenewRequest[value] && NulmSusvRenewRequest[value]==="Yes" ){
+      set( NulmSusvRenewRequest, value, true );
     }else{
-      set( NULMSEPRequest, value, false );
+      set( NulmSusvRenewRequest, value, false );
     }
-  })
-  
- set( NULMSEPRequest, "age", Number(NULMSEPRequest["age"]) );
-  const requestBody = {NULMSEPRequest};
+  })  
+ 
+  const requestBody = {NulmSusvRenewRequest};
   console.log("requestbody", requestBody);
 
   if (action === "CREATE") {
     try {
       const response = await httpRequest(
         "post",
-        "/nulm-services/v1/sep/_create",
+        "/nulm-services/v1/susv/renew/_create",
         "",
         queryObject,
         requestBody
@@ -273,7 +265,7 @@ let dob = get(NULMSEPRequest, "dob");
     try {
       const response = await httpRequest(
         "post",
-        "/nulm-services/v1/sep/_update",
+        "/nulm-services/v1/susv/renew/_update",
         "",
         queryObject,
         requestBody

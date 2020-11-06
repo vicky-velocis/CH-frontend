@@ -32,7 +32,7 @@ const NomineeDetailsCard = {
                 },
                 required: true,
                 pattern: getPattern("Name") || null,
-                jsonPath: "NulmSusvRequest.susvApplicationFamilyDetails[0].name",       
+                jsonPath: "NulmSusvRenewRequest.susvApplicationFamilyDetails[0].name",       
               })
             },
             age: {
@@ -47,7 +47,7 @@ const NomineeDetailsCard = {
                 },
                 required: true,
                 pattern: getPattern("age") || null,
-                jsonPath: "NulmSusvRequest.susvApplicationFamilyDetails[0].age"
+                jsonPath: "NulmSusvRenewRequest.susvApplicationFamilyDetails[0].age"
               })
             },
             relation: {
@@ -62,7 +62,7 @@ const NomineeDetailsCard = {
                 },
                 required: true,
                 pattern: getPattern("Name") || null,
-                jsonPath: "NulmSusvRequest.susvApplicationFamilyDetails[0].relation"
+                jsonPath: "NulmSusvRenewRequest.susvApplicationFamilyDetails[0].relation"
               })
             },
         },
@@ -81,7 +81,7 @@ const NomineeDetailsCard = {
     headerName: "Nominee",
     headerJsonPath:
       "children.cardContent.children.header.children.head.children.Accessories.props.label",
-    sourceJsonPath: "NulmSusvRequest.susvApplicationFamilyDetails",
+    sourceJsonPath: "NulmSusvRenewRequest.susvApplicationFamilyDetails",
     prefixSourceJsonPath:
       "children.cardContent.children.NomineeDetailsCardContainer.children"
   },
@@ -101,7 +101,7 @@ export const SepDetails = getCommonCard({
   ),
   SepDetailsContainer: getCommonContainer({
    
-    lookingfor: {
+    lookingFor: {
       ...getSelectField({
         label: {
           labelName: "I am Looking for",
@@ -115,8 +115,8 @@ export const SepDetails = getCommonCard({
         pattern: getPattern("Address") || null,
         //applyScreenMdmsData
       //   sourceJsonPath:
-      //  "applyScreenMdmsData.NULM.lookingfor",
-        jsonPath: "NULMSEPRequest.lookingfor",
+      //  "applyScreenMdmsData.NULM.lookingFor",
+        jsonPath: "NulmSusvRenewRequest.lookingFor",
         props: {
           data: [
             {
@@ -157,7 +157,7 @@ export const SepDetails = getCommonCard({
               dispatch(
                 handleField(
                   "create-svru",
-                  "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.newproposedZone",
+                  "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.nameOfProposedNewStreetVendor",
                   "props.style",                  
                   { display: "inline-block" }
                 )
@@ -177,7 +177,7 @@ export const SepDetails = getCommonCard({
               dispatch(
                 handleField(
                   "create-svru",
-                  "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.newproposedZone",
+                  "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.nameOfProposedNewStreetVendor",
                   "props.style",
                   { display: "none" }
                 )
@@ -188,7 +188,7 @@ export const SepDetails = getCommonCard({
         },
       })
     },
-    nameOfStreetVender: {
+    nameOfStreetVendor: {
       ...getTextField({
         label: {
           labelName: "Name of Street Vendor",
@@ -200,10 +200,10 @@ export const SepDetails = getCommonCard({
         },
         required: true,
         pattern: getPattern("Name") || null,
-        jsonPath: "NULMSEPRequest.nameOfStreetVender",       
+        jsonPath: "NulmSusvRenewRequest.nameOfStreetVendor",       
       })
     },
-    covNumber: {
+    covNo: {
       ...getTextField({
         label: {
           labelName: "Certificate of Vensing No (COV No.)",
@@ -215,7 +215,7 @@ export const SepDetails = getCommonCard({
         },
         required: true,
         pattern: getPattern("Name") || null,
-        jsonPath: "NULMSEPRequest.covNumber",       
+        jsonPath: "NulmSusvRenewRequest.covNo",       
       })
     },
     residentialAddress: {
@@ -230,20 +230,20 @@ export const SepDetails = getCommonCard({
         },
         required: true,
         pattern: getPattern("Name") || null,
-        jsonPath: "NULMSEPRequest.residentialAddress",       
+        jsonPath: "NulmSusvRenewRequest.residentialAddress",       
       })
     },
-    isProposal: {
+    changeOfLocation: {
       uiFramework: "custom-containers",
       componentPath: "RadioGroupContainer",
       gridDefination: {
         xs: 6
       },
-      jsonPath: "NULMSEPRequest.isProposal",
+      jsonPath: "NulmSusvRenewRequest.changeOfLocation",
       type: "array",
       props: {
         required: true,
-        jsonPath: "NULMSEPRequest.isProposal",
+        jsonPath: "NulmSusvRenewRequest.changeOfLocation",
         label: { name: "Any Proposal in Change of location for street vending", key: "NULM_SVRU_PROPOSAL" },
         buttons: [
           {
@@ -266,19 +266,19 @@ export const SepDetails = getCommonCard({
           dispatch(
             handleField(
               "create-svru",
-              "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.proposedZone",
+              "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.proposedAddress",
               "props.style",
               { display: "none" }
             )
           ); 
-         // dispatch(prepareFinalObject("NULMSEPRequest.proposedZone",null));
+         // dispatch(prepareFinalObject("NulmSusvRenewRequest.proposedAddress",null));
 
         }
         else  if (action.value === "Yes") {
           dispatch(
             handleField(
               "create-svru",
-              "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.proposedZone",
+              "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.proposedAddress",
               "props.style",
               { display: "inline-block" }
             )
@@ -289,7 +289,7 @@ export const SepDetails = getCommonCard({
       }
      
     },
-    proposedZone: {
+    proposedAddress: {
       ...getTextField({
         label: {
           labelName: "Proposed Zone",
@@ -299,9 +299,9 @@ export const SepDetails = getCommonCard({
           labelName: "Enter proposed zone",
           labelKey: "NULM_SVRU_PROPOSED_ZONE_PLACEHOLDER"
         },
-     //   required: true,
+        required: false,
         pattern: getPattern("Name") || null,
-        jsonPath: "NULMSEPRequest.proposedZone"
+        jsonPath: "NulmSusvRenewRequest.proposedAddress"
       })
     },
     nominieedetails :getCommonCard({
@@ -319,7 +319,7 @@ export const SepDetails = getCommonCard({
       NomineeDetailsCard
     }),
     
-    newproposedZone: {
+    nameOfProposedNewStreetVendor: {
       ...getTextField({
         label: {
           labelName: "Name of Proposed New Street Vendor",
@@ -329,9 +329,9 @@ export const SepDetails = getCommonCard({
           labelName: "Enter new Street Vendor",
           labelKey: "NULM_SVRU_PROPOSED_NEW_VENDER_PLACEHOLDER"
         },
-     //   required: true,
+      required: true,
         pattern: getPattern("Name") || null,
-        jsonPath: "NULMSEPRequest.newproposedZone"
+        jsonPath: "NulmSusvRenewRequest.nameOfProposedNewStreetVendor"
       })
     },
   })

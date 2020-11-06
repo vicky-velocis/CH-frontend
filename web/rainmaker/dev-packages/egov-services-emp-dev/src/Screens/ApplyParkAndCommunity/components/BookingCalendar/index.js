@@ -7,9 +7,9 @@ import {
 import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-
-import "react-day-picker/lib/style.css";
-import "./index.css";
+import "../../../../contributed-modules/react-day-picker/lib/style.css"
+//import "react-day-picker/lib/style.css";
+//import "./index.css";
 import get from "lodash/get";
 import set from "lodash/set";
 

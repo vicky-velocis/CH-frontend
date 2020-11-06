@@ -92,12 +92,12 @@ import {
         label: "Forwarded to Task Force Committee"
       },
       {
-        value: "Approved by Task Force committee",
+        value: "Approved by Task Force Committee",
         label: "Approved by Task Force committee"
       },
       {
-        value: "Rejected by Task Force committee",
-        label: "Rejected by Task Force committee"
+        value: "Rejected by Task Force Committee",
+        label: "Rejected by Task Force Committee"
       },
       {
         value: "Sent to Bank for Processing",

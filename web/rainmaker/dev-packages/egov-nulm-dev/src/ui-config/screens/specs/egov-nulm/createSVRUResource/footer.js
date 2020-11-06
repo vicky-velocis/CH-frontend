@@ -42,7 +42,7 @@ export const callBackForNext = async (state, dispatch) => {
     "components.div.children.stepper.props.activeStep",
     0
   );
-  const {NULMSEPRequest} = state.screenConfiguration.preparedFinalObject;
+  const {NulmSusvRenewRequest} = state.screenConfiguration.preparedFinalObject;
   let isFormValid = true;
   let documentsPreview =[];
   let applicationDocument =[];
@@ -53,9 +53,105 @@ export const callBackForNext = async (state, dispatch) => {
       dispatch,
       "create-svru"
     );
+    
+    if (!isSepDetailsValid) {
+      const fields = get(
+        state.screenConfiguration.screenConfig[`create-svru`],
+        "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children",
+        {}
+      );
+if(NulmSusvRenewRequest !== undefined && NulmSusvRenewRequest.lookingFor !== undefined)
+{
+      if(NulmSusvRenewRequest.lookingFor ==='Application for Transfer of Registration on Death Cases')
+      {
+        if(fields.lookingFor!==undefined       
+          &&fields.nameOfStreetVendor!==undefined 
+          &&fields.covNo!==undefined 
+          &&fields.residentialAddress!==undefined 
+          &&fields.nameOfProposedNewStreetVendor!==undefined 
+         ) {
+          if(fields.lookingFor.isFieldValid ===false 
+            ||fields.nameOfStreetVendor.isFieldValid ===false 
+            ||fields.covNo.isFieldValid ===false 
+            ||fields.residentialAddress.isFieldValid ===false           
+            ||fields.nameOfProposedNewStreetVendor.isFieldValid ===false         
+           
+            )
+            {
+              isFormValid = false;
+            }
+            else
+            {
+              if(NulmSusvRenewRequest && NulmSusvRenewRequest.isProposal){
+                if(NulmSusvRenewRequest.isProposal =="Yes" && !NulmSusvRenewRequest.proposedZone ){
+                  const errorMessage = {
+                    labelName: "Please provide proposed zone/ward/area",
+                    labelKey: "NULM_SVRU_ZONE_VALIDATION"
+                  };
+                  dispatch(toggleSnackbar(true, errorMessage, "warning"));
+                  return;
+                }
+                else
+                {
+                  isFormValid = true;
+                }
+              }
+              else{
+                isFormValid = true;
+              }
+              
+            }
+         }
+
+      }
+      else
+      {
+        let nomineeDetailsPath =
+      "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.nominieedetails.children.cardContent.children.NomineeDetailsCard.props.items";
+
+    let nomineeItems = get(
+      state.screenConfiguration.screenConfig['create-svru'],
+      nomineeDetailsPath,
+      []
+    );
+    let isNomineeValid = true;
+    for (var j = 0; j < nomineeItems.length; j++) {
+      if (
+        (nomineeItems[j].isDeleted === undefined ||
+          nomineeItems[j].isDeleted !== false) &&
+        !validateFields(
+          `${nomineeDetailsPath}[${j}].item${j}.children.cardContent.children.NomineeDetailsCardContainer.children`,
+          state,
+          dispatch,
+          "create-svru"
+        )
+      )
+      isNomineeValid = false;
+    }
+    if (!isNomineeValid) {
+      const errorMessage = {
+        labelName: "Please provide nominee details",
+        labelKey: "NULM_SVRU_NOMINEE_VALIDATION"
+      };
+      dispatch(toggleSnackbar(true, errorMessage, "warning"));
+      return;
+
+    }
+    else
+    {
+      isFormValid = true;
+    }
+
+      }
+    }
+    else
+    {
+      isFormValid = false;
+    }
+    }
 //     if (isSepDetailsValid) {
-//     if(NULMSEPRequest ){
-//       if(!NULMSEPRequest.dob && !NULMSEPRequest.age ){
+//     if(NulmSusvRenewRequest ){
+//       if(!NulmSusvRenewRequest.dob && !NulmSusvRenewRequest.age ){
 //         const errorMessage = {
 //           labelName: "Please select the Minority",
 //           labelKey: "ERR_NULM_DOB_AGE_VALIDATION"
@@ -66,8 +162,8 @@ export const callBackForNext = async (state, dispatch) => {
 //     }
 //   }
     
-// if(NULMSEPRequest && NULMSEPRequest.isMinority){
-//   if(NULMSEPRequest.isMinority =="Yes" && !NULMSEPRequest.minority ){
+// if(NulmSusvRenewRequest && NulmSusvRenewRequest.isMinority){
+//   if(NulmSusvRenewRequest.isMinority =="Yes" && !NulmSusvRenewRequest.minority ){
 //     const errorMessage = {
 //       labelName: "Please select the Minority",
 //       labelKey: "ERR_NULM_MINORTY"
@@ -77,8 +173,8 @@ export const callBackForNext = async (state, dispatch) => {
 //   }
 // }
 
-// if(NULMSEPRequest && NULMSEPRequest.isUrbanPoor){
-//   if(NULMSEPRequest.isUrbanPoor =="Yes" && !NULMSEPRequest.bplNo ){
+// if(NulmSusvRenewRequest && NulmSusvRenewRequest.isUrbanPoor){
+//   if(NulmSusvRenewRequest.isUrbanPoor =="Yes" && !NulmSusvRenewRequest.bplNo ){
 //     const errorMessage = {
 //       labelName: "Please fill BPL Number",
 //       labelKey: "ERR_NULM_FILL_BPL_NUMBER"
@@ -87,8 +183,8 @@ export const callBackForNext = async (state, dispatch) => {
 //     return;
 //   }
 // }
-// if(NULMSEPRequest && NULMSEPRequest.isHandicapped){
-//   if(NULMSEPRequest.isHandicapped =="Yes" && (NULMSEPRequest.isDisabilityCertificateAvailable === undefined) ){
+// if(NulmSusvRenewRequest && NulmSusvRenewRequest.isHandicapped){
+//   if(NulmSusvRenewRequest.isHandicapped =="Yes" && (NulmSusvRenewRequest.isDisabilityCertificateAvailable === undefined) ){
 //     const errorMessage = {
 //       labelName: "Please chose disability certificate available option",
 //       labelKey: "ERR_NULM_FILL_DISABILITY_CERTIFICATE"
@@ -98,13 +194,13 @@ export const callBackForNext = async (state, dispatch) => {
 //   }
 // }
 
-// if(NULMSEPRequest && ( !NULMSEPRequest.hasOwnProperty("gender") || !NULMSEPRequest.hasOwnProperty("category"))){
+// if(NulmSusvRenewRequest && ( !NulmSusvRenewRequest.hasOwnProperty("gender") || !NulmSusvRenewRequest.hasOwnProperty("category"))){
 //   isFormValid = false;
 // }
 
-    if (!isSepDetailsValid) {     
-      isFormValid = true;
-    }
+    // if (!isSepDetailsValid) {     
+    //   isFormValid = true;
+    // }
     const status = window.localStorage.getItem("SEP_Status");
 
     // if(status === FORWARD_TO_TASK_FORCE_COMMITTEE || status === APPROVED_BY_TASK_FORCE_COMMITTEE|| status===REJECTED_BY_TASK_FORCE_COMMITTEE || status===SENT_TO_BANK_FOR_PROCESSING) {
@@ -234,7 +330,7 @@ export const callBackForNext = async (state, dispatch) => {
 else if(activeStep == 1 && isFormValid){
 
   dispatch(
-    prepareFinalObject("NULMSEPRequest.applicationDocument", applicationDocument)
+    prepareFinalObject("NulmSusvRenewRequest.applicationDocument", applicationDocument)
   );
   dispatch(
     prepareFinalObject("documentsPreview", documentsPreview)
@@ -244,47 +340,11 @@ else if(activeStep == 1 && isFormValid){
   else{
     if(activeStep ===0)
     {
-      let loanamount = 200000
-      const loanAmountInput = get(state.screenConfiguration.preparedFinalObject, "NULMSEPRequest.loanAmount");
-      if(loanAmountInput>loanamount)
-      {
-        const errorMessage = {
-          labelName: "Amount of Loan should not be more than 2Lacs",
-          labelKey: "NULM_SEP_AMOUNT_OF_LOAN_REQUIRED_VALIDATION"
-        };
-        dispatch(toggleSnackbar(true, errorMessage, "warning"));
-      }
-      else
-      {
-        // setting documents for conditional doc mandatory
+      // setting documents for conditional doc mandatory
     prepareDocumentsUploadData(state, dispatch, 'SVRUApplication');
-
-    // show validation mewssage and clear age value from json
-    if(NULMSEPRequest && NULMSEPRequest.dob && NULMSEPRequest.age ){
-      if(NULMSEPRequest.dob && NULMSEPRequest.age ){
-        const errorMessage = {
-          labelName: "Please select the Minority",
-          labelKey: "ERR_NULM_DOB_AGE_VALIDATION"
-        };
-        dispatch(toggleSnackbar(true, errorMessage, "warning"));
-        // dispatch(
-        //   handleField(
-        //     `create-svru`,
-        //     "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.age",
-        //     "props.value",
-        //     ''
-        //   )
-        // );
-        // dispatch(prepareFinalObject(`NULMSEPRequest.age`, null ));
-        return;
-      }
-    }
-      changeStep(state, dispatch);
-      }
-    }
-    else
     changeStep(state, dispatch);
   }
+}
 };
 
 export const changeStep = (
@@ -409,9 +469,9 @@ export const getActionDefinationForStepper = path => {
 };
 
 export const callBackForPrevious = (state, dispatch) => {
-  const {NULMSEPRequest} = state.screenConfiguration.preparedFinalObject;
-  if(NULMSEPRequest && NULMSEPRequest.dob && NULMSEPRequest.age ){
-    if(NULMSEPRequest.dob && NULMSEPRequest.age ){
+  const {NulmSusvRenewRequest} = state.screenConfiguration.preparedFinalObject;
+  if(NulmSusvRenewRequest && NulmSusvRenewRequest.dob && NulmSusvRenewRequest.age ){
+    if(NulmSusvRenewRequest.dob && NulmSusvRenewRequest.age ){
       dispatch(
         handleField(
           `create-svru`,
@@ -420,7 +480,7 @@ export const callBackForPrevious = (state, dispatch) => {
           ''
         )
       );
-      dispatch(prepareFinalObject(`NULMSEPRequest.age`, null ));
+      dispatch(prepareFinalObject(`NulmSusvRenewRequest.age`, null ));
     }
   }
   changeStep(state, dispatch, "previous");

@@ -1,6 +1,6 @@
 import React from "react";
 // import Helmet from "react-helmet";
-  import DayPicker, { DateUtils } from "react-day-picker";
+  import DayPicker, { DateUtils } from "../../../../contributed-modules/react-day-picker";
   import { httpRequest } from "egov-ui-kit/utils/api";
 import {
     prepareFinalObject,

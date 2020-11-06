@@ -65,28 +65,28 @@ export const getSEPDetailsView = (isReview = true) => {
       }
     },
     viewOne: getCommonContainer({
-      lookingfor: getLabelWithValue(
+      lookingFor: getLabelWithValue(
         {
           labelName: "I am Looking for",
           labelKey: "NULM_SVRU_LOOKING_FOR"
         },
-        { jsonPath: "NULMSEPRequest.lookingfor",callBack: checkValueForNA  }
+        { jsonPath: "NulmSusvRenewRequest.lookingFor",callBack: checkValueForNA  }
       ),
-      nameOfStreetVender: getLabelWithValue(
+      nameOfStreetVendor: getLabelWithValue(
         {
           labelName: "Name of Street Vendor",
           labelKey: "NULM_SVRU_NANE_OF_STREET_VENDER"
         },
-        { jsonPath: "NULMSEPRequest.nameOfStreetVender",callBack: checkValueForNA  }
+        { jsonPath: "NulmSusvRenewRequest.nameOfStreetVendor",callBack: checkValueForNA  }
       ),
      
       
-      covNumber: getLabelWithValue(
+      covNo: getLabelWithValue(
         {
           labelName: "Certificate of Vensing No (COV No.)",
           labelKey: "NULM_SVRU_CON_NUMBER"
         },
-        { jsonPath: "NULMSEPRequest.covNumber",
+        { jsonPath: "NulmSusvRenewRequest.covNo",
         callBack: checkValueForNA  }
       ),
       residentialAddress: getLabelWithValue(
@@ -94,26 +94,26 @@ export const getSEPDetailsView = (isReview = true) => {
           labelName: "Residential Address if Change from Last Given",
           labelKey: "NULM_SVRU_RES_ASDDRESS"
         },
-        { jsonPath: "NULMSEPRequest.residentialAddress",
+        { jsonPath: "NulmSusvRenewRequest.residentialAddress",
         callBack: checkValueForNA }
       ),
       
 
-      isProposal: getLabelWithValue(
+      changeOfLocation: getLabelWithValue(
         {
           labelName: "Adhar Number",
           labelKey: "NULM_SVRU_PROPOSAL"
         },
-        { jsonPath: "NULMSEPRequest.isProposal",
+        { jsonPath: "NulmSusvRenewRequest.changeOfLocation",
         callBack: checkValueForNA  }
       ),
 
-      proposedZone: getLabelWithValue(
+      proposedAddress: getLabelWithValue(
         {
           labelName: "Proposed Zone",
           labelKey: "NULM_SVRU_PROPOSED_ZONE"
         },
-        { jsonPath: "NULMSEPRequest.proposedZone" ,
+        { jsonPath: "NulmSusvRenewRequest.proposedAddress" ,
         callBack: checkValueForNA  }
       ),
 
@@ -123,7 +123,7 @@ export const getSEPDetailsView = (isReview = true) => {
           labelName: "Name of Proposed New Street Vendor",
           labelKey: "NULM_SVRU_PROPOSED_NEW_VENDER"
         },
-        { jsonPath: "NULMSEPRequest.newproposedZone" ,
+        { jsonPath: "NulmSusvRenewRequest.newproposedZone" ,
         callBack: checkValueForNA  }
       ),
 

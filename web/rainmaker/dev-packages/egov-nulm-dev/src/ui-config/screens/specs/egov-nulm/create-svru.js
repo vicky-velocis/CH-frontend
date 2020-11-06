@@ -145,48 +145,134 @@ const screenConfig = {
   beforeInitScreen: (action, state, dispatch) => {
     
     const mdmsDataStatus = getMdmsData(state, dispatch);
-  //   if(state.screenConfiguration.preparedFinalObject && state.screenConfiguration.preparedFinalObject.NULMSEPRequest){
+    if(state.screenConfiguration.preparedFinalObject && state.screenConfiguration.preparedFinalObject.NulmSusvRenewRequest){
 
-  //     const {NULMSEPRequest} = state.screenConfiguration.preparedFinalObject ;
-  //     if(NULMSEPRequest && NULMSEPRequest.applicationUuid){
-  //     const radioButtonValue = ["isUrbanPoor","isMinority","isHandicapped","isRepaymentMade","isLoanFromBankinginstitute","isDisabilityCertificateAvailable"];
+      const {NulmSusvRenewRequest} = state.screenConfiguration.preparedFinalObject ;
+      if(NulmSusvRenewRequest && NulmSusvRenewRequest.applicationUuid){
+      const radioButtonValue = ["changeOfLocation",];
     
-  //     radioButtonValue.forEach(value => {
-  //       if(NULMSEPRequest[value] && NULMSEPRequest[value]=== true ){
-  //         dispatch(prepareFinalObject(`NULMSEPRequest[${value}]`, "Yes" ));
-  //       }else{
-  //         dispatch(prepareFinalObject(`NULMSEPRequest[${value}]`, "No" ));
-  //       }
-  //     })
+      radioButtonValue.forEach(value => {
+        if(NulmSusvRenewRequest[value] && NulmSusvRenewRequest[value]=== true ){
+          dispatch(prepareFinalObject(`NulmSusvRenewRequest[${value}]`, "Yes" ));
+        }else{
+          dispatch(prepareFinalObject(`NulmSusvRenewRequest[${value}]`, "No" ));
+        }
+      })
 
-  //     dispatch(prepareFinalObject(`NULMSEPRequest.dob`, NULMSEPRequest.dob.split(" ")[0] ));
-  //   }
-  //   else{
-  //     const radioButtonValue = ["isUrbanPoor","isMinority","isHandicapped","isRepaymentMade","isLoanFromBankinginstitute","isDisabilityCertificateAvailable"];
-  //     radioButtonValue.forEach(value => {
+      
+    }
+    else{
+      const radioButtonValue = ["changeOfLocation",];
+      radioButtonValue.forEach(value => {
         
-  //         dispatch(prepareFinalObject(`NULMSEPRequest[${value}]`, "No" ));
+          dispatch(prepareFinalObject(`NulmSusvRenewRequest[${value}]`, "No" ));
         
-  //     })
-  //    // dispatch(prepareFinalObject(`NULMSEPRequest.isDisabilityCertificateAvailable`, "No" ));
-  //   }
-  // }
+      })
+     // dispatch(prepareFinalObject(`NulmSusvRenewRequest.isDisabilityCertificateAvailable`, "No" ));
+    }
+    if(NulmSusvRenewRequest)
+    {
+      if(NulmSusvRenewRequest.lookingFor !== undefined)
+      {
 
-  set(
-    action.screenConfig,
-    "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.newproposedZone.props.style",
-    { display: "none" }
-  ); 
-  set(
-    action.screenConfig,
-    "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.nominieedetails.props.style",
-    { display: "none",width:"100%" }
-  ); 
-  set(
-    action.screenConfig,
-    "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.proposedZone.props.style",
-    { display: "none" }
-  ); 
+      if( NulmSusvRenewRequest.lookingFor ==='Application for Transfer of Registration on Death Cases')
+      {
+        set(
+          action.screenConfig,
+          "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.nameOfProposedNewStreetVendor.props.style",
+          { display: "inline-block" }
+        ); 
+        set(
+          action.screenConfig,
+          "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.nominieedetails.props.style",
+          { display: "none" }
+        );        
+        
+      }
+      else
+      {
+        set(
+          action.screenConfig,
+          "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.nameOfProposedNewStreetVendor.props.style",
+          { display: "none" }
+        ); 
+        set(
+          action.screenConfig,
+          "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.nominieedetails.props.style",
+          { display: "none" }
+        );
+        
+      }
+    }
+    else
+    {
+      set(
+        action.screenConfig,
+        "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.nameOfProposedNewStreetVendor.props.style",
+        { display: "none" }
+      ); 
+      set(
+        action.screenConfig,
+        "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.nominieedetails.props.style",
+        { display: "none" }
+      );
+
+    }
+      if(NulmSusvRenewRequest.lookingFor === true)
+      {
+        set(
+          action.screenConfig,
+          "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.proposedAddress.props.style",
+          { display: "inline-block" }
+        );
+
+      }
+      else
+      {
+        set(
+          action.screenConfig,
+          "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.proposedAddress.props.style",
+          { display: "none" }
+        );
+
+      }    
+  
+    }
+    else
+    {
+      set(
+        action.screenConfig,
+        "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.nameOfProposedNewStreetVendor.props.style",
+        { display: "none" }
+      ); 
+      set(
+        action.screenConfig,
+        "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.nominieedetails.props.style",
+        { display: "none",width:"100%" }
+      ); 
+      set(
+        action.screenConfig,
+        "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.proposedAddress.props.style",
+        { display: "none" }
+      );
+      
+    }
+  }
+  else{
+    set(
+      action.screenConfig,
+      "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.nameOfProposedNewStreetVendor.props.style",
+      { display: "none" }
+    ); 
+    set(
+      action.screenConfig,
+      "components.div.children.formwizardFirstStep.children.SepDetails.children.cardContent.children.SepDetailsContainer.children.nominieedetails.props.style",
+      { display: "none" }
+    );
+  }
+
+
+ 
 
     return action;
   },

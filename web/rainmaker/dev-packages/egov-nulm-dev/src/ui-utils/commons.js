@@ -71,6 +71,8 @@ export const getSearchResults = async (queryObject=[],requestBody={},dispatch,sc
     break;
      case "suhShelterName" : url = "/nulm-services/v1/suh/_getShelterName";
     break;
+    case "svru" : url = "/nulm-services/v1/susv/renew/_get";
+    break;
   }
   try {
     const response = await httpRequest("post", url, "", queryObject, requestBody );

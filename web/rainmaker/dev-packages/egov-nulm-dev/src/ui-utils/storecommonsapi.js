@@ -76,10 +76,15 @@ export const prepareDocumentsUploadData = async (state, dispatch, type) => {
     // Handle the case for multiple muildings
     const isHandicapped = get(state.screenConfiguration.preparedFinalObject, "NULMSEPRequest.isHandicapped");      
     const isDisabilityCertificateAvailable = get(state.screenConfiguration.preparedFinalObject, "NULMSEPRequest.isDisabilityCertificateAvailable");
+    const lookingfor = get(state.screenConfiguration.preparedFinalObject, "NULMSEPRequest.lookingfor");
     let card = {};
     card["name"] = doc.code;
     card["code"] = doc.code;
     if(isHandicapped ==='Yes'&& isDisabilityCertificateAvailable==="Yes" && doc.code ==='NULM_DISABILITY_CERTIFICATE')
+    {
+      card["required"] = true ;
+    }
+    if(lookingfor === 'Application for Transfer of Registration on Death Cases'&& doc.code ==='NULM_NOC_DEPENDENT_FAMILY_MEMBER')
     {
       card["required"] = true ;
     }

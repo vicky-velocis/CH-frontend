@@ -26,7 +26,7 @@ import {
   
   const screenConfig = {
     uiFramework: "material-ui",
-    name: "review-sep",
+    name: "review-svru",
     beforeInitScreen: (action, state, dispatch) => {
      
       return action;

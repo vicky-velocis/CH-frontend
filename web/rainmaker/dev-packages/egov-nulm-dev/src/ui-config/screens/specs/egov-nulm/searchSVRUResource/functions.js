@@ -84,13 +84,13 @@ export const searchApiCall = async (state, dispatch) => {
   // }
   
    const requestBody = {NULMSEPRequest}
-    let response = await getSearchResults([],requestBody, dispatch,"sep");
+    let response = await getSearchResults([],requestBody, dispatch,"svru");
     try {
       let data = response.ResponseBody.map((item) => {
   
         return {
           [getTextToLocalMapping("Application Id")]: get(item, "applicationId", "-") || "-",
-          [getTextToLocalMapping("Name of Applicant")]: get(item, "name", "-") || "-",
+          [getTextToLocalMapping("Name of Applicant")]: get(item, "nameOfApplicant", "-") || "-",
           [getTextToLocalMapping("Application Status")]: get(item, "applicationStatus", "-") || "-",
           [getTextToLocalMapping("Creation Date")]: get(item, "auditDetails.createdTime", "")? new Date(get(item, "auditDetails.createdTime", "-")).toISOString().substr(0,10) : "-",
           ["code"]: get(item, "applicationUuid", "-")

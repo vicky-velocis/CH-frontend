@@ -48,7 +48,8 @@ export const buttonController = () => {
           action: "condition",
           callBack: handleForwardToTFCSEP,
         },
-        visible:status ===NULM_SEP_CREATED ? true :false,
+        //visible:status ===NULM_SEP_CREATED ? true :false,
+        visible: false,
       },
       approvedButton: {
         componentPath: "Button",
@@ -71,7 +72,8 @@ export const buttonController = () => {
           action: "condition",
           callBack: handleSubmitSEP,
         },
-        visible: status !==NULM_SEP_CREATED ? true :false,
+        //visible: status !==NULM_SEP_CREATED ? true :false,
+        visible: false,
       },
     };
   else
@@ -97,7 +99,7 @@ export const buttonController = () => {
           action: "condition",
           callBack: handlesaveSEP,
         },
-        visible: true,
+        visible: false,
       },
       submitButton: {
         componentPath: "Button",
