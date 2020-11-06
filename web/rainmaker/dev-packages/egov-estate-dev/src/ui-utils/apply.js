@@ -274,7 +274,7 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
       //   []
       // )
       if (screenName == "allotment") {
-        tabsArr.pop();
+        tabsArr.splice(-2, 2);
       }
       else if (screenName == "apply-building-branch") {
         tabsArr = tabsArr.splice(0, tabsArr.length - 6);
