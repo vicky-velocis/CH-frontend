@@ -161,6 +161,18 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
     set(queryObject[0], "propertyDetails.companyRegistrationDate", convertDateToEpoch(queryObject[0].propertyDetails.companyRegistrationDate))
     set(queryObject[0], "propertyDetails.emdDate", convertDateToEpoch(queryObject[0].propertyDetails.emdDate))
 
+    let auctionId = get(
+      queryObject[0],
+      "propertyDetails.bidders[0].auctionId",
+      ""
+    )
+
+    set(
+      queryObject[0],
+      "propertyDetails.auctionId",
+      auctionId
+    )
+
     var prevOwners = get(
       queryObject[0],
       "propertyDetails.purchaser",
@@ -250,7 +262,7 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
         /*****************************************************************************************/
       }
     } else {
-      let tabsArr = [0,1,2,3,4,5,6,7];
+      let tabsArr = [0,1,2,3,4,5,6,7,8];
       // let owners = get(
       //   queryObject[0],
       //   "propertyDetails.owners",
@@ -265,7 +277,7 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
         tabsArr.pop();
       }
       else if (screenName == "apply-building-branch") {
-        tabsArr = tabsArr.splice(0, tabsArr.length - 5);
+        tabsArr = tabsArr.splice(0, tabsArr.length - 6);
       }
       if (tabsArr.indexOf(activeIndex) !== -1) {
         set(queryObject[0], "action", "")
