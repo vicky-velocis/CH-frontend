@@ -17,7 +17,7 @@ import {
     getapplicationNumber,
 } from "egov-ui-kit/utils/localStorageUtils";
 import {
-    
+
     getFileUrlFromAPI,
     getQueryArg,
     setBusinessServiceDataToLocalStorage,
@@ -29,6 +29,7 @@ import set from "lodash/set";
 import {
     generageBillCollection,
     generateBill,
+    getRefundDetails
 } from "../utils";
 import { pccSummary } from "./refundResource/pccSummary";
 
@@ -155,7 +156,7 @@ const setSearchResponse = async (
         { key: "applicationNumber", value: applicationNumber },
     ]);
     let recData = get(response, "bookingsModelList", []);
-    console.log(recData, "nero data");
+
     dispatch(
         prepareFinalObject("Booking", recData.length > 0 ? recData[0] : {})
     );
@@ -173,6 +174,12 @@ const setSearchResponse = async (
     } else {
         await generateBill(state, dispatch, applicationNumber, tenantId, recData[0].businessService);
     }
+
+    const refundDetailsResp = await getRefundDetails(applicationNumber, tenantId);
+
+    dispatch(
+        prepareFinalObject("refundData", refundDetailsResp.data[0])
+    );
 
     localStorageSet("bookingStatus", bookingStatus);
     HideshowFooter(action, bookingStatus);
@@ -272,7 +279,7 @@ const screenConfig = {
         // });
         // Set MDMS Data
         getMdmsData(action, state, dispatch).then((response) => {
-            console.log("Hello Nero");
+            console.log("Calling MDMS");
         });
         const queryObject = [
             { key: "tenantId", value: tenantId },

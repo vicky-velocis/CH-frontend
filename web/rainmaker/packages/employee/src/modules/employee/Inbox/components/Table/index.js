@@ -154,7 +154,7 @@ class InboxData extends React.Component {
     let contextPath = status === "Initiated" ? getWFConfig(row[0].hiddenText,row[0].subtext,taskId).INITIATED : getWFConfig(row[0].hiddenText,row[0].subtext,taskId).DEFAULT;
     let queryParams = `applicationNumber=${taskId}&tenantId=${tenantId}`;
     
-    if(contextPath=='/egov-services/application-details'||contextPath=='/egov-services/bwt-application-details'|| "/egov-services/newLocation-application-details"){
+    if(contextPath=='/egov-services/application-details'||contextPath=='/egov-services/bwt-application-details'|| contextPath=="/egov-services/newLocation-application-details"){
       queryParams = `${taskId}`;
     }
 
@@ -181,11 +181,13 @@ class InboxData extends React.Component {
     else if (row[0].subtext == "Engineering" || row[0].subtext == "IT" || row[0].subtext == "Caretaker" || row[0].subtext == "MOH") {
       queryParams += `&Status=${wfStatus}`;
     }
-	else if (row[0].subtext == "NULM") {
+	  else if (row[0].subtext == "NULM") {
       queryParams += `&status=${wfStatus}`;
+    } else if(row[0].subtext === "ES-EB-AllotmentOfSite") {
+      queryParams = `filenumber=${taskId}&tenantId=${tenantId}`
     }
 
-    if(contextPath=='/egov-services/application-details'||contextPath=='/egov-services/bwt-application-details'|| "/egov-services/newLocation-application-details"){
+    if(contextPath=='/egov-services/application-details'||contextPath=='/egov-services/bwt-application-details'||contextPath== "/egov-services/newLocation-application-details"){
       this.props.setRoute(`${contextPath}/${queryParams}`);
 
     }else{

@@ -164,7 +164,7 @@ const screenConfig = {
                             {
                                 label: "BK_MY_BK_APPLICATION_NUMBER_LABEL",
                                 jsonPath: "bkApplicationNumber",
-                                
+
                             },
                             {
                                 label: "BK_MY_BK_APPLICATION_STATUS_LABEL",

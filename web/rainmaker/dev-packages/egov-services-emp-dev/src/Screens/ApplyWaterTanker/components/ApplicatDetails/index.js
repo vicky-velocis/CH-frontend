@@ -72,6 +72,7 @@ class ApplicatInfo extends Component {
             type="text"
             required = {true}
             value={firstName}
+            required = {true} 
             hintText={
               <Label
                 label="BK_MYBK_NAME_CITIZEN_PLACEHOLDER"
@@ -102,6 +103,7 @@ class ApplicatInfo extends Component {
             type="string"
             required = {true}
             value={email}
+            required = {true} 
             hintText={
               <Label
                 label="BK_MYBK_CITIZEN_EMAIL_PLACEHOLDER"
@@ -133,6 +135,7 @@ class ApplicatInfo extends Component {
             type="text"
             required = {true}
             value={mobileNo}
+            required = {true} 
             hintText={
               <Label
                 label="BK_MYBK_CITIZEN_MOBILENO_PLACEHOLDER"

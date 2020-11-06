@@ -198,7 +198,7 @@ class ActionDialog extends React.Component {
             );
       return
     }
-    else if(value==="0"){
+    else if(parseInt(value)===0){
       toggleSnackbar(
         true,
         { labelName: "Please enter number greater than zero", labelKey: "Please enter number greater than zero"},
@@ -240,7 +240,7 @@ return
             );
       return
     }
-    else if(value==="0"){
+    else if(parseInt(value)===0){
       toggleSnackbar(
         true,
         { labelName: "Please enter number greater than zero", labelKey: "Please enter number greater than zero"},
@@ -284,7 +284,7 @@ return
     const sanctionDateEpoch = (!!mortgageApplication.mortgageApprovedGrantDetails[0].sanctionDate) ? parseInt(mortgageApplication.mortgageApprovedGrantDetails[0].sanctionDate) : ""
     const mortgageEndDateEpoch = (!!mortgageApplication.mortgageApprovedGrantDetails[0].mortgageEndDate) ? parseInt(mortgageApplication.mortgageApprovedGrantDetails[0].mortgageEndDate) : ""
 
-    if(!bankName && !mortgageAmountValid && ! sanctionLetterNumber && !sanctionDateEpoch && !mortageEndDate){
+    if(!bankName || !mortgageAmountValid || ! sanctionLetterNumber || !sanctionDateEpoch || !mortgageEndDateEpoch){
       toggleSnackbar(
         true,
         { labelName: "Please enter all required fields", labelKey: "Please enter all required fields"},
@@ -295,15 +295,23 @@ return
     else if(!(bankName.length >= 3 && bankName.length <= 25)) {
       toggleSnackbar(
               true,
-              { labelName: "Enter Bank Name between 1 and 25 Characters", labelKey: "ERR_BANKNAME_RANGE"},
+              { labelName: "Enter Bank Name between 1 and 25 Characters", labelKey: "RP_ERR_BANKNAME_RANGE"},
               "error"
             );
+      return
+    }
+    else if(isNaN(mortgageAmountValid)){
+      toggleSnackbar(
+        true,
+        { labelName: "Amount should be a numeric value", labelKey: "RP_ERR_MORTGAGEAMOUNT_NUMBER"},
+        "error"
+      );
       return
     }
     else if(!(mortgageAmountValid.length >= 3 && mortgageAmountValid.length <= 8)){
       toggleSnackbar(
         true,
-        { labelName: "Enter Mortgage Amount between 3 and 8 digits only", labelKey: "ERR_MORTGAGEAMOUNT_RANGE"},
+        { labelName: "Enter Mortgage Amount between 3 and 8 digits only", labelKey: "RP_ERR_MORTGAGEAMOUNT_RANGE"},
         "error"
       );
       return
@@ -311,7 +319,7 @@ return
     else if(!(sanctionLetterNumber.length >= 1 && sanctionLetterNumber.length <= 25)){
       toggleSnackbar(
         true,
-        { labelName: "Enter Sanction Letter Number between 1 and 25 Characters", labelKey: "ERR_SANCTION_LETTER_NUMBER_RANGE"},
+        { labelName: "Enter Sanction Letter Number between 1 and 25 Characters", labelKey: "RP_ERR_SANCTION_LETTER_NUMBER_RANGE"},
         "error"
       );
       return
@@ -324,6 +332,18 @@ return
       );
       return
     }
+  }
+  else if((this.props.moduleName==="MasterRP"||this.props.moduleName===WORKFLOW_BUSINESS_SERVICE_OT||this.props.moduleName===WORKFLOW_BUSINESS_SERVICE_DC||this.props.moduleName==="PermissionToMortgage")&&(buttonLabel==="REJECT" || buttonLabel==="APPROVE"))
+  {
+const comments=data.comment
+if(!comments || !comments.replace(/\s/g, '').length){
+  toggleSnackbar(
+    true,
+    { labelName: "Please enter the comments", labelKey: "RP_ERR_ENTER_COMMENTS"},
+    "error"
+  );
+return
+}
   }
     this.props.onButtonClick(buttonLabel, isDocRequired)
  }
@@ -382,6 +402,7 @@ return
     const mastrerstate=(get(state.screenConfiguration.preparedFinalObject,dataPath)||[]).masterDataState
     const applicationState = (get(state.screenConfiguration.preparedFinalObject, dataPath) || []).applicationState
     const duplicateCopyApplicationState = (get(state.screenConfiguration.preparedFinalObject, dataPath) || []).state
+    
     return (
       <Dialog
         fullScreen={fullscreen}
@@ -455,6 +476,7 @@ return
                       />
                     </Grid>
                   )}
+                  {(
                   <Grid item sm="12">
                     {/* <TextFieldContainer
                       InputLabelProps={{ shrink: true }}
@@ -465,10 +487,11 @@ return
                       jsonPath={`${dataPath}.comment`}
                       placeholder={fieldConfig.comments.placeholder}
                     /> */}
-                    <label className="commentsLabel">{fieldConfig.comments.label.labelName}</label>
+                     { (showEmployeeList && !!dropDownData.length) ? <label className="commentsLabel">{fieldConfig.comments.label.labelName}</label> : <div style={{height: "10px"}}></div>
+                    }
                     <textarea className="form-control comments" rows="5" placeholder={fieldConfig.comments.placeholder.labelName} onChange={e => handleFieldChange(`${dataPath}.comment`, e.target.value)}/>
                   </Grid>
-    
+                  )}
                   {moduleName === WORKFLOW_BUSINESS_SERVICE_OT && (applicationState === "OT_PENDINGSAVERIFICATION" || applicationState === "OT_PENDINGAPRO") && (buttonLabel === "FORWARD" || buttonLabel === "SUBMIT") && (
                     <Grid item sm="12">
                     <TextFieldContainer

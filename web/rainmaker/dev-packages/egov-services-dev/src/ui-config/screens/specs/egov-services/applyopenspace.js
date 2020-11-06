@@ -168,6 +168,20 @@ const getMdmsData = async (action, state, dispatch) => {
             [],
             mdmsBody
         );
+
+        // payload.MdmsRes.Booking.Documents = [
+        //     {
+
+        //         "code": "DOC.DOC_PICTURE",
+        //         "description":"DOC.DOC_PICTURE.PICTURE_DESCRIPTION",
+        //         "active":true,
+        //         "documentType":"DOC",
+        //         "dropdownData":[],
+        //         "hasDropdown":false,
+        //         "required":true
+
+        //     }];
+
         dispatch(prepareFinalObject("applyScreenMdmsData", payload.MdmsRes));
     } catch (e) {
         console.log(e);

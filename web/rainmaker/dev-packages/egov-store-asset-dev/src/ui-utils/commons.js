@@ -68,6 +68,8 @@ export const getSearchResults = async (queryObject,dispatch,screenName) => {
     break;
     case "disposals":  url = "store-asset-services/disposals/_search";
     break;
+    case "creatorList":  url = "store-asset-services/indents/_creatorList";
+    break;
   }
   try {
     const response = await httpRequest("post", url, "", queryObject, {} );
@@ -1962,9 +1964,11 @@ export const getSTOREPattern = type => {
       return /^[a-zA-Z0-9-]*$/i;
     case "consumerNo":
       return /^[a-zA-Z0-9/-]*$/i;
-      case "Comment":
-        return /^[^\$\"'<>\\\\~`@$%^()+={}\[\]*:;]{1,500}$/i;
-        case "WFComment":
-        return /^[^\$\"'<>\\\\~`@$%^()+={}\[\]*:;]{1,120}$/i;
+    case "Comment":
+      return /^[^\$\"'<>\\\\~`@$%^()+={}\[\]*:;]{1,500}$/i;
+    case "WFComment":
+    return /^[^\$\"'<>\\\\~`@$%^()+={}\[\]*:;]{1,120}$/i;
+    case "Quantity":
+      return /^\d+(?:\.\d{0,3})?$/i;
   }
 };

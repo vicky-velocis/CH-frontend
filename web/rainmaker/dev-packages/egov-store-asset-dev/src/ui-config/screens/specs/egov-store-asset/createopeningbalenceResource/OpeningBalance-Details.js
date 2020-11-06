@@ -8,8 +8,15 @@ import {
     getCommonGrayCard,
     getPattern
   } from "egov-ui-framework/ui-config/screens/specs/utils";
+  import {
+     toggleSnackbar
+  } from "egov-ui-framework/ui-redux/screen-configuration/actions";
  import { getTodaysDateInYMD } from "../../utils";
  import { getSTOREPattern} from "../../../../../ui-utils/commons";
+ import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
+ import set from "lodash/set";
+ import get from "lodash/get";
+ import { getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
  const OpeningbalenceDetailsCard = {
   uiFramework: "custom-containers",
   componentPath: "MultiItem",
@@ -65,7 +72,7 @@ import {
                 labelName: "Lot No.",
                 labelKey: "STORE_MATERIAL_OPENNING_BALANCE_LOT_NO"
               },
-              required: true,
+              required: false,
               errorMessage:"STORE_VALIDATION_LOT_NUMBER",
               pattern: getPattern("Name") || null,
               jsonPath: "materialReceipt[0].receiptDetails[0].lotNo"
@@ -104,8 +111,9 @@ import {
               },
               required: true,
               errorMessage:"STORE_VALIDATION_OPENING_QUANTITY",
-              pattern: getPattern("Amount") || null,
-              jsonPath: "materialReceipt[0].receiptDetails[0].userQuantity"
+              //pattern: getPattern("Amount") || null,
+              pattern: getSTOREPattern("Quantity"),
+              jsonPath: "materialReceipt[0].receiptDetails[0].userReceivedQty"
             })
           },
           OpeningRate: {
@@ -120,7 +128,8 @@ import {
               },
               required: true,
               errorMessage:"STORE_VALIDATION_OPENING_RATE",
-              pattern: getPattern("Amount") || null,
+              //pattern: getPattern("Amount") || null,
+              pattern: getSTOREPattern("Quantity"),
               jsonPath: "materialReceipt[0].receiptDetails[0].unitRate"
             })
           },
@@ -190,6 +199,7 @@ import {
         }
       )
     }),
+ 
     items: [],
     addItemLabel: {
       labelName: "ADD",
@@ -274,7 +284,30 @@ import {
               optionValue: "code",
               optionLabel: "name",
             },
-          })
+          }),
+          beforeFieldChange: (action, state, dispatch) => {
+            let stores = get(state, "screenConfiguration.preparedFinalObject.store.stores",[]) 
+             stores = stores.filter(x=>x.code == action.value)//.materialType.code
+             const userInfo = JSON.parse(getUserInfo());
+             let businessServiceName =''
+             let businessService  = get(state, `screenConfiguration.preparedFinalObject.searchScreenMdmsData.store-asset.businessService`,[]) 
+             // filter store based on login user role and assign business service
+             let roles = userInfo.roles
+             businessService = businessService.filter(x=>x.role === roles[0].code)
+             if(businessService.length==1)
+             businessServiceName =businessService[0].name;
+            if(stores &&stores[0])
+                  {
+                    if(stores[0].department.deptCategory !== businessServiceName )
+                    {
+                      const errorMessage = {
+                        labelName: "Select valid store",
+                        labelKey: "STORE_OPENING_BALANCE_STORE_SELECTION_VALIDATION"
+                      };
+                      dispatch(toggleSnackbar(true, errorMessage, "warning"));
+                    }
+                  }
+          }
         },
         
        
