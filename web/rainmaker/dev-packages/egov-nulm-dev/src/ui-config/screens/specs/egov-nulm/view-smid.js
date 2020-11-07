@@ -187,7 +187,7 @@ import {
         return poViewFooter();
     }
     else{
-      if(status==="DRAFTED")
+      if(status==="Drafted")
           return poViewFooter() 
       else
         return{};

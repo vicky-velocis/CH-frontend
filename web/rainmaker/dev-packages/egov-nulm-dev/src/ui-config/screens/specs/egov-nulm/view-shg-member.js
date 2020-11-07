@@ -177,7 +177,7 @@ import {
         return {};
     }
     else{
-          return status==="DELETED" ? {} : poViewFooter() 
+          return status==="Deleted" ? {} : poViewFooter() 
     }
    
   }

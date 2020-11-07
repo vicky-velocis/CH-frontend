@@ -269,7 +269,7 @@ const getSUHDetails = async(state, dispatch) =>{
 
 const roleBasedValidationForFooter = () => {
   if(process.env.REACT_APP_NAME === "Employee"){
-      if(status === "CREATED"){
+      if(status === "Created"){
         return poViewFooter();
       }
       else{
@@ -277,7 +277,7 @@ const roleBasedValidationForFooter = () => {
       }
   }     
   else{
-    if(status==="DRAFTED")
+    if(status==="Drafted")
         return poViewFooter() 
     else
       return{};

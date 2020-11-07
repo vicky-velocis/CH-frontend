@@ -120,16 +120,16 @@ const handleDeletedCards = (jsonObject, jsonPath, key) => {
 };
 
 export const handleSubmitSMID = (state, dispatch) =>{
-  handleCreateUpdateSMID(state, dispatch,"CREATED")
+  handleCreateUpdateSMID(state, dispatch,"Created")
 };
 export const handlesaveSMID = (state, dispatch) =>{
-  handleCreateUpdateSMID(state, dispatch,"DRAFTED")
+  handleCreateUpdateSMID(state, dispatch,"Drafted")
 };
 export const handleRejectSMID = (state, dispatch) =>{
-  handleCreateUpdateSMID(state, dispatch,"REJECTED")
+  handleCreateUpdateSMID(state, dispatch,"Rejected")
 };
 export const handleApproveSMID = (state, dispatch) =>{
-  handleCreateUpdateSMID(state, dispatch,"APPROVED")
+  handleCreateUpdateSMID(state, dispatch,"Approved")
 };
 
 export const handleDelete =  async(state, dispatch) =>{
@@ -154,7 +154,7 @@ export const handleDelete =  async(state, dispatch) =>{
   NulmShgMemberRequest.shgUuid = shgUuid;
   NulmShgMemberRequest.applicationUuid = applicationUuid;
   NulmShgMemberRequest.tenantId = tenantId;
-  NulmShgMemberRequest.status = "DELETED";
+  NulmShgMemberRequest.status = "Deleted";
   
   const requestBody = {NulmShgMemberRequest}
   if(NulmShgMemberRequest.applicationUuid){
