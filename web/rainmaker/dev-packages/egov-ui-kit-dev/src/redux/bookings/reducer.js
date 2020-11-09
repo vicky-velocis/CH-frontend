@@ -545,6 +545,80 @@ const complaintsReducer = (state = intialState, action) => {
           error: true,
           errorMessage: action.error,
         };
+        case actionTypes.DOWNLOAD_ESAMPARK_PL_COMPLETE_PCC:
+        return {
+          ...state,
+          loading: false,
+          fetchSuccess: true,
+          Downloadesamparkdetailspl: action.payload
+        };
+      case actionTypes.DOWNLOAD_ESAMPARK_APP__ERROR_PCC:
+        return {
+          ...state,
+          loading: false,
+          fetchSuccess: true,
+          error: true,
+          errorMessage: action.error,
+        };
+        case actionTypes.FACILATION_CHARGES_FETCH_SUCCESS:
+          // let facilationChargesSuccess = transformById(action.payload.MdmsRes["BillingService"].TaxHeadMaster, "code");          
+        return {
+          ...state,
+          loading: false,
+          fetchSuccess: true,
+          facilationChargesSuccess: action.payload
+        };
+        // return {
+        //   ...state,
+        //   loading: false,
+        //   facilationChargesSuccess: {
+        //     ...state.facilationChargesSuccess,
+        //     ...facilationChargesSuccess,
+        //   }
+        // }
+      case actionTypes.DOWNLOAD_ESAMPARK_APP__ERROR_PCC:
+        return {
+          ...state,
+          loading: false,
+          fetchSuccess: true,
+          error: true,
+          errorMessage: action.error,
+        };
+        //REFUNDINIT_COMPLETE
+        case actionTypes.REFUNDINIT_COMPLETE:
+          return {
+            ...state,
+            loading: false,
+            fetchSuccess: true,
+            dataforRefund: action.payload,
+          };
+
+        case actionTypes.FACILATION_FETCH_SUCCESS:
+          let applicationFetchfaciliation = transformById(action.payload.MdmsRes["BillingService"].TaxHeadMaster, "code");
+          console.log("applicationFetchfaciliation--",applicationFetchfaciliation)
+          let TaxHeadMaster = action.payload.MdmsRes.BillingService.TaxHeadMaster
+          console.log("TaxHeadMaster--",TaxHeadMaster)
+          var facilation;
+          var arrayName = [];
+          arrayName.push(action.payload.MdmsRes.BillingService.TaxHeadMaster)
+          console.log("arrayName--",arrayName)
+        //  for(let i = 0; i < arrayName.length; i++){
+        //    if(arrayName[i].code==="FACILITATION_CHARGE")
+        //      {
+        //         facilation = facilitationCharge
+        //       }
+        //   }
+        //   console.log("facilation--Inreducer",facilation)
+   
+        return {
+          ...state,
+          loading: false,
+          arrayName: {
+            ...state.arrayName,
+            ...arrayName,
+          },
+        };
+              
     default:
       return state;
   }

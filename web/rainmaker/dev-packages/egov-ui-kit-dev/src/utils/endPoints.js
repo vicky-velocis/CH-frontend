@@ -345,4 +345,11 @@ export const ESAMPARK = {
     ACTION: "_search",
   },
 };
+export const ESAMPARKPL = {
+  POST: {
+    URL: "pdf-service/v1/_create?key=bk-pacc-booking-pl",
+    ACTION: "_search",
+  },
+};
+
 

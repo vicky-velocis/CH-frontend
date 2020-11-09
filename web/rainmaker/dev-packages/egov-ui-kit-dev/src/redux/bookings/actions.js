@@ -1,6 +1,6 @@
 import * as actionTypes from "./actionTypes";
 // import {CREATEBWTAPPLICATION,APPLICATION,MCCAPPLICATION, COMPLAINT, CATEGORY,PAYMENT,HISTORY,AFTERPAYMENTAPI,DWONLOADPAYMENTRECEIPT,DOWNLOADBWTAPPLICATION,DOWNLOADAPPLICATION,DWONLOADPERMISSIONLETTER,OSBMPerDayRateAmount,PerDayRateAmount,DWONLOADNEWRECEIPTFORCG,PermissionLetterDWNOSMCC,ApplicationDWNOSMCC, DWONLOADPAYMENTRECEIPTFORCG,DWONLOADAPPLICATIONFORCG,CREATEPACCAPPLICATION } from "../../utils/endPoints";
-import {CREATEBWTAPPLICATION,DWONLOADPLFORPCC,DWONLOADRECEIPTFORPCC,APPLICATION,MCCAPPLICATION, COMPLAINT, CATEGORY,PAYMENT,HISTORY,AFTERPAYMENTAPI,DWONLOADPAYMENTRECEIPT,DOWNLOADBWTAPPLICATION,DOWNLOADAPPLICATION,DWONLOADPERMISSIONLETTER,OSBMPerDayRateAmount,PerDayRateAmount,DWONLOADNEWRECEIPTFORCG,PermissionLetterDWNOSMCC,ApplicationDWNOSMCC, DWONLOADPAYMENTRECEIPTFORCG,DWONLOADAPPLICATIONFORCG,DWONLOADAPPFORPCC,CREATEPACCAPPLICATION,UPDATEPACCAPPLICATION,ESAMPARK } from "egov-ui-kit/utils/endPoints";
+import {CREATEBWTAPPLICATION,PGService,DWONLOADPLFORPCC,DWONLOADRECEIPTFORPCC,APPLICATION,MCCAPPLICATION, COMPLAINT, CATEGORY,PAYMENT,HISTORY,AFTERPAYMENTAPI,DWONLOADPAYMENTRECEIPT,DOWNLOADBWTAPPLICATION,DOWNLOADAPPLICATION,DWONLOADPERMISSIONLETTER,OSBMPerDayRateAmount,PerDayRateAmount,DWONLOADNEWRECEIPTFORCG,PermissionLetterDWNOSMCC,ApplicationDWNOSMCC, DWONLOADPAYMENTRECEIPTFORCG,DWONLOADAPPLICATIONFORCG,DWONLOADAPPFORPCC,CREATEPACCAPPLICATION,UPDATEPACCAPPLICATION,ESAMPARK,ESAMPARKPL } from "egov-ui-kit/utils/endPoints";
 import { httpRequest } from "egov-ui-kit/utils/api";
 import commonConfig from "config/common.js";
 
@@ -618,8 +618,99 @@ export const fetchApplicationType = () => {
 	};
 };
 
+//pcc e-sampark
+export const fetchfacilationCharges = () => {
+	//Fetching Application sector from MDMS
+	let requestBody = {
+		MdmsCriteria:{
+			tenantId: commonConfig.tenantId,
+        moduleDetails: [
+            {
+				"moduleName": "BillingService",
+				"masterDetails": [
+                    {
+                        "name": "TaxHeadMaster"
+                    }
+                ]
+            }
+		]
+	}
+    }
+	
+	return async (dispatch) => {
+		try {
+			const payload = await httpRequest(CATEGORY.GET.URL, CATEGORY.GET.ACTION, [], requestBody);
+			console.log('payload--facilationCharges',payload)
+			dispatch(fetchFaciliationChargesSuccess(payload));
+		} catch (error) {
+			dispatch(fetchFaciliationChargesError(error.message));
+		}
+	};
+};
 
-	export const OSBMfetchperDayRate = (requestBody, hasUsers = true, overWrite) => {
+
+
+
+const fetchFaciliationChargesSuccess = (payload) => {
+	return {
+		type: actionTypes.FACILATION_CHARGES_FETCH_SUCCESS,
+		payload,
+	};
+};
+
+const fetchFaciliationChargesError = (error) => {
+	return {
+		type: actionTypes.FACILATION_CHARGES_FETCH_ERROR,
+		error,
+	};
+};
+
+export const fetchfacilationtry = () => {
+	//Fetching Application sector from MDMS
+	let requestBody = {
+		MdmsCriteria:{
+			tenantId: commonConfig.tenantId,
+        moduleDetails: [
+            {
+				"moduleName": "BillingService",
+				"masterDetails": [
+                    {
+                        "name": "TaxHeadMaster"
+                    }
+                ]
+            }
+		]
+	}
+    }
+	
+	return async (dispatch) => {
+		try {
+			const payload = await httpRequest(CATEGORY.GET.URL, CATEGORY.GET.ACTION, [], requestBody);
+			console.log('payload--facilationCharges',payload)
+			dispatch(FaciliationChargesSuccess(payload));
+		} catch (error) {
+			dispatch(FaciliationChargesError(error.message));
+		}
+	};
+};
+
+const FaciliationChargesSuccess = (payload) => {
+	return {
+		type: actionTypes.FACILATION_FETCH_SUCCESS,
+		payload,
+	};
+};
+
+const FaciliationChargesError = (error) => {
+	return {
+		type: actionTypes.FACILATION_FETCH_ERROR,
+		error,
+	};
+};
+
+
+
+export const OSBMfetchperDayRate = (requestBody, hasUsers = true, overWrite) => {
 		return async (dispatch, getState) => {
 		  try {
 			let tenantId = "";
@@ -831,3 +922,83 @@ export const fetchApplicationType = () => {
 		};
 	};
 
+	export const downloadEsamparkPL = (requestBody, hasUsers = true, overWrite) => {
+		return async (dispatch, getState) => {
+		  try {
+			let tenantId = "";
+			const payload = await httpRequest(ESAMPARK.POST.URL, ESAMPARK.POST.ACTION, [], requestBody);
+			dispatch(downloadESAMPARKPLComplete(payload, overWrite));
+		  } catch (error) {
+			dispatch(downloadESAMPARKPLError(error.message));
+		  }
+		};
+	  };
+
+	  const downloadESAMPARKPLComplete = (payload, overWrite) => {
+		return {
+			type: actionTypes.DOWNLOAD_ESAMPARK_PL_COMPLETE_PCC,
+			payload,
+			overWrite: overWrite,
+		};
+	};
+	
+	const downloadESAMPARKPLError = (error) => {
+		return {
+			type: actionTypes.DOWNLOAD_ESAMPARK_PL__ERROR_PCC,
+			error,
+		};
+	};
+//updated
+	// export const downloadEsamparkPL = (requestBody, hasUsers = true, overWrite) => {
+	// 	return async (dispatch, getState) => {
+	// 	  try {
+	// 		let tenantId = "";
+	// 		const payload = await httpRequest(ESAMPARK.POST.URL, ESAMPARK.POST.ACTION, [], requestBody);
+	// 		dispatch(downloadESAMPARKPLComplete(payload, overWrite));
+	// 	  } catch (error) {
+	// 		dispatch(downloadESAMPARKPLError(error.message));
+	// 	  }
+	// 	};
+	//   };
+
+	//   const downloadESAMPARKPLComplete = (payload, overWrite) => {
+	// 	return {
+	// 		type: actionTypes.DOWNLOAD_ESAMPARK_PL_COMPLETE_PCC,
+	// 		payload,
+	// 		overWrite: overWrite,
+	// 	};
+	// };
+	
+	// const downloadESAMPARKPLError = (error) => {
+	// 	return {
+	// 		type: actionTypes.DOWNLOAD_ESAMPARK_PL__ERROR_PCC,
+	// 		error,
+	// 	};
+	// };
+
+	export const fetchResponseForRefdunf = (queryObject, hasUsers = true, overWrite) => {
+		return async (dispatch, getState) => {
+			try {
+				let tenantId = "";
+				const payload = await httpRequest(PGService.POST.URL, PGService.POST.ACTION, queryObject);
+				console.log('payloadforUSEREFUND', payload)
+				dispatch(fetchResponseForRefdunfComplete(payload, overWrite));
+			} catch (error) {
+				dispatch(fetchResponseForRefdunfError(error.message));
+			}
+		};
+	};
+	const fetchResponseForRefdunfComplete = (payload, overWrite) => {
+		console.log('payload', payload, overWrite)
+		return {
+			type: actionTypes.REFUNDINIT_COMPLETE,
+			payload,
+			overWrite: overWrite,
+		};
+	};
+	const fetchResponseForRefdunfError = (error) => {
+		return {
+			type: actionTypes.REFUNDINIT_ERROR,
+			error,
+		};
+	};

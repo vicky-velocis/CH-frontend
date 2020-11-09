@@ -27,6 +27,13 @@ const AllRequests = Loadable({
   loader: () => import("../Screens/AllApplications"),
   loading: Loading
 });
+
+
+const ServicesTest = Loadable({
+  loader: () => import("../Screens/ServicesTest"),
+  loading: Loading
+})
+
 const MasterData = Loadable({
   loader: () => import("../Screens/MasterData"),
   loading: Loading
@@ -214,9 +221,15 @@ const ApplyPArkAndCommunity= Loadable({
   loading: Loading
 })
 
+const testing= Loadable({
+  loader: () => import("../Screens/testing"),
+  loading: Loading
+})
 
-
-
+const MyTry = Loadable({
+  loader: () => import("../Screens/MyTry"),
+  loading: Loading
+})
 
 // import CreateEmployee from "modules/employee/pgr/CreateEmployee";
 const redirectionUrl = "/user/login";
@@ -261,6 +274,22 @@ const routes = [
       customTitle: "BK_MYBK_ALL_APPLICAION_HEADER"
     }
   },
+  {
+    path: "egov-services/ServicesTest",
+    component: ServicesTest,
+    needsAuthentication: true,
+    options: {
+      hideFooter: true,
+      title: "ES_OPEN_APPLICAION_HEADER",
+      hideTitle: false,
+      // redirectionUrl,
+      // hideFor: "ao",
+      customFor: "employee",
+      customTitle: "BK_MYBK_ALL_APPLICAION_HEADER"
+    }
+  },
+
+
 //successPageForPCC
 {
   path: "egov-services/create-success-pcc",
@@ -268,6 +297,7 @@ const routes = [
   needsAuthentication: true,
   options: {
     hideBackButton: true,
+    customFor: "employee",
     hideFooter: true,
     title: "CS_COMPLAINT_DETAILS_COMPLAINT_RESOLVED",
     hideTitle: true,
@@ -415,6 +445,7 @@ const routes = [
     needsAuthentication: true,
     options: {
       hideFooter: true,
+      customFor: "employee",
       title: "MYBK_APPLICATION_DETAILS_RESOLVE",
       titleBackground: true, // Use this if you need white background for title in web version
       redirectionUrl
@@ -436,6 +467,7 @@ const routes = [
     needsAuthentication: true,
     options: {
       hideFooter: true,
+      customFor: "employee",
       // title: "BK_CS_HEADER_APPLICATION_SUMMARY",
       redirectionUrl
     }
@@ -459,6 +491,7 @@ const routes = [
     needsAuthentication: true,
     options: {
       hideFooter: true,
+      customFor: "employee",
       // title: "BK_CS_HEADER_APPLICATION_SUMMARY",
       redirectionUrl
     }
@@ -469,6 +502,7 @@ const routes = [
     needsAuthentication: true,
     options: {
       hideFooter: true,
+      customFor: "employee",
       // title: "BK_CS_HEADER_APPLICATION_SUMMARY",
       redirectionUrl
     }
@@ -479,6 +513,7 @@ const routes = [
     needsAuthentication: true,
     options: {
       hideFooter: true,
+      customFor: "employee",
       title: "BK_CS_HEADER_APPLICATION_SUMMARY",
       redirectionUrl
     }
@@ -490,6 +525,7 @@ const routes = [
     needsAuthentication: true,
     options: {
       hideFooter: true,
+      customFor: "employee",
       // title: "BK_CS_HEADER_APPLICATION_SUMMARY",
       redirectionUrl
     }
@@ -501,6 +537,7 @@ const routes = [
     needsAuthentication: true,
     options: {
       hideFooter: true,
+      customFor: "employee",
       // title: "BK_CS_HEADER_APPLICATION_SUMMARY",
       redirectionUrl
     }
@@ -537,6 +574,7 @@ const routes = [
       hideFooter: true,
       title: "CS_COMPLAINT_DETAILS_COMPLAINT_RESOLVED",
       hideTitle: true,
+      customFor: "employee",
       redirectionUrl
     }
   },
@@ -549,6 +587,7 @@ const routes = [
       hideFooter: true,
       title: "CS_COMPLAINT_DETAILS_COMPLAINT_RESOLVED",
       hideTitle: true,
+      customFor: "employee",
       redirectionUrl
     }
   },
@@ -563,25 +602,10 @@ const routes = [
       hideFooter: true,
       title: "CS_COMPLAINT_DETAILS_COMPLAINT_RESOLVED",
       hideTitle: true,
+      customFor: "employee",
       redirectionUrl
     }
   },
-
-
-  {
-    path: "egov-services/create-success",
-    component: CreateSuccess,
-    needsAuthentication: true,
-    options: {
-      hideBackButton: true,
-      hideFooter: true,
-      title: "CS_COMPLAINT_DETAILS_COMPLAINT_RESOLVED",
-      hideTitle: true,
-      redirectionUrl
-    }
-  },
-
-  
   {
     path: "egov-services/assign-to-success",
     component: AssignToDriverSuccess,
@@ -591,6 +615,7 @@ const routes = [
       hideFooter: true,
       title: "CS_COMPLAINT_DETAILS_COMPLAINT_RESOLVED",
       hideTitle: true,
+      customFor: "employee",
       redirectionUrl
     }
   },
@@ -604,6 +629,7 @@ const routes = [
       hideFooter: true,
       title: "CS_COMPLAINT_DETAILS_COMPLAINT_RESOLVED",
       hideTitle: true,
+      customFor: "employee",
       redirectionUrl
     }
   },
@@ -617,6 +643,7 @@ const routes = [
       hideFooter: true,
       title: "CS_COMPLAINT_DETAILS_COMPLAINT_RESOLVED",
       hideTitle: true,
+      customFor: "employee",
       redirectionUrl
     }
   },
@@ -652,6 +679,7 @@ const routes = [
       title: "ES_COMPLAINT_REJECTED_HEADER",
       hideTitle: true,
       hideFooter: true,
+      customFor: "employee",
       redirectionUrl,
       hideBackButton: true
     }
@@ -694,6 +722,7 @@ const routes = [
       // title: "ES_REASON_TO_REJECT_HEADER",
       titleBackground: true, // Use this if you need white background for title in web version
       hideFooter: true,
+      customFor: "employee",
       redirectionUrl
     }
   },
@@ -705,6 +734,7 @@ const routes = [
       // title: "ES_REASON_TO_REJECT_HEADER",
       titleBackground: true, // Use this if you need white background for title in web version
       hideFooter: true,
+      customFor: "employee",
       redirectionUrl
     }
   },
@@ -717,6 +747,7 @@ const routes = [
       // title: "ES_REASON_TO_REJECT_HEADER",
       titleBackground: true, // Use this if you need white background for title in web version
       hideFooter: true,
+      customFor: "employee",
       redirectionUrl
     }
   },
@@ -728,6 +759,7 @@ const routes = [
       // title: "ES_REASON_TO_REJECT_HEADER",
       titleBackground: true, // Use this if you need white background for title in web version
       hideFooter: true,
+      customFor: "employee",
       redirectionUrl
     }
   },
@@ -741,76 +773,63 @@ const routes = [
        title: "BK_MYBK_ASSIGN_TO_DRIVER_HEADER",
       titleBackground: true, // Use this if you need white background for title in web version
       hideFooter: true,
+      customFor: "employee",
       redirectionUrl
     }
   },
 
+  {
+    path: "/egov-services/testing",
+    component: testing,
+    needsAuthentication: true,
+    options: {
+      hideFooter: true,
+      title: "BK_MYBK_PCC_APPLICATION_REQUEST",
+      hideTitle: false,
+      customFor: "employee"
+    }
+  },
 
-  
+
   {
-    path: "request-reassign/:serviceRequestId?",
-    component: RequestReAssign,
-    needsAuthentication: true,
-    options: {
-      title: "CS_HEADER_REQUEST_REASSIGN",
-      titleBackground: true, // Use this if you need white background for title in web version
-      hideFooter: true,
-      redirectionUrl
-    }
-  },
-  // {
-  //   path: "create-complaint",
-  //   component: CreateComplaint,
-  //   needsAuthentication: true,
-  //   options: {
-  //     title: "CS_ADD_COMPLAINT_COMPLAINT_SUBMISSION",
-  //     hideFooter: true,
-  //     redirectionUrl,
-  //     isHomeScreen: true
-  //   }
-  // },
-  // {
-  //   path: "complaint-submitted",
-  //   component: ComplaintCreated,
-  //   needsAuthentication: true,
-  //   options: {
-  //     hideFooter: true,
-  //     title: "CS_HEADER_COMPLAINT_SUBMITTED",
-  //     hideTitle: true,
-  //     hideBackButton: true
-  //   }
-  // },
-  {
-    path: "reopen-complaint/:serviceRequestId?",
-    component: ReOpenComplaint,
-    needsAuthentication: true,
-    options: {
-      title: "CS_HEADER_REOPEN_COMPLAINT",
-      titleBackground: true // Use this if you need white background for title in web version
-    }
-  },
-  {
-    path: "reopen-acknowledgement",
-    component: ReopenAcknowledgement,
+    path: "egov-services/ServicesTest",
+    component: ServicesTest,
     needsAuthentication: true,
     options: {
       hideFooter: true,
+      title: "ES_OPEN_APPLICAION_HEADER",
+      hideTitle: false,
+      // redirectionUrl,
+      // hideFor: "ao",
+      customFor: "employee",
+      customTitle: "BK_MYBK_ALL_APPLICAION_HEADER"
+    }
+  },
+
+  {
+    path: "egov-services/create-success",
+    component: CreateSuccess,
+    needsAuthentication: true,
+    options: {
       hideBackButton: true,
-      title: "CS_COMMON_COMPLAINT_REOPENED",
-      hideTitle: true
+      hideFooter: true,
+      title: "CS_COMPLAINT_DETAILS_COMPLAINT_RESOLVED",
+      hideTitle: true,
+      customFor: "employee",
     }
-  }
-  // {
-  //   path: "create-employee",
-  //   component: CreateEmployee,
-  //   needsAuthentication: true,
-  //   options: {
-  //     hideFooter: true,
-  //     title: "Create Employee",
-  //     hideTitle: true,
-  //     hideBackButton: true
-  //   }
-  // }
+  },
+
+  {
+    path: "/egov-services/MyTry",
+    component: MyTry,
+    needsAuthentication: true,
+    options: {
+      hideFooter: true,
+      title: "BK_MYBK_PCC_APPLICATION_REQUEST",
+      redirectionUrl
+    }
+  },
+
 ];
 
 export default routes;
