@@ -12,10 +12,10 @@ export const getTextToLocalMapping = (label) => {
         "NULM_SEP_APPLICATION_ID",
         localisationLabels
       );
-      case "Name of Applicant":
+      case "Name of StreetVendor":
         return getLocaleLabels(
-          "Name of Applicant",
-          "NULM_SEP_NAME_OF_APPLICANT",
+          "Name of StreetVendor",
+          "NULM_SVRU_NANE_OF_STREET_VENDER",
           localisationLabels
         );
     case "Application Status":
@@ -42,9 +42,9 @@ export const getTextToLocalMapping = (label) => {
           "STORE_MATERIAL_TYPE_CODE",
           localisationLabels
         );
-    case "Search Results for SEP":
+case "Search Results for svru":
       return getLocaleLabels(
-        "Search Results for SEP",
+        "Search Results for svru",
         "NULM_SEP_SEARCH_RESULTS_TABLE_HEADING",
         localisationLabels
       );
@@ -68,7 +68,7 @@ export const searchResults = {
         }
       }
     ],
-    title: getTextToLocalMapping("Search Results for SEP"),
+    title: getTextToLocalMapping("Search Results for svru"),
     options: {
       filter: false,
       download: false,
@@ -85,7 +85,7 @@ export const searchResults = {
 
 const onRowClick = (rowData) => {
   const tenantId = process.env.REACT_APP_NAME === "Employee" ?  getTenantId() : JSON.parse(getUserInfo()).permanentCity;
-  window.location.href = `view-sep?tenantId=${tenantId}&applicationNumber=${rowData[0]}&status=${rowData[2]}`;
+  window.location.href = `view-svru?tenantId=${tenantId}&applicationNumber=${rowData[0]}&status=${rowData[2]}`;
 };
 
 

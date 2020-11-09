@@ -187,13 +187,13 @@ let applicationId = get(
 // try {
 //   const response = await httpRequest(
 //     "post",
-//     "/nulm-services/v1/sep/_updateAppStatus",
+//     "/nulm-services/v1/svru/_updateAppStatus",
 //     "",
 //     queryObject,
 //     requestBody
 //   );
 //    if(response){
-//     dispatch(setRoute(`/egov-nulm/acknowledgement?screen=sep&mode=update&code=${applicationId}`));
+//     dispatch(setRoute(`/egov-nulm/acknowledgement?screen=svru&mode=update&code=${applicationId}`));
 //    }
 
 // } catch (error) {
@@ -261,7 +261,7 @@ export const createUpdatePO = async (state, dispatch, action,status) => {
         requestBody
       );
        if(response){
-        dispatch(setRoute(`/egov-nulm/acknowledgement?screen=sep&mode=create&code=${response.ResponseBody.applicationId}`));
+        dispatch(setRoute(`/egov-nulm/acknowledgement?screen=svru&mode=create&code=${response.ResponseBody.applicationId}`));
        }
   
     } catch (error) {
@@ -284,7 +284,7 @@ export const createUpdatePO = async (state, dispatch, action,status) => {
         requestBody
       );
        if(response){
-        dispatch(setRoute(`/egov-nulm/acknowledgement?screen=sep&mode=update&code=${response.ResponseBody.applicationId}`));
+        dispatch(setRoute(`/egov-nulm/acknowledgement?screen=svru&mode=update&code=${response.ResponseBody.applicationId}`));
        }
   
     } catch (error) {
