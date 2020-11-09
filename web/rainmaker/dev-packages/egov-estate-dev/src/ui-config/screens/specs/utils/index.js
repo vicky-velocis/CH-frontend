@@ -1746,7 +1746,7 @@ export const _getPattern = (type) => {
     case "alphaNumeric":
       return /^[a-zA-Z0-9]{1,100}$/i;
     case "fileNumber":
-      return /^[a-zA-Z0-9]{1,50}$/i;
+      return /^[A-Za-z0-9_@./#&+-]*$/i;
     case "alphabet":
       return /^[a-zA-Z ]{1,150}$/i;
     case "address":
