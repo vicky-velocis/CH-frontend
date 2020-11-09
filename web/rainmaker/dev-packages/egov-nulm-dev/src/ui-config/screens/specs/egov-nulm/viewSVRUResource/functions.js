@@ -203,7 +203,13 @@ export const createUpdatePO = async (state, dispatch, action,status) => {
   NulmSusvRenewRequest.tenantId = tenantId;
   let queryObject = [{ key: "tenantId", value: tenantId }];
  //setting status
-   NulmSusvRenewRequest.applicationStatus = status;
+//  let applicationStatus = get(
+//   state.screenConfiguration.preparedFinalObject,
+//   "NulmSusvRenewRequest.applicationStatus",
+//   null
+// );
+
+//   NulmSusvRenewRequest.applicationStatus = applicationStatus;
 
 
 
@@ -225,6 +231,7 @@ export const createUpdatePO = async (state, dispatch, action,status) => {
       
       if (status == "Drafted") {
         requestBody.NulmSusvRenewRequest.action = "Drafted";
+        requestBody.NulmSusvRenewRequest.applicationStatus = "Drafted";
       } else if (status == "Created") { 
         requestBody.NulmSusvRenewRequest.action = "Created";
       }
@@ -249,7 +256,7 @@ export const createUpdatePO = async (state, dispatch, action,status) => {
       } else if (requestBody.NulmSusvRenewRequest.applicationStatus=="Drafted" && status == "Created") { 
         requestBody.NulmSusvRenewRequest.action = "Created";
       }else if (requestBody.NulmSusvRenewRequest.applicationStatus == "Reassign To Citizen") {
-        requestBody.NulmSusvRenewRequest.action = 'Forward To JA';
+        requestBody.NulmSusvRenewRequest.action = 'Forwarded To JA';
       } 
       const response = await httpRequest(
         "post",

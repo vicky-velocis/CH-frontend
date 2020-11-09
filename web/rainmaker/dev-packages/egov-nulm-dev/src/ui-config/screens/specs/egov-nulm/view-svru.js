@@ -190,10 +190,11 @@ const getSEPDetails = async(state, dispatch) =>{
 
 const roleBasedValidationForFooter = () => {
   if(process.env.REACT_APP_NAME === "Employee" && (status !== SANCTION_BY_BANK && status!==REJECTED_BY_TASK_FORCE_COMMITTEE)){
-      return poViewFooter();
+      // return poViewFooter();
+    return {};
   }
   else{
-    if(status==="Drafted")
+    if(status==="Drafted" || status==="Reassign To Citizen")
         return poViewFooter() 
     else
       return{};
@@ -273,6 +274,17 @@ printMenu = [receiptPrintObject];
                   }
                 }
               }
+            }
+          },
+          taskStatus: {
+            uiFramework: "custom-containers-local",
+            componentPath: "WorkFlowContainer",
+            moduleName: "egov-nulm",
+            visible: process.env.REACT_APP_NAME === "Citizen" ? false : true,
+            props: {
+              dataPath: "NulmSusvRenewRequest",
+              moduleName: "NULM",
+              updateUrl: "/nulm-services/v1/susv/renew/_updateAppStatus"
             }
           },
           tradeView,
