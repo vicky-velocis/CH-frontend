@@ -58,7 +58,7 @@ export const searchResults = {
   props: {
     columns: [
       getTextToLocalMapping("Application Id"),
-      getTextToLocalMapping("Name of Applicant"),
+      getTextToLocalMapping("Name of StreetVendor"),
       getTextToLocalMapping("Application Status"),
       getTextToLocalMapping("Creation Date"),
       {

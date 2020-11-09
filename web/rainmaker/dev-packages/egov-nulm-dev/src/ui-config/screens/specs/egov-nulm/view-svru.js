@@ -122,7 +122,7 @@ import {
                                         if(viewScreenMdmsData && viewScreenMdmsData.NULM && viewScreenMdmsData.NULM.SEPDocuments){
 
                                           const {SEPDocuments} = viewScreenMdmsData.NULM;
-                                          const documentsDes = ["Copy of Ration card / Priority household card","Copy of Voter ID","Copy of Aadhar card","Copy of Pan Card","Applicant Photo – Passport Size","Disability Certificate"]
+                                          const documentsDes = ["Photo Copy of Certificate of Vending","Photo Copy of Govt. ID Proof","Proof of Current Residential Address","NOC From Other Dependent Family Member"]
                                           const indexOfDoc = documentsDes.findIndex(doc =>  doc === docInfo.documentType )
 
                                             documentsUploadRedux[indexOfDoc] = {                          
@@ -181,8 +181,8 @@ const getSEPDetails = async(state, dispatch) =>{
           dispatch(prepareFinalObject(`NulmSusvRenewRequest[${value}]`, "No" ));
         }
       })
-if(NulmSusvRenewRequest.dob !== null)
-      dispatch(prepareFinalObject(`NulmSusvRenewRequest.dob`, NulmSusvRenewRequest.dob.split(" ")[0] ));
+// if(NulmSusvRenewRequest.dob !== null)
+//       dispatch(prepareFinalObject(`NulmSusvRenewRequest.dob`, NulmSusvRenewRequest.dob.split(" ")[0] ));
 
     }
   }

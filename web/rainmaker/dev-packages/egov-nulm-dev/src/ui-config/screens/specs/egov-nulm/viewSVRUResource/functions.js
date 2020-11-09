@@ -131,32 +131,7 @@ export const handleForwardToTFCSEP = (state, dispatch) =>{
 };
 
 export const handleSubmitSEP = (state, dispatch) =>{
-  const status = window.localStorage.getItem("SEP_Status");
-
-  if(process.env.REACT_APP_NAME === "Employee"){
-      if(status === FORWARD_TO_TASK_FORCE_COMMITTEE){
-      const tfcStatus =  get(state, 'screenConfiguration.preparedFinalObject.NulmSusvRenewRequest.taskCommitteeStatus');
-        if(tfcStatus === "Approved by Task Force Committee")
-            handleCreateUpdateSEP(state, dispatch,APPROVED_BY_TASK_FORCE_COMMITTEE);
-        else 
-          handleCreateUpdateSEP(state, dispatch,REJECTED_BY_TASK_FORCE_COMMITTEE); 
-      }
-    else if (status === APPROVED_BY_TASK_FORCE_COMMITTEE){
-      const tfcStatus =  get(state, 'screenConfiguration.preparedFinalObject.NulmSusvRenewRequest.taskCommitteeStatus');
-      if(tfcStatus === "Approved by Task Force Committee")
-          handleCreateUpdateSEP(state, dispatch,SENT_TO_BANK_FOR_PROCESSING);
-      else 
-        handleCreateUpdateSEP(state, dispatch,REJECTED_BY_TASK_FORCE_COMMITTEE); 
-    }
-    else if(status === SENT_TO_BANK_FOR_PROCESSING){
-      handleCreateUpdateSEP(state, dispatch,SANCTION_BY_BANK); 
-    }
-  
-    window.localStorage.removeItem("SEP_Status");
-  }
-  else{
-    handleCreateUpdateSEP(state, dispatch,"Drafted");
-  }
+  handleCreateUpdateSEP(state, dispatch,"Created");
   
 };
 export const handlesaveSEP = (state, dispatch) =>{
@@ -170,7 +145,7 @@ export const handleApproveSEP = async(state, dispatch) =>{
  const tenantId = process.env.REACT_APP_NAME === "Employee" ?  getTenantId() : JSON.parse(getUserInfo()).permanentCity;
  let uuid = get(
   state.screenConfiguration.preparedFinalObject,
-  "NulmSusvRenewRequest.applicationUuid",
+  "NulmSusvRenewRequest.applicationUuId",
   null
 );
 let applicationId = get(
@@ -179,7 +154,7 @@ let applicationId = get(
   null
 );
 // let NulmSusvRenewRequest ={}
-// NulmSusvRenewRequest.applicationUuid = uuid;
+// NulmSusvRenewRequest.applicationUuId = uuid;
 // NulmSusvRenewRequest.tenantId = tenantId;
 // NulmSusvRenewRequest.applicationStatus = "Approved";
 
@@ -206,7 +181,7 @@ let applicationId = get(
 export const handleCreateUpdateSEP = (state, dispatch,status) => {
   let uuid = get(
     state.screenConfiguration.preparedFinalObject,
-    "NulmSusvRenewRequest.applicationUuid",
+    "NulmSusvRenewRequest.applicationUuId",
     null
   );
   if (uuid) {
