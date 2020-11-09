@@ -45,7 +45,7 @@ import {
 } from "egov-ui-framework/ui-utils/commons";
 import axios from 'axios';
 import {
-  getSearchApplicationsResults
+  getSearchApplicationsResults, getSearchResults
 } from "../../../../ui-utils/commons";
 import moment from "moment";
 import { ESTATE_PROPERTY_MASTER_BILLING_BUSINESS_SERVICE } from "../../../../ui-constants";
@@ -1413,11 +1413,20 @@ export const fetchBill = async (action, state, dispatch) => {
   ];
   let payload;
   if(businessService === ESTATE_PROPERTY_MASTER_BILLING_BUSINESS_SERVICE) {
-    const propertyPayload = get(state.screenConfiguration.preparedFinalObject, "Properties[0]")
+    const applicationNumber = getQueryArg(window.location.href, "consumerCode")
+    let propertyPayload = get(state.screenConfiguration.preparedFinalObject, "Properties")
+    if(applicationNumber.startsWith("SITE")) {
+      const array = applicationNumber.split("-");
+      array.splice(array.length-6)
+      array.splice(0,1)
+      const fileNumber = array.join("-");
+      propertyPayload = await getSearchResults([{key: "fileNumber", value: fileNumber}])
+    }
     payload =
       propertyPayload &&
+      propertyPayload.Properties &&
       (await createEstimateData(
-        propertyPayload,
+        propertyPayload.Properties[0],
         dispatch,
         window.location.href
       ));
