@@ -340,6 +340,11 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
       owners.map((item, index) => {
         item.share = (item.share).toString();
         let ownerDocuments = Properties[0].propertyDetails.owners[index].ownerDetails.ownerDocuments || [];
+        let isPreviousOwnerRequired = Properties[0].propertyDetails.owners[index].ownerDetails.isPreviousOwnerRequired;
+        if (typeof isPreviousOwnerRequired != "undefined" && isPreviousOwnerRequired != null) {
+          isPreviousOwnerRequired = isPreviousOwnerRequired.toString();
+          Properties[0].propertyDetails.owners[index].ownerDetails.isPreviousOwnerRequired = isPreviousOwnerRequired;
+        }
         const removedDocs = ownerDocuments.filter(item => !item.isActive)
         ownerDocuments = ownerDocuments.filter(item => item.isActive)
         Properties[0].propertyDetails.owners[index].ownerDetails.ownerDocuments = ownerDocuments;
