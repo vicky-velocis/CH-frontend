@@ -160,39 +160,30 @@ const getSEPDetails = async(state, dispatch) =>{
     
   const tenantId = process.env.REACT_APP_NAME === "Employee" ?  getTenantId() : JSON.parse(getUserInfo()).permanentCity;
 
-  let NULMSEPRequest = {};
-  NULMSEPRequest.tenantId = tenantId;
-  NULMSEPRequest.applicationId= applicationNumber;
-  const requestBody = {NULMSEPRequest}
-  let response = await getSearchResults([],requestBody, dispatch,"sep");
+  let NulmSusvRenewRequest = {};
+  NulmSusvRenewRequest.tenantId = tenantId;
+  NulmSusvRenewRequest.applicationId= applicationNumber;
+  const requestBody = {NulmSusvRenewRequest}
+  let response = await getSearchResults([],requestBody, dispatch,"svru");
 
   if(response){ 
     getFileUrlDetails(state,dispatch,tenantId,response);
-    dispatch(prepareFinalObject("NULMSEPRequest", response.ResponseBody[0]));
+    dispatch(prepareFinalObject("NulmSusvRenewRequest", response.ResponseBody[0]));
 
     if(response.ResponseBody){
-      const NULMSEPRequest  = { ...response.ResponseBody[0]};
-      const radioButtonValue = ["isUrbanPoor","isMinority","isHandicapped","isRepaymentMade","isLoanFromBankinginstitute"];
+      const NulmSusvRenewRequest  = { ...response.ResponseBody[0]};
+      const radioButtonValue = ["changeOfLocation"];
     
       radioButtonValue.forEach(value => {
-        if(NULMSEPRequest[value] && NULMSEPRequest[value]=== true ){
-          dispatch(prepareFinalObject(`NULMSEPRequest[${value}]`, "Yes" ));
+        if(NulmSusvRenewRequest[value] && NulmSusvRenewRequest[value]=== true ){
+          dispatch(prepareFinalObject(`NulmSusvRenewRequest[${value}]`, "Yes" ));
         }else{
-          dispatch(prepareFinalObject(`NULMSEPRequest[${value}]`, "No" ));
+          dispatch(prepareFinalObject(`NulmSusvRenewRequest[${value}]`, "No" ));
         }
       })
-if(NULMSEPRequest.dob !== null)
-      dispatch(prepareFinalObject(`NULMSEPRequest.dob`, NULMSEPRequest.dob.split(" ")[0] ));
+if(NulmSusvRenewRequest.dob !== null)
+      dispatch(prepareFinalObject(`NulmSusvRenewRequest.dob`, NulmSusvRenewRequest.dob.split(" ")[0] ));
 
-      if(NULMSEPRequest.taskCommitteeActionDate){
-        dispatch(prepareFinalObject(`NULMSEPRequest.taskCommitteeActionDate`, NULMSEPRequest.taskCommitteeActionDate.split(" ")[0] ));
-      }
-      if(NULMSEPRequest.applicationForwardedOnDate){
-        dispatch(prepareFinalObject(`NULMSEPRequest.applicationForwardedOnDate`, NULMSEPRequest.applicationForwardedOnDate.split(" ")[0] ));
-      }
-      if(NULMSEPRequest.sanctionDate){
-        dispatch(prepareFinalObject(`NULMSEPRequest.sanctionDate`, NULMSEPRequest.sanctionDate.split(" ")[0] ));
-      }
     }
   }
 }
@@ -213,7 +204,7 @@ let printMenu = [];
 let receiptPrintObject = {
   label: { labelName: "Receipt", labelKey: "NULM_PRINT_SEP" },
   link: () => {
-    downloadAcknowledgementForm("Sep");
+    downloadAcknowledgementForm("svru");
   },
   leftIcon: "receipt"
 };
@@ -221,7 +212,7 @@ printMenu = [receiptPrintObject];
 
   const screenConfig = {
     uiFramework: "material-ui",
-    name: "view-sep",
+    name: "view-svru",
     beforeInitScreen: (action, state, dispatch) => {
       getSEPDetails(state, dispatch);
       window.localStorage.setItem("SEP_Status",status);

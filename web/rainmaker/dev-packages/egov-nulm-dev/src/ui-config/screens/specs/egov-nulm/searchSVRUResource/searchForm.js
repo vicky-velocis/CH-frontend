@@ -44,36 +44,7 @@ export const searchForm = getCommonCard({
     labelKey: "STORE_HOME_SEARCH_RESULTS_DESC",
   }),
   searchFormContainer: getCommonContainer({
-    applicationStatus: getSelectField({
-      label: { labelName: "Application Status", labelKey: "NULM_SEP_APPLICATION_STATUS" },
-      placeholder: {
-        labelName: "Select Application Status",
-        labelKey: "NULM_SEP_APPLICATION_STATUS_SELECT",
-      },
-      jsonPath: "searchScreen.applicationStatus",
-      gridDefination: {
-        xs: 12,
-        sm: 4,
-      },     
-     //  sourceJsonPath: "searchScreenMdmsData.store-asset.MaterialType",
-     props: {
-      optionValue: "value",
-      optionLabel: "label",
-      style : {
-        display: process.env.REACT_APP_NAME === "Employee" ? "none" : "",
-      },
-      data: [
-        {
-          value: "Created",
-          label: "Created"
-        },
-        {
-          value: "Drafted",
-          label: "Drafted"
-        }
-      ],
-    },
-    }),
+    
     applicationId: {
       ...getTextField({
         label: {
@@ -138,7 +109,37 @@ export const searchForm = getCommonCard({
         }
       })
     },
-  
+    applicationStatus: getSelectField({
+      label: { labelName: "Application Status", labelKey: "NULM_SEP_APPLICATION_STATUS" },
+      placeholder: {
+        labelName: "Select Application Status",
+        labelKey: "NULM_SEP_APPLICATION_STATUS_SELECT",
+      },
+      jsonPath: "searchScreen.applicationStatus",
+      gridDefination: {
+        xs: 12,
+        sm: 4,
+      },     
+     //  sourceJsonPath: "searchScreenMdmsData.store-asset.MaterialType",
+     props: {
+      optionValue: "value",
+      optionLabel: "label",
+      style : {
+        display: process.env.REACT_APP_NAME === "Employee" ? "none" : "",
+      },
+      data: [
+        {
+          value: "Created",
+          label: "Created"
+        },
+        {
+          value: "Drafted",
+          label: "Drafted"
+        }
+      ],
+    },
+    }),
+    
   }),
 
   button: getCommonContainer({

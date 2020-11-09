@@ -8,8 +8,10 @@ import {NULM_SEP_CREATED,
   REJECTED_BY_TASK_FORCE_COMMITTEE,
   SENT_TO_BANK_FOR_PROCESSING,
 SANCTION_BY_BANK} from '../../../../../ui-utils/commons'
+import get from "lodash/get";  
+import store from "ui-redux/store";
 const gotoCreateFlow = (state, dispatch) => {
-  const createUrl = `/egov-nulm/create-sep`;
+  const createUrl = `/egov-nulm/create-svru`;
   dispatch(setRoute(createUrl));
 };
 
@@ -24,13 +26,13 @@ const getCommonCreateFooter = children => {
   };
 };
 export const buttonController = () => {
-  const status = window.localStorage.getItem("SEP_Status");
+ // const status = window.localStorage.getItem("SEP_Status");
   if (process.env.REACT_APP_NAME === "Employee")
     return {
-      forwardToTFC: {
+      rejectButton: {
         componentPath: "Button",
         props: {
-          variant: "contained",
+          variant: "outlined",
           color: "primary",
           style: {
              minWidth: "200px",
@@ -40,16 +42,15 @@ export const buttonController = () => {
         },
         children: {
           resetButtonLabel: getLabel({
-            labelName: "Forward to Task force Committee",
-            labelKey: "NULM_COMMON_FORWARD_TO_TFC_BUTTON",
+            labelName: "Reject",
+            labelKey: "NULM_COMMON_REJECT_BUTTON",
           }),
         },
         onClickDefination: {
           action: "condition",
-          callBack: handleForwardToTFCSEP,
+          callBack: handleRejectSMID,
         },
-        visible:status ===NULM_SEP_CREATED ? true :false,
-        //visible: false,
+        visible: true,
       },
       approvedButton: {
         componentPath: "Button",
@@ -64,16 +65,15 @@ export const buttonController = () => {
         },
         children: {
           updateButtonLabel: getLabel({
-            labelName: "SUBMIT",
-            labelKey: "HR_SUBMIT_LABEL",
+            labelName: "Approved",
+            labelKey: "NULM_COMMON_APPROVED_BUTTON",
           }),
         },
         onClickDefination: {
           action: "condition",
-          callBack: handleSubmitSEP,
+          callBack: handleApproveSMID,
         },
-        //visible: status !==NULM_SEP_CREATED ? true :false,
-        visible: false,
+        visible: true,
       },
     };
   else
@@ -99,7 +99,7 @@ export const buttonController = () => {
           action: "condition",
           callBack: handlesaveSEP,
         },
-        visible: false,
+        visible: get(store.getState().screenConfiguration.preparedFinalObject, "NulmSusvRenewRequest.applicationStatus", null) == "Reassign To Citizen" ? false : true,
       },
       submitButton: {
         componentPath: "Button",
