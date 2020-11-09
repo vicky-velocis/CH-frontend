@@ -166,6 +166,7 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
       "propertyDetails.purchaser",
       []
     )
+    debugger;
     
     if (prevOwners.length) {
       prevOwners = prevOwners.filter(item => item.ownerDetails.isPreviousOwnerRequired == "true");
@@ -339,10 +340,16 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
       owners.map((item, index) => {
         item.share = (item.share).toString();
         let ownerDocuments = Properties[0].propertyDetails.owners[index].ownerDetails.ownerDocuments || [];
+        let isPreviousOwnerRequired = Properties[0].propertyDetails.owners[index].ownerDetails.isPreviousOwnerRequired;
+        debugger;
+        if (typeof isPreviousOwnerRequired != "undefined") {
+          isPreviousOwnerRequired = isPreviousOwnerRequired.toString();
+        }
         const removedDocs = ownerDocuments.filter(item => !item.isActive)
         ownerDocuments = ownerDocuments.filter(item => item.isActive)
         Properties[0].propertyDetails.owners[index].ownerDetails.ownerDocuments = ownerDocuments;
         Properties[0].propertyDetails.owners[index].ownerDetails.removedDocs = removedDocs;
+        Properties[0].propertyDetails.owners[index].ownerDetails.isPreviousOwnerRequired = isPreviousOwnerRequired;
       })
       
       if (screenName != "apply-building-branch") {
