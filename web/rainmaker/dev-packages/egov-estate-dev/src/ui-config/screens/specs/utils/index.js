@@ -1710,7 +1710,7 @@ export const getTextToLocalMapping = label => {
     case "Refund Status":
       return getLocaleLabels(
         "Refund Status",
-        "ES_REFUND_STATUSS",
+        "ES_REFUND_STATUS",
         localisationLabels
       );
   }

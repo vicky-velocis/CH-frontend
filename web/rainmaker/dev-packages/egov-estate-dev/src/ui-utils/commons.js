@@ -322,18 +322,16 @@ export const populateBiddersTable = (biddersList, screenKey, componentJsonPath) 
               setTimeout((e) => {
                 store.dispatch(toggleSpinner());
                 let { Properties } = store.getState().screenConfiguration.preparedFinalObject;
-                debugger
                 let bidderData = store.getState().screenConfiguration.preparedFinalObject.BidderData;
 
                 biddersList.map((item, index) => {
                   if (bidderData[1] == item.bidderName) {
-                    debugger
-                    item.refundStatus = isMarked ? "Initiated" : "";
+                    item.refundStatus = isMarked ? "Initiated" : "-";
                     bidderData[6] = item.refundStatus;
                     store.dispatch(
                       handleField(
                         `refund`,
-                        `components.div.children.auctionTableContainer.[${index}]`,
+                        `components.div.children.auctionTableContainer.props.data[${index}]`,
                         `Refund Status`,
                         item.refundStatus
                       )
