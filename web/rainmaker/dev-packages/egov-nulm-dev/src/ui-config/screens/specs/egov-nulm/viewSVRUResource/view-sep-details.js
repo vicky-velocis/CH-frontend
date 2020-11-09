@@ -123,7 +123,7 @@ export const getSEPDetailsView = (isReview = true) => {
           labelName: "Name of Proposed New Street Vendor",
           labelKey: "NULM_SVRU_PROPOSED_NEW_VENDER"
         },
-        { jsonPath: "NulmSusvRenewRequest.newproposedZone" ,
+        { jsonPath: "NulmSusvRenewRequest.nameOfProposedNewStreetVendor" ,
         callBack: checkValueForNA  }
       ),
 
