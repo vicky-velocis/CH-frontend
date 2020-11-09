@@ -228,7 +228,6 @@ export const downloadAccountStatementXLS = async (state, dispatch) => {
 
   const isSearchBoxFirstRowValid = validateFields(
     "components.div.children.estateApplicationAccountStatementGen.children.cardContent.children.searchBoxContainer.children.fileNumberContainer", 
-    // "components.div.children.accountStatementFilterForm.children.cardContent.children.applicationNoContainer.children",
     state,
     dispatch,
     "estate-search-account-statement"
