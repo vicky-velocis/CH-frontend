@@ -246,7 +246,13 @@ export const createUpdatePO = async (state, dispatch, action,status) => {
   console.log("requestbody", requestBody);
 
   if (action === "CREATE") {
-    try {
+    try {      
+      
+      if (status == "Drafted") {
+        requestBody.NulmSusvRenewRequest.action = "Drafted";
+      } else if (status == "Created") { 
+        requestBody.NulmSusvRenewRequest.action = "Created";
+      }
       const response = await httpRequest(
         "post",
         "/nulm-services/v1/susv/renew/_create",
@@ -263,6 +269,13 @@ export const createUpdatePO = async (state, dispatch, action,status) => {
     }
   } else if (action === "UPDATE") {
     try {
+      if (status == "Drafted") {
+        requestBody.NulmSusvRenewRequest.action = "Drafted";
+      } else if (requestBody.NulmSusvRenewRequest.applicationStatus=="Drafted" && status == "Created") { 
+        requestBody.NulmSusvRenewRequest.action = "Created";
+      }else if (requestBody.NulmSusvRenewRequest.applicationStatus == "Reassign To Citizen") {
+        requestBody.NulmSusvRenewRequest.action = 'Forward To JA';
+      } 
       const response = await httpRequest(
         "post",
         "/nulm-services/v1/susv/renew/_update",
