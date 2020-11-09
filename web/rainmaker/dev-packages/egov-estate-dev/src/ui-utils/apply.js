@@ -20,6 +20,7 @@ import {
 } from "egov-ui-kit/utils/localStorageUtils";
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
+import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 
 let userInfo = JSON.parse(getUserInfo());
 
@@ -402,3 +403,42 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
     return false;
   }
 }
+
+export const addPenalty = async (state, dispatch, activeIndex) => {
+  try {
+    let queryObject = JSON.parse(JSON.stringify(get(state.screenConfiguration.preparedFinalObject, "propertyPenalties", [])))
+    const tenantId = userInfo.permanentCity || getTenantId();
+    let properties = JSON.parse(JSON.stringify(get(state.screenConfiguration.preparedFinalObject, "Properties", [])))
+    const propertyId = properties[0].id;
+    const fileNumber = properties[0].fileNumber
+    set(queryObject[0], "tenantId", tenantId);
+    set(queryObject[0], "propertyId", propertyId);
+    set(queryObject[0], "branchType", "estateBranch");
+    let response;
+    if(queryObject) {  
+      response = await httpRequest(
+        "post",
+        "/est-services/violation/_penalty",
+        "",
+        [],
+        { propertyPenalties : queryObject }
+      );
+    } 
+      let {PropertyPenalties} = response
+      if(response){
+        dispatch(
+          setRoute(
+          `acknowledgement?purpose=penalty&fileNumber=${fileNumber}&status=success&tenantId=${tenantId}`
+          )
+        )
+      }
+      dispatch(prepareFinalObject("PropertyPenalties", PropertyPenalties));
+      return true;
+  } catch (error) {
+    dispatch(toggleSnackbar(true, { labelName: error.message }, "error"));
+    console.log(error);
+    return false;
+  }
+}
+
+
