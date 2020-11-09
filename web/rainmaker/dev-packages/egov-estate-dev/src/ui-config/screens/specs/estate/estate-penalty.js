@@ -137,7 +137,6 @@ export const getCommonApplyFooter = children => {
 };
 
 const callBackForSubmit = (state, dispatch) => {
-  // console.log("callBackForSubmit");
   addPenalty(state,dispatch)
 }
 
