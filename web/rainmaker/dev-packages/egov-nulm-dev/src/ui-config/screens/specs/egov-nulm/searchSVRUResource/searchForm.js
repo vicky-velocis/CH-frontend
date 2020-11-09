@@ -19,11 +19,11 @@ const resetFields = (state, dispatch) => {
   const textFields = ["applicationStatus","applicationId","fromDate","toDate"];
   for (let i = 0; i < textFields.length; i++) {
     if (
-      `state.screenConfiguration.screenConfig.search-sep.searchForm.children.cardContent.children.searchFormContainer.children.${textFields[i]}.props.value`
+      `state.screenConfiguration.screenConfig.search-svru.searchForm.children.cardContent.children.searchFormContainer.children.${textFields[i]}.props.value`
     ) {
       dispatch(
         handleField(
-          "search-sep",
+          "search-svru",
           `components.div.children.searchForm.children.cardContent.children.searchFormContainer.children.${textFields[i]}`,
           "props.value",
           ""
@@ -55,7 +55,7 @@ export const searchForm = getCommonCard({
         xs: 12,
         sm: 4,
       },
-      sourceJsonPath: "searchScreenMdmsData.sep.status",
+      sourceJsonPath: "searchScreenMdmsData.svru.status",
       props: {
         optionValue: "value",
         optionLabel: "label",

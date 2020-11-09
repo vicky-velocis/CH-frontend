@@ -82,8 +82,8 @@ if(NulmSusvRenewRequest !== undefined && NulmSusvRenewRequest.lookingFor !== und
             }
             else
             {
-              if(NulmSusvRenewRequest && NulmSusvRenewRequest.isProposal){
-                if(NulmSusvRenewRequest.isProposal =="Yes" && !NulmSusvRenewRequest.proposedZone ){
+              if(NulmSusvRenewRequest && NulmSusvRenewRequest.changeOfLocation){
+                if(NulmSusvRenewRequest.changeOfLocation =="Yes" && !NulmSusvRenewRequest.proposedAddress ){
                   const errorMessage = {
                     labelName: "Please provide proposed zone/ward/area",
                     labelKey: "NULM_SVRU_ZONE_VALIDATION"
