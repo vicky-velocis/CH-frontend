@@ -83,6 +83,11 @@ const getAcknowledgementCard = (
           labelKey: `${label}`
         }
       }
+    }else if(purpose === "penalty"){
+      header = {
+        labelName: "Penalty is Added successfully",
+        labelKey: "ES_ADD_PENALTY_SUCCESS_MESSAGE_HEAD"
+      }
     } else {
       header = {}
     }
