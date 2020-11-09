@@ -93,7 +93,7 @@ import {
       },
       {
         value: "Approved by Task Force Committee",
-        label: "Approved by Task Force committee"
+        label: "Approved by Task Force Committee"
       },
       {
         value: "Rejected by Task Force Committee",

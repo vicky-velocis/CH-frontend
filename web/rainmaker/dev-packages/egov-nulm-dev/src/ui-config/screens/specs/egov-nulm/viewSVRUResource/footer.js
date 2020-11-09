@@ -48,8 +48,8 @@ export const buttonController = () => {
           action: "condition",
           callBack: handleForwardToTFCSEP,
         },
-        //visible:status ===NULM_SEP_CREATED ? true :false,
-        visible: false,
+        visible:status ===NULM_SEP_CREATED ? true :false,
+        //visible: false,
       },
       approvedButton: {
         componentPath: "Button",

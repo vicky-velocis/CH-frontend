@@ -54,12 +54,25 @@ export const searchForm = getCommonCard({
       gridDefination: {
         xs: 12,
         sm: 4,
+      },     
+     //  sourceJsonPath: "searchScreenMdmsData.store-asset.MaterialType",
+     props: {
+      optionValue: "value",
+      optionLabel: "label",
+      style : {
+        display: process.env.REACT_APP_NAME === "Employee" ? "none" : "",
       },
-      sourceJsonPath: "searchScreenMdmsData.svru.status",
-      props: {
-        optionValue: "value",
-        optionLabel: "label",
-      },
+      data: [
+        {
+          value: "Created",
+          label: "Created"
+        },
+        {
+          value: "Drafted",
+          label: "Drafted"
+        }
+      ],
+    },
     }),
     applicationId: {
       ...getTextField({
