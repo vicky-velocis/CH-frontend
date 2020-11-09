@@ -145,7 +145,7 @@ export const handleApproveSEP = async(state, dispatch) =>{
  const tenantId = process.env.REACT_APP_NAME === "Employee" ?  getTenantId() : JSON.parse(getUserInfo()).permanentCity;
  let uuid = get(
   state.screenConfiguration.preparedFinalObject,
-  "NulmSusvRenewRequest.applicationUuid",
+  "NulmSusvRenewRequest.applicationUuId",
   null
 );
 let applicationId = get(
@@ -154,7 +154,7 @@ let applicationId = get(
   null
 );
 // let NulmSusvRenewRequest ={}
-// NulmSusvRenewRequest.applicationUuid = uuid;
+// NulmSusvRenewRequest.applicationUuId = uuid;
 // NulmSusvRenewRequest.tenantId = tenantId;
 // NulmSusvRenewRequest.applicationStatus = "Approved";
 
@@ -181,7 +181,7 @@ let applicationId = get(
 export const handleCreateUpdateSEP = (state, dispatch,status) => {
   let uuid = get(
     state.screenConfiguration.preparedFinalObject,
-    "NulmSusvRenewRequest.applicationUuid",
+    "NulmSusvRenewRequest.applicationUuId",
     null
   );
   if (uuid) {
