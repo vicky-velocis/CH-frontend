@@ -3,7 +3,8 @@ import {
     getCommonCard,
     getPattern,
     getDateField,
-    getLabel
+    getLabel,
+    getCommonHeader
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import { prepareFinalObject,handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
@@ -15,6 +16,11 @@ import { getBreak } from "egov-ui-framework/ui-config/screens/specs/utils";
 import {propertyInfo} from './preview-resource/preview-properties'
 import { getTodaysDateInYMD } from "../utils";
 import {penaltyDetailsTable} from "./searchResource/searchResults"
+
+const header = getCommonHeader({
+    labelName: "Penalty",
+    labelKey: "ES_PENALTY_HEADER"
+  });
 
 const beforeInitFn = async (action, state, dispatch, fileNumber) => {
 //   if(fileNumber){
@@ -134,20 +140,6 @@ export const penaltyStatementFilter = getCommonCard({
       })
   })
 
-const detailsContainer = {
-  uiFramework: "custom-atoms",
-  componentPath: "Form",
-  props: {
-    id: "apply_form1"
-  },
-  children: {
-    propertyDetails,
-    penaltyStatementFilter,
-    penaltyDetailsTable
-  },
-  visible: true
-}
-
 const generatePenaltyStatement = {
   uiFramework: "material-ui",
   name: "generatePenaltyStatement",
@@ -168,12 +160,12 @@ const generatePenaltyStatement = {
           uiFramework: "custom-atoms",
           componentPath: "Container",
           children: {
-            header1: {
+            header: {
               gridDefination: {
                 xs: 12,
                 sm: 8
               },
-             ...headerrow
+              ...header
             },
             }
           },
@@ -188,9 +180,11 @@ const generatePenaltyStatement = {
             },
             type: "array",
           },
+          
+          propertyDetails,
+          penaltyStatementFilter,
           breakAfterSearch: getBreak(),
-          detailsContainer
-        //   paymentDetailsTable
+          penaltyDetailsTable
       }
     }
   }
