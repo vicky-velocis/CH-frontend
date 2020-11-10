@@ -1851,7 +1851,7 @@ export const downloadCancelledBookingReceipt = async (
 ) => {
 
 
-     tenantId = process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId();
+    tenantId = process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId();
 
 
     let applicationData = get(
@@ -1996,7 +1996,7 @@ export const downloadCancelledBookingReceipt = async (
 };
 
 export const calculateCancelledBookingRefundAmount = async (applicationNumber, tenantId, bookingDate) => {
-
+    tenantId = process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId();
     if (applicationNumber && tenantId) {
         let queryObject = [
             { key: "tenantId", value: tenantId },
@@ -2012,9 +2012,11 @@ export const calculateCancelledBookingRefundAmount = async (applicationNumber, t
 
             let billAccountDetails = payload.Payments[0].paymentDetails[0].bill.billDetails[0].billAccountDetails;
             let bookingAmount = 0;
+            let refundSecurity = 0;
             for (let i = 0; i < billAccountDetails.length; i++) {
                 if (billAccountDetails[i].taxHeadCode == "REFUNDABLE_SECURITY") {
                     bookingAmount += billAccountDetails[i].amount;
+                    refundSecurity += billAccountDetails[i].amount;
                 }
                 if (billAccountDetails[i].taxHeadCode == "PACC") {
                     bookingAmount += billAccountDetails[i].amount;
@@ -2052,7 +2054,6 @@ export const calculateCancelledBookingRefundAmount = async (applicationNumber, t
                 mdmsBody
             );
 
-            console.log(payloadRes, "RefundPercentage");
             refundPercentage = payloadRes.MdmsRes.Booking.bookingCancellationRefundCalc[0];
 
 
@@ -2073,11 +2074,11 @@ export const calculateCancelledBookingRefundAmount = async (applicationNumber, t
 
                 let refundPercent = refundPercentage.LETTHAN30MORETHAN15DAYS.refundpercentage;
                 refundAmount = (parseFloat(bookingAmount) * refundPercent) / 100
+            } else if (refundSecurity > 0) {
+                refundAmount = refundSecurity;
             }
 
-
             return refundAmount;
-
 
         }
     }
@@ -2085,7 +2086,7 @@ export const calculateCancelledBookingRefundAmount = async (applicationNumber, t
 
 }
 
-export const getBookingCancelledDate = async(applicationNumber, tenantId) => {
+export const getBookingCancelledDate = async (applicationNumber, tenantId) => {
     if (applicationNumber && tenantId) {
         let queryObject = [
             { key: "tenantId", value: tenantId },
@@ -2105,11 +2106,53 @@ export const getBookingCancelledDate = async(applicationNumber, tenantId) => {
             let date2 = new Date(cancelledTimeStamp);
 
             let gdate = ('0' + date2.getDate()).slice(-2) + '/'
-             + ('0' + (date2.getMonth()+1)).slice(-2) + '/'
-             + date2.getFullYear();
+                + ('0' + (date2.getMonth() + 1)).slice(-2) + '/'
+                + date2.getFullYear();
             return gdate;
 
 
         }
     }
 }
+
+export const updateBillDemand = async (
+    state,
+    dispatch,
+    applicationNumber,
+    tenantId,
+    bookingType
+) => {
+    const tenantIdn = process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId();
+    let applicationData = get(
+        state.screenConfiguration.preparedFinalObject,
+        "Booking"
+    );
+
+    console.log(applicationNumber, tenantIdn, bookingType, "Neor App");
+    //try {
+    if (applicationNumber && tenantIdn && bookingType) {
+        let applicationData = get(
+            state.screenConfiguration.preparedFinalObject,
+            "Booking"
+        );
+
+        console.log(applicationData, "Neor App");
+        try {
+            const response = await httpRequest(
+                "post",
+                "/bookings/park/community/demand/_update",
+                "",
+                [],
+                {
+                    Booking: applicationData,
+                }
+            );
+            return response;
+        } catch (error) {
+            console.log(error, "errornew");
+        }
+    }
+    // } catch (e) {
+    //     console.log(e);
+    // }
+};

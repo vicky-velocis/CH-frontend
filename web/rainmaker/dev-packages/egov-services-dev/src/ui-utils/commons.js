@@ -321,7 +321,7 @@ export const createUpdatePCCApplication = async (state, dispatch, action) => {
     let response = "";
     let tenantId = process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId();
 
-    let method = action === "INITIATE" || action === "RE_INITIATE" ? "CREATE" : "UPDATE";
+    let method = action === "INITIATE" || action === "MODIFY" ? "CREATE" : "UPDATE";
     try {
         let payload = get(
             state.screenConfiguration.preparedFinalObject,
@@ -360,13 +360,22 @@ export const createUpdatePCCApplication = async (state, dispatch, action) => {
         set(payload, "tenantId", tenantId);
         set(payload, "bkAction", action);
         set(payload, "businessService", "PACC");
-        let reInitiate = true;
-        if(payload.bkApplicationStatus == "RE_INITIATED"){
-            reInitiate = false;
+        // let reInitiate = true;
+        // if(payload.bkApplicationStatus == "RE_INITIATED"){
+        //     reInitiate = false;
+        // }
+        let reInitiate = false;
+        if(action == "MODIFY"){
+            reInitiate = true;
         }
         set(payload, "reInitiateStatus", reInitiate);
 
         set(payload, "financialYear", `${getCurrentFinancialYear()}`);
+
+        if(action == "CANCEL"){
+            payload.bkFromDate = null;
+            payload.bkToDate = null;
+        }
 
         if (method === "CREATE") {
             response = await httpRequest(
@@ -407,6 +416,8 @@ export const createUpdatePCCApplication = async (state, dispatch, action) => {
                 return { status: "fail", data: response.data };
             }
         } else if (method === "UPDATE") {
+
+
             response = await httpRequest(
                 "post",
                 "/bookings/park/community/_update",

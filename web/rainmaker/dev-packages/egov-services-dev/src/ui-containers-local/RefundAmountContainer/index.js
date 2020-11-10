@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { FeesEstimateCard } from "../../ui-molecules-local";
 import { connect } from "react-redux";
 import get from "lodash/get";
+import {calculateCancelledBookingRefundAmount} from "../../ui-config/screens/specs/utils";
 
 class RefundAmountContainer extends Component {
 
@@ -20,13 +21,20 @@ class RefundAmountContainer extends Component {
 const mapStateToProps = (state, ownProps) => {
     const { screenConfiguration } = state;
 
-
+    const applicationNumber = get(
+        screenConfiguration,
+        "preparedFinalObject.Booking.applicationNumber",
+        []
+    )
 
     const bookingDate = get(
         screenConfiguration,
         "preparedFinalObject.Booking.bkFromDate",
         []
     )
+    let refundAmount = 0;
+    refundAmount = calculateCancelledBookingRefundAmount(applicationNumber, "ch.chandigarh", bookingDate);
+ /*
     var billAccountDetails = get(
         screenConfiguration,
         "preparedFinalObject.ReceiptTemp[0].Bill[0].billDetails[0].billAccountDetails",
@@ -73,7 +81,7 @@ const mapStateToProps = (state, ownProps) => {
         refundAmount = (parseFloat(bookingAmount)*refundPercent)/100
     }
 
-
+*/
     return { refundAmount };
 };
 

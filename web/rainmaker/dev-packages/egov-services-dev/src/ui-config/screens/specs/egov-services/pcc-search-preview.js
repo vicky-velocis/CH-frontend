@@ -2,7 +2,7 @@ import {
     getCommonCard,
     getCommonContainer,
     getCommonHeader,
-    getBreak,
+    getBreak
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import {
     handleScreenConfigurationFieldChange as handleField,
@@ -25,7 +25,7 @@ import { fetchLocalizationLabel } from "egov-ui-kit/redux/app/actions";
 import jp from "jsonpath";
 import get from "lodash/get";
 import set from "lodash/set";
-import { generageBillCollection, generateBill, clearlocalstorageAppDetails } from "../utils";
+import { generageBillCollection, generateBill, clearlocalstorageAppDetails, calculateCancelledBookingRefundAmount } from "../utils";
 import { pccSummary } from "./summaryResource/pccSummary";
 import { pccApplicantSummary } from "./summaryResource/pccApplicantSummary";
 import { documentsSummary } from "./summaryResource/documentsSummary";
@@ -104,10 +104,16 @@ const prepareDocumentsView = async (state, dispatch) => {
     }
 };
 
-const HideshowFooter = (action, bookingStatus, fromDate, bookingObj, state) => {
+const HideshowFooter = async (action, bookingStatus, fromDate, bookingObj, state) => {
     const { screenConfiguration } = state;
     let bookingTimeStamp = new Date(fromDate).getTime();
     let currentTimeStamp = new Date().getTime();
+    const applicationNumber = get(
+        screenConfiguration,
+        "preparedFinalObject.Booking.applicationNumber",
+        []
+    );
+
     let showFooter = false;
     if (bookingObj.timeslots.length > 0) {
         let [fromTime] = bookingObj.timeslots[0].slot.split("-");
@@ -134,6 +140,7 @@ const HideshowFooter = (action, bookingStatus, fromDate, bookingObj, state) => {
 
     let bookingAmount = 0;
     let refundSecAmount = 0;
+   // let refundAmount = 0;
     for (let i = 0; i < billAccountDetails.length; i++) {
         if (billAccountDetails[i].taxHeadCode == "REFUNDABLE_SECURITY") {
             bookingAmount += billAccountDetails[i].amount;
@@ -143,6 +150,10 @@ const HideshowFooter = (action, bookingStatus, fromDate, bookingObj, state) => {
             bookingAmount += billAccountDetails[i].amount;
         }
     }
+
+    // refundAmount = await calculateCancelledBookingRefundAmount(applicationNumber, "ch.chandigarh", fromDate).then( function(result){
+
+    // })
 
     var date1 = new Date(fromDate);
     var date2 = new Date();
@@ -174,6 +185,8 @@ const HideshowFooter = (action, bookingStatus, fromDate, bookingObj, state) => {
             []
         )
         refundAmount = (parseFloat(bookingAmount) * refundPercent) / 100
+    }else if (refundSecAmount > 0) {
+        refundAmount = refundSecAmount;
     }
 console.log(bookingTimeStamp +"========="+ currentTimeStamp+"====="+refundAmount);
 
