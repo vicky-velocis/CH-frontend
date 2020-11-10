@@ -9,7 +9,7 @@ import {
   import commonConfig from "config/common.js";
   import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
   import { httpRequest } from "../../../../ui-utils";
-  import {downloadAccountStatementPdf} from '../estate/searchResource/searchAccountStatementFunction'
+  import {downloadAccountStatementPdf,downloadAccountStatementXLS} from '../estate/searchResource/searchAccountStatementFunction'
   import {
     handleScreenConfigurationFieldChange as handleField
   } from "egov-ui-framework/ui-redux/screen-configuration/actions";
@@ -230,7 +230,7 @@ import get from "lodash/get";
                 },
                 onClickDefination: {
                   action: "condition",
-                  // callBack: downloadAccountStatementXLS
+                  callBack: downloadAccountStatementXLS
                 }
               }
             }
