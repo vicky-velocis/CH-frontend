@@ -28,7 +28,6 @@ export const applicationSuccessFooter = (
   tenant
 ) => {
   const fileNumber = getQueryArg(window.location.href, "fileNumber");
-  let type = getQueryArg(window.location.href, "type");
   const purpose  = getQueryArg(window.location.href, "purpose");
   const type = getQueryArg(window.location.href, "type");
   const roleExists = ifUserRoleExists("CITIZEN");
