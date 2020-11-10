@@ -108,7 +108,13 @@ export const searchApplicationResults = {
 };
 
 const onApplicationRowClick = rowData => {
-  window.location.href = `preview?applicationNumber=${rowData[1]}&tenantId=${tenantId}`
+  let applicationState = rowData[2];
+  if (applicationState == "-") {
+    window.location.href = `_apply?applicationNumber=${rowData[1]}&tenantId=${tenantId}`
+  }
+  else {
+    window.location.href = `preview?applicationNumber=${rowData[1]}&tenantId=${tenantId}`
+  }
 }
 
 const onRowClick = rowData => {
