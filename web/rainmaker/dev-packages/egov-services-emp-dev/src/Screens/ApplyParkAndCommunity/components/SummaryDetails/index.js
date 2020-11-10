@@ -30,11 +30,16 @@ class SummaryDetails extends Component {
             utGST, cGST, GSTnumber, dimension, location, facilitationCharges, cleaningCharges, rent, houseNo, type, purpose, locality, residenials, facilationChargesSuccess,discountType } = this.props;
 console.log("this.propos--insummaryPage--",this.props)
 console.log("discountType--",discountType)
+console.log("newConsole--ut",utGST)
+
+prepareFinalObject("SummaryutGST",this.props.utGST);
+prepareFinalObject("SummarycGST",this.props.cGST);
+prepareFinalObject("Summarysurcharge",this.props.surcharge);
 
 
-prepareFinalObject("SummaryutGST",utGST);
-prepareFinalObject("SummarycGST",cGST);
-prepareFinalObject("Summarysurcharge",surcharge);
+prepareFinalObject("cGSTSummary",cGST);
+
+
 let newDisCount;
 let finalDiscount;
 if(discountType == "50%"){
@@ -208,8 +213,6 @@ let payloadfund = await httpRequest(
     }
 
     submit = e => {
-        let hsjs = <Label label={"BK_MYBK_PCC_APPLICATION_REQUEST"}/>
-        console.log("hsjs--",hsjs)
         let { updatePACCApplication, documentMap, createPACCApplicationData, bookingData, venueType,prepareFinalObject } = this.props;
         let dataOne = this.state.createPACCApp && this.state.createPACCApp.data ? this.state.createPACCApp.data: "NoDataFound"
         console.log("dataOne--",dataOne)
@@ -345,12 +348,14 @@ let payloadfund = await httpRequest(
             console.log("propsInRendersummary--",this.props)
             let fc = fCharges?fCharges.facilitationCharge:'100';
             console.log("stateofBooking--",this.state.createPACCApp)
+
+            
         return (
             <div>
                 <div className="form-without-button-cont-generic">
                     <div classsName="container">
                         <div className="col-xs-12">
-                            <PaccFeeEstimate
+                            {/* <PaccFeeEstimate
 BK_FEE_HEAD_PACC={BK_FEE_HEAD_PACC}
 LUXURY_TAX={LUXURY_TAX}
 REFUNDABLE_SECURITY={REFUNDABLE_SECURITY}
@@ -363,7 +368,29 @@ totalAmountSuPage={totalAmountSuPage}
                                 utGST={utGST}
                                 fc={fc}
                                 firstStep={this.firstStep}
+
+                                one,two,three,four,four,six
+                            /> */}
+
+<PaccFeeEstimate
+one={one}
+two={two}
+three={three}
+four={four}
+five={five}
+six={six}
+REFUNDABLE_SECURITY={REFUNDABLE_SECURITY}
+PACC_TAX={PACC_TAX}
+PACPACC_ROUND_OFFC_TAX={PACPACC_ROUND_OFFC_TAX}
+FACILITATION_CHARGE={FACILITATION_CHARGE}
+totalAmountSuPage={totalAmountSuPage}
+                                amount={amount}
+                                cGST={cGST}
+                                utGST={utGST}
+                                fc={fc}
+                                firstStep={this.firstStep}
                             />
+
                             <SummaryApplicantDetail
                                 firstName={firstName}
                                 email={email}
@@ -377,9 +404,9 @@ totalAmountSuPage={totalAmountSuPage}
                                 toDate={toDate}
                                 cleaningCharges={cleaningCharges}
                                 rent={rent}
-                                surcharge={surcharge}
-                                cGST={cGST}
-                                utGST={utGST}
+                                surcharge={this.props.surcharge}
+                                cGST={this.props.cGST}
+                                utGST={this.props.utGST}
                                 GSTnumber={GSTnumber}
                             />
                             <SummaryDocumentDetail
@@ -478,23 +505,23 @@ console.log("five--",five)
 console.log("six--",six)
 
     //1
-    let BK_FEE_HEAD_PACC = checkBillLength ? paymentDataOne.Bill[0].billDetails[0].billAccountDetails[0].amount: "notFound";
-    console.log("BK_FEE_HEAD_PACC--",BK_FEE_HEAD_PACC)
-    //2
-    let LUXURY_TAX = checkBillLength ? paymentDataOne.Bill[0].billDetails[0].billAccountDetails[1].amount: "notFound";
-    console.log("LUXURY_TAX--",LUXURY_TAX)
-    //3
-    let REFUNDABLE_SECURITY = checkBillLength ? paymentDataOne.Bill[0].billDetails[0].billAccountDetails[2].amount: "notFound";
-    console.log("REFUNDABLE_SECURITY--",REFUNDABLE_SECURITY)
-    //4
-    let PACC_TAX = checkBillLength ? paymentDataOne.Bill[0].billDetails[0].billAccountDetails[3].amount: "notFound";
-    console.log("PACC_TAX--",PACC_TAX)
-    //5
-    let PACPACC_ROUND_OFFC_TAX = checkBillLength ? paymentDataOne.Bill[0].billDetails[0].billAccountDetails[4].amount: "notFound";
-    console.log("PACPACC_ROUND_OFFC_TAX--",PACPACC_ROUND_OFFC_TAX)
-    //6
-    let FACILITATION_CHARGE = checkBillLength ? paymentDataOne.Bill[0].billDetails[0].billAccountDetails[5].amount: "notFound";
-    console.log("FACILITATION_CHARGE--",FACILITATION_CHARGE)
+    // let BK_FEE_HEAD_PACC = checkBillLength ? paymentDataOne.Bill[0].billDetails[0].billAccountDetails[0].amount: "notFound";
+    // console.log("BK_FEE_HEAD_PACC--",BK_FEE_HEAD_PACC)
+    // //2
+    // let LUXURY_TAX = checkBillLength ? paymentDataOne.Bill[0].billDetails[0].billAccountDetails[1].amount: "notFound";
+    // console.log("LUXURY_TAX--",LUXURY_TAX)
+    // //3
+    // let REFUNDABLE_SECURITY = checkBillLength ? paymentDataOne.Bill[0].billDetails[0].billAccountDetails[2].amount: "notFound";
+    // console.log("REFUNDABLE_SECURITY--",REFUNDABLE_SECURITY)
+    // //4
+    // let PACC_TAX = checkBillLength ? paymentDataOne.Bill[0].billDetails[0].billAccountDetails[3].amount: "notFound";
+    // console.log("PACC_TAX--",PACC_TAX)
+    // //5
+    // let PACPACC_ROUND_OFFC_TAX = checkBillLength ? paymentDataOne.Bill[0].billDetails[0].billAccountDetails[4].amount: "notFound";
+    // console.log("PACPACC_ROUND_OFFC_TAX--",PACPACC_ROUND_OFFC_TAX)
+    // //6
+    // let FACILITATION_CHARGE = checkBillLength ? paymentDataOne.Bill[0].billDetails[0].billAccountDetails[5].amount: "notFound";
+    // console.log("FACILITATION_CHARGE--",FACILITATION_CHARGE)
 
   
     // const loadingOne = !isEmpty(createPACCApplicationData)
@@ -526,10 +553,11 @@ console.log("six--",six)
     let documentMap = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.documentMap : "";
     let bkLocation = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.availabilityCheckData.bkLocation : "";
     return {
+        //BK_FEE_HEAD_PACC,LUXURY_TAX,REFUNDABLE_SECURITY,PACC_TAX,
+        //PACPACC_ROUND_OFFC_TAX,FACILITATION_CHARGE,
         createPACCApplicationData,userInfo,
         documentMap, bkLocation, facilationChargesSuccess,
-        fCharges,myLocationtwo,BK_FEE_HEAD_PACC,LUXURY_TAX,REFUNDABLE_SECURITY,PACC_TAX,
-        PACPACC_ROUND_OFFC_TAX,FACILITATION_CHARGE,totalAmountSuPage,one,two,three,four,five,six
+        fCharges,myLocationtwo,totalAmountSuPage,one,two,three,four,five,six
     }
 
 }

@@ -136,8 +136,6 @@ class ApplicationDetails extends Component {
 			userInfo,
 			selectedComplaint
 		} = this.props;
-
-		alert("cone--in--actionButtonOnClick--")
 		if (label == 'APPROVED') {
 			this.setState({
 				actionTittle: "Approve Application"
@@ -615,7 +613,7 @@ class ApplicationDetails extends Component {
 		let { comments, openMap } = this.state;
 		let { complaint, timeLine } = this.props.transformedComplaint;
 		let { documentMap } = this.props;
-		let { historyApiData, paymentDetails, match, userInfo,paymentDetailsForReceipt } = this.props;
+		let { historyApiData, paymentDetails, match, userInfo,paymentDetailsForReceipt,PayMentTwo,PayMentOne } = this.props;
 		console.log("this.props.match--",match)
 		let {
 			role,
@@ -770,6 +768,9 @@ class ApplicationDetails extends Component {
 								/>
 								<PaymentDetails
 									paymentDetails={paymentDetails && paymentDetails}
+									PayMentTwo={PayMentTwo && PayMentTwo}
+									PayMentOne={PayMentOne && PayMentOne}
+
 								/>
 								<div style={{
 									height: "100px",

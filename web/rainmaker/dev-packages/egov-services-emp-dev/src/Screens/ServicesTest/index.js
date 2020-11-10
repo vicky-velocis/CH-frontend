@@ -25,42 +25,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
-// class AllRequests extends Component {
-
-//  render(){
-
-//   // let name = "Vandana";
-
-//   return(
-//     <div>
-//     {/* <h3>hello Vandana</h3>
-//   <h1>{name}</h1>
-//   <Label label={"BK_MYBK_PCC_APPLICATION_REQUEST"}/>
-//   {console.log("hello testone")} */}
-
-
-
-
-
-  
-//     </div>
-//   )
-//  }
-// };
-
-// export default AllRequests;
-
-
-
-// import React, { Component } from "react";
-// import { Button, Icon } from "components";
-// import Label from "egov-ui-kit/utils/translationNode";
-
 class example extends Component {
 
   downloadApplicationButton = async (e) => {
-  //   // this.props.history.push("/egov-services/testing");
-  // alert("hello"),
   this.props.history.push(`/egov-services/create-success`);
   
   }
