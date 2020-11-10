@@ -56,81 +56,50 @@ import {
     let payload = await getSearchResults(queryObject);
     if (payload) {
       let properties = payload.Properties;
-      let value;
-      // let labelSubCat = properties[0].subCategory
-      // const localisationLabels = getTransformedLocalStorgaeLabels();
-      // switch (labelSubCat) {
-      //   case "SUBCAT.HOUSE":
-          
-      //     console.log(`CHECK THIS ${labelSubCat}`)
-      //     return labelSubCat
-      //     }
-      //     console.log("SEE HERE NOW!!!")
-      //     console.log(getLocaleLabels(properties[0].subCategory, properties[0].subCategory))
+      let categorySelected = mdmsCategory.filter(item => item.code === properties[0].category && !!item.SubCategory);
+      let subCatSelected = categorySelected[0].SubCategory.filter(item => item.code === properties[0].subCategory)
 
-      if(properties[0].subCategory === "SUBCAT.HOUSE"){
-        value = "House"
-        dispatch(prepareFinalObject("singleSubCategory", value));
-      }
-      else if(properties[0].subCategory === "SUBCAT.DWELLINGS"){
-        value = "Dwellings"
-        dispatch(prepareFinalObject("singleSubCategory", value));
-      }
-      else if(properties[0].subCategory === "SUBCAT.FLAT"){
-        value = "Flat"
-        dispatch(prepareFinalObject("singleSubCategory", value));
-      }
-      else if(properties[0].subCategory === "SUBCAT.SCF"){
-        value = "SCF"
-        dispatch(prepareFinalObject("singleSubCategory", value));
-      }
-      else if(properties[0].subCategory === "SUBCAT.SCO"){
-        value = "SCO"
-        dispatch(prepareFinalObject("singleSubCategory", value));
-      }
-      else if(properties[0].subCategory === "SUBCAT.BOOTH"){
-        value = "Booth"
-        dispatch(prepareFinalObject("singleSubCategory", value));
-      }
-      else if(properties[0].subCategory === "SUBCAT.SHOP"){
-        value = "Shop"
-        dispatch(prepareFinalObject("singleSubCategory", value));
-      }
-
+      dispatch(prepareFinalObject("singleSubCategory", subCatSelected[0].name));
+      
       dispatch(prepareFinalObject("Properties", properties));
   
     }
   }
 
-  const getMdmsData = async (dispatch) => {
-    let mdmsBody = {
-      MdmsCriteria: {
-        tenantId: commonConfig.tenantId,
-        moduleDetails: [{
-          moduleName: ESTATE_SERVICES_MDMS_MODULE,
-          masterDetails: [{
-           name: "categories"
-          }]
-        }]
-      }
-    };
-    try {
-      let payload = await httpRequest(
-        "post",
-        "/egov-mdms-service/v1/_search",
-        "_search",
-        [],
-        mdmsBody
-      );
-      return dispatch(prepareFinalObject("searchScreenMdmsData", payload.MdmsRes));
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  
 
   const beforeInitFn = async (action, state, dispatch, fileNumber) => {
     dispatch(prepareFinalObject("workflow.ProcessInstances", []))
+
+    const getMdmsData = async (dispatch) => {
+      let mdmsBody = {
+        MdmsCriteria: {
+          tenantId: commonConfig.tenantId,
+          moduleDetails: [{
+            moduleName: ESTATE_SERVICES_MDMS_MODULE,
+            masterDetails: [{
+             name: "categories"
+            }]
+          }]
+        }
+      };
+      try {
+        let payload = await httpRequest(
+          "post",
+          "/egov-mdms-service/v1/_search",
+          "_search",
+          [],
+          mdmsBody
+        );
+        return dispatch(prepareFinalObject("searchScreenMdmsData", payload.MdmsRes));
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+
     if (fileNumber) {
+      await getMdmsData(dispatch)
       await searchResults(action, state, dispatch, fileNumber);
       dispatch(
         handleField(
@@ -149,7 +118,6 @@ import {
     name: "estate-search-account-statement",
     beforeInitScreen: (action, state, dispatch) => {
       let fileNumber = getQueryArg(window.location.href, "fileNumber");
-      getMdmsData(dispatch);
       beforeInitFn(action, state, dispatch, fileNumber);
       return action
     },
