@@ -18,9 +18,14 @@ import {
   getSearchResults
 } from "../../../../ui-utils/commons";
 import {
+  getLocaleLabels,
   getQueryArg
 } from "egov-ui-framework/ui-utils/commons";
 import get from "lodash/get";
+import {
+  getTransformedLocalStorgaeLabels,
+  getTransformedLocale,
+} from "egov-ui-framework/ui-utils/commons";
   
   const header = getCommonHeader({
     labelName: "Account Statement Generation",
@@ -52,6 +57,16 @@ import get from "lodash/get";
     if (payload) {
       let properties = payload.Properties;
       let value;
+      // let labelSubCat = properties[0].subCategory
+      // const localisationLabels = getTransformedLocalStorgaeLabels();
+      // switch (labelSubCat) {
+      //   case "SUBCAT.HOUSE":
+          
+      //     console.log(`CHECK THIS ${labelSubCat}`)
+      //     return labelSubCat
+      //     }
+      //     console.log("SEE HERE NOW!!!")
+      //     console.log(getLocaleLabels(properties[0].subCategory, properties[0].subCategory))
 
       if(properties[0].subCategory === "SUBCAT.HOUSE"){
         value = "House"
@@ -186,7 +201,7 @@ import get from "lodash/get";
                     backgroundColor: "#fe7a51",
                     borderColor:"#fe7a51",
                     borderRadius: "2px",
-                    width: "25%",
+                    // width: "50%",
                     height: "48px",
                     margin:"10px"
                   }
@@ -217,7 +232,7 @@ import get from "lodash/get";
                     backgroundColor: "#fe7a51",
                     borderColor:"#fe7a51",
                     borderRadius: "2px",
-                    width: "25%",
+                    // width: "25%",
                     height: "48px",
                     margin:"10px"
                   }
