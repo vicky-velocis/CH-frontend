@@ -1530,7 +1530,7 @@ export const getTextToLocalMappingPaymentDetail = label => {
         "Challan No",
         "EC_COMMON_TABLE_COL_PAYMENT_MAPPING_CHALLAN_NO",
         localisationLabels
-      ); transactionId
+      );
     case "transactionId":
       return getLocaleLabels(
         "Challan No",
