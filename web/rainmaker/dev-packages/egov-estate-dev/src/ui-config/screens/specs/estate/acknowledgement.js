@@ -66,6 +66,18 @@ const getAcknowledgementCard = (
         labelKey: "ES_MASTER_ENTRY_APPROVE_SUCCESS_MESSAGE_MAIN"
       }
     }
+    else if(purpose === "submit") {
+      header = {
+        labelName: "Estate Property Master Entry is Submitted Successfully",
+        labelKey: "ES_MASTER_ENTRY_SUBMIT_SUCCESS_MESSAGE_MAIN"
+      }
+    }
+    else if(purpose === "modify") {
+      header = {
+        labelName: "Estate Property Master Entry is Modified Successfully",
+        labelKey: "ES_MASTER_ENTRY_MODIFY_SUCCESS_MESSAGE_MAIN"
+      }
+    }
     else {
       header = {}
     }
