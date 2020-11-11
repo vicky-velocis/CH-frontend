@@ -11,7 +11,7 @@ import acknowledgementCard from "./acknowledgementResource/acknowledgementUtils"
 import {
   applicationSuccessFooter
 } from "./acknowledgementResource/applicationSuccessFooter";
-import { WF_ALLOTMENT_OF_SITE } from "../../../../ui-constants";
+import { WF_ALLOTMENT_OF_SITE, WF_BB_PROPERTY_MASTER } from "../../../../ui-constants";
 import { paymentFailureFooter } from "./acknowledgementResource/paymentFailureFooter";
 
 const getAcknowledgementCard = (
@@ -29,7 +29,7 @@ const getAcknowledgementCard = (
 ) => {
   var header;
   if (status === "success") {
-    if(type === WF_ALLOTMENT_OF_SITE) {
+    if(type === WF_ALLOTMENT_OF_SITE || type === WF_BB_PROPERTY_MASTER) {
     if (purpose == "apply") {
       header = {
         labelName: "Estate Property Master Entry Submitted Successfully",
@@ -110,7 +110,7 @@ const getAcknowledgementCard = (
       labelKey: "ES_APPLICATION_NUMBER_LABEL"
     }
 
-    const commonHeader = type === WF_ALLOTMENT_OF_SITE ? {
+    const commonHeader = (type === WF_ALLOTMENT_OF_SITE || type === WF_BB_PROPERTY_MASTER) ? {
       labelName: 'Estate Property Master Entry',
       labelKey: "ES_PROPERTY_MASTER_ENTRY",
     } : !!type ? 

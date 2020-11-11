@@ -179,6 +179,7 @@ class WorkFlowContainer extends React.Component {
       }
     }
     try {
+      debugger;
       const payload = await httpRequest("post", updateUrl, "", [], {
         [dataPath]: data
       });
@@ -189,6 +190,9 @@ class WorkFlowContainer extends React.Component {
         let path = "";
         switch(this.props.moduleName) {
           case WF_ALLOTMENT_OF_SITE: 
+            path = `&fileNumber=${data[0].fileNumber}&tenantId=${tenant}&type=${this.props.moduleName}`
+            break;
+          case WF_BB_PROPERTY_MASTER: 
             path = `&fileNumber=${data[0].fileNumber}&tenantId=${tenant}&type=${this.props.moduleName}`
             break;
           default: {
