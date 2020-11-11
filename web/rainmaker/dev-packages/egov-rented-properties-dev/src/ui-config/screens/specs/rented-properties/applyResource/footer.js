@@ -261,7 +261,7 @@ const callBackForNext = async(state, dispatch) => {
                     errorMessage = {
                       labelName:
                           "Date of possession is greater than current date",
-                      labelKey: "RP_ERR_DATE_ALLOTMENT_FIELDS_CURRENT_DATE"
+                      labelKey: "RP_ERR_DATE_POSESSION_FIELDS_CURRENT_DATE"
                   };
                   }else{
                     errorMessage = {
