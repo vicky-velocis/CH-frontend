@@ -179,7 +179,6 @@ class WorkFlowContainer extends React.Component {
       }
     }
     try {
-      debugger;
       const payload = await httpRequest("post", updateUrl, "", [], {
         [dataPath]: data
       });
