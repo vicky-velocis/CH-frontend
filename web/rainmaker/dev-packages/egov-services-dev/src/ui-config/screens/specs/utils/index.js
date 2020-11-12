@@ -758,10 +758,10 @@ export const  downloadReceipt =async (
 
 
     tenantId = process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId();
-    let applicationData = get(
-        state.screenConfiguration.preparedFinalObject,
-        "Booking"
-    );
+    // let applicationData = get(
+    //     state.screenConfiguration.preparedFinalObject,
+    //     "Booking"
+    // );
 
     let applicationData={}
     let receiptUrl=""
