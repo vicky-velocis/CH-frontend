@@ -11,7 +11,7 @@ class PayDetails extends Component {
 
 render() {
 const {amount, cGST, utGST, location,facilationChargesSuccess,result, firstStep,fc,
-  BK_FEE_HEAD_PACC,LUXURY_TAX,REFUNDABLE_SECURITY,PACC_TAX,totalAmountSuPage,
+  BK_FEE_HEAD_PACC,LUXURY_TAX,REFUNDABLE_SECURITY,PACC_TAX,totalAmountSuPage,one,two,three,four,five,six,
   PACPACC_ROUND_OFFC_TAX,FACILITATION_CHARGE} = this.props
 
 // let num = 100.000;
@@ -44,17 +44,32 @@ const {amount, cGST, utGST, location,facilationChargesSuccess,result, firstStep,
 // let Rnum = (Math.round(fc * 100) / 100).toFixed(2);
 
 
-let ONE =  (Math.round(BK_FEE_HEAD_PACC * 100) / 100).toFixed(2);
+// let ONE =  (Math.round(BK_FEE_HEAD_PACC * 100) / 100).toFixed(2);
 
-let TWO = (Math.round(PACC_TAX * 100) / 100).toFixed(2);
+// let TWO = (Math.round(PACC_TAX * 100) / 100).toFixed(2);
 
-let THREE = (Math.round(PACPACC_ROUND_OFFC_TAX * 100) / 100).toFixed(2);
+// let THREE = (Math.round(PACPACC_ROUND_OFFC_TAX * 100) / 100).toFixed(2);
 
-let FOUR = (Math.round(FACILITATION_CHARGE * 100) / 100).toFixed(2);
+// let FOUR = (Math.round(FACILITATION_CHARGE * 100) / 100).toFixed(2);
 
-let FIVE = (Math.round(LUXURY_TAX * 100) / 100).toFixed(2);
+// let FIVE = (Math.round(LUXURY_TAX * 100) / 100).toFixed(2);
 
-let SIX = (Math.round(REFUNDABLE_SECURITY * 100) / 100).toFixed(2);
+// let SIX = (Math.round(REFUNDABLE_SECURITY * 100) / 100).toFixed(2);
+
+// let SEVEN = (Math.round(totalAmountSuPage * 100) / 100).toFixed(2);
+
+
+let ONE =  (Math.round(one * 100) / 100).toFixed(2);
+
+let TWO = (Math.round(two * 100) / 100).toFixed(2);
+
+let THREE = (Math.round(three * 100) / 100).toFixed(2);
+
+let FOUR = (Math.round(four * 100) / 100).toFixed(2);
+
+let FIVE = (Math.round(five * 100) / 100).toFixed(2);
+
+let SIX = (Math.round(six * 100) / 100).toFixed(2);
 
 let SEVEN = (Math.round(totalAmountSuPage * 100) / 100).toFixed(2);
 
@@ -92,7 +107,7 @@ let SEVEN = (Math.round(totalAmountSuPage * 100) / 100).toFixed(2);
                   <Label className="col-xs-12  col-sm-12 col-md-12 status-color" label="PACC_TAX" />
                 </div>
                 <div className="col-sm-4 col-xs-12">
-                <h5 style={{ textAlign: "right" }}>{TWO ? TWO : 'NA'}</h5>
+                <h5 style={{ textAlign: "right" }}>{FOUR ? FOUR : 'NA'}</h5>
                 </div>
               </div>
              
@@ -102,7 +117,7 @@ let SEVEN = (Math.round(totalAmountSuPage * 100) / 100).toFixed(2);
                   <Label className="col-xs-12  col-sm-12 col-md-12 status-color" label="PACPACC_ROUND_OFFC_TAX" />
                 </div>
                 <div className="col-sm-4 col-xs-12">
-                <h5 style={{ textAlign: "right" }}>{THREE ? THREE : 'NA'}</h5>
+                <h5 style={{ textAlign: "right" }}>{FIVE ? FIVE : 'NA'}</h5>
               
                 </div>
               </div>
@@ -112,7 +127,7 @@ let SEVEN = (Math.round(totalAmountSuPage * 100) / 100).toFixed(2);
                   <Label className="col-xs-12  col-sm-12 col-md-12 status-color" label="BK_MYBK_FACILITATION_CHARGE" />
                 </div>
                 <div className="col-sm-4 col-xs-12">
-                <h5 style={{ textAlign: "right" }}>{FOUR ? FOUR : 'NA'}</h5>
+                <h5 style={{ textAlign: "right" }}>{SIX ? SIX : 'NA'}</h5>
               
                 </div>
               </div>
@@ -122,7 +137,7 @@ let SEVEN = (Math.round(totalAmountSuPage * 100) / 100).toFixed(2);
                   <Label className="col-xs-12  col-sm-12 col-md-12 status-color" label="LUXURY_TAX" />
                 </div>
                 <div className="col-sm-4 col-xs-12">
-                <h5 style={{ textAlign: "right" }}>{FIVE ? FIVE : 'NA'}</h5>
+                <h5 style={{ textAlign: "right" }}>{TWO ? TWO : 'NA'}</h5>
               
                 </div>
               </div>
@@ -132,7 +147,7 @@ let SEVEN = (Math.round(totalAmountSuPage * 100) / 100).toFixed(2);
                   <Label className="col-xs-12  col-sm-12 col-md-12 status-color" label="REFUNDABLE_SECURITY"/>
                 </div>
                 <div className="col-sm-4 col-xs-12">
-                <h5 style={{ textAlign: "right" }}>{SIX ? SIX: "100"}</h5>
+                <h5 style={{ textAlign: "right" }}>{THREE ? THREE: "100"}</h5>
                
                 </div>
               </div>

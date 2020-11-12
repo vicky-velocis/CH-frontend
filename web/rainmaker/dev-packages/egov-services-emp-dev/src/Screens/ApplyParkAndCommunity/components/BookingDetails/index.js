@@ -248,35 +248,6 @@ class BookingsDetails extends Component {
               hintStyle={{ width: "100%" }}
             />
           </div>
-          {/* <div className="col-sm-6 col-xs-6">
-            <TextField
-              id="facilitationCharges"
-              name="facilitationCharges"
-              type="text"
-              value={fc}
-              required={true}
-              hintText={
-                <Label
-                  label="BK_MYBK_PCC_APPLICATION_REQUEST"
-                  color="rgba(0, 0, 0, 0.3799999952316284)"
-                  fontSize={16}
-                  labelStyle={hintTextStyle}
-                />
-              }
-              floatingLabelText={
-                <Label
-                  key={0}
-                  label="BK_MYBK_PCC_APPLICATION_REQUEST"
-                  color="rgba(0,0,0,0.60)"
-                  fontSize="12px"
-                />
-              }
-              onChange={handleChange('facilitationCharges')}
-              underlineStyle={{ bottom: 7 }}
-              underlineFocusStyle={{ bottom: 7 }}
-              hintStyle={{ width: "100%" }}
-            />
-          </div> */}
           <div className="col-sm-6 col-xs-6">
             <TextField
               id="surcharge"

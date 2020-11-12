@@ -49,7 +49,7 @@ class PayDetails extends Component {
   // };
 
   render() {
-    const { bkPaymentDate, paymentDetails, bkPaymentReceiptNumber, bkPaymentStatus } = this.props;
+    const { bkPaymentDate, paymentDetails, bkPaymentReceiptNumber, bkPaymentStatus,PayMentOne,PayMentTwo } = this.props;
 
     return (
       <div>

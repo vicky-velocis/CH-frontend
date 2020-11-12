@@ -273,7 +273,7 @@ let vrent = Number(vanueData.rent);
        
         cGST = (Number(RentPlusCcharges) * Number(vanueData.cgstRate)) / 100
         console.log("cGST--",cGST)
-       
+
         locality = vanueData.sector;
         console.log("locality--",locality)
         // surcharge = (Number(totalAmount) * Number(vanueData.surcharge)) / 100
@@ -400,7 +400,6 @@ let vrent = Number(vanueData.rent);
                 cleaningCharges={cleaningCharges}
                 type={type}
                 rent={vrent}
-              
                 fromDate={fromDate}
                 toDate={toDate}
                 GSTnumber={GSTnumber}

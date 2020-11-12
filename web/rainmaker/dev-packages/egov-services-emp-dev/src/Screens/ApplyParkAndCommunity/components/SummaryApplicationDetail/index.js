@@ -19,17 +19,63 @@ class CGBookingDetails extends Component {
         let UTGST = PrintutGST2
         console.log("UTGST--",UTGST)
       }
-      if(PrintcGST != "notfound"){
+      if(PrintcGST !== "notfound"){
         let CGST = PrintcGST
         console.log("CGST--",CGST)
       }
-      if(Printsurcharge != "notfound"){
+      if(Printsurcharge !== "notfound"){
         let surCharges = Printsurcharge
         console.log("surCharges--",surCharges)
       }
+ var vandanaOne = 0;
 
+      if (SummaryutGST) {
+       // do something
+       vandanaOne = SummaryutGST
+       console.log("vandanaOne--",vandanaOne)
+    }
+   
+    console.log("vandanaOne-vandanaOne--",vandanaOne)
+
+    const n = vandanaOne.toString();
+
+    const printvandanaOne = n ? n : "NA"
+    console.log("printvandanaOne--",printvandanaOne)
+
+var vandanaTwo = 0;
+
+   if (SummarycGST) {
+    // do something
+    vandanaTwo = SummarycGST
+    console.log("vandanaTwo--",vandanaTwo)
+  }
+
+  const m = vandanaTwo.toString();
+
+  const printvandanaTwo = m ? m : "NA"
+  console.log("printvandanaOne--",printvandanaOne)
+
+  console.log("vandanaTwo--vandanaTwo-",vandanaTwo)
+
+
+ var vandanaThree = 0;
+
+   if (Summarysurcharge) {
+    // do something
+    vandanaThree = Summarysurcharge
+    console.log("vandanaThree--",vandanaTwo)
+  }
+
+  const o = vandanaThree.toString();
+
+  var printvandanaThree = o ? o : "NA"
+  console.log("printvandanaThree--",printvandanaThree)
+
+  console.log("vandanaTwo,vandanaOne--",vandanaTwo,vandanaOne)
+  var abc = 89;
 return (
       <div>
+        {console.log("vandanaThree-In-render--",vandanaThree)} 
         <Card
           textChildren={
             <div>
@@ -123,7 +169,7 @@ return (
                                     className="col-xs-12  col-sm-12 col-md-12  status-result-color"
                                     id="complaint-details-current-status"
                                     labelStyle={{ color: "inherit" }}
-                                    label={Printsurcharge != "notfound" ? Printsurcharge: "NA" }
+                                    label={printvandanaThree}
                                 />
                             </div>
                             <div className="col-md-4">
@@ -131,9 +177,8 @@ return (
                                 <Label
                                     className="col-xs-12  col-sm-12 col-md-12  status-result-color"
                                     id="complaint-details-current-status"
-                                    labelStyle={{ color: "inherit" }}
-                                    label={PrintutGST2 != "notfound" ? PrintutGST2: "NA"}
-                                    
+                                    labelStyle={{ color: "inherit" }}                
+                                    label={printvandanaOne}
          
                                 />
                             </div>
@@ -143,7 +188,7 @@ return (
                                     className="col-xs-12  col-sm-12 col-md-12  status-result-color"
                                     id="complaint-details-current-status"
                                     labelStyle={{ color: "inherit" }}
-                                    label={PrintcGST != "notfound" ? PrintcGST: "NA"}
+                                    label={printvandanaTwo}
                                 />
                             </div>
                             <div className="col-md-4">
@@ -200,11 +245,15 @@ const mapStateToProps = state => {
     let SummaryutGST = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.SummaryutGST: "NotFound";
    console.log("SummaryutGST-2-",SummaryutGST)
 
+   
+
    let PrintutGST2 = SummaryutGST && SummaryutGST ? SummaryutGST : " notfound";
    console.log("PrintutGST2--",PrintutGST2)
 
    let SummarycGST = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.SummarycGST: "NotFound";
    console.log("SummarycGST-2-",SummarycGST)
+
+   
 
    let PrintcGST = SummarycGST && SummarycGST ? SummarycGST : " notfound";
    console.log("PrintcGST--",PrintcGST)
@@ -215,10 +264,16 @@ const mapStateToProps = state => {
    let Printsurcharge = Summarysurcharge && Summarysurcharge ? Summarysurcharge : " notfound";
    console.log("Printsurcharge--",Printsurcharge) 
 
+   
+
+
     const { createPACCApplicationData } = complaints;
    
     return {
         createPACCApplicationData,
+        SummarycGST,
+        Summarysurcharge,
+        SummaryutGST,
         PrintutGST2,
         PrintcGST,
         Printsurcharge,

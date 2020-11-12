@@ -572,24 +572,6 @@ class AllRequests extends Component {
   }
 
   render() {
-
-// let yyyy; 
-
-// let lastOne = "BK_MYBK_PCC_APPLICATION_REQUEST"
-// console.log("lastOne--",lastOne);
-
-// let keyItems={
-//   label:"BK_MYBK_PCC_APPLICATION_REQUEST"
-// }
-
-// console.log("keyItems--",keyItems)
-
-// let keysecItems={
-//   label:"BK_MYBK_PCC_APPLICATION_REQUEST"
-// }
-
-// console.log("keysecItems--",keysecItems)
-
     const dropbordernone = {
       border: "none",
       boxShadow: "none",
@@ -656,6 +638,8 @@ class AllRequests extends Component {
     const foundFirstLavel = userInfo && userInfo.roles.some(el => el.code === 'BK_MCC_APPROVER');
     const foundSecondLavel = userInfo && userInfo.roles.some(el => el.code === 'BK_OSD_APPROVER');
     const foundthirdLavel = userInfo && userInfo.roles.some(el => el.code === 'BK_ADMIN_APPROVER');
+    const foundfourthLavel = userInfo && userInfo.roles.some(el => el.code === 'BK_E-SAMPARK-CENTER');
+    const foundfifthLavel = userInfo && userInfo.roles.some(el => el.code === 'BK_MCC_USER');
 
     return role === "ao" ? (
       <div>
@@ -793,7 +777,7 @@ class AllRequests extends Component {
       </div>
     ) : role === "employee" ? (
       <Screen loading={loading}>
-        {foundWaterTanker ?
+        {/* {foundWaterTanker ?
           <Button
             className="responsive-action-button"
             label={<Label buttonLabel={true} label="BK_MYBK_WATER_TANKER_APPLY" />}
@@ -802,7 +786,7 @@ class AllRequests extends Component {
             style={{ float: 'right', marginRight: '50px', marginTop: '40px' }}
             onClick={() => this.gotoWaterTanker()
             } /> : ''
-        }
+        } */}
         {foundFirstLavel || foundSecondLavel || foundthirdLavel ?
           <Button
             className="responsive-action-button"
@@ -816,18 +800,15 @@ class AllRequests extends Component {
             onClick={() => this.gotoMcc()}
           /> : ''
         }
-      
-          <Button
+      {foundfourthLavel || foundfifthLavel ? 
+      <Button
             className="responsive-action-button"
             label={<Label buttonLabel={true} label="Apply E-Sampark" />}
             fullWidth={true}
             primary={true}
             style={{ float: 'right', marginRight: '50px', marginTop: '40px' }}
             onClick={() => this.gotoPArkAndCommunityTanker()
-            } /> : '' 
-
-
-
+            } /> : '' }
         <div className="form-without-button-cont-generic">
           {/* <Grid container spacing={8}>{this.handleFormFields()}</Grid> */}
           <Card

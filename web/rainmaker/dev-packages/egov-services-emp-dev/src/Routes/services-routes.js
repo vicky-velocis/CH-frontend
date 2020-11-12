@@ -112,6 +112,11 @@ const CheckAvailabilityPcc= Loadable({
   loading: Loading
 })
 
+const PaymentReceiptDteail = Loadable({
+  loader: () => import("../Screens/ApplyParkAndCommunity/components/PaymentReceiptDetail"),
+  loading: Loading
+})
+
 const ServiceHome = Loadable({
   loader: () => import("../Screens/ApplicationDetails"),
   loading: Loading
@@ -227,7 +232,7 @@ const testing= Loadable({
 })
 
 const MyTry = Loadable({
-  loader: () => import("../Screens/MyTry"),
+  loader: () => import("../Screens/MyTry/payment-methods"),
   loading: Loading
 })
 
@@ -263,6 +268,20 @@ const routes = [
   {
     path: "egov-services/all-applications",
     component: AllRequests,
+    needsAuthentication: true,
+    options: {
+      hideFooter: true,
+      title: "ES_OPEN_APPLICAION_HEADER",
+      hideTitle: false,
+      // redirectionUrl,
+      // hideFor: "ao",
+      customFor: "employee",
+      customTitle: "BK_MYBK_ALL_APPLICAION_HEADER"
+    }
+  },
+  {
+    path: "egov-services/PaymentReceiptDteail",
+    component: PaymentReceiptDteail,
     needsAuthentication: true,
     options: {
       hideFooter: true,
@@ -824,9 +843,10 @@ const routes = [
     component: MyTry,
     needsAuthentication: true,
     options: {
-      hideFooter: true,
+      hideFooter: false,
+      hideBackButton: true,
       title: "BK_MYBK_PCC_APPLICATION_REQUEST",
-      redirectionUrl
+      customFor: "employee",
     }
   },
 

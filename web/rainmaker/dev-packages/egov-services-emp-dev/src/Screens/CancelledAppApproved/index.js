@@ -450,7 +450,6 @@ if(selectedComplaint.bkAction == "OFFLINE_CANCEL"){
   };
 
   onSubmit = e => {
-   alert("hello submit")
     const { valueSelected, commentValue } = this.state;
     const { toggleSnackbarAndSetText } = this.props;
     //here we call api
@@ -458,7 +457,6 @@ if(selectedComplaint.bkAction == "OFFLINE_CANCEL"){
 
 // suggested by neeraj sir
   calculateCancelledBookingRefundAmount = async (applicationNumber, tenantId, bookingDate) => {
-alert("hello1")
 const {payloadone, payload, payloadTwo} = this.props;
 console.log("propsforcalculateCancelledBookingRefundAmount--",this.props)
 
