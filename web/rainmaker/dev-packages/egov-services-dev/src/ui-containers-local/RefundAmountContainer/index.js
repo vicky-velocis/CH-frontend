@@ -8,6 +8,7 @@ class RefundAmountContainer extends Component {
 
     render() {
         const { refundAmount } = this.props;
+
         return (
             <div style={{marginLeft: "23px"}}>
                 Refund Amount - <span style={{fontWeight:"bold"}}>Rs. {refundAmount}</span>
@@ -18,7 +19,7 @@ class RefundAmountContainer extends Component {
 
 
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps =  (state, ownProps) => {
     const { screenConfiguration } = state;
 
     const applicationNumber = get(
@@ -32,18 +33,21 @@ const mapStateToProps = (state, ownProps) => {
         "preparedFinalObject.Booking.bkFromDate",
         []
     )
-    let refundAmount = 0;
-    refundAmount = calculateCancelledBookingRefundAmount(applicationNumber, "ch.chandigarh", bookingDate);
- /*
+//     let refundAmount = 0;
+//     refundAmount = await calculateCancelledBookingRefundAmount(applicationNumber, "ch.chandigarh", bookingDate);
+//   console.log(refundAmount, "nero refundAmount");
+
     var billAccountDetails = get(
         screenConfiguration,
         "preparedFinalObject.ReceiptTemp[0].Bill[0].billDetails[0].billAccountDetails",
         []
     );
     let bookingAmount = 0;
+    let securityAmount = 0;
     for(let i = 0; i<billAccountDetails.length; i++){
         if(billAccountDetails[i].taxHeadCode == "REFUNDABLE_SECURITY"){
             bookingAmount += billAccountDetails[i].amount;
+            securityAmount += billAccountDetails[i].amount;
         }
         if(billAccountDetails[i].taxHeadCode == "PACC"){
             bookingAmount += billAccountDetails[i].amount;
@@ -79,9 +83,11 @@ const mapStateToProps = (state, ownProps) => {
             []
         )
         refundAmount = (parseFloat(bookingAmount)*refundPercent)/100
+    }else if(securityAmount > 0){
+        refundAmount = securityAmount;
     }
 
-*/
+
     return { refundAmount };
 };
 

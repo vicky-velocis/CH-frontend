@@ -52,7 +52,7 @@ const getMdmsData = async (action, state, dispatch) => {
                             "name": "Status"
                         },
                          {
-                            "name": "ApplicationType"
+                            "name": "BookingType"
                         }
                     ],
                 },
@@ -68,7 +68,7 @@ const getMdmsData = async (action, state, dispatch) => {
             [],
             mdmsBody
         );
-        payload.MdmsRes.Booking.ApplicationType = payload.MdmsRes.Booking.ApplicationType.filter(el => el.code !== "NLUJM")
+        payload.MdmsRes.Booking.BookingType = payload.MdmsRes.Booking.BookingType.filter(el => el.code !== "NLUJM")
 
         dispatch(prepareFinalObject("applyScreenMdmsData", payload.MdmsRes));
     } catch (e) {
