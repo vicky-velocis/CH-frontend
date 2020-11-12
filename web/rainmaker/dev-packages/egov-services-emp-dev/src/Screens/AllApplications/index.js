@@ -777,7 +777,7 @@ class AllRequests extends Component {
       </div>
     ) : role === "employee" ? (
       <Screen loading={loading}>
-        {foundWaterTanker ?
+        {/* {foundWaterTanker ?
           <Button
             className="responsive-action-button"
             label={<Label buttonLabel={true} label="BK_MYBK_WATER_TANKER_APPLY" />}
@@ -786,7 +786,7 @@ class AllRequests extends Component {
             style={{ float: 'right', marginRight: '50px', marginTop: '40px' }}
             onClick={() => this.gotoWaterTanker()
             } /> : ''
-        }
+        } */}
         {foundFirstLavel || foundSecondLavel || foundthirdLavel ?
           <Button
             className="responsive-action-button"

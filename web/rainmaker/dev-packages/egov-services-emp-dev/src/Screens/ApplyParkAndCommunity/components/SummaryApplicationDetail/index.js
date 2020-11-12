@@ -50,10 +50,12 @@ var vandanaTwo = 0;
     console.log("vandanaTwo--",vandanaTwo)
   }
 
-  console.log("vandanaTwo--vandanaTwo-",vandanaTwo)
+  const m = vandanaTwo.toString();
 
-var printvandanaTwo = vandanaTwo ? vandanaTwo : "NA"
-console.log("printvandanaTwo--",printvandanaTwo)
+  const printvandanaTwo = m ? m : "NA"
+  console.log("printvandanaOne--",printvandanaOne)
+
+  console.log("vandanaTwo--vandanaTwo-",vandanaTwo)
 
 
  var vandanaThree = 0;
@@ -64,7 +66,9 @@ console.log("printvandanaTwo--",printvandanaTwo)
     console.log("vandanaThree--",vandanaTwo)
   }
 
-  var printvandanaThree = vandanaThree ? vandanaThree : "NA"
+  const o = vandanaThree.toString();
+
+  var printvandanaThree = o ? o : "NA"
   console.log("printvandanaThree--",printvandanaThree)
 
   console.log("vandanaTwo,vandanaOne--",vandanaTwo,vandanaOne)
@@ -178,18 +182,6 @@ return (
          
                                 />
                             </div>
-
-                            <div className="col-md-4">
-                                <Label className="col-xs-12  col-sm-12 col-md-12 status-color" label="BK_MYBK_CREATE_UTGST" />
-                                <Label
-                                    className="col-xs-12  col-sm-12 col-md-12  status-result-color"
-                                    id="complaint-details-current-status"
-                                    labelStyle={{ color: "inherit" }}                
-                                    label={secondRate}
-         
-                                />
-                            </div>
-
                             <div className="col-md-4">
                                 <Label className="col-xs-12  col-sm-12 col-md-12 status-color" label="BK_MYBK_CREATE_CGST" />
                                 <Label

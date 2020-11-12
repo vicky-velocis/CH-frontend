@@ -1064,14 +1064,25 @@ const mapStateToProps = (state, ownProps) => {
 	console.log("PayMentTwo--",PayMentTwo)
 	let abc = PayMentTwo && PayMentTwo ? PayMentTwo : "abc"
 	console.log("abc--",abc)
-	if (selectedComplaint && selectedComplaint.bkApplicationStatus == "APPLIED") {
-		paymentDetails = fetchPaymentAfterPayment && fetchPaymentAfterPayment.Payments[0] && fetchPaymentAfterPayment.Payments[0].paymentDetails[0].bill;
+	// if (selectedComplaint && selectedComplaint.bkPaymentStatus == "SUCCESS") {
+
+	// 	paymentDetails = fetchPaymentAfterPayment && fetchPaymentAfterPayment.Payments[0] && fetchPaymentAfterPayment.Payments[0].paymentDetails[0].bill;
 		
-	} else {
-		paymentDetails = paymentData ? paymentData.Bill[0] : '';
-		
-	}
+	// }
 	
+	// if (selectedComplaint && selectedComplaint.bkPaymentStatus == "SUCCESS") {
+
+	// 	paymentDetails = fetchPaymentAfterPayment && fetchPaymentAfterPayment.Payments[0] && fetchPaymentAfterPayment.Payments[0].paymentDetails[0].bill;
+		
+	// }
+
+	// else {
+	// 	paymentDetails = paymentData ? paymentData.Bill[0] : '';
+		
+	// }
+
+	paymentDetails = fetchPaymentAfterPayment && fetchPaymentAfterPayment.Payments[0] && fetchPaymentAfterPayment.Payments[0].paymentDetails[0].bill;
+
 	let historyApiData = {}
 	if (historyObject) {
 		historyApiData = historyObject;
