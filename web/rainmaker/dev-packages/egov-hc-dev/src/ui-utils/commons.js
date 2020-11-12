@@ -577,9 +577,9 @@ try {
     
     dispatch(toggleSpinner());
 
-    response = await httpRequest("post", "hc-services/serviceRequest/_create", "", [], {services: arraypayload });
+    response = await httpRequest("post", "/hc-services/serviceRequest/_create", "", [], {services: arraypayload });
     
-    
+    debugger
     if (response.services[0].serviceRequestId !== 'null' || response.services[0].serviceRequestId !== '') {
       dispatch(prepareFinalObject("SERVICES", response));
     
