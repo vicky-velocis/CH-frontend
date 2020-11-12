@@ -62,33 +62,69 @@ const colonyField = {
         const rentPerSqyd = !!findItem ? findItem.costPerSqyd : ""
         dispatch(prepareFinalObject("applyScreenMdmsData.propertyAreas", propertyAreas))
         dispatch(prepareFinalObject("Properties[0].propertyDetails.rentPerSqyd", rentPerSqyd))
+        let interestRatePerYear = get(state.screenConfiguration.screenConfig["apply"],"components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.interestRatePerYear.props.value");
+        let rentIncrementPercentage = get(state.screenConfiguration.screenConfig["apply"],"components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPercentage.props.value");
+        let rentIncrementPeriod = get(state.screenConfiguration.screenConfig["apply"], "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPeriod.props.value");
+
+        // compare mdms colony data values for rent with field values if same dispatch 
+        //if not same dont dispatch
 
         rentedPropertyColonies.map(item => {
+          // check if colonies are same
             if (action.value === item.code) {
+              if(!!interestRatePerYear && !!rentIncrementPercentage && !!rentIncrementPeriod && (item.interestRateOrYear !== parseInt(interestRatePerYear) || item.rentIncrementPercentage !== parseInt(rentIncrementPercentage) || item.rentIncrementPeriod !== parseInt(rentIncrementPeriod))){
                 dispatch(
-                    handleField(
-                        "apply",
-                        "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.interestRatePerYear",
-                        "props.value",
-                        item.interestRateOrYear.toString()
-                    )
-                )
+                  handleField(
+                      "apply",
+                      "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.interestRatePerYear",
+                      "props.value",
+                      interestRatePerYear.toString()
+                  )
+              )
+              dispatch(
+                  handleField(
+                      "apply",
+                      "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPercentage",
+                      "props.value",
+                      rentIncrementPercentage.toString()
+                  )
+              )
+              dispatch(
+                  handleField(
+                      "apply",
+                      "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPeriod",
+                      "props.value",
+                      rentIncrementPeriod.toString()
+                  )
+              )
+              }
+              else{
                 dispatch(
-                    handleField(
-                        "apply",
-                        "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPercentage",
-                        "props.value",
-                        item.rentIncrementPercentage.toString()
-                    )
-                )
-                dispatch(
-                    handleField(
-                        "apply",
-                        "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPeriod",
-                        "props.value",
-                        item.rentIncrementPeriod.toString()
-                    )
-                )
+                  handleField(
+                      "apply",
+                      "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.interestRatePerYear",
+                      "props.value",
+                      item.interestRateOrYear.toString()
+                  )
+              )
+              dispatch(
+                  handleField(
+                      "apply",
+                      "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPercentage",
+                      "props.value",
+                      item.rentIncrementPercentage.toString()
+                  )
+              )
+              dispatch(
+                  handleField(
+                      "apply",
+                      "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPeriod",
+                      "props.value",
+                      item.rentIncrementPeriod.toString()
+                  )
+              )
+              }
+                
             }
         })
         if(action.value === 'COLONY.KUMHAR' || action.value === 'COLONY.MILK'){
