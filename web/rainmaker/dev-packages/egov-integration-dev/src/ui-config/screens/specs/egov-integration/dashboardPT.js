@@ -327,8 +327,12 @@ let validcode = false;
             }
           
         }
-        else{
+        if(fields.code.isFieldValid ===true)
+        {
           validcode = true
+        }
+        else{
+          validcode = false
 
         }
       }
@@ -952,6 +956,30 @@ let validcode = false;
           "components.div.children.SearchCard.children.cardContent.children.appPRSearchContainer.children.otp.props.style",
           { display: "none" }
         );
+    }
+    else{
+      set(
+        action.screenConfig,
+        "components.div.children.SearchCard.children.cardContent.children.appPRSearchContainer.children.code.props.style",
+        { display: "inline-block" }
+      );
+      set(
+        action.screenConfig,
+        "components.div.children.SearchCard.children.cardContent.children.appPRSearchContainer.children.mobileNo.props.style",
+        { display: "inline-block" }
+      );
+      set(
+        action.screenConfig,
+        "components.div.children.SearchCard.children.cardContent.children.appPRSearchContainer.children.otp.props.style",
+        { display: "none" }
+      );
+      set(
+        action.screenConfig,
+        "components.div.children.SearchCard.children.cardContent.children.button.children.buttonContainer.children.validateOTPButton.props.style",
+        { display: "none" }
+      );
+
+
     }
     set(
       action.screenConfig,
