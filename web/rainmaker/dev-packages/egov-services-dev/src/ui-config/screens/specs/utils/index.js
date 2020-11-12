@@ -546,10 +546,10 @@ export const getNextMonthDateInYMD = () => {
 
 export const getReceiptUrlFromFilestoreID = async (fileStoreId, mode, tenantId) => {
     const fileRes= await getFileUrlFromAPI(fileStoreId, tenantId)
-         return  fileRes[fileStoreId] 
-     
- }       
- 
+         return  fileRes[fileStoreId]
+
+ }
+
 
 export const downloadReceiptFromFilestoreID = (fileStoreId, mode, tenantId) => {
     getFileUrlFromAPI(fileStoreId, tenantId).then(async (fileRes) => {
@@ -752,9 +752,17 @@ export const  downloadReceipt =async (
     state,
     applicationNumber,
     tenantId,
-    flag='false', 
+    flag='false',
     mode = "download"
 ) => {
+
+
+    tenantId = process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId();
+    let applicationData = get(
+        state.screenConfiguration.preparedFinalObject,
+        "Booking"
+    );
+
     let applicationData={}
     let receiptUrl=""
     let receiptVal
@@ -769,12 +777,16 @@ export const  downloadReceipt =async (
     {
         applicationData=state
     }
-    
+
+
     const receiptQueryString = [
         { key: "consumerCodes", value: applicationNumber },
         {
             key: "tenantId",
-            value: tenantId,
+
+           // value: tenantId.length > 2 ? tenantId.split('.')[0] : tenantId,
+           value: tenantId,
+
         },
     ];
     const FETCHRECEIPT = {
@@ -796,15 +808,16 @@ export const  downloadReceipt =async (
             FETCHRECEIPT.GET.ACTION,
             receiptQueryString
         )
-        
-        
+
+
             let queryStr = "";
             if (applicationData.businessService === "PACC") {
                 queryStr = [
                     { key: "key", value: "pacc-payment-receipt" },
                     {
                         key: "tenantId",
-                        value: "ch",
+                        value: tenantId,
+
                     },
                 ];
             } else {
@@ -812,7 +825,8 @@ export const  downloadReceipt =async (
                     { key: "key", value: "bk-payment-receipt" },
                     {
                         key: "tenantId",
-                        value: "ch",
+                        value: tenantId,
+
                     },
                 ];
             }
@@ -957,7 +971,7 @@ export const  downloadReceipt =async (
                     },
                 },
             ];
-            
+
            let res= await httpRequest(
                 "post",
                 DOWNLOADRECEIPT.GET.URL,
@@ -970,44 +984,67 @@ export const  downloadReceipt =async (
                 res.filestoreIds[0];
                 if (res && res.filestoreIds && res.filestoreIds.length > 0) {
                   receiptVal= res.filestoreIds.map(async (fileStoreId) => {
-                        
+
                         if(flag==='false')
                         {
-                            downloadReceiptFromFilestoreID(fileStoreId, mode);
+                            downloadReceiptFromFilestoreID(fileStoreId, mode, tenandId);
                         }
                         else if(flag==='true')
                         {
-                         
-                            
-                           receiptUrl= await getReceiptUrlFromFilestoreID(fileStoreId, mode) 
+
+
+                           receiptUrl= await getReceiptUrlFromFilestoreID(fileStoreId, mode, tenandId)
                             return  receiptUrl
-                            
+
                         }
                          });
+
                 } else {
                     console.log("Error In Receipt Download");
                 }
-   
-      
-       
+
+
+
     } catch (exception) {
         alert("Some Error Occured while downloading Receipt!");
     }
 
-       
+
     return receiptVal
-        
-  
+
+
 };
 
 export const downloadCertificate = async (
     state,
     applicationNumber,
     tenantId,
-    flag='false', 
+    flag='false',
     mode = "download"
     ) => {
 let applicationData={}
+
+    tenantId = process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId();
+    let bookingWfHistory = await getBookingWorkflowHistory(applicationNumber, tenantId);
+
+    let apporvedByDetail = {
+        approvedBy: "Renil Commissioner",
+        role: "Additional Commissioner",
+    };
+    if (bookingWfHistory && bookingWfHistory.length > 0) {
+        for (let i = 0; i < bookingWfHistory.length; i++) {
+            if (bookingWfHistory[i].assignee != null) {
+                apporvedByDetail.approvedBy = bookingWfHistory[i].assignee.name;
+                let filteredRole = bookingWfHistory[i].assignee.roles.filter((role) => {
+                    return role.code == "BK_OSBM_APPROVER";
+                });
+
+                apporvedByDetail.role = filteredRole[0].name;
+            }
+        }
+    }
+
+
 let receiptUrl=""
 let receiptVal
 if(flag==='flase')
@@ -1016,6 +1053,7 @@ if(flag==='flase')
         state.screenConfiguration.preparedFinalObject,
         "Booking"
     );
+
 }
 else if(flag==='true')
 {
@@ -1023,6 +1061,7 @@ else if(flag==='true')
 }
 
     let tenantData = await getMdmsTenantsData();
+
 
     const DOWNLOADCERTIFICATE = {
         GET: {
@@ -1043,7 +1082,9 @@ else if(flag==='true')
                                 ? "bk-oswmcc-booking-pl"
                                 : "bk-cg-pl",
             },
-            { key: "tenantId", value: "ch" },
+
+            { key: "tenantId", value: tenantId },
+
         ];
 
         // applicationData.businessService == "OSBM"
@@ -1157,29 +1198,31 @@ else if(flag==='true')
             { Accept: "application/json" },
             { responseType: "arraybuffer" }
         )
-        
-        
+
+
             res.filestoreIds[0];
             if (res && res.filestoreIds && res.filestoreIds.length > 0) {
+
                 receiptVal=res.filestoreIds.map(async(fileStoreId) => {
-              
+
                         if(flag==='false')
                         {
-                            downloadReceiptFromFilestoreID(fileStoreId, mode);
+                            downloadReceiptFromFilestoreID(fileStoreId, mode, tenantId);
                         }
                         else if(flag==='true')
                         {
-                         
-                            
-                           receiptUrl= await getReceiptUrlFromFilestoreID(fileStoreId, mode) 
+
+
+                           receiptUrl= await getReceiptUrlFromFilestoreID(fileStoreId, mode, tenantId)
                             return  receiptUrl
-                            
+
                         }
+
                 });
             } else {
                 console.log("Error In Permission Letter Download");
             }
-        
+
         //   })
     } catch (exception) {
         alert("Some Error Occured while downloading Permission Letter!");
@@ -1194,7 +1237,7 @@ export const downloadApplication = async (
     mode = "download"
 ) => {
     let tenantData = await getMdmsTenantsData();
-
+    tenantId = process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId();
     let applicationData = get(
         state.screenConfiguration.preparedFinalObject,
         "Booking"
@@ -1238,7 +1281,7 @@ export const downloadApplication = async (
                                             ? "bk-wt-app-form"
                                             : "bk-wt-unpaid-app-form",
             },
-            { key: "tenantId", value: tenantId.length > 2 ? tenantId.split('.')[0] : tenantId },
+            { key: "tenantId", value: tenantId },
         ];
 
         let bookingDataOsbm = {
@@ -1444,7 +1487,7 @@ export const downloadApplication = async (
             res.filestoreIds[0];
             if (res && res.filestoreIds && res.filestoreIds.length > 0) {
                 res.filestoreIds.map((fileStoreId) => {
-                    downloadReceiptFromFilestoreID(fileStoreId, mode);
+                    downloadReceiptFromFilestoreID(fileStoreId, mode, tenantId);
                 });
             } else {
                 console.log("Error In Application Download");

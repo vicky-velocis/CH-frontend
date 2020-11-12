@@ -65,6 +65,15 @@ class PlotArea extends React.Component {
             "Booking.bkDuration",
             item.bkDuration
         );
+        this.props.prepareFinalObject(
+            "Booking.bkRefundAmount",
+            item.refundabelSecurity
+        );
+
+        this.props.prepareFinalObject(
+            "availabilityCheckData.bkRefundAmount",
+            item.refundabelSecurity
+        );
 
         let requestBody = {
             bookingType: availabilityCheckData.bkBookingType,

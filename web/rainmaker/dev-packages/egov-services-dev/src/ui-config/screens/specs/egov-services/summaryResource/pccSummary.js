@@ -158,7 +158,7 @@ export const pccSummary = getCommonGrayCard({
                         {
                             jsonPath: "DisplayTimeSlotData.bkDisplayFromDateTime",
                             callBack: (value) => {
-                                
+
                                 if (value === undefined || value === "" || value === null) {
                                     return "NA"
                                 } else {
@@ -254,6 +254,35 @@ export const pccSummary = getCommonGrayCard({
                         },
                         {
                             jsonPath: "Booking.bkCgst",
+                        }
+                    ),
+                    bkRefundAmount: getLabelWithValue(
+                        {
+                            labelName: "Refundable Amount",
+                            labelKey: "BK_PCC_RefundAmount_LABEL",
+                        },
+                        {
+                            jsonPath: "Booking.bkRefundAmount",
+                        }
+                    ),
+                    locationChangeCharge: getLabelWithValue(
+                        {
+                            labelName: "locationChangeCharge",
+                            labelKey: "BK_PCC_locationChangeCharge_LABEL",
+                        },
+                        {
+                            jsonPath: "Booking.bkLocationChangeAmount",
+                            callBack: (value) => {
+                                if (
+                                    value === undefined ||
+                                    value === "" ||
+                                    value === null
+                                ) {
+                                    return "NA";
+                                } else {
+                                    return value;
+                                }
+                            },
                         }
                     ),
                     CustomerGstNo: getLabelWithValue(
