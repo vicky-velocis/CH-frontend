@@ -262,6 +262,14 @@ const getDemandRadioButton = {
         !!(action.value == "LICENSEFEE")
       )
     )
+    dispatch(
+      handleField(
+        "allotment",
+        "components.div.children.formwizardSeventhStepAllotment.children.reviewAllotmentDetails.children.cardContent.children.reviewAdvanceRent",
+        "visible",
+        !!(action.value)
+      )
+    )
   }
 };
 
