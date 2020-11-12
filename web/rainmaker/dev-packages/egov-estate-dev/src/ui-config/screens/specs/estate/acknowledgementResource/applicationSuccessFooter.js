@@ -233,7 +233,6 @@ export const applicationSuccessFooter = (
           action: "condition",
           callBack: async() => {
             switch(purpose){
-              
               case 'apply':
                 if(type === 'EstateBranch_InternalServices_IssuanceOfNotice' || type === 'BuildingBranch_CitizenService_IssuanceOfNotice'){
                   const { Applications,temp } = state.screenConfiguration.preparedFinalObject;

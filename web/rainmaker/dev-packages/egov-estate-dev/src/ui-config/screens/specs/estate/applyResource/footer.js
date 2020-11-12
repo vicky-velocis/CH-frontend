@@ -1072,7 +1072,7 @@ export const downloadPrintContainer = (
   
 
   let NDCWHODownloadObject = {
-    label: { labelName: "Letter", labelKey: "ES_NDC_AWHO_LETTER" },
+    label: { labelName: "Letter", labelKey: applicationType === 'NDC' ? "ES_NDC_AWHO_LETTER": "ES_LETTER" },
     link: () => {
       const { Applications,temp } = state.screenConfiguration.preparedFinalObject;
       const documents = temp[0].reviewDocData;
@@ -1367,7 +1367,7 @@ export const downloadPrintContainer = (
               NOCproposalLetterPrintObject
             ] 
           break;
-        case 'IssuanceOfNotice' && 'ES_PENDING_SDE_VERIFICATION':
+        case 'IssuanceOfNotice' && 'PENDING_SDE_VERIFICATION':
         case 'IssuanceOfNotice' && 'ES_PENDING_AC_APPROVAL':
         case 'IssuanceOfNotice' && 'ES_REJECTED':  
         case 'IssuanceOfNotice' && 'ES_PENDING_JE_CLARIFICATION':
@@ -1625,6 +1625,28 @@ export const downloadPrintContainer = (
                     applicationPrintObject,LetterPrintObject,NoticePrintObject,EmailPrintObject
                   ]
               break;
+
+              case 'IssuanceOfNotice':
+                  downloadMenu = [
+                    applicationDownloadObject,
+                    NoticeDownloadObject,
+                    IssuanceViolationOrderDownloadObject,
+                    cancellationOrderDownloadObject,
+                    nonPaymentNoticeDownloadObject,
+                    nonPaymentOrderDownloadObject,
+                    occupationCertificateDownloadObject
+                  ]
+                
+                  printMenu = [
+                    applicationPrintObject,
+                    NoticePrintObject,
+                    IssuanceViolationOrderPrintObject,
+                    cancellationOrderPrintObject,
+                    nonPaymentNoticePrintObject,
+                    nonPaymentOrderPrintObject,
+                    occupationCertificatePrintObject
+                  ]
+                  break;
             } 
           break;   
           
