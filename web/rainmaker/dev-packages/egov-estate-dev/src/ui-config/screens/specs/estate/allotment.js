@@ -240,6 +240,22 @@ const getData = async (action, state, dispatch) => {
       false
     )
   )
+  dispatch(
+    handleField(
+      "allotment",
+      "components.div.children.formwizardSeventhStepAllotment.children.reviewAllotmentDetails.children.cardContent.children.reviewGroundRent",
+      "visible",
+      false
+    )
+  )
+  dispatch(
+    handleField(
+      "allotment",
+      "components.div.children.formwizardSeventhStepAllotment.children.reviewAllotmentDetails.children.cardContent.children.reviewLicenseFee",
+      "visible",
+      false
+    )
+  )
 
   setBiddersDoc(action, state, dispatch);
 

@@ -110,7 +110,7 @@ const callBackForNext = async (state, dispatch) => {
     dispatch(
       handleField(
         "apply",
-        "components.div.children.formwizardTenththStep.children.reviewDetails.children.cardContent.children.reviewPropertyInfo.children.cardContent.children.viewFour.children.entityType",
+        "components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewPropertyInfo.children.cardContent.children.viewFour.children.entityType",
         "visible",
         propertyRegisteredTo == "ENTITY"
       )
