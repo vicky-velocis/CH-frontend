@@ -112,6 +112,7 @@
     "file-saver": "^2.0.2",
     "git": "^0.1.5",
     "js-file-download": "^0.4.8",
+    "learna": "^1.0.1",
     "multi-select-react": "^0.1.8",
     "multiselect-react-dropdown": "^1.4.8",
     "node-sass": "^4.11.0",

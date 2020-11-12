@@ -6,9 +6,13 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { getSearchResultsView } from "../../ui-utils/commons";
-
+import {
+    downloadReceipt,
+    downloadCertificate,
+    
+} from "../../ui-config/screens/specs/utils";
 class PaymentRedirect extends Component {
-    componentDidMount = async () => {
+    async componentDidMount () {
         let { search } = this.props.location;
         const txnQuery = search
             .split("&")[0]
@@ -27,6 +31,7 @@ class PaymentRedirect extends Component {
                 pgUpdateResponse,
                 "Transaction[0].consumerCode"
             );
+            
             let tenantId = get(pgUpdateResponse, "Transaction[0].tenantId");
             let transactionStatus = get(
                 pgUpdateResponse,
@@ -51,55 +56,64 @@ class PaymentRedirect extends Component {
                     { key: "applicationNumber", value: consumerCode },
                 ]);
 
-                let paymentStatus = get(
-                    response.bookingsModelList[0],
-                    "bkPaymentStatus",
-                    ""
-                );
                 let payload = response.bookingsModelList[0];
-
-                let bkAction = ""
                 set(
                     payload,
                     "bkAction",
-                    bookingType === "OSBM" || bookingType === "OSUJM"
+                    bookingType === "OSBM" || bookingType === "OSUJM" 
                         ? "PAY"
-                        : bookingType === "GFCP"
-                            ? "APPLY"
-                            : bookingType === "PACC"
-                                ? paymentStatus === "SUCCESS" || paymentStatus === "succes" ? "MODIFY" : "APPLY"
-                                : "PAIDAPPLY"
+                        : bookingType === "GFCP" || bookingType === "PACC"
+                        ? "APPLY"
+                        : "PAIDAPPLY"
                 );
-                set(payload, "bkPaymentStatus", transactionStatus);
-                if (bookingType === "PACC") {
-                    response = await httpRequest(
-                        "post",
-                        "/bookings/park/community/_update",
-                        "",
-                        [],
-                        {
-                            Booking: payload,
+                set(payload, "bk_payment_status", transactionStatus);
+                
+               
+                let paymentReceipt= await downloadReceipt(payload, consumerCode, tenantId, 'true')
+                
+                
+                let permissionLetter= await downloadCertificate(payload, consumerCode, tenantId, 'true')
+                
+                
+               
+                Promise.all(paymentReceipt).then(data=>{
+                    let urlPayload={
+                        "paymentReceipt" :  data[0]
+                    }
+
+                    Promise.all(permissionLetter).then(permissionLetterData=>{
+
+                        urlPayload= {
+                            ...urlPayload, 
+                            "permissionLetter": permissionLetterData[0]
                         }
-                    );
-                } else {
-                    response = await httpRequest(
-                        "post",
-                        "/bookings/api/_update",
-                        "",
-                        [],
-                        {
-                            Booking: payload,
-                        }
-                    );
-                }
-                this.props.setRoute(
-                    `/egov-services/acknowledgement?purpose=${"pay"}&status=${"success"}&applicationNumber=${consumerCode}&tenantId=${tenantId}&secondNumber=${transactionId}&businessService=${bookingType}`
-                );
+                        console.log(urlPayload, "payload")
+                        httpRequest(
+                            "post",
+                            "/bookings/api/_update",
+                            "",
+                            [],
+                            {   UrlData: urlPayload, 
+                                Booking: payload,
+                               
+                            }
+                        );
+                        
+                        
+                        this.props.setRoute(
+                            `/egov-services/acknowledgement?purpose=${"pay"}&status=${"success"}&applicationNumber=${consumerCode}&tenantId=${tenantId}&secondNumber=${transactionId}&businessService=${bookingType}`
+                        );
+
+                })
+            })  
+            
+             
             }
         } catch (e) {
-            console.log(e);
+            console.log(e)
         }
     };
+
     render() {
         return <div />;
     }
@@ -110,5 +124,8 @@ const mapDispatchToProps = (dispatch) => {
         setRoute: (route) => dispatch(setRoute(route)),
     };
 };
+
+
+
 
 export default connect(null, mapDispatchToProps)(withRouter(PaymentRedirect));

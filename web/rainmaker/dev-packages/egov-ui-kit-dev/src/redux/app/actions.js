@@ -25,7 +25,10 @@ export const setBottomNavigationIndex = (bottomNavigationIndex) => {
 };
 
 const setLocalizationLabels = (locale, localizationLabels) => {
+  console.log("locale--",locale)
+  console.log("localizationLabels--",localizationLabels)
   window.localStorage.setItem(`localization_${locale}`, JSON.stringify(localizationLabels));
+  console.log("setLocalizationLabels--", window.localStorage.setItem(`localization_${locale}`, JSON.stringify(localizationLabels)))
   setLocale(locale);
   return { type: actionTypes.ADD_LOCALIZATION, locale, localizationLabels };
 };
@@ -46,8 +49,10 @@ export const fetchLocalizationLabel = (locale, module, tenantId) => {
      
    
     const moduleName = getModule();
+    console.log("moduleName--",moduleName)
     const localeModule = (moduleName === 'rainmaker-common'||moduleName === null) ? 'rainmaker-common' : `rainmaker-common,${moduleName}`;
-   
+   console.log("localeModule--",localeModule)
+   console.log("locale--",locale)
     try {
       const payload1 = await httpRequest(LOCALATION.GET.URL, LOCALATION.GET.ACTION, [
         { key: "module", value: localeModule },
@@ -67,6 +72,7 @@ const payload2 =[]
       if (payload2 && payload2.messages) {
         resultArray = [...resultArray, ...payload2.messages];
       }
+      console.log("payloas2--",payload2)
       dispatch(setLocalizationLabels(locale, resultArray));
     } catch (error) {
       console.log(error);
