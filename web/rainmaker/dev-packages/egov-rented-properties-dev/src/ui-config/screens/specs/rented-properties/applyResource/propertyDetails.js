@@ -49,7 +49,7 @@ export const colonyFieldDup = {
   props: {
     disabled: true
   }}
-
+let colonySelectedCode = [];
 const colonyField = {
     ...colonyFieldConfig,
     beforeFieldChange: (action, state, dispatch) => {
@@ -59,7 +59,9 @@ const colonyField = {
           code: item.code,
           label: item.sqyd
         })) : [];
+        colonySelectedCode.push(findItem.code)
         const rentPerSqyd = !!findItem ? findItem.costPerSqyd : ""
+        dispatch(prepareFinalObject("colonySelectedCode", colonySelectedCode))
         dispatch(prepareFinalObject("applyScreenMdmsData.propertyAreas", propertyAreas))
         dispatch(prepareFinalObject("Properties[0].propertyDetails.rentPerSqyd", rentPerSqyd))
         let interestRatePerYear = get(state.screenConfiguration.screenConfig["apply"],"components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.interestRatePerYear.props.value");
@@ -71,8 +73,9 @@ const colonyField = {
 
         rentedPropertyColonies.map(item => {
           // check if colonies are same
+          // What if changing colony again how to keep track of change in value? -- push then to an array. see the last item if not same as previous dispatch new values.
             if (action.value === item.code) {
-              if(!!interestRatePerYear && !!rentIncrementPercentage && !!rentIncrementPeriod && (item.interestRateOrYear !== parseInt(interestRatePerYear) || item.rentIncrementPercentage !== parseInt(rentIncrementPercentage) || item.rentIncrementPeriod !== parseInt(rentIncrementPeriod))){
+              if((colonySelectedCode[colonySelectedCode.length - 1] === colonySelectedCode[colonySelectedCode.length - 2]) && !!interestRatePerYear && !!rentIncrementPercentage && !!rentIncrementPeriod && (item.interestRateOrYear !== parseInt(interestRatePerYear) || item.rentIncrementPercentage !== parseInt(rentIncrementPercentage) || item.rentIncrementPeriod !== parseInt(rentIncrementPeriod))){
                 dispatch(
                   handleField(
                       "apply",
