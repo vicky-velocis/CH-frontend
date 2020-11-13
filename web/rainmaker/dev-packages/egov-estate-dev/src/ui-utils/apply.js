@@ -385,7 +385,7 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
 
     if (activeIndex == 3) {
       currOwners.map((item, index) => {
-        setDocsForEditFlow(state, dispatch, `Properties[0].propertyDetails.owners[0].ownerDetails.ownerDocuments`, `PropertiesTemp[0].propertyDetails.owners[0].ownerDetails.uploadedDocsInRedux`);
+        setDocsForEditFlow(state, dispatch, `Properties[0].propertyDetails.owners[${index}].ownerDetails.ownerDocuments`, `PropertiesTemp[0].propertyDetails.owners[${index}].ownerDetails.uploadedDocsInRedux`);
       })
     }
 
