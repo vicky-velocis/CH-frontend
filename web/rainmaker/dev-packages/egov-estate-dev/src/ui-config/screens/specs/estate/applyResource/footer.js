@@ -1403,8 +1403,6 @@ export const downloadPrintContainer = (
       case `${applicationType}` && 'ES_PENDING_SRA_VERIFICATION':
       case `${applicationType}` && 'ES_PENDING_SO_VERIFICATION': 
       case `${applicationType}` && 'ES_PENDING_AC_APPROVAL':
-      case `${applicationType}` && 'ES_PENDING_DA_FEE': 
-      case `${applicationType}` && 'ES_PENDING_PAYMENT':
       case `${applicationType}` && 'ES_PENDING_CLARIFICATION':     
       case `${applicationType}` && 'ES_REJECTED': 
       case `${applicationType}` && 'ES_PENDING_SO_TEMPLATE_CREATION':
@@ -1421,26 +1419,92 @@ export const downloadPrintContainer = (
          ] 
           break;    
       case `${applicationType}` && 'ES_PENDING_DA_PREPARE_LETTER':
+      case `${applicationType}` && 'ES_PENDING_DA_FEE':  
       case `${applicationType}` && 'ES_PENDING_SO_APPROVAL': 
-      case `${applicationType}` && 'ES_PENDING_PAYMENT': 
-            switch(applicationType) {
-              case 'ChangeInTrade':
-              case 'DuplicateCopy':  
-                  downloadMenu = [
-                    applicationDownloadObject
-                  ]
-                  printMenu = [
-                    applicationPrintObject
-                  ]
+      case `${applicationType}` && 'ES_PENDING_PAYMENT':
+          switch(applicationType) {
+            case 'SaleDeed':
+            case 'ScfToSco':
+            case 'ChangeInTrade':
+            case 'NOC':
+            case 'NDC':
+            case 'PatnershipDeed':
+            case 'DuplicateCopy':
+            case 'Mortgage':
+            case 'FamilySettlement':
+            case 'LeaseDeed':
+                downloadMenu = [
+                  applicationDownloadObject
+                ]
+              
+                printMenu = [
+                  applicationPrintObject
+                ]
+            break;
+            case 'LeaseholdToFreehold':
+                downloadMenu = [
+                  applicationDownloadObject,
+                  NoticeDownloadObject
+                ]
+              
+                printMenu = [
+                  applicationPrintObject,NoticePrintObject
+                ]
+                
+              break;
+            
+            case 'UnRegisteredWill':
+                downloadMenu = [
+                  applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject
+                ]
+              
+                printMenu = [
+                  applicationPrintObject,NoticePrintObject,EmailPrintObject
+                ]
+              break;
+               
+            case 'RegisteredWill':
+                downloadMenu = [
+                  applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject
+                ]
+              
+                printMenu = [
+                  applicationPrintObject,NoticePrintObject,EmailPrintObject
+                ]
+            break;
+                      
+            case 'IntestateDeath':
+                downloadMenu = [
+                  applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject
+                ]
+              
+                printMenu = [
+                  applicationPrintObject,NoticePrintObject,EmailPrintObject
+                ]
+            break;
+
+            case 'IssuanceOfNotice':
+                downloadMenu = [
+                  applicationDownloadObject,
+                  NoticeDownloadObject,
+                  IssuanceViolationOrderDownloadObject,
+                  cancellationOrderDownloadObject,
+                  nonPaymentNoticeDownloadObject,
+                  nonPaymentOrderDownloadObject,
+                  occupationCertificateDownloadObject
+                ]
+              
+                printMenu = [
+                  applicationPrintObject,
+                  NoticePrintObject,
+                  IssuanceViolationOrderPrintObject,
+                  cancellationOrderPrintObject,
+                  nonPaymentNoticePrintObject,
+                  nonPaymentOrderPrintObject,
+                  occupationCertificatePrintObject
+                ]
                 break;
-              default:
-                  downloadMenu = [
-                    applicationDownloadObject,LetterDownloadObject
-                  ]
-                  printMenu = [
-                    applicationPrintObject,LetterPrintObject
-                  ]
-            } 
+          }  
           break;
       case `${applicationType}` && 'ES_PENDING_DA_NOTICE_CREATION':    
       case `${applicationType}` && 'ES_PENDING_CITIZEN_NOTICE_DOCUMENTS':
@@ -1459,12 +1523,12 @@ export const downloadPrintContainer = (
             switch(applicationType){
               case 'LeaseholdToFreehold':
                   downloadMenu = [
-                    applicationDownloadObject,LetterDownloadObject,
+                    applicationDownloadObject,
                     NoticeDownloadObject
                   ]
                 
                   printMenu = [
-                    applicationPrintObject,LetterPrintObject,
+                    applicationPrintObject,
                     NoticePrintObject
                   ]
                   break;
