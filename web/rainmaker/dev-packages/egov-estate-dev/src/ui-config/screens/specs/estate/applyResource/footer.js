@@ -1435,10 +1435,12 @@ export const downloadPrintContainer = (
                 break;
               default:
                   downloadMenu = [
-                    applicationDownloadObject,LetterDownloadObject
+                    applicationDownloadObject,
+                    // LetterDownloadObject
                   ]
                   printMenu = [
-                    applicationPrintObject,LetterPrintObject
+                    applicationPrintObject,
+                    // LetterPrintObject
                   ]
             } 
           break;
@@ -1459,12 +1461,14 @@ export const downloadPrintContainer = (
             switch(applicationType){
               case 'LeaseholdToFreehold':
                   downloadMenu = [
-                    applicationDownloadObject,LetterDownloadObject,
+                    applicationDownloadObject,
+                    // LetterDownloadObject,
                     NoticeDownloadObject
                   ]
                 
                   printMenu = [
-                    applicationPrintObject,LetterPrintObject,
+                    applicationPrintObject,
+                    // LetterPrintObject,
                     NoticePrintObject
                   ]
                   break;
