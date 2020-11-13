@@ -379,16 +379,25 @@ export const changeStep = (
     "components.div.children.stepper.props.activeStep",
     0
   );
+  const {purchaseOrders}  = state.screenConfiguration.preparedFinalObject;
+  const {rateType} = purchaseOrders[0];
   if (defaultActiveStep === -1) {
     activeStep = mode === "next" ? activeStep + 1 : activeStep - 1;
+    if(rateType.toLocaleUpperCase() === 'GEM' && mode ==='previous')
+    {
+      activeStep = activeStep-1;
+    }
   } else {
     activeStep = defaultActiveStep;
   }
-  const {purchaseOrders}  = state.screenConfiguration.preparedFinalObject;
-      const {rateType} = purchaseOrders[0];
-      if(rateType.toLocaleUpperCase() === 'GEM')
+ 
+      if(rateType.toLocaleUpperCase() === 'GEM' && mode ==='next')
       {
         activeStep = activeStep +1;
+      }
+      else if(rateType.toLocaleUpperCase() === 'GEM' && mode ==='previous')
+      {
+        activeStep = activeStep;
       }
 
   const isPreviousButtonVisible = activeStep > 0 ? true : false;

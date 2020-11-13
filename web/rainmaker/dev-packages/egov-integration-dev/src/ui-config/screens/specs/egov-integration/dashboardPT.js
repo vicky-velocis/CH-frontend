@@ -332,7 +332,14 @@ let validcode = false;
           validcode = true
         }
         else{
-          validcode = false
+          if(fields.code.props.style.display ==="none")
+          {
+            validcode = true
+          }
+          else{
+            validcode = false
+          }
+          
 
         }
       }
@@ -946,6 +953,14 @@ let validcode = false;
             propertyTaxId
           )
         );
+        dispatch(
+          handleField(
+            `dashboardPT`,
+            "components.div.children.SearchCard.children.cardContent.children.appPRSearchContainer.children.code",
+            "isFieldValid",
+            true  
+          )        
+        );
         set(
           action.screenConfig,
           "components.div.children.SearchCard.children.cardContent.children.button.children.buttonContainer.children.validateOTPButton.props.style",
@@ -958,6 +973,7 @@ let validcode = false;
         );
     }
     else{
+     
       set(
         action.screenConfig,
         "components.div.children.SearchCard.children.cardContent.children.appPRSearchContainer.children.code.props.style",
@@ -978,6 +994,20 @@ let validcode = false;
         "components.div.children.SearchCard.children.cardContent.children.button.children.buttonContainer.children.validateOTPButton.props.style",
         { display: "none" }
       );
+      // set(
+      //   action.screenConfig,
+      //   "components.div.children.SearchCard.children.cardContent.children.appPRSearchContainer.children.code",
+      //   "isFieldValid",
+      //   false
+      // );
+      // dispatch(
+      //   handleField(
+      //     `dashboardPT`,
+      //     "components.div.children.SearchCard.children.cardContent.children.appPRSearchContainer.children.code",
+      //     "isFieldValid",
+      //     false
+      //   )
+      // );
 
 
     }
@@ -1154,6 +1184,7 @@ let validcode = false;
               },
               required: true,
               jsonPath: "searchScreen.code",
+              isFieldValid:true,
              pattern: getPTPattern("PropertycodePT"),
               gridDefination: {
                 xs: 12,
