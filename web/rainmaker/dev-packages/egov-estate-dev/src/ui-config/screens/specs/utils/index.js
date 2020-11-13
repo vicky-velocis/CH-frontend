@@ -352,6 +352,16 @@ if(Property.propertyDetails.purchaser.length > 0){
   })
 }
 
+debugger
+const properties = Property.propertyDetails.owners.map((item) => ({
+  ...item,
+  ownerDetails:{
+    ...item.ownerDetails,guardianRelation:getLocaleLabels(item.ownerDetails.guardianRelation, item.ownerDetails.guardianRelation)
+  }
+}))
+
+console.log(properties)
+
   const DOWNLOADRECEIPT = {
     GET: {
       URL: "/pdf-service/v1/_create",
