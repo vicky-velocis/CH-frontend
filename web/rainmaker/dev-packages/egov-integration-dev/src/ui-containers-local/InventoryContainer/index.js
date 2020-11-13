@@ -29,7 +29,8 @@ class InventoryContainer extends Component {
   onPayClick=async()=>{  
     const { prepareFinalObject, toggleSnackbar, state,ProcessInstances } = this.props;
 
-    window.location.href = `http://sampark.chd.nic.in/Epayment/Services/PAID/PropertyTax/PropertyTaxbyPID.aspx`;
+    //window.location.href = `http://sampark.chd.nic.in/Epayment/Services/PAID/PropertyTax/PropertyTaxbyPID.aspx`,`_blank`;
+    window.open(`http://sampark.chd.nic.in/Epayment/Services/PAID/PropertyTax/PropertyTaxbyPID.aspx`,`_blank`);
   
     }
     componentDidMount = async () => {
@@ -131,7 +132,7 @@ class InventoryContainer extends Component {
                  
                 }}> 
     
-                <Button  color="primary" onClick={() => this.onPayClick()}  style={{ alignItems: "right"}}>
+                <Button  color="primary" onClick={() => this.onPayClick()}  target="_blank" style={{ alignItems: "right"}}>
                                          <LabelContainer
                                                  labelName="Pay"
                                                  labelKey="INTIGRATION_PAY"

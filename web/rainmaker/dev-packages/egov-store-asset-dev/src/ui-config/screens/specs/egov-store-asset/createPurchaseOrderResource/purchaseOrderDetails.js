@@ -82,6 +82,9 @@ const purchaseOrderDetailsCard = {
                 labelKey: "STORE_PURCHASE_ORDER_INDENT_NO_PLACEHOLDER"
               },
               //pattern: getPattern("alpha-numeric"),
+              props: {
+                disabled:true,                 
+              },
               jsonPath: "purchaseOrders[0].purchaseOrderDetails[0].indentNumber"
             })
           },
@@ -96,6 +99,9 @@ const purchaseOrderDetailsCard = {
                 labelKey: "STORE_MATERIAL_DESCRIPTION_PLCHLDER"
               },
               //pattern: getPattern("alpha-numeric"),
+              props: {
+                disabled:true,                 
+              },
               jsonPath: "purchaseOrders[0].purchaseOrderDetails[0].material.description"
             })
           },

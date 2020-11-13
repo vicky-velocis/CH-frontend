@@ -11,6 +11,7 @@ import get from "lodash/get";
 import set from "lodash/set";
 import { prepareFinalObject, handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
+import { fetchLocalizationLabel } from "egov-ui-kit/redux/app/actions";
 import { footer } from "./applyResource/footer";
 import { getPropertyIDDetails, propertyID, propertyHeader } from "./applyResource/propertyDetails";
 import { getPropertyDetails } from "./applyResource/property-locationDetails";
@@ -36,7 +37,7 @@ import { reviewDocuments } from "./applyResource/reviewDocuments";
 import { reviewOwner } from "./applyResource/reviewOwner";
 import { reviewConnectionDetails } from "./applyResource/reviewConnectionDetails";
 import { togglePropertyFeilds, toggleSewerageFeilds, toggleWaterFeilds } from '../../../../ui-containers-local/CheckboxContainer/toggleFeilds';
-
+import { getLocale,getTenantId,getUserInfo,setModule } from "egov-ui-kit/utils/localStorageUtils";
 import cloneDeep from "lodash/cloneDeep";
 export const stepperData = () => {
   if (process.env.REACT_APP_NAME === "Citizen") {
@@ -232,9 +233,14 @@ export const getMdmsData = async dispatch => {
 
 export const getData = async (action, state, dispatch) => {
   const applicationNo = getQueryArg(window.location.href, "applicationNumber");
-  const tenantId = getQueryArg(window.location.href, "tenantId");
+  let tenantId = getQueryArg(window.location.href, "tenantId");
   const propertyID = getQueryArg(window.location.href, "propertyId");
   await getMdmsData(dispatch);
+  setModule("rainmaker-ws,rainmaker-pt");
+ // setModule("rainmaker-pt");
+    const userInfo = JSON.parse(getUserInfo());
+     tenantId = process.env.REACT_APP_NAME === "Citizen" ? (userInfo.permanentCity || userInfo.tenantId): getTenantId();
+      dispatch(fetchLocalizationLabel(getLocale(), tenantId, tenantId));
   if (applicationNo) {
     //Edit/Update Flow ----
     let queryObject = [{ key: "tenantId", value: tenantId }, { key: "applicationNumber", value: applicationNo }];

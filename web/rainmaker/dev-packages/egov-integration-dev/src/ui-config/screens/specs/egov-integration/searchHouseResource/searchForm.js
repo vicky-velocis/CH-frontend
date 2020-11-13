@@ -83,6 +83,7 @@ export const searchForm = getCommonCard({
           labelKey: "INTIGRATION_TH_PT_HOUSE"
         },
       //  pattern: getPattern("Amount"),
+      required: true, 
         gridDefination: {
           xs: 12,
           sm: 4,

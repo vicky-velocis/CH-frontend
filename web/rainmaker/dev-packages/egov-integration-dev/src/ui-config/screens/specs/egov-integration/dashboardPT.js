@@ -79,6 +79,14 @@ import {
         { display: "none" }
         )
         );
+        dispatch(
+          handleField(
+          "dashboardPT",
+          `components.div.children.SearchCard.children.cardContent.children.appPRSearchContainer.children.code`,
+          "props.style",
+          { display: "none" }
+          )
+          );
       dispatch(prepareFinalObject("searchScreen", {}));
      
       dispatch(prepareFinalObject("APIData", []));
