@@ -49,7 +49,7 @@ export const setDocsForEditFlow = async (state, dispatch, sourceJsonPath, destin
     sourceJsonPath,
     []
   ) || []
-  applicationDocuments = applicationDocuments.filter(item => !!item.isActive && !!item.fileStoreId)
+  applicationDocuments = applicationDocuments.filter(item => !!item && !!item.isActive && !!item.fileStoreId)
   let uploadedDocuments = {};
   let fileStoreIds = applicationDocuments && applicationDocuments.map(item => item && item.fileStoreId).filter(item => !!item).join(",");
   const fileUrlPayload =
