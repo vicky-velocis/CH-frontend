@@ -315,19 +315,17 @@ const modifiedOwner = PropertiesTempOwners.map((owner) => {
 })
 
   let Property = Properties[0];
-  if(Property.propertyDetails.purchaser.length > 0){
-    debugger
+  if(Property.propertyDetails.owners.length > 0){
     let propertyOwners = Property.propertyDetails.owners;
     const owners = propertyOwners.map((owner , index) => {
        owner.ownerDetails.ownerDocuments = modifiedOwner[index].ownerDetails.ownerDocuments
        return owner
     })
-    propertyOwners.map((item) => ({
-      ...item,
-      ownerDetails:{
-        ...item.ownerDetails,guardianRelation:getLocaleLabels(item.ownerDetails.guardianRelation, item.ownerDetails.guardianRelation)
-      }
-    }))
+    propertyOwners = propertyOwners.map((item) => {
+      item.ownerDetails.guardianRelation = getLocaleLabels(item.ownerDetails.guardianRelation, item.ownerDetails.guardianRelation)
+      return item  
+    }
+    )
   }
 
 let previousOwners = PropertiesTemp[0].propertyDetails.purchaser;
@@ -357,13 +355,11 @@ if(Property.propertyDetails.purchaser.length > 0){
      purchaser.ownerDetails.ownerDocuments = modifedPurchaser[index].ownerDetails.ownerDocuments
      return purchaser
   })
-
-  purchasers.map((item) => ({
-    ...item,
-    ownerDetails:{
-      ...item.ownerDetails,guardianRelation:getLocaleLabels(item.ownerDetails.guardianRelation, item.ownerDetails.guardianRelation)
-    }
-  }))
+  purchasers = purchasers.map((item) => {
+    item.ownerDetails.guardianRelation = getLocaleLabels(item.ownerDetails.guardianRelation, item.ownerDetails.guardianRelation)
+    return item  
+  }
+  )
 }
 
 
