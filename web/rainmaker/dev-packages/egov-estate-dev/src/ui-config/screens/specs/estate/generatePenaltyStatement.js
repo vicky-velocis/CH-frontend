@@ -17,24 +17,14 @@ import {propertyInfo,penaltyInfo} from './preview-resource/preview-properties'
 import { getTodaysDateInYMD } from "../utils";
 import {penaltyDetailsTable} from "./searchResource/searchResults"
 import {generatePenaltyStatementApiCall} from './searchResource/functions'
+import {penaltyStatmentResult} from './searchResource/functions'
 const header = getCommonHeader({
     labelName: "Penalty",
     labelKey: "ES_PENALTY_HEADER"
   });
 
 const beforeInitFn = async (action, state, dispatch, fileNumber) => {
-//   if(fileNumber){
-//       let queryObject = [
-//           { key: "fileNumber", value: fileNumber }
-//         ];
-//    const response =  await getSearchResults(queryObject);
-//     if(!!response) {
-//       let {estateDemands, estatePayments} = response.Properties[0].propertyDetails;
-//       estateDemands = estateDemands || []
-//       estatePayments = estatePayments || []
-//       setXLSTableData({demands:estateDemands,payments:estatePayments, componentJsonPath: "components.div.children.paymentDetailsTable", screenKey: "payment-details"})
-//     }
-//   }
+
     const queryObject = [{
     key: "fileNumber",
     value: fileNumber
@@ -43,11 +33,23 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
     if (!!response.Properties && !!response.Properties.length) {
     dispatch(prepareFinalObject("Properties", response.Properties))
     dispatch(prepareFinalObject("propertyPenalties", []))
+
+      if(!!response) {
+      let properties = response.Properties
+      const propertyId = properties[0].id;   
+      let Criteria = {
+        fromdate: properties[0].propertyDetails.auditDetails.createdTime || "",
+        todate:   ""
+      }
+      Criteria = {...Criteria, propertyid: propertyId}
+      await penaltyStatmentResult (state,dispatch, Criteria)
+    }
+
     }
 }
 
-const propertyDetails = getCommonCard(propertyInfo(false))
-const penaltySummary = getCommonCard(penaltyInfo(false))
+export const propertyDetails = getCommonCard(propertyInfo(false))
+export const penaltySummary = getCommonCard(penaltyInfo(false))
 
 export const penaltyStatementFilter = getCommonCard({  
     dateContainer: getCommonContainer({
@@ -183,8 +185,8 @@ const generatePenaltyStatement = {
           },
           
           propertyDetails,
-          penaltyStatementFilter,
           penaltySummary,
+          penaltyStatementFilter,
           breakAfterSearch: getBreak(),
           penaltyDetailsTable
       }

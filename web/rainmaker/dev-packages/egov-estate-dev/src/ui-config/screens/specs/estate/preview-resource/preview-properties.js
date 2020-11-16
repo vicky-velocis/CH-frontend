@@ -140,7 +140,7 @@ export const editSection = {
     }
 }
 
-const masterEntryEditSection = (isEditable) => ({
+export const masterEntryEditSection = (isEditable) => ({
     ...editSection,
     visible: isEditable,
     onClickDefination: {

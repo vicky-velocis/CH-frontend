@@ -14,7 +14,7 @@ import commonConfig from "config/common.js";
 import { httpRequest } from "../../../../../ui-utils"
 import { APPLICATION_TYPE, LAST_MODIFIED_ON,DATE , PENALTY_STATUS , AMOUNT , TYPE } from "./searchResults";
 import moment from 'moment'
-
+import {penaltySummary} from '../../estate/generatePenaltyStatement'
 export const getStatusList = async (state, dispatch, queryObject, screen, path, moduleName) => {
   await setBusinessServiceDataToLocalStorage(queryObject, dispatch);
   const businessServices = JSON.parse(localStorageGet("businessServiceData"));
@@ -323,13 +323,14 @@ export const penaltyStatmentResult = async(state, dispatch ,Criteria) => {
         response.PropertyPenalty
       )
     )
+
     let data = response.PropertyPenalty.map(item => ({
-      [DATE]: moment(new Date(item.generationDate)).format("DD-MMM-YYYY") || "-",
+      [getTextToLocalMapping("Date")]: moment(new Date(item.generationDate)).format("DD-MMM-YYYY") || "-",
       [TYPE]: (item.violationType) || "-",
       [AMOUNT]:(item.penaltyAmount.toFixed(2)) || "-",
       [PENALTY_STATUS]: (item.status) || "-"
     }));
-
+    
     dispatch(
       handleField(
         "generatePenaltyStatement",
