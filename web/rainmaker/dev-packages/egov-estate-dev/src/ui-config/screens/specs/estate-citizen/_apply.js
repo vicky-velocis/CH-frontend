@@ -67,7 +67,6 @@ const getData = async (action, state, dispatch) => {
       {key: "applicationNumber", value: applicationNumber}
     ] 
     try {
-      await hideFooter(action, state, dispatch)
       const applicationRes = await getSearchApplicationsResults(applicationQueryObject)
       const {Applications = []} = applicationRes;
       dispatch(prepareFinalObject("Applications", Applications))
@@ -91,7 +90,7 @@ const getData = async (action, state, dispatch) => {
        dispatch(prepareFinalObject("Applications[0].property.id", propertyId ))
     }
   // }
-
+    await hideFooter(action, state, dispatch)
     const owners = property.propertyDetails.owners.filter(item => !!item.ownerDetails.isCurrentOwner)
     property = {...property, propertyDetails: {...property.propertyDetails, owners}}
     
