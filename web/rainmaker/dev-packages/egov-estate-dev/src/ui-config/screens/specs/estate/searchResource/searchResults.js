@@ -158,16 +158,7 @@ export const penaltyDetailsTable = {
     columns: [
       DATE,
       TYPE,
-      {
-        name: AMOUNT,
-        options: {
-          customBodyRender: value => (
-            <span style={{ display: 'flex', justifyContent: 'right', flexDirection: 'row-reverse',marginBottom:'none'}}>
-          {value}
-        </span> 
-          )
-        }
-      },
+      AMOUNT,
       PENALTY_STATUS 
     ],
     options: {...searchResults.props.options,

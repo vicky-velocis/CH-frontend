@@ -6,28 +6,33 @@ import { prepareFinalObject,handleScreenConfigurationFieldChange as handleField 
 import { getSearchResults ,setXLSTableData } from "../../../../ui-utils/commons";
 import {getReviewPayment} from './preview-resource/payment-details'
 import {onTabChange, headerrow, tabs} from './estate-payment'
-import {paymentDetailsTable} from './applyResource/applyConfig'
 import { getBreak } from "egov-ui-framework/ui-config/screens/specs/utils";
-import {penaltyDetailsTable} from "./searchResource/searchResults"
-
+import {penaltyInfo} from "./preview-resource/preview-properties"
+import {penaltyStatmentResult} from "./searchResource/functions"
 const header = getCommonHeader({
   labelName: "Penalty",
   labelKey: "ES_PENALTY_STATEMENT"
 });
 
+const penaltySummary = getCommonCard(penaltyInfo(false))
+
 const beforeInitFn = async (action, state, dispatch, fileNumber) => {
-//   if(fileNumber){
-//       let queryObject = [
-//           { key: "fileNumber", value: fileNumber }
-//         ];
-//    const response =  await getSearchResults(queryObject);
-//     if(!!response) {
-//       let {estateDemands, estatePayments} = response.Properties[0].propertyDetails;
-//       estateDemands = estateDemands || []
-//       estatePayments = estatePayments || []
-//       setXLSTableData({demands:estateDemands,payments:estatePayments, componentJsonPath: "components.div.children.paymentDetailsTable", screenKey: "payment-details"})
-//     }
-//   }
+  if(fileNumber){
+      let queryObject = [
+          { key: "fileNumber", value: fileNumber }
+        ];
+   const response =  await getSearchResults(queryObject);
+    if(!!response) {
+      let properties = response.Properties
+      const propertyId = properties[0].id;   
+      let Criteria = {
+        fromdate: properties[0].propertyDetails.auditDetails.createdTime || "",
+        todate:   ""
+      }
+      Criteria = {...Criteria, propertyid: propertyId}
+      await penaltyStatmentResult (state,dispatch, Criteria)
+    }
+  }
 }
 
 
@@ -72,7 +77,7 @@ const penaltyStatementDetails = {
             type: "array",
           },
           breakAfterSearch: getBreak(),
-          penaltyDetailsTable
+         penaltySummary
       }
     }
   }

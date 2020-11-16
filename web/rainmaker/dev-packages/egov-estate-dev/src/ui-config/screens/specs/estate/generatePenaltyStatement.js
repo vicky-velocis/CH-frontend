@@ -13,10 +13,10 @@ import {getReviewPayment} from './preview-resource/payment-details'
 import {onTabChange, headerrow, tabs} from './estate-penalty'
 import {paymentDetailsTable} from './applyResource/applyConfig'
 import { getBreak } from "egov-ui-framework/ui-config/screens/specs/utils";
-import {propertyInfo} from './preview-resource/preview-properties'
+import {propertyInfo,penaltyInfo} from './preview-resource/preview-properties'
 import { getTodaysDateInYMD } from "../utils";
 import {penaltyDetailsTable} from "./searchResource/searchResults"
-
+import {generatePenaltyStatementApiCall} from './searchResource/functions'
 const header = getCommonHeader({
     labelName: "Penalty",
     labelKey: "ES_PENALTY_HEADER"
@@ -47,6 +47,7 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
 }
 
 const propertyDetails = getCommonCard(propertyInfo(false))
+const penaltySummary = getCommonCard(penaltyInfo(false))
 
 export const penaltyStatementFilter = getCommonCard({  
     dateContainer: getCommonContainer({
@@ -126,7 +127,7 @@ export const penaltyStatementFilter = getCommonCard({
             },
             onClickDefination: {
               action: "condition",
-            //   callBack: searchApiCallAccountStatement
+              callBack: generatePenaltyStatementApiCall
             }
           }, lastCont: {
             uiFramework: "custom-atoms",
@@ -183,6 +184,7 @@ const generatePenaltyStatement = {
           
           propertyDetails,
           penaltyStatementFilter,
+          penaltySummary,
           breakAfterSearch: getBreak(),
           penaltyDetailsTable
       }

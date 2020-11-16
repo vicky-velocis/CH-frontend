@@ -100,6 +100,21 @@ const entityTypeLabel = {
   labelKey: "ES_ENTITY_TYPE_LABEL"
 }
 
+const totalPenaltyLabel = {
+  labelName: "Total Penalty",
+  labelKey: "ES_TOTAL_PENALTY_LABEL"
+}
+
+const totalPenaltyDueLabel = {
+  labelName: "Total Penalty Due",
+  labelKey: "ES_TOTAL_PENALTY_DUE_LABEL"
+}
+
+const totalPenaltyPaidLabel = {
+  labelName: "Total Penalty Paid",
+  labelKey: "ES_TOTAL_PENALTY_PAID_LABEL"
+}
+
 export const editSection = {
     componentPath: "Button",
     props: {
@@ -215,6 +230,42 @@ export const propertyInfo = (isEditable) => ({
     entityType: getLabelWithValue(
       entityTypeLabel, {
         jsonPath: "Properties[0].propertyDetails.entityType"
+      }
+    )
+  })
+})
+
+export const penaltyInfo = (isEditable) => ({
+  headerDiv: {
+    ...headerDiv,
+    children: {
+      header: {
+        gridDefination: {
+          xs: 12,
+          sm: 10
+        },
+        ...getCommonSubHeader({
+          labelName: "Penalty Summary",
+          labelKey: "ES_PENALTY_SUMMARY"
+        })
+      },
+      editSection: masterEntryEditSection(isEditable, 0)
+    }
+  },
+  viewFour: getCommonContainer({
+    totalPenalty: getLabelWithValue(
+      totalPenaltyLabel, {
+        jsonPath: "PenaltyStatementSummary.totalPenalty"
+      }
+    ),
+    totalPenaltyDue: getLabelWithValue(
+      totalPenaltyDueLabel, {
+        jsonPath: "PenaltyStatementSummary.totalPenaltyDue"
+      }
+    ),
+    totalPenaltyPaid: getLabelWithValue(
+      totalPenaltyPaidLabel, {
+        jsonPath: "PenaltyStatementSummary.totalPenaltyPaid"
       }
     )
   })

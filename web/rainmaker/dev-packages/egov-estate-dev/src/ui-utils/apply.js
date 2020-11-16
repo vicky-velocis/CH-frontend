@@ -424,9 +424,9 @@ export const addPenalty = async (state, dispatch, activeIndex) => {
     let properties = JSON.parse(JSON.stringify(get(state.screenConfiguration.preparedFinalObject, "Properties", [])))
     const propertyId = properties[0].id;
     const fileNumber = properties[0].fileNumber
-    set(queryObject[0], "tenantId", tenantId);
-    set(queryObject[0], "propertyId", propertyId);
-    set(queryObject[0], "branchType", "estateBranch");
+    set(queryObject[0], "property", {
+      "id":propertyId
+    });
     let response;
     if(queryObject) {  
       response = await httpRequest(
