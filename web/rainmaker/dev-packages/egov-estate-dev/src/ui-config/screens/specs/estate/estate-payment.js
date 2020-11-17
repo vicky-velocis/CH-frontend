@@ -351,28 +351,6 @@ import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
     }
   })
 
-  export const onTabChange = async(tabIndex, dispatch, state) => {
-    const fileNumber = getQueryArg(window.location.href, "fileNumber");
-    const propertyId = getQueryArg(window.location.href, "propertyId")
-    let path = "";
-    if (tabIndex === 0) {
-      path = `/estate/estate-payment?propertyId=${propertyId}&fileNumber=${fileNumber}`;
-    }
-    else if (tabIndex === 1) {
-      path = `/estate/penaltyStatement?propertyId=${propertyId}&fileNumber=${fileNumber}`
-    }
-    dispatch(setRoute(path))
-  }
-
-  export const tabs = [
-    {
-      tabButton: { labelName: "Rent Payment", labelKey: "ES_RENT_PAYMENT" }
-    },
-    {
-      tabButton: { labelName: "Penalty Statement", labelKey: "ES_PENALTY_STATEMENT" }
-    },
-  ]
-
 const payment = {
     uiFramework: "material-ui",
     name: "estate-payment",
@@ -400,17 +378,6 @@ const payment = {
                   ...header
                 }
               }
-            },
-            tabSection: {
-              uiFramework: "custom-containers-local",
-              moduleName: "egov-estate",
-              componentPath: "CustomTabContainer",
-              props: {
-                tabs,
-                activeIndex: 0,
-                onTabChange
-              },
-              type: "array",
             },
             detailsContainer,
             footer: paymentFooter
