@@ -243,8 +243,8 @@ export const stepsData = [{
   labelKey: "ES_COMMON_RENT_INFORMATION"
 },
 {
-  labelName: "Consolidated Payment Details",
-  labelKey: "ES_COMMON_CONSOLIDATED_PAYMENT_DETAILS"
+  labelName: "Payment Details",
+  labelKey: "ES_COMMON_PAYMENT_DETAILS"
 },
 {
   labelName: "Summary",

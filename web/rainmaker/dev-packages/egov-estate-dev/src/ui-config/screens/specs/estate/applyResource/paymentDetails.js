@@ -18,8 +18,8 @@ import get from "lodash/get";
 import { _getPattern } from "../../utils/"
 
 const paymentHeader = getCommonTitle({
-  labelName: "Payment Details",
-  labelKey: "ES_PAYMENT_DETAILS_HEADER"
+  labelName: "Consolidated Payment Details",
+  labelKey: "ES_CONSOLIDATED_PAYMENT_DETAILS_HEADER"
 })
 
 const rentField = {
@@ -130,7 +130,7 @@ const consolidatedTillField = {
 export const paymentDetails = getCommonCard({
   header: paymentHeader,
   detailsContainer: getCommonContainer({
-    totalrent: getTextField(rentField),
+    rent: getTextField(rentField),
     balance: getTextField(balanceField),
     gst: getTextField(gstField),
     interestOnRent: getTextField(interestOnRentField),
