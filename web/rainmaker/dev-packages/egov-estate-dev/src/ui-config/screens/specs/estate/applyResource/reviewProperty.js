@@ -79,7 +79,7 @@ const lastNocDateLabel = {
   labelName: "Last NOC Date",
   labelKey: "ES_LAST_NOC_DATE_LABEL"
 }
-const propertyTypeLabel = {
+export const propertyTypeLabel = {
   labelName: "Property Type",
   labelKey: "ES_PROPERTY_TYPE_LABEL"
 }

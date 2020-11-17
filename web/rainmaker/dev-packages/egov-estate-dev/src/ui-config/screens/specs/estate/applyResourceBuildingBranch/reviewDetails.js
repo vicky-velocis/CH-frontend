@@ -12,7 +12,7 @@ import {
   changeStep
 } from "./footer"
 
-const header = getCommonTitle({
+export const header = getCommonTitle({
   labelName: "Please review your Application and Submit",
   labelKey: "ES_SUMMARY_HEADER"
 })
@@ -22,23 +22,23 @@ const possessionDateLabel = {
   labelName: "Possession Date",
   labelKey: "ES_POSSESSION_DATE_LABEL"
 }
-const categoryLabel = {
+export const categoryLabel = {
   labelName: "Category",
   labelKey: "ES_CATEGORY_LABEL"
 }
-const subCategoryLabel = {
+export const subCategoryLabel = {
   labelName: "Sub Category",
   labelKey: "ES_SUBCATEGORY_LABEL"
 }
-const siteNumberLabel = {
+export const siteNumberLabel = {
   labelName: "Site Number",
   labelKey: "ES_SITE_NUMBER_LABEL"
 }
-const sectorNumberLabel = {
+export const sectorNumberLabel = {
   labelName: "Sector Number",
   labelKey: "ES_SECTOR_NUMBER_LABEL"
 }
-const fileNumberLabel = {
+export const fileNumberLabel = {
   labelName: "File Number",
   labelKey: "ES_FILE_NUMBER_LABEL"
 }
@@ -46,7 +46,7 @@ const houseNumberLabel = {
   labelName: "House Number",
   labelKey: "ES_HOUSE_NUMBER_LABEL"
 }
-const mohallaLabel = {
+export const mohallaLabel = {
   labelName: "Mohalla",
   labelKey: "ES_MOHALLA_LABEL"
 }
@@ -84,7 +84,7 @@ export const editSection = {
   }
 }
 
-const masterEntryEditSection = (isEditable, step = 0) => ({
+export const masterEntryEditSection = (isEditable, step = 0) => ({
   ...editSection,
   visible: isEditable,
   onClickDefination: {

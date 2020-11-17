@@ -388,7 +388,7 @@ export const formwizardTenthStep = {
   uiFramework: "custom-atoms",
   componentPath: "Form",
   props: {
-    id: "apply_form8"
+    id: "apply_form10"
   },
   children: {
     reviewDetails
@@ -527,4 +527,3 @@ export const formwizardSeventhStepAllotment = {
   },
   visible: false
 };
-
