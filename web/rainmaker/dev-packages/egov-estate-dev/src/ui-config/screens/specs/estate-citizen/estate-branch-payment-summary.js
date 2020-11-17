@@ -80,7 +80,7 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
 
 const EstateBranchPaymentSummary = {
   uiFramework: "material-ui",
-  name: "estate-branch-owner-details",
+  name: "estate-branch-payment-summary",
   beforeInitScreen: (action, state, dispatch) => {
     let fileNumber = getQueryArg(window.location.href, "fileNumber");
     beforeInitFn(action, state, dispatch, fileNumber);
