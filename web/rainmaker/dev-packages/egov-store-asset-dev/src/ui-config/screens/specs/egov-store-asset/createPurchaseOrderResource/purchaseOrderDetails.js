@@ -52,8 +52,11 @@ const purchaseOrderDetailsCard = {
                  const index= action.componentJsonpath.indexOf("items[");
                  if(index !== -1){
                   const itemIndex = action.componentJsonpath.charAt(index + 6);
+                  if(matObj[0])
+                  {
                   dispatch(prepareFinalObject(`purchaseOrders[0].purchaseOrderDetails[${itemIndex}].material.name`, matObj[0].name)); 
                   dispatch(prepareFinalObject(`purchaseOrders[0].purchaseOrderDetails[${itemIndex}].material.description`, matObj[0].description)); 
+                  
                   if(matObj[0].uom.code)  
                   {
                     dispatch(prepareFinalObject(`purchaseOrders[0].purchaseOrderDetails[${itemIndex}].uom.code`, matObj[0].uom.code));
@@ -65,7 +68,7 @@ const purchaseOrderDetailsCard = {
                   dispatch(prepareFinalObject(`purchaseOrders[0].totalIndentQty`, matObj[0].indentQuantity));
                   dispatch(prepareFinalObject(`purchaseOrders[0].purchaseOrderDetails[${itemIndex}].issuedQuantity`, matObj[0].indentIssuedQuantity));
                   dispatch(prepareFinalObject(`purchaseOrders[0].purchaseOrderDetails[${itemIndex}].poOrderedQuantity`, matObj[0].poOrderedQuantity));
-                 
+                }
                  }
                 }
               }

@@ -191,7 +191,7 @@ import {
       getData(action, state, dispatch);
       let indentNumber="";
       indentNumber = getQueryArg(window.location.href, "indentNumber");
-      const step = getQueryArg(window.location.href, "tenantId");
+      const step = getQueryArg(window.location.href, "step");
       const poNumber = getQueryArg(window.location.href, "poNumber");
       if(!step && !poNumber){
         dispatch(prepareFinalObject("purchaseOrders[0]",null));
