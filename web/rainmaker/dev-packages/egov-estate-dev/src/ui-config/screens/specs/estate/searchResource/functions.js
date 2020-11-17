@@ -309,7 +309,6 @@ export const penaltyStatmentResult = async(state, dispatch ,Criteria) => {
       {Criteria}
     )
   
-    console.log(response)
     dispatch(
       prepareFinalObject(
         "PenaltyStatementSummary",
