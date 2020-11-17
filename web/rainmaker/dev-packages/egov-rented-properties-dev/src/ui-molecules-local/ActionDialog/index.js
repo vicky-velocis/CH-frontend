@@ -404,7 +404,7 @@ return formIsValid;
       return formIsValid;
     }
   }
-  else if((this.props.moduleName==="MasterRP"||this.props.moduleName===WORKFLOW_BUSINESS_SERVICE_OT||this.props.moduleName===WORKFLOW_BUSINESS_SERVICE_DC||this.props.moduleName==="PermissionToMortgage")&&(buttonLabel==="REJECT" || buttonLabel==="APPROVE"))
+  else if((this.props.moduleName==="MasterRP"||this.props.moduleName===WORKFLOW_BUSINESS_SERVICE_OT||this.props.moduleName===WORKFLOW_BUSINESS_SERVICE_DC||this.props.moduleName==="PermissionToMortgage")&&(buttonLabel==="REJECT" || buttonLabel==="APPROVE"||buttonLabel==="SENDFORREJECT"||buttonLabel==="COMPLETE"))
   {
     let formIsValid = true;
 const comments=data.comment
@@ -560,6 +560,10 @@ let fields = this.state.fields;
       dataPath = `${dataPath}[0]`;
     }
 
+if(open==false){
+  let errors = this.state.errors;
+  errors["comments"] = "";
+}
     const mastrerstate=(get(state.screenConfiguration.preparedFinalObject,dataPath)||[]).masterDataState
     const applicationState = (get(state.screenConfiguration.preparedFinalObject, dataPath) || []).applicationState
     const duplicateCopyApplicationState = (get(state.screenConfiguration.preparedFinalObject, dataPath) || []).state
@@ -752,7 +756,7 @@ let fields = this.state.fields;
                        <span style={{color: "red"}}>{this.state.errors["mortagage"]}</span>   
                      </Grid>
                   )}
-                  {((moduleName === WORKFLOW_BUSINESS_SERVICE_OT && applicationState === "OT_PENDINGCLAPPROVAL") || (moduleName === WORKFLOW_BUSINESS_SERVICE_DC && duplicateCopyApplicationState === "DC_PENDINGCLAPPROVAL")) && buttonLabel === "REJECT" && (<Grid item sm="12">
+                  {((moduleName === WORKFLOW_BUSINESS_SERVICE_OT && applicationState === "OT_PENDINGCLAPPROVAL") || (moduleName === WORKFLOW_BUSINESS_SERVICE_DC && duplicateCopyApplicationState === "DC_PENDINGCLAPPROVAL")) && buttonLabel === "SENDFORREJECT" && (<Grid item sm="12">
                   <Typography
                       component="h3"
                       variant="subheading"
