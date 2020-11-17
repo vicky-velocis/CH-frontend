@@ -563,6 +563,13 @@ let fields = this.state.fields;
 if(open==false){
   let errors = this.state.errors;
   errors["comments"] = "";
+  errors["dueamount"]="";
+  errors["publicationcharge"]="";
+  errors["mortgageAmount"]="";
+  errors["sanctionLetterNumber"]="";
+  errors["sanctionDate"]="";
+  errors["mortagage"]="";
+errors["bankname"]="";
 }
     const mastrerstate=(get(state.screenConfiguration.preparedFinalObject,dataPath)||[]).masterDataState
     const applicationState = (get(state.screenConfiguration.preparedFinalObject, dataPath) || []).applicationState
