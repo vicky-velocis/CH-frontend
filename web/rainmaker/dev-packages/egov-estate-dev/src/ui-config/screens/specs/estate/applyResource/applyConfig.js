@@ -23,9 +23,7 @@ import {
   courtCaseDetails
 } from './courtCaseDetails';
 import {
-  groundRentDetailsPM,
-  serviceTaxDetails,
-  paymentMadeBy
+  paymentDetails
 } from './paymentDetails';
 import {
   reviewDetails
@@ -245,8 +243,8 @@ export const stepsData = [{
   labelKey: "ES_COMMON_RENT_INFORMATION"
 },
 {
-  labelName: "Payment Details",
-  labelKey: "ES_COMMON_PAYMENT_DETAILS"
+  labelName: "Consolidated Payment Details",
+  labelKey: "ES_COMMON_CONSOLIDATED_PAYMENT_DETAILS"
 },
 {
   labelName: "Summary",
@@ -374,10 +372,10 @@ export const formwizardNinthStep = {
     id: "apply_form9"
   },
   children: {
-    paymentDocumentsDetails,
-    breakAfterSearch: getBreak(),
-    paymentDetailsTable
-    // groundRentDetailsPM,
+    // paymentDocumentsDetails,
+    // breakAfterSearch: getBreak(),
+    // paymentDetailsTable
+    paymentDetails,
     // serviceTaxDetails,
     // paymentMadeBy
   },
