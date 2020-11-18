@@ -83,8 +83,30 @@ export const applicationSuccessFooter = (
           callBack: async() => {
             const purpose = getQueryArg(window.location.href, "purpose");
             let tenantId = getQueryArg(window.location.href, "tenantId");
+            let consumerCodes = getQueryArg(window.location.href, "applicationNumber");
             if(purpose === 'pay'){
+              if(consumerCodes.startsWith('SITE')){
                 let consumerCodes = getQueryArg(window.location.href, "applicationNumber");
+                let fileNumber = consumerCodes.split('-')[1]
+                let queryObject = [
+                  { key: "fileNumber", value: fileNumber }
+                ];
+                let response =  await getSearchResults(queryObject);
+                let properties = response.Properties.map(item => ({...item, estateRentSummary: {balanceRent: Number(item.estateRentSummary.balanceRent.toFixed(2)),
+                balanceGST: Number(item.estateRentSummary.balanceGST.toFixed(2)),
+                balanceGSTPenalty: Number(item.estateRentSummary.balanceGSTPenalty.toFixed(2)),
+                balanceRentPenalty: Number(item.estateRentSummary.balanceRentPenalty.toFixed(2)),
+                balanceAmount: Number(item.estateRentSummary.balanceAmount.toFixed(2))
+                }}))
+                dispatch(prepareFinalObject("Properties", properties))
+                let { Properties} = state.screenConfiguration.preparedFinalObject;
+                let id = getQueryArg(window.location.href, "tenantId");
+                const receiptQuery = [
+                { key: "consumerCodes", value:consumerCodes},
+                  { key: "tenantId", value: id }
+                ]
+                downloadPaymentReceipt(receiptQuery, Properties,[], userInfo.name,'rent-payment');
+              }else{
                 const queryObject = [
                   {
                     key: "tenantId",
@@ -102,8 +124,8 @@ export const applicationSuccessFooter = (
                     { key: "consumerCodes", value:consumerCodes},
                     { key: "tenantId", value: tenantId }
                 ]
-                downloadPaymentReceipt(receiptQuery, Applications,[], userInfo.name,'rent-payment');
-              
+                downloadPaymentReceipt(receiptQuery, Applications,[], userInfo.name,'application-payment');
+              }
                   
             }else{
               const { Applications,temp } = state.screenConfiguration.preparedFinalObject;
@@ -146,8 +168,30 @@ export const applicationSuccessFooter = (
           callBack: async() => {
             const purpose = getQueryArg(window.location.href, "purpose");
             let tenantId = getQueryArg(window.location.href, "tenantId");
+            let consumerCodes = getQueryArg(window.location.href, "applicationNumber");
             if(purpose === 'pay'){
+              if(consumerCodes.startsWith('SITE')){
                 let consumerCodes = getQueryArg(window.location.href, "applicationNumber");
+                let fileNumber = consumerCodes.split('-')[1]
+                let queryObject = [
+                  { key: "fileNumber", value: fileNumber }
+                ];
+                let response =  await getSearchResults(queryObject);
+                let properties = response.Properties.map(item => ({...item, estateRentSummary: {balanceRent: Number(item.estateRentSummary.balanceRent.toFixed(2)),
+                balanceGST: Number(item.estateRentSummary.balanceGST.toFixed(2)),
+                balanceGSTPenalty: Number(item.estateRentSummary.balanceGSTPenalty.toFixed(2)),
+                balanceRentPenalty: Number(item.estateRentSummary.balanceRentPenalty.toFixed(2)),
+                balanceAmount: Number(item.estateRentSummary.balanceAmount.toFixed(2))
+                }}))
+                dispatch(prepareFinalObject("Properties", properties))
+                let { Properties} = state.screenConfiguration.preparedFinalObject;
+                let id = getQueryArg(window.location.href, "tenantId");
+                const receiptQuery = [
+                { key: "consumerCodes", value:consumerCodes},
+                  { key: "tenantId", value: id }
+                ]
+                downloadPaymentReceipt(receiptQuery, Properties,[], userInfo.name,'rent-payment','print');
+              }else{
                 const queryObject = [
                   {
                     key: "tenantId",
@@ -165,8 +209,8 @@ export const applicationSuccessFooter = (
                     { key: "consumerCodes", value:consumerCodes},
                     { key: "tenantId", value: tenantId }
                 ]
-                downloadPaymentReceipt(receiptQuery, Applications,[], userInfo.name,'rent-payment','print');
-              
+                downloadPaymentReceipt(receiptQuery, Applications,[], userInfo.name,'application-payment','print');
+              }
                   
             }else{
               const { Applications,temp } = state.screenConfiguration.preparedFinalObject;
