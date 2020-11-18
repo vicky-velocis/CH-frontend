@@ -128,7 +128,8 @@ import {
     status,
     applicationNumber,
     tenantId,
-    businessService
+    businessService,
+    transitNumber
   ) => {
     /** MenuButton data based on status */
 
@@ -172,6 +173,32 @@ import {
                   }  
                 },
                 visible: process.env.REACT_APP_NAME != "Citizen" &&  !!findItem && getButtonVisibility(state, "APPROVED") ? true : false
+              },
+              editButton: {
+                componentPath: "Button",
+                props: {
+                  variant: "contained",
+                  color: "primary",
+                  style: {
+                    minWidth: "180px",
+                    height: "60px",
+                    marginRight: "45px",
+                    borderRadius: "inherit"
+                  }
+                },
+                children: {
+                  submitButtonLabel: getLabel({
+                    labelName: "Edit",
+                    labelKey: "RP_EDIT_PROPERTY_DETAILS"
+                  })
+                },
+                onClickDefination: {
+                  action: "condition",
+                  callBack: (state, dispatch) => {
+                    window.location.href = `apply?tenantId=${tenantId}&transitNumber=${transitNumber}`
+                  }  
+                },
+                visible: process.env.REACT_APP_NAME != "Citizen" &&  !!findItem && getButtonVisibility(state, "EDIT") ? true : false
               }
             },
             gridDefination: {

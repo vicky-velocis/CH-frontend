@@ -198,6 +198,31 @@ export const searchResults = async (action, state, dispatch, transitNumber) => {
         );
         
   }
+    if((state == "PM_PENDINGCLARIFICATION" || state == "PM_REJECTED") && !!findItem){
+    const footer = editFooter(
+      action,
+      state,
+      dispatch,
+      status,
+      "applicationNumber",
+      "tenantId",
+      "OwnershipTransferRP",
+      transitNumber
+
+    );
+    process.env.REACT_APP_NAME != "Citizen"
+        ? set(action, "screenConfig.components.div.children.footer", footer)
+        : set(action, "screenConfig.components.div.children.footer", {});
+        dispatch(
+          handleField(
+            "search-preview",
+            "components.div.children.footer",
+            "visible",
+            true
+          )
+        );
+        
+  }
 }
 }
 
