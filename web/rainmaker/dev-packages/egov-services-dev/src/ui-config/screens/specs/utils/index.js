@@ -808,7 +808,7 @@ export const  downloadReceipt =async (
             FETCHRECEIPT.GET.ACTION,
             receiptQueryString
         )
-console.log(applicationData, "Nero App Data")
+
 
             let queryStr = "";
             if (applicationData.businessService === "PACC") {
@@ -1040,6 +1040,8 @@ let applicationData={}
         approvedBy: "Renil Commissioner",
         role: "Additional Commissioner",
     };
+
+    console.log(bookingWfHistory, "Nero bookingWfHistory");
     if (bookingWfHistory && bookingWfHistory.length > 0) {
         for (let i = 0; i < bookingWfHistory.length; i++) {
             if (bookingWfHistory[i].assignee != null) {
@@ -1181,10 +1183,7 @@ else if(flag==='true')
                     categoryImage: "",
                     // categoryImage: "http://3.6.65.87:3000/static/media/cat-a.4e1bc5ec.jpeg"
                 },
-                approvedBy: {
-                    approvedBy: "Renil Commissioner",
-                    role: "Additional Commissioner",
-                },
+                approvedBy: apporvedByDetail,
                 tenantInfo: {
                     municipalityName:
                         tenantData.tenants[0].city.municipalityName,
