@@ -231,10 +231,22 @@ export const getWFConfig = (module, businessService, taskId) => {
       };
     }
     case "ESTATEPROPERTIES":
-      if(businessService === "ES-EB-AllotmentOfSite") {
+      if(businessService === "ES-EB-AllotmentOfSite" || businessService === "ES-EB-PropertyMaster") {
         return {
           INITIATED: 'estate/search-preview',
           DEFAULT: 'estate/search-preview'
+        }
+      } else {
+        return {
+          INITIATED: "/estate/preview",
+          DEFAULT: "/estate/preview"
+        }
+      }
+    case "ESTATESERVICES":
+      if(businessService === "ES-BB-PropertyMaster") {
+        return {
+          INITIATED: "/estate/search-preview-building-branch",
+          DEFAULT: "/estate/search-preview-building-branch"
         }
       } else {
         return {
