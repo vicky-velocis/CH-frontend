@@ -132,7 +132,7 @@ class InboxData extends React.Component {
    
     return (
       <div>
-        <Hidden only={["xs"]}>
+       <Hidden >
         <div className="Container Flipped">
           <Table className="Content" size="small">
             <TableHead

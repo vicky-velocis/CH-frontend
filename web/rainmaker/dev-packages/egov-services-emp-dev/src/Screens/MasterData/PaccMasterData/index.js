@@ -108,6 +108,7 @@ class SimpleTable extends React.Component {
       "Sector",
       "Last Modified Date",
       "Created Date",
+
       "Valid From Date", 
       "Valid To Date", 
       "Action"       
@@ -124,7 +125,7 @@ class SimpleTable extends React.Component {
       let  feeData={}
       let feeDataRes=feeResponse.data
       feeData.rows= feeDataRes
-     // feeData.rows= feeDataRes.reverse()
+     
       feeData.headers =headers
       this.setState({tableData: feeData})
 
@@ -171,14 +172,13 @@ class SimpleTable extends React.Component {
   
   handleEditClick (row) {
      
-    let fromDateData= new Date(row.fromDate)
     
-    fromDateData.setDate(fromDateData.getDate() + 1);
-    
+    let fromDateData= new Date(row.fromDate) 
+    fromDateData = new Date(fromDateData.getTime() + 86400000)  //adding 1 day in mili second
     fromDateData= epochToYmd(fromDateData)
-    
-  
-    let updateData =row
+     
+    let updateData={}
+    Object.assign(updateData, row)
     updateData.fromDate= fromDateData
 
     this.setState({updateData})
@@ -270,7 +270,7 @@ class SimpleTable extends React.Component {
                   this.handleSearch(e)}}
                 underlineShow={true}
                 fullWidth={false}
-                hintText={<Label label="ES_MYCOMPLAINTS_SEARCH_BUTTON" />}
+                hintText={<Label label="BK_ADMIN_SEARCH_BUTTON" />}
                 Icon={SearchIcon}
                 value={this.state.searchValue}
                 id="search-mdms"

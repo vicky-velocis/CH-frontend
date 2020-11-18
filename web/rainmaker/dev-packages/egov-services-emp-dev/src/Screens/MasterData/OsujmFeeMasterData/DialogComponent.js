@@ -144,8 +144,8 @@ class DialogComponent extends Component {
             if(responseStatus.status== '200'){
               this.props.toggleSnackbarAndSetText(
                 true,
-                {labelName: "Create Successfull",
-                labelKey: `Create Successfull`} ,
+                {labelName: "Created Successfully",
+                labelKey: `Created Successfully`} ,
                 "success"
               );
               }else{
@@ -208,8 +208,8 @@ class DialogComponent extends Component {
               if(responseStatus.status== '200'){
               this.props.toggleSnackbarAndSetText(
                 true,
-                {labelName: "Update Successfull",
-                labelKey: `Update Successfull`} ,
+                {labelName: "Updated Successfully",
+                labelKey: `Updated Successfully`} ,
                 "success"
               );
               }else{
@@ -456,13 +456,22 @@ class DialogComponent extends Component {
                 prepareFinalObject('updateData.fromDate', e.target.value)
 
               } else {
-                
-                this.props.toggleSnackbarAndSetText(
-                  true,
-                  {labelName: "New From Date Should Be Greater then Selected Date",
-                  labelKey: `New From Date Should Be Greater then Selected Date`} ,
-                  "error"
-                );
+                if(this.state.create===true){
+                  this.props.toggleSnackbarAndSetText(
+                    true,
+                    {labelName: "Valid From Date Should Be Greater then Today",
+                    labelKey: `Valid From Date Should Be Greater then Today`} ,
+                    "error"
+                  );
+                }else{
+                  this.props.toggleSnackbarAndSetText(
+                    true,
+                    {labelName: "New Valid From Date Should Be Greater then Selected Date",
+                    labelKey: `New Valid From Date Should Be Greater then Selected Date`} ,
+                    "error"
+                  );
+                }
+               
               
 
                 }

@@ -87,7 +87,7 @@ class SimpleTable extends React.Component {
       let  feeData={}
       let feeDataRes=feeResponse.data
       
-      feeData.rows= feeDataRes.reverse()
+      feeData.rows= feeDataRes
       feeData.headers=headers
       this.setState({data: feeData})
 
@@ -209,7 +209,7 @@ class SimpleTable extends React.Component {
                   this.handleSearch(e)}}
                 underlineShow={true}
                 fullWidth={false}
-                hintText={<Label label="ES_MYCOMPLAINTS_SEARCH_BUTTON" />}
+                hintText={<Label label="BK_ADMIN_SEARCH_BUTTON" />}
                 Icon={SearchIcon}
                 value={this.state.searchValue}
                 id="search-mdms"
