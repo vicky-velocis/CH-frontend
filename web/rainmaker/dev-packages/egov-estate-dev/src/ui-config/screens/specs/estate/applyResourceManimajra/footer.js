@@ -24,36 +24,32 @@ import {
   set
 } from "lodash";
 import "./index.css";
-import {
-  setDocumentData,
-  setPrevOwnerDocs
-} from '../apply'
+// import {
+//   setDocumentData,
+//   setPrevOwnerDocs
+// } from '../apply'
 import {
   getReviewOwner,
-  getReviewPurchaser,
-  getReviewPayment,
-  getReviewCourtCase
-} from "./reviewProperty";
+} from "../applyResourceBuildingBranch/reviewDetails";
 import {
   getReviewDocuments
-} from "./reviewDocuments";
+} from "../applyResourceBuildingBranch/reviewDocuments";
+import { getReviewPurchaser, getReviewCourtCase } from "../applyResource/reviewProperty"
 import { WF_ALLOTMENT_OF_SITE } from "../../../../../ui-constants";
-import { download } from "../../../../../ui-utils/commons";
+// import { download } from "../../../../../ui-utils/commons";
 import { downloadAcknowledgementForm,downloadLetter,downloadEmailNotice,downloadNotice,downloadAmountLetter,downloadHousingBoardLetter} from "../../utils";
 import { getFileUrl, getFileUrlFromAPI } from "egov-ui-framework/ui-utils/commons";
 
 
 export const DEFAULT_STEP = -1;
 export const PROPERTY_DETAILS_STEP = 0;
-export const AUCTION_DETAILS_STEP = 1;
-export const ENTITY_OWNER_DETAILS_STEP = 2;
-export const ENTITY_OWNER_DOCUMENT_UPLOAD_STEP = 3;
-export const PURCHASER_DETAILS_STEP = 4;
-export const PURCHASER_DOCUMENTS_STEP = 5;
+export const OWNER_DETAILS_STEP = 1;
+export const OWNER_DOCUMENT_UPLOAD_STEP = 2;
+export const PURCHASER_DETAILS_STEP = 3;
+export const PURCHASER_DOCUMENTS_STEP = 4;
+export const PAYMENT_DETAILS_STEP = 5;
 export const COURT_CASE_DETAILS_STEP = 6;
-export const RENT_INFO_DETAILS_STEP = 7;
-export const PAYMENT_DETAILS_STEP = 8;
-export const SUMMARY_STEP = 9;
+export const SUMMARY_STEP = 7;
 
 export const moveToSuccess = (data, dispatch, type) => {
   const id = get(data, "id");
@@ -80,8 +76,8 @@ export const moveToSuccess = (data, dispatch, type) => {
 
 const callBackForNext = async (state, dispatch) => {
   let activeStep = get(
-    state.screenConfiguration.screenConfig["apply"],
-    "components.div.children.stepper.props.activeStep",
+    state.screenConfiguration.screenConfig["apply-manimajra"],
+    "components.div.children.manimajraStepper.props.activeStep",
     0
   );
   let isFormValid = true;
@@ -92,33 +88,18 @@ const callBackForNext = async (state, dispatch) => {
       "components.div.children.formwizardFirstStep.children.propertyInfoDetails.children.cardContent.children.detailsContainer.children",
       state,
       dispatch,
-      "apply"
+      "apply-manimajra"
     )
 
     const isAdditionalValid = validateFields(
       "components.div.children.formwizardFirstStep.children.additionalDetails.children.cardContent.children.detailsContainer.children",
       state,
       dispatch,
-      "apply"
-    )
-
-    let propertyRegisteredTo = get(
-      state.screenConfiguration.preparedFinalObject,
-      "Properties[0].propertyDetails.propertyRegisteredTo",
-      ""
-    )
-
-    dispatch(
-      handleField(
-        "apply",
-        "components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewPropertyInfo.children.cardContent.children.viewFour.children.entityType",
-        "visible",
-        propertyRegisteredTo == "ENTITY"
-      )
+      "apply-manimajra"
     )
 
     if (isPropertyInfoValid && isAdditionalValid) {
-      const res = await applyEstates(state, dispatch, activeStep);
+      const res = await applyEstates(state, dispatch, activeStep, "apply-manimajra");
       if (!res) {
         return
       }
@@ -127,127 +108,81 @@ const callBackForNext = async (state, dispatch) => {
     }
   }
 
-  if (activeStep === AUCTION_DETAILS_STEP) {
-    const isAuctionValid = validateFields(
-      "components.div.children.formwizardSecondStep.children.AllotmentAuctionDetails.children.cardContent.children.detailsContainer.children.cardContent.children.auctionCard.children",
-      state,
-      dispatch,
-      "apply"
-    )
-
-    if (isAuctionValid) {
-      const res = await applyEstates(state, dispatch, activeStep);
-      if (!res) {
-        return
-      }
-    } else {
-      isFormValid = false;
-    }
-  }
-
-  if (activeStep === ENTITY_OWNER_DETAILS_STEP) {
-    let entityType = get(
+  if (activeStep === OWNER_DETAILS_STEP) {
+    let propertyOwners = get(
       state.screenConfiguration.preparedFinalObject,
-      "Properties[0].propertyDetails.entityType",
-      ""
-    )
+      "Properties[0].propertyDetails.owners",
+      []
+    );
 
-    if (!!entityType) {
-      if (entityType == "ET.PARTNERSHIP_FIRM") {
-        dispatch(
-          prepareFinalObject(
-            `Properties[0].propertyDetails.owners[${i}].ownershipType`,
-            "PARTNER"
-          )
+    let propertyOwnersItems = get(
+      state.screenConfiguration.screenConfig,
+      `apply-manimajra.components.div.children.formwizardSecondStep.children.ownerDetails.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items`
+    );
+
+    let isOwnerDetailsValid = true;
+
+    if (propertyOwnersItems && propertyOwnersItems.length > 0) {
+      for (var i = 0; i < propertyOwnersItems.length; i++) {
+        if (typeof propertyOwnersItems[i].isDeleted !== "undefined") {
+          continue;
+        }
+        isOwnerDetailsValid = validateFields(
+          `components.div.children.formwizardSecondStep.children.ownerDetails.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items[${i}].item${i}.children.cardContent.children.ownerCard.children`,
+          state,
+          dispatch,
+          "apply-manimajra"
         )
-      }
-      else {
-        dispatch(
-          prepareFinalObject(
-            `Properties[0].propertyDetails.owners[${i}].ownershipType`,
-            "OWNER"
+
+        var ownerName = propertyOwners ? propertyOwners[i] ? propertyOwners[i].ownerDetails.ownerName : "" : "";
+
+        if (i > 0) {
+          var documentDetailsString = JSON.stringify(get(
+            state.screenConfiguration.screenConfig,
+            `apply-manimajra.components.div.children.formwizardThirdStep.children.ownerDocumentDetails_0`, {}
+          ))
+          var newDocumentDetailsString = documentDetailsString.replace(/_0/g, `_${i}`);
+          newDocumentDetailsString = newDocumentDetailsString.replace(/owners\[0\]/g, `owners[${i}]`)
+          var documentDetailsObj = JSON.parse(newDocumentDetailsString);
+          set(
+            state.screenConfiguration.screenConfig,
+            `apply-manimajra.components.div.children.formwizardThirdStep.children.ownerDocumentDetails_${i}`,
+            documentDetailsObj
           )
+  
+          setDocumentData("", state, dispatch, i, "formwizardThirdStep")
+        }
+        set(
+          state.screenConfiguration.screenConfig,
+          `apply-manimajra.components.div.children.formwizardThirdStep.children.ownerDocumentDetails_${i}.children.cardContent.children.header.children.key.props.labelKey`,
+          `Documents - ${ownerName}`
+        )
+
+        const reviewOwnerDetails = getReviewOwner(true, i, 1, "apply-manimajra");
+        set(
+          reviewOwnerDetails,
+          "children.cardContent.children.headerDiv.children.header.children.key.props.labelKey",
+          `Owner Details - ${ownerName}`
+        )
+        set(
+          state.screenConfiguration.screenConfig,
+          `apply-manimajra.components.div.children.formwizardEighthStep.children.reviewDetails.children.cardContent.children.reviewOwnerDetails_${i}`,
+          reviewOwnerDetails
         )
       }
     }
 
-    let isOwnerOrPartnerDetailsValid = true;
-
-    switch(entityType) {
-      case "ET.PUBLIC_LIMITED_COMPANY":
-      case "ET.PRIVATE_LIMITED_COMPANY":
-        var isCompanyDetailsValid = validateFields(
-          "components.div.children.formwizardThirdStep.children.companyDetails.children.cardContent.children.detailsContainer.children",
-          state,
-          dispatch,
-          "apply"
-        );
-
-        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "ownerDetails");
-        if (isOwnerOrPartnerDetailsValid && isCompanyDetailsValid) {
-          const res = await applyEstates(state, dispatch, activeStep, "apply");
-          if (!res) {
-            return
-          }
-        } else {
-          isFormValid = false;
-        }
-        break;
-      case "ET.PARTNERSHIP_FIRM":
-        var isFirmDetailsValid = validateFields(
-          "components.div.children.formwizardThirdStep.children.firmDetails.children.cardContent.children.detailsContainer.children",
-          state,
-          dispatch,
-          "apply"
-        )
-
-        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "partnerDetails");
-        if (isFirmDetailsValid && isOwnerOrPartnerDetailsValid) {
-          const res = await applyEstates(state, dispatch, activeStep, "apply");
-          if (!res) {
-            return
-          }
-        } else {
-          isFormValid = false;
-        }
-        break;
-      case "ET.PROPRIETORSHIP":
-        var isFirmDetailsValid = validateFields(
-          "components.div.children.formwizardThirdStep.children.firmDetails.children.cardContent.children.detailsContainer.children",
-          state,
-          dispatch,
-          "apply"
-        )
-        var isProprietorshipDetailsValid = validateFields(
-          "components.div.children.formwizardThirdStep.children.proprietorshipDetails.children.cardContent.children.detailsContainer.children",
-          state,
-          dispatch,
-          "apply"
-        )
-        if (isFirmDetailsValid && isProprietorshipDetailsValid) {
-          const res = await applyEstates(state, dispatch, activeStep, "apply");
-          if (!res) {
-            return
-          }
-        } else {
-          isFormValid = false;
-        }
-        break;
-      default:
-        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "ownerDetails");
-        if (isOwnerOrPartnerDetailsValid) {
-          const res = await applyEstates(state, dispatch, activeStep, "apply");
-          if (!res) {
-            return
-          }
-        } else {
-          isFormValid = false;
-        }
-        break;
+    if (isOwnerDetailsValid) {
+      const res = await applyEstates(state, dispatch, activeStep, "apply-manimajra");
+      if (!res) {
+        return
+      }
+    } else {
+      isFormValid = false;
     }
   }
 
-  if (activeStep === ENTITY_OWNER_DOCUMENT_UPLOAD_STEP) {
+  if (activeStep === OWNER_DOCUMENT_UPLOAD_STEP) {
     const propertyOwners = get(
       state.screenConfiguration.preparedFinalObject,
       "Properties[0].propertyDetails.owners"
@@ -308,7 +243,7 @@ const callBackForNext = async (state, dispatch) => {
           prepareFinalObject(`PropertiesTemp[0].propertyDetails.owners[${i}].ownerDetails.reviewDocData`, reviewDocData)
         );
 
-        const reviewDocuments = getReviewDocuments(true, "apply", `PropertiesTemp[0].propertyDetails.owners[${i}].ownerDetails.reviewDocData`);
+        const reviewDocuments = getReviewDocuments(true, "apply-manimajra", `PropertiesTemp[0].propertyDetails.owners[${i}].ownerDetails.reviewDocData`, 2);
         set(
           reviewDocuments,
           "children.cardContent.children.headerDiv.children.header.children.key.props.labelKey",
@@ -316,11 +251,11 @@ const callBackForNext = async (state, dispatch) => {
         )
         set(
           state.screenConfiguration.screenConfig,
-          `apply.components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewDocuments_${i}`,
+          `apply-manimajra.components.div.children.formwizardEighthStep.children.reviewDetails.children.cardContent.children.reviewDocuments_${i}`,
           reviewDocuments
         )
 
-        const res = await applyEstates(state, dispatch, activeStep, "apply");
+        const res = await applyEstates(state, dispatch, activeStep, "apply-manimajra");
         if(!res) {
           return
         }
@@ -336,7 +271,7 @@ const callBackForNext = async (state, dispatch) => {
 
     let propertyPurchaserItems = get(
       state,
-      "screenConfiguration.screenConfig.apply.components.div.children.formwizardFifthStep.children.purchaserDetails.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items"
+      "screenConfiguration.screenConfig.apply-manimajra.components.div.children.formwizardFourthStep.children.purchaserDetails.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items"
     );
 
     if (propertyPurchaserItems && propertyPurchaserItems.length > 0) {
@@ -345,10 +280,10 @@ const callBackForNext = async (state, dispatch) => {
           continue;
         }
         var isPurchaserDetailsValid = validateFields(
-          `components.div.children.formwizardFifthStep.children.purchaserDetails.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items[${i}].item${i}.children.cardContent.children.purchaserCard.children`,
+          `components.div.children.formwizardFourthStep.children.purchaserDetails.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items[${i}].item${i}.children.cardContent.children.purchaserCard.children`,
           state,
           dispatch,
-          "apply"
+          "apply-manimajra"
         )
 
         const purchaserName = propertyPurchasers ? propertyPurchasers[i] ? propertyPurchasers[i].ownerDetails.ownerName : "" : "";
@@ -356,14 +291,14 @@ const callBackForNext = async (state, dispatch) => {
         if (i > 0) {
           var documentDetailsString = JSON.stringify(get(
             state.screenConfiguration.screenConfig,
-            `apply.components.div.children.formwizardSixthStep.children.previousOwnerDocuments_0`, {}
+            `apply-manimajra.components.div.children.formwizardFifthStep.children.previousOwnerDocuments_0`, {}
           ))
           var newDocumentDetailsString = documentDetailsString.replace(/_0/g, `_${i}`);
           newDocumentDetailsString = newDocumentDetailsString.replace(/purchaser\[0\]/g, `purchaser[${i}]`)
           var documentDetailsObj = JSON.parse(newDocumentDetailsString);
           set(
             state.screenConfiguration.screenConfig,
-            `apply.components.div.children.formwizardSixthStep.children.previousOwnerDocuments_${i}`,
+            `apply-manimajra.components.div.children.formwizardFifthStep.children.previousOwnerDocuments_${i}`,
             documentDetailsObj
           )
   
@@ -372,7 +307,7 @@ const callBackForNext = async (state, dispatch) => {
 
         set(
           state.screenConfiguration.screenConfig,
-          `apply.components.div.children.formwizardSixthStep.children.previousOwnerDocuments_${i}.children.cardContent.children.header.children.key.props.labelKey`,
+          `apply-manimajra.components.div.children.formwizardFifthStep.children.previousOwnerDocuments_${i}.children.cardContent.children.header.children.key.props.labelKey`,
           `Documents - ${purchaserName}`
         )
         const reviewPurchaserDetails = getReviewPurchaser(true, i);
@@ -383,14 +318,14 @@ const callBackForNext = async (state, dispatch) => {
         )
         set(
           state.screenConfiguration.screenConfig,
-          `apply.components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewPurchaserDetails_${i}`,
+          `apply-manimajra.components.div.children.formwizardEighthStep.children.reviewDetails.children.cardContent.children.reviewPurchaserDetails_${i}`,
           reviewPurchaserDetails
         )
       }
     }
 
     if (isPurchaserDetailsValid) {
-      const res = await applyEstates(state, dispatch, activeStep);
+      const res = await applyEstates(state, dispatch, activeStep, "apply-manimajra");
       if (!res) {
         return
       }
@@ -459,7 +394,7 @@ const callBackForNext = async (state, dispatch) => {
           prepareFinalObject(`PropertiesTemp[0].propertyDetails.purchaser[${i}].ownerDetails.reviewDocDataPrevOwner`, reviewDocData)
         );
 
-        const reviewDocuments = getReviewDocuments(true, "apply", `PropertiesTemp[0].propertyDetails.purchaser[${i}].ownerDetails.reviewDocDataPrevOwner`, 5);
+        const reviewDocuments = getReviewDocuments(true, "apply-manimajra", `PropertiesTemp[0].propertyDetails.purchaser[${i}].ownerDetails.reviewDocDataPrevOwner`, 5);
         set(
           reviewDocuments,
           "children.cardContent.children.headerDiv.children.header.children.key.props.labelKey",
@@ -467,9 +402,14 @@ const callBackForNext = async (state, dispatch) => {
         )
         set(
           state.screenConfiguration.screenConfig,
-          `apply.components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewDocumentsPrevOwner_${i}`,
+          `apply-manimajra.components.div.children.formwizardEighthStep.children.reviewDetails.children.cardContent.children.reviewDocumentsPrevOwner_${i}`,
           reviewDocuments
         )
+
+        const res = await applyEstates(state, dispatch, activeStep, "apply-manimajra");
+        if(!res) {
+          return
+        }
       }
     }
   }
@@ -481,7 +421,7 @@ const callBackForNext = async (state, dispatch) => {
     )
     let courtCaseItems = get(
       state,
-      "screenConfiguration.screenConfig.apply.components.div.children.formwizardSeventhStep.children.courtCaseDetails.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items"
+      "screenConfiguration.screenConfig.apply-manimajra.components.div.children.formwizardSeventhStep.children.courtCaseDetails.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items"
     );
 
     if (courtCaseItems && courtCaseItems.length > 0) {
@@ -498,53 +438,28 @@ const callBackForNext = async (state, dispatch) => {
         const reviewCourtCaseDetails = getReviewCourtCase(true, i);
         set(
           state.screenConfiguration.screenConfig,
-          `apply.components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewCourtCaseDetails_${i}`,
+          `apply-manimajra.components.div.children.formwizardEighthStep.children.reviewDetails.children.cardContent.children.reviewCourtCaseDetails_${i}`,
           reviewCourtCaseDetails
         )
       }
     }
 
     if (isCourtCaseDetailsValid) {
-      const res = await applyEstates(state, dispatch, activeStep);
+      const res = await applyEstates(state, dispatch, activeStep, "apply-manimajra");
       if (!res) {
         return
       }
     } else {
       isFormValid = false;
     }
-  }
-
-  if (activeStep === RENT_INFO_DETAILS_STEP) {
-
   }
 
   if (activeStep === PAYMENT_DETAILS_STEP) {
-    var isGroundRentDetailsValid = validateFields(
-      `components.div.children.formwizardNinthStep.children.groundRentDetails.children.cardContent.children.detailsContainer.children`,
-      state,
-      dispatch,
-      "apply"
-    )
-
-    var isServiceTaxDetailsValid = validateFields(
-      `components.div.children.formwizardNinthStep.children.serviceTaxDetails.children.cardContent.children.detailsContainer.children`,
-      state,
-      dispatch,
-      "apply"
-    )
-
-    if (isGroundRentDetailsValid && isServiceTaxDetailsValid) {
-      const res = await applyEstates(state, dispatch, activeStep);
-      if (!res) {
-        return
-      }
-    } else {
-      isFormValid = false;
-    }
+    
   }
 
   if (activeStep === SUMMARY_STEP) {
-    isFormValid = await applyEstates(state, dispatch, activeStep);
+    isFormValid = await applyEstates(state, dispatch, activeStep, "apply-manimajra");
     if (isFormValid) {
       const estatesData = get(
         state.screenConfiguration.preparedFinalObject,
@@ -556,7 +471,7 @@ const callBackForNext = async (state, dispatch) => {
 
   if (activeStep !== SUMMARY_STEP) {
     if (isFormValid) {
-      changeStep(state, dispatch, "apply");
+      changeStep(state, dispatch, "apply-manimajra");
     } else if (hasFieldToaster) {
       let errorMessage = {
         labelName: "Please fill all mandatory fields and upload the documents !",
@@ -564,11 +479,9 @@ const callBackForNext = async (state, dispatch) => {
       };
       switch (activeStep) {
         case PROPERTY_DETAILS_STEP:
-        case AUCTION_DETAILS_STEP:
-        case ENTITY_OWNER_DETAILS_STEP:
+        case OWNER_DETAILS_STEP:
         case PURCHASER_DETAILS_STEP:
         case COURT_CASE_DETAILS_STEP:
-        case RENT_INFO_DETAILS_STEP:
         case PAYMENT_DETAILS_STEP:
           errorMessage = {
             labelName: "Please fill all mandatory fields, then do next !",
@@ -588,73 +501,6 @@ const callBackForNext = async (state, dispatch) => {
   }
 }
 
-const setOwnersOrPartners = (state, dispatch, container) => {
-  let propertyOwners = get(
-    state.screenConfiguration.preparedFinalObject,
-    "Properties[0].propertyDetails.owners"
-  );
-
-  let propertyOwnersItems = get(
-    state.screenConfiguration.screenConfig,
-    `apply.components.div.children.formwizardThirdStep.children.${container}.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items`
-  );
-
-  let isOwnerOrPartnerDetailsValid = true;
-
-  if (propertyOwnersItems && propertyOwnersItems.length > 0) {
-    for (var i = 0; i < propertyOwnersItems.length; i++) {
-      if (typeof propertyOwnersItems[i].isDeleted !== "undefined") {
-        continue;
-      }
-      isOwnerOrPartnerDetailsValid = validateFields(
-        `components.div.children.formwizardThirdStep.children.${container}.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items[${i}].item${i}.children.cardContent.children.ownerCard.children`,
-        state,
-        dispatch,
-        "apply"
-      )
-
-      var ownerName = propertyOwners ? propertyOwners[i] ? propertyOwners[i].ownerDetails.ownerName : "" : "";
-      
-      if (i > 0) {
-        var documentDetailsString = JSON.stringify(get(
-          state.screenConfiguration.screenConfig,
-          `apply.components.div.children.formwizardFourthStep.children.ownerDocumentDetails_0`, {}
-        ))
-        var newDocumentDetailsString = documentDetailsString.replace(/_0/g, `_${i}`);
-        newDocumentDetailsString = newDocumentDetailsString.replace(/owners\[0\]/g, `owners[${i}]`)
-        var documentDetailsObj = JSON.parse(newDocumentDetailsString);
-        set(
-          state.screenConfiguration.screenConfig,
-          `apply.components.div.children.formwizardFourthStep.children.ownerDocumentDetails_${i}`,
-          documentDetailsObj
-        )
-
-        setDocumentData("", state, dispatch, i)
-      }
-
-      set(
-        state.screenConfiguration.screenConfig,
-        `apply.components.div.children.formwizardFourthStep.children.ownerDocumentDetails_${i}.children.cardContent.children.header.children.key.props.labelKey`,
-        `Documents - ${ownerName}`
-      )
-
-      const reviewOwnerDetails = getReviewOwner(true, i);
-      set(
-        reviewOwnerDetails,
-        "children.cardContent.children.headerDiv.children.header.children.key.props.labelKey",
-        `Owner Details - ${ownerName}`
-      )
-      set(
-        state.screenConfiguration.screenConfig,
-        `apply.components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewOwnerDetails_${i}`,
-        reviewOwnerDetails
-      )
-    }
-  }
-
-  return isOwnerOrPartnerDetailsValid;
-}
-
 export const changeStep = (
   state,
   dispatch,
@@ -664,7 +510,7 @@ export const changeStep = (
 ) => {
   let activeStep = get(
     state.screenConfiguration.screenConfig[screenName],
-    "components.div.children.stepper.props.activeStep",
+    "components.div.children.manimajraStepper.props.activeStep",
     0
   );
   if (defaultActiveStep === DEFAULT_STEP) {
@@ -681,7 +527,7 @@ export const changeStep = (
   const isNextButtonVisible = activeStep < SUMMARY_STEP ? true : false;
   const isSubmitButtonVisible = activeStep === SUMMARY_STEP ? true : false;
   const actionDefination = [{
-    path: "components.div.children.stepper.props",
+    path: "components.div.children.manimajraStepper.props",
     property: "activeStep",
     value: activeStep
   },
@@ -716,7 +562,7 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         dispatch
       );
       break;
-    case AUCTION_DETAILS_STEP:
+    case OWNER_DETAILS_STEP:
       dispatchMultipleFieldChangeAction(
         screenName,
         getActionDefinationForStepper(
@@ -725,7 +571,7 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         dispatch
       );
       break;
-    case ENTITY_OWNER_DETAILS_STEP:
+    case OWNER_DOCUMENT_UPLOAD_STEP:
       dispatchMultipleFieldChangeAction(
         screenName,
         getActionDefinationForStepper(
@@ -734,7 +580,7 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         dispatch
       );
       break;
-    case ENTITY_OWNER_DOCUMENT_UPLOAD_STEP:
+    case PURCHASER_DETAILS_STEP:
       dispatchMultipleFieldChangeAction(
         screenName,
         getActionDefinationForStepper(
@@ -743,7 +589,7 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         dispatch
       );
       break;
-    case PURCHASER_DETAILS_STEP:
+    case PURCHASER_DOCUMENTS_STEP:
       dispatchMultipleFieldChangeAction(
         screenName,
         getActionDefinationForStepper(
@@ -752,15 +598,15 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         dispatch
       );
       break;
-    case PURCHASER_DOCUMENTS_STEP:
-      dispatchMultipleFieldChangeAction(
-        screenName,
-        getActionDefinationForStepper(
-          "components.div.children.formwizardSixthStep"
-        ),
-        dispatch
-      );
-      break;
+    case PAYMENT_DETAILS_STEP:
+    dispatchMultipleFieldChangeAction(
+      screenName,
+      getActionDefinationForStepper(
+        "components.div.children.formwizardSixthStep"
+      ),
+      dispatch
+    );
+    break;
     case COURT_CASE_DETAILS_STEP:
       dispatchMultipleFieldChangeAction(
         screenName,
@@ -770,29 +616,11 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         dispatch
       );
       break;
-    case RENT_INFO_DETAILS_STEP:
-      dispatchMultipleFieldChangeAction(
-        screenName,
-        getActionDefinationForStepper(
-          "components.div.children.formwizardEighthStep"
-        ),
-        dispatch
-      );
-      break;
-    case PAYMENT_DETAILS_STEP:
-      dispatchMultipleFieldChangeAction(
-        screenName,
-        getActionDefinationForStepper(
-          "components.div.children.formwizardNinthStep"
-        ),
-        dispatch
-      );
-      break;
     default:
       dispatchMultipleFieldChangeAction(
         screenName,
         getActionDefinationForStepper(
-          "components.div.children.formwizardTenthStep"
+          "components.div.children.formwizardEighthStep"
         ),
         dispatch
       );
@@ -839,18 +667,7 @@ export const getActionDefinationForStepper = path => {
     path: "components.div.children.formwizardEighthStep",
     property: "visible",
     value: false
-  },
-  {
-    path: "components.div.children.formwizardNinthStep",
-    property: "visible",
-    value: false
-  },
-  {
-    path: "components.div.children.formwizardTenthStep",
-    property: "visible",
-    value: false
-  }
-  ];
+  }];
   for (var i = 0; i < actionDefination.length; i++) {
     actionDefination[i] = {
       ...actionDefination[i],
@@ -867,7 +684,7 @@ export const getActionDefinationForStepper = path => {
 };
 
 export const callBackForPrevious = (state, dispatch) => {
-  changeStep(state, dispatch, "apply", "previous");
+  changeStep(state, dispatch, "apply-manimajra", "previous");
 };
 
 export const previousButton = {

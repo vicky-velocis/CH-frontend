@@ -7,7 +7,6 @@ import {
   getCommonSubHeader,
   getCommonContainer
 } from "egov-ui-framework/ui-config/screens/specs/utils";
-import { masterEntryEditSection } from "../applyResourceBuildingBranch/reviewDetails";
 import {
  fileNumberLabel,
  mohallaLabel,
@@ -20,7 +19,21 @@ import {
 } from "../applyResourceBuildingBranch/reviewDetails";
 import {
   propertyTypeLabel
-} from "../applyResource/reviewProperty"
+} from "../applyResource/reviewProperty";
+import { editSection } from "../applyResourceBuildingBranch/reviewDetails";
+import { changeStep } from "./footer";
+
+export const masterEntryEditSection = (isEditable, step = 0) => ({
+  ...editSection,
+  visible: isEditable,
+  onClickDefination: {
+    action: "condition",
+    callBack: (state, dispatch) => {
+      changeStep(state, dispatch, "apply-manimajra", "", step);
+    }
+  }
+})
+
 
 const houseNumberLabel = {
   labelName: "House/Shop Number",

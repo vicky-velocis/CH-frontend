@@ -260,7 +260,7 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
       //   "propertyDetails.purchaser",
       //   []
       // )
-      if (screenName == "allotment") {
+      if (screenName == "allotment" || screenName == "apply-manimajra") {
         tabsArr.splice(-2, 2);
       }
       else if (screenName == "apply-building-branch") {

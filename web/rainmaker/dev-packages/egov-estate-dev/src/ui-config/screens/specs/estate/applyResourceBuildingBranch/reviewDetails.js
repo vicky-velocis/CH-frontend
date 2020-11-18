@@ -10,7 +10,8 @@ import {
 import { convertEpochToDate } from "../../utils";
 import {
   changeStep
-} from "./footer"
+} from "./footer";
+import { changeStep as changeStepManimajra } from "../applyResourceManimajra/footer"
 
 export const header = getCommonTitle({
   labelName: "Please review your Application and Submit",
@@ -84,13 +85,17 @@ export const editSection = {
   }
 }
 
-export const masterEntryEditSection = (isEditable, step = 0) => ({
+export const masterEntryEditSection = (isEditable, step = 0, screenKey = "apply-building-branch") => ({
   ...editSection,
   visible: isEditable,
   onClickDefination: {
     action: "condition",
     callBack: (state, dispatch) => {
-      changeStep(state, dispatch, "apply-building-branch", "", step);
+      if (screenKey == "apply-buildimg-branch")
+        changeStep(state, dispatch, screenKey, "", step);
+      else if (screenKey == "apply-manimajra") {
+        changeStepManimajra(state, dispatch, screenKey, "", step);
+      }
     }
   }
 })
@@ -203,7 +208,7 @@ const isCurrentOwnerLabel = {
   labelKey: "ES_IS_CURRENT_OWNER_LABEL"
 }
 
-export const getReviewOwner = (isEditable = true, owner = 0) => {
+export const getReviewOwner = (isEditable = true, owner = 0, step = 2, screenKey = "apply-building-branch") => {
   return getCommonGrayCard({
     headerDiv: {
       ...headerDiv,
@@ -218,7 +223,7 @@ export const getReviewOwner = (isEditable = true, owner = 0) => {
             labelKey: "ES_OWNER_DETAILS_HEADER"
           })
         },
-        editSection: masterEntryEditSection(isEditable, 2)
+        editSection: masterEntryEditSection(isEditable, step, screenKey)
       }
     },
     viewFour: getCommonContainer({

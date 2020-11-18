@@ -77,7 +77,8 @@ export const formwizardSecondStep = {
   },
   children: {
     ownerDetails
-  }
+  },
+  visible: false
 };
 
 export const formwizardThirdStep = {
