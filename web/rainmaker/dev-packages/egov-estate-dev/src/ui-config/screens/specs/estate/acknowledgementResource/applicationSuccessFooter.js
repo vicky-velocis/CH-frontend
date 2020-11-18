@@ -8,7 +8,8 @@ import set from "lodash/set";
 import get from "lodash/get";
 const { getQueryArg } = require("egov-ui-framework/ui-utils/commons");
 import { getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
-import {getSearchApplicationsResults} from '../../../../../ui-utils/commons'
+import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import {getSearchApplicationsResults,getSearchResults} from '../../../../../ui-utils/commons'
 const userInfo = JSON.parse(getUserInfo());
 const getCommonApplyFooter = children => {
   return {
@@ -250,27 +251,55 @@ export const applicationSuccessFooter = (
                 }
   
                 break;
-              case 'pay': 
-                let tenantId = getQueryArg(window.location.href, "tenantId");
-                let consumerCodes = getQueryArg(window.location.href, "applicationNumber");
-                const queryObject = [
-                  {
-                    key: "tenantId",
-                    value: tenantId
-                  },
-                  {
-                    key: "applicationNumber",
-                    value: consumerCodes
+              case 'pay':
+
+                if(type === 'ESTATE_SERVICE_ESTATE_BRANCH.PROPERTY_MASTER'){
+                  let fileNumber = getQueryArg(window.location.href, "fileNumber");
+                  const consumerCodes = getQueryArg(window.location.href, "applicationNumber");
+                  if(consumerCodes.startsWith('SITE')){
+                    let queryObject = [
+                      { key: "fileNumber", value: fileNumber }
+                    ];
+                    let response =  await getSearchResults(queryObject);
+                     let properties = response.Properties.map(item => ({...item, estateRentSummary: {balanceRent: Number(item.estateRentSummary.balanceRent.toFixed(2)),
+                      balanceGST: Number(item.estateRentSummary.balanceGST.toFixed(2)),
+                      balanceGSTPenalty: Number(item.estateRentSummary.balanceGSTPenalty.toFixed(2)),
+                      balanceRentPenalty: Number(item.estateRentSummary.balanceRentPenalty.toFixed(2)),
+                      balanceAmount: Number(item.estateRentSummary.balanceAmount.toFixed(2))
+                      }}))
+                    dispatch(prepareFinalObject("Properties", properties))
+                    let { Properties} = state.screenConfiguration.preparedFinalObject;
+                    let id = getQueryArg(window.location.href, "tenantId");
+                      const receiptQuery = [
+                        { key: "consumerCodes", value:consumerCodes},
+                        { key: "tenantId", value: id }
+                    ]
+                    downloadPaymentReceipt(receiptQuery, Properties,[], userInfo.name,'rent-payment');
                   }
-                ];
-                const response = await getSearchApplicationsResults(queryObject);
-                const Applications = get(response, "Applications");
+                }
+                else{
+                  let tenantId = getQueryArg(window.location.href, "tenantId");
+                  let consumerCodes = getQueryArg(window.location.href, "applicationNumber");
+                  const queryObject = [
+                    {
+                      key: "tenantId",
+                      value: tenantId
+                    },
+                    {
+                      key: "applicationNumber",
+                      value: consumerCodes
+                    }
+                  ];
+                  const response = await getSearchApplicationsResults(queryObject);
+                  const Applications = get(response, "Applications");
+                  
+                    const receiptQuery = [
+                      { key: "consumerCodes", value:consumerCodes},
+                      { key: "tenantId", value: tenantId }
+                  ]
+                  downloadPaymentReceipt(receiptQuery, Applications,[], userInfo.name,'application-payment');
+                }
                 
-                  const receiptQuery = [
-                    { key: "consumerCodes", value:consumerCodes},
-                    { key: "tenantId", value: tenantId }
-                ]
-                downloadPaymentReceipt(receiptQuery, Applications,[], userInfo.name,'rent-payment');
               break; 
             }   
           }
@@ -317,6 +346,31 @@ export const applicationSuccessFooter = (
                     downloadSummary(Properties, PropertiesTemp);
                   }
               case 'pay': 
+              if(type === 'ESTATE_SERVICE_ESTATE_BRANCH.PROPERTY_MASTER'){
+                let fileNumber = getQueryArg(window.location.href, "fileNumber");
+                const consumerCodes = getQueryArg(window.location.href, "applicationNumber");
+                if(consumerCodes.startsWith('SITE')){
+                  let queryObject = [
+                    { key: "fileNumber", value: fileNumber }
+                  ];
+                  let response =  await getSearchResults(queryObject);
+                   let properties = response.Properties.map(item => ({...item, estateRentSummary: {balanceRent: Number(item.estateRentSummary.balanceRent.toFixed(2)),
+                    balanceGST: Number(item.estateRentSummary.balanceGST.toFixed(2)),
+                    balanceGSTPenalty: Number(item.estateRentSummary.balanceGSTPenalty.toFixed(2)),
+                    balanceRentPenalty: Number(item.estateRentSummary.balanceRentPenalty.toFixed(2)),
+                    balanceAmount: Number(item.estateRentSummary.balanceAmount.toFixed(2))
+                    }}))
+                  dispatch(prepareFinalObject("Properties", properties))
+                  let { Properties} = state.screenConfiguration.preparedFinalObject;
+                  let id = getQueryArg(window.location.href, "tenantId");
+                    const receiptQuery = [
+                      { key: "consumerCodes", value:consumerCodes},
+                      { key: "tenantId", value: id }
+                  ]
+                  downloadPaymentReceipt(receiptQuery, Properties,[], userInfo.name,'rent-payment','print');
+                }
+              }
+              else{
                 let tenantId = getQueryArg(window.location.href, "tenantId");
                 let consumerCodes = getQueryArg(window.location.href, "applicationNumber");
                 const queryObject = [
@@ -336,7 +390,9 @@ export const applicationSuccessFooter = (
                     { key: "consumerCodes", value:consumerCodes},
                     { key: "tenantId", value: tenantId }
                 ]
-                downloadPaymentReceipt(receiptQuery, Applications,[], userInfo.name,'rent-payment','print');
+                downloadPaymentReceipt(receiptQuery, Applications,[], userInfo.name,'application-payment',print);
+              }
+              
               break; 
             }
            
