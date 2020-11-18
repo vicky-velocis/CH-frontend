@@ -209,8 +209,8 @@ class DialogComponent extends Component {
             if(responseStatus.status== '200'){
               this.props.toggleSnackbarAndSetText(
                 true,
-                {labelName: "Create Successfull",
-                labelKey: `Create Successfull`} ,
+                {labelName: "Created Successfully",
+                labelKey: `Created Successfully`} ,
                 "success"
               );
               }else{
@@ -254,8 +254,8 @@ class DialogComponent extends Component {
               if(responseStatus.status== '200'){
               this.props.toggleSnackbarAndSetText(
                 true,
-                {labelName: "Update Successfull",
-                labelKey: `Update Successfull`} ,
+                {labelName: "Updated Successfully",
+                labelKey: `Updated Successfully`} ,
                 "success"
               );
               }else{
