@@ -662,7 +662,7 @@ errors["bankname"]="";
                      {(moduleName==="MasterRP" && ((mastrerstate ==="PM_PENDINGJAVERIFICATION" && buttonLabel==="SENDBACK") || buttonLabel === "REJECT"))? <div style={{height: "10px"}}></div>: (showEmployeeList && !!dropDownData.length) ? <label className="commentsLabel">{fieldConfig.comments.label.labelName}</label> :<div style={{height: "10px"}}></div>
                     }
                     {/* <textarea className="form-control comments" rows="5" placeholder={fieldConfig.comments.placeholder.labelName} onChange={e => handleFieldChange(`${dataPath}.comment`, e.target.value)}/> */}
-                    <textarea refs="comments" className="form-control comments" rows="5" placeholder={fieldConfig.comments.placeholder.labelName} value={this.state.fields["comments"]} onChange={e => {
+                    <textarea refs="comments" className="form-control comments" rows="5" placeholder={fieldConfig.comments.placeholder.labelName}  onChange={e => {
                     this.handleChange("comments", e);handleFieldChange(`${dataPath}.comment`, e.target.value)}
                     }/>
                     <span style={{color: "red"}}>{this.state.errors["comments"]}</span>
