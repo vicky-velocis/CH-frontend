@@ -758,15 +758,15 @@ export const  downloadReceipt =async (
 
 
     tenantId = process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId();
-    let applicationData = get(
-        state.screenConfiguration.preparedFinalObject,
-        "Booking"
-    );
+    // let applicationData = get(
+    //     state.screenConfiguration.preparedFinalObject,
+    //     "Booking"
+    // );
 
     let applicationData={}
     let receiptUrl=""
     let receiptVal
-    if(flag==='flase')
+    if(flag==='false')
     {
        applicationData = get(
             state.screenConfiguration.preparedFinalObject,
@@ -808,12 +808,21 @@ export const  downloadReceipt =async (
             FETCHRECEIPT.GET.ACTION,
             receiptQueryString
         )
-
+console.log(applicationData, "Nero App Data")
 
             let queryStr = "";
             if (applicationData.businessService === "PACC") {
                 queryStr = [
                     { key: "key", value: "pacc-payment-receipt" },
+                    {
+                        key: "tenantId",
+                        value: tenantId,
+
+                    },
+                ];
+            }else if(applicationData.businessService === "BWT"){
+                queryStr = [
+                    { key: "key", value: "bk-wt-payment-receipt" },
                     {
                         key: "tenantId",
                         value: tenantId,
@@ -987,13 +996,13 @@ export const  downloadReceipt =async (
 
                         if(flag==='false')
                         {
-                            downloadReceiptFromFilestoreID(fileStoreId, mode, tenandId);
+                            downloadReceiptFromFilestoreID(fileStoreId, mode, tenantId);
                         }
                         else if(flag==='true')
                         {
 
 
-                           receiptUrl= await getReceiptUrlFromFilestoreID(fileStoreId, mode, tenandId)
+                           receiptUrl= await getReceiptUrlFromFilestoreID(fileStoreId, mode, tenantId)
                             return  receiptUrl
 
                         }
@@ -1047,7 +1056,7 @@ let applicationData={}
 
 let receiptUrl=""
 let receiptVal
-if(flag==='flase')
+if(flag==='false')
 {
    applicationData = get(
         state.screenConfiguration.preparedFinalObject,
