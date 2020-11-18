@@ -157,6 +157,8 @@ import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
         xs: 12,
         sm: 6
     },
+    minLength: 3,
+    maxLength: 7,
     errorMessage: "ES_ERR_AMOUNT_FIELD",
     placeholder: {
       labelName: "Enter amount",
@@ -270,8 +272,19 @@ import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 
   const goToPayment = async (state, dispatch, type) => {
     let isValid = true;
+    let amountValue = get(state.screenConfiguration.screenConfig["estate-payment"],"components.div.children.detailsContainer.children.offlinePaymentDetails.children.cardContent.children.detailsContainer.children.Amount.props.value")
     isValid = validateFields("components.div.children.detailsContainer.children.offlinePaymentDetails.children.cardContent.children.detailsContainer.children", state, dispatch, "estate-payment")
-    if(!!isValid) {
+    if (!(Number.isInteger(parseInt(amountValue)) && amountValue.length >= 3 && amountValue.length <= 7)) {
+  
+      let errorMessage = {
+        labelName:
+            "Please enter value between 3 and 7 digits",
+        labelKey: "ES_ERR_VALUE_BETWEEN_3_AND_7_DIGITS"
+    };
+    
+    dispatch(toggleSnackbar(true, errorMessage, "warning"));
+    }   
+    if(!!isValid && ((Number.isInteger(parseInt(amountValue)) && amountValue.length >= 3 && amountValue.length <= 7))) {
       const propertyId = getQueryArg(window.location.href, "propertyId")
       const offlinePaymentDetails = get(state.screenConfiguration.preparedFinalObject, "payment")
       const {paymentAmount, ...rest} = offlinePaymentDetails
