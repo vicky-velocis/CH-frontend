@@ -67,6 +67,7 @@ export const searchResults = async (action, state, dispatch, transitNumber) => {
   let queryObject = [
     { key: "transitNumber", value: transitNumber }
   ];
+  const tenantId = getQueryArg(window.location.href, "tenantId");
   let payload = await getSearchResults(queryObject);
   if(payload) {
     let properties = payload.Properties;
@@ -205,7 +206,7 @@ export const searchResults = async (action, state, dispatch, transitNumber) => {
       dispatch,
       status,
       "applicationNumber",
-      "tenantId",
+      tenantId,
       "OwnershipTransferRP",
       transitNumber
 
