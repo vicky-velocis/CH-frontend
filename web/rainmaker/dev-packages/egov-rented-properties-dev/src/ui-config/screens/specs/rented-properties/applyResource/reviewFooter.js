@@ -22,7 +22,8 @@ import {
     status,
     applicationNumber,
     tenantId,
-    businessService
+    businessService,
+    applicationType
   ) => {
     /** MenuButton data based on status */
 
@@ -71,6 +72,32 @@ import {
   
                 },
                 visible: process.env.REACT_APP_NAME === "Citizen"  && getButtonVisibility(status, "PENDINGPAYMENT") ? true : false
+              },
+              editButton: {
+                componentPath: "Button",
+                props: {
+                  variant: "contained",
+                  color: "primary",
+                  style: {
+                    minWidth: "180px",
+                    height: "48px",
+                    marginRight: "45px",
+                    borderRadius: "inherit"
+                  }
+                },
+                children: {
+                  editButtonLabel: getLabel({
+                    labelName: "Edit",
+                    labelKey: "RP_EDIT_PROPERTY_DETAILS"
+                  })
+                },
+                onClickDefination: {
+                  action: "condition",
+                  callBack: (state, dispatch) => {
+                    window.location.href = `/rented-properties-citizen/${applicationType}?applicationNumber=${applicationNumber}&tenantId=${tenantId}`;
+                  }  
+                },
+                visible: process.env.REACT_APP_NAME == "Citizen" &&  getButtonVisibility(status, "EDIT") ? true : false
               }
             },
             gridDefination: {
