@@ -336,12 +336,13 @@ export const applicationSuccessFooter = (
                   ];
                   const response = await getSearchApplicationsResults(queryObject);
                   const Applications = get(response, "Applications");
-                  
+                  const { temp } = state.screenConfiguration.preparedFinalObject;
+                  const feeEstimate = temp[0].estimateCardData;
                     const receiptQuery = [
                       { key: "consumerCodes", value:consumerCodes},
                       { key: "tenantId", value: tenantId }
                   ]
-                  downloadPaymentReceipt(receiptQuery, Applications,[], userInfo.name,'application-payment');
+                  downloadPaymentReceipt(receiptQuery, Applications,feeEstimate, userInfo.name,'application-payment');
                 }
                 
               break; 
@@ -429,12 +430,13 @@ export const applicationSuccessFooter = (
                 ];
                 const response = await getSearchApplicationsResults(queryObject);
                 const Applications = get(response, "Applications");
-                
-                  const receiptQuery = [
+                const { temp } = state.screenConfiguration.preparedFinalObject;
+                const feeEstimate = temp[0].estimateCardData;
+                const receiptQuery = [
                     { key: "consumerCodes", value:consumerCodes},
                     { key: "tenantId", value: tenantId }
                 ]
-                downloadPaymentReceipt(receiptQuery, Applications,[], userInfo.name,'application-payment',print);
+                downloadPaymentReceipt(receiptQuery, Applications,feeEstimate, userInfo.name,'application-payment',print);
               }
               
               break; 
