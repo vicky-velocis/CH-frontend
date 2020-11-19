@@ -122,7 +122,6 @@ const onApplicationRowClick = rowData => {
 }
 
 const onRowClick = rowData => {
-  console.log(rowData);
   let type = getQueryArg(window.location.href, "type");
   let branchType = getQueryArg(window.location.href, "branchType");
 

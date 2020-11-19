@@ -166,4 +166,4 @@ const propertyMasterPreview = {
   }
 };
 
-export default estateDetailPreview;
+export default propertyMasterPreview;
