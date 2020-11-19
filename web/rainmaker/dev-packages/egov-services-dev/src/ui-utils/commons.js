@@ -373,8 +373,9 @@ export const createUpdatePCCApplication = async (state, dispatch, action) => {
         set(payload, "financialYear", `${getCurrentFinancialYear()}`);
 
         if(action == "CANCEL"){
-            payload.bkFromDate = null;
-            payload.bkToDate = null;
+            // payload.bkFromDate = null;
+            // payload.bkToDate = null;
+            payload.bkStatus = action;
         }
 
         if (method === "CREATE") {

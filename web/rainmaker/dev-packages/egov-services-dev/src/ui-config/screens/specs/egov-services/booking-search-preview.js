@@ -30,7 +30,7 @@ import {
 import { applicantSummary } from "./searchResource/applicantSummary";
 import { openSpaceSummary } from "./searchResource/openSpaceSummary";
 import { estimateSummary } from "./searchResource/estimateSummary";
-import { documentsSummary } from "./searchResource/documentsSummary";
+import { documentsSummary, documentsSummary1 } from "./searchResource/documentsSummary";
 import { remarksSummary } from "./searchResource/remarksSummary";
 import { footer } from "./searchResource/citizenFooter";
 import {
@@ -64,6 +64,7 @@ const titlebar = getCommonContainer({
 
 const prepareDocumentsView = async (state, dispatch) => {
     let documentsPreview = [];
+    let documentsPreview1 = [];
 
     // Get all documents from response
     let bookingDocs = get(
@@ -108,6 +109,41 @@ const prepareDocumentsView = async (state, dispatch) => {
             return doc;
         });
         dispatch(prepareFinalObject("documentsPreview", documentsPreview));
+        
+        let id1 = keys[1],
+            fileName1 = values[1];
+
+        documentsPreview1.push({
+            title: "BK_BUILDING_PLAN_APPROVAL",
+            fileStoreId: id1,
+            linkText: "View",
+        });
+        let fileStoreIds1 = jp.query(documentsPreview1, "$.*.fileStoreId");
+        let fileUrls1 =
+            fileStoreIds1.length > 0
+                ? await getFileUrlFromAPI(fileStoreIds1)
+                : {};
+        documentsPreview1 = documentsPreview1.map(function (doc, index) {
+            doc["link"] =
+                (fileUrls1 &&
+                    fileUrls1[doc.fileStoreId1] &&
+                    fileUrls1[doc.fileStoreId1].split(",")[0]) ||
+                "";
+            doc["name"] =
+                (fileUrls1[doc.fileStoreId] &&
+                    decodeURIComponent(
+                        fileUrls1[doc.fileStoreId]
+                            .split(",")[0]
+                            .split("?")[0]
+                            .split("/")
+                            .pop()
+                            .slice(13)
+                    )) ||
+                `Document - ${index + 1}`;
+            return doc;
+        });
+        dispatch(prepareFinalObject("approvalDocument", documentsPreview1));
+        
     }
 };
 
@@ -274,6 +310,7 @@ const screenConfig = {
                     applicantSummary : applicantSummary,
                     openSpaceSummary: openSpaceSummary,
                     documentsSummary: documentsSummary,
+                    documentsSummary1: documentsSummary1,
                     remarksSummary: remarksSummary,
                 }),
                 break: getBreak(),
