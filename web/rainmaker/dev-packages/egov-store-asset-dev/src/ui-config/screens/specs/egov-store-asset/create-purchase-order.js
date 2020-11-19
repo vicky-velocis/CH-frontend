@@ -214,10 +214,17 @@ import {
       );
       if(purchaseOrders && purchaseOrders[0])
       {
-        if(purchaseOrders[0].purchaseOrderDetails[0].indentNumber)
+        if(purchaseOrders[0].purchaseOrderDetails)
         {
-          indentNumber = purchaseOrders[0].purchaseOrderDetails[0].indentNumber
-        }
+          if(purchaseOrders[0].purchaseOrderDetails && purchaseOrders[0].purchaseOrderDetails[0])
+          {
+            if(purchaseOrders[0].purchaseOrderDetails[0].indentNumber)
+            {
+              indentNumber = purchaseOrders[0].purchaseOrderDetails[0].indentNumber
+            }
+          }
+        
+      }
       }
       if(indentNumber){     
           dispatch(prepareFinalObject("purchaseOrders[0].purchaseType", "Indent"));   
