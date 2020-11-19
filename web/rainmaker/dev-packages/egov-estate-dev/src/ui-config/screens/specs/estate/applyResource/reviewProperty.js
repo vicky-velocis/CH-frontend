@@ -900,7 +900,7 @@ export const getReviewPremiumAmount = (isEditable = true) => {
           labelKey: "ES_PREMIUM_AMOUNT_LABEL"
         }, 
         {
-          jsonPath: ``
+          jsonPath: `Properties[0].propertyDetails.paymentConfig.totalAmount`
         }
       )
     }),
@@ -933,7 +933,7 @@ export const getReviewGroundRent = (isEditable = true) => {
           labelKey: "ES_GROUND_RENT_GENERATION_TYPE_LABEL"
         }, 
         {
-          jsonPath: ``
+          jsonPath: `Properties[0].propertyDetails.paymentConfig.groundRentGenerationType`
         }
       ),
       billingStartDate: getLabelWithValue(
@@ -942,7 +942,8 @@ export const getReviewGroundRent = (isEditable = true) => {
           labelKey: "ES_BILLING_START_DATE_LABEL"
         }, 
         {
-          jsonPath: ``
+          jsonPath: `Properties[0].propertyDetails.paymentConfig.groundRentBillStartDate`,
+          callBack: convertEpochToDate
         }
       ),
       dateToGenerateDemandRent: getLabelWithValue(
@@ -951,7 +952,8 @@ export const getReviewGroundRent = (isEditable = true) => {
           labelKey: "ES_DATE_TO_GENERATE_DEMAND_RENT_LABEL"
         }, 
         {
-          jsonPath: ``
+          jsonPath: `Properties[0].propertyDetails.paymentConfig.groundRentGenerateDemand`,
+          callBack: convertEpochToDate
         }
       )
     }),
@@ -984,7 +986,7 @@ export const getReviewAdvanceRent = (isEditable = true) => {
           labelKey: "ES_ADVANCED_RENT_LABEL"
         }, 
         {
-          jsonPath: ``
+          jsonPath: `Properties[0].propertyDetails.paymentConfig.groundRentAdvanceRent`
         }
       ),
       dateOfPaymentOfAdvanceRent: getLabelWithValue(
@@ -993,7 +995,8 @@ export const getReviewAdvanceRent = (isEditable = true) => {
           labelKey: "ES_DATE_OF_PAYMENT_OF_ADVANCE_RENT_LABEL"
         }, 
         {
-          jsonPath: ``
+          jsonPath: `Properties[0].propertyDetails.paymentConfig.groundRentAdvanceRentDate`,
+          callBack: convertEpochToDate
         }
       )
     })
@@ -1025,7 +1028,7 @@ export const getReviewLicenseFee = (isEditable = true) => {
           labelKey: "ES_LICENSE_FEE_GENERATION_TYPE_LABEL"
         }, 
         {
-          jsonPath: ``
+          jsonPath: `Properties[0].propertyDetails.paymentConfig.groundRentGenerationType`
         }
       ),
       dateToGenerateDemand: getLabelWithValue(
@@ -1034,7 +1037,8 @@ export const getReviewLicenseFee = (isEditable = true) => {
           labelKey: "ES_DATE_TO_GENERATE_DEMAND_LICENSE_FEE_LABEL"
         }, 
         {
-          jsonPath: ``
+          jsonPath: `Properties[0].propertyDetails.paymentConfig.groundRentGenerateDemand`,
+          callBack: convertEpochToDate
         }
       ),
       billingStartDate: getLabelWithValue(
@@ -1043,7 +1047,8 @@ export const getReviewLicenseFee = (isEditable = true) => {
           labelKey: "ES_BILLING_START_DATE_LABEL"
         }, 
         {
-          jsonPath: ``
+          jsonPath: `Properties[0].propertyDetails.paymentConfig.groundRentBillStartDate`,
+          callBack: convertEpochToDate
         }
       )
     }),
@@ -1076,7 +1081,7 @@ export const getReviewSecurity = (isEditable = true) => {
           labelKey: "ES_SECURITY_FEE_AMOUNT_LABEL"
         }, 
         {
-          jsonPath: ``
+          jsonPath: `Properties[0].propertyDetails.paymentConfig.securityAmount`
         }
       ),
       securityFeeDateOfPayment: getLabelWithValue(
@@ -1085,7 +1090,8 @@ export const getReviewSecurity = (isEditable = true) => {
           labelKey: "ES_DATE_OF_PAYMENT_LABEL"
         }, 
         {
-          jsonPath: ``
+          jsonPath: `Properties[0].propertyDetails.paymentConfig.dueDateOfPayment`,
+          callBack: convertEpochToDate
         }
       )
     })
@@ -1183,7 +1189,7 @@ export const getReviewAllotmentMultipleSectionDetails = (state, dispatch, screen
             labelKey: "ES_INSTALLMENT_LABEL"
           }, 
           {
-            jsonPath: `Properties[0].propertyDetails.paymentDetails[0].installments[${i}].installmentAmount`
+            jsonPath: `Properties[0].propertyDetails.paymentConfig.premiumAmountConfigItems[${i}].premiumAmount`
           }
         );
       
@@ -1193,7 +1199,8 @@ export const getReviewAllotmentMultipleSectionDetails = (state, dispatch, screen
             labelKey: "ES_DUE_DATE_INSTALLMENT_LABEL"
           }, 
           {
-            jsonPath: `Properties[0].propertyDetails.paymentDetails[0].installments[${i}].dueDate`
+            jsonPath: `Properties[0].propertyDetails.paymentConfig.premiumAmountConfigItems[${i}].premiumAmountDate`,
+            callBack: convertEpochToDate
           }
         )
       }
@@ -1206,7 +1213,7 @@ export const getReviewAllotmentMultipleSectionDetails = (state, dispatch, screen
             labelKey: "ES_RENT_AMOUNT_LABEL"
           }, 
           {
-            jsonPath: `Properties[0].propertyDetails.paymentDetails[0].rent[${i}].rentAmount`
+            jsonPath: `Properties[0].propertyDetails.paymentConfig.paymentConfigItems[${i}].groundRentAmount`
           }
         );
       
@@ -1216,7 +1223,7 @@ export const getReviewAllotmentMultipleSectionDetails = (state, dispatch, screen
             labelKey: "ES_START_YEAR_LABEL"
           }, 
           {
-            jsonPath: `Properties[0].propertyDetails.paymentDetails[0].rent[${i}].startYear`
+            jsonPath: `Properties[0].propertyDetails.paymentConfig.paymentConfigItems[${i}].groundRentStartMonth`
           }
         )
 
@@ -1226,7 +1233,7 @@ export const getReviewAllotmentMultipleSectionDetails = (state, dispatch, screen
             labelKey: "ES_END_YEAR_LABEL"
           }, 
           {
-            jsonPath: `Properties[0].propertyDetails.paymentDetails[0].rent[${i}].endYear`
+            jsonPath: `Properties[0].propertyDetails.paymentConfig.paymentConfigItems[${i}].groundRentEndMonth`
           }
         )
       }
@@ -1240,7 +1247,7 @@ export const getReviewAllotmentMultipleSectionDetails = (state, dispatch, screen
             labelKey: "ES_LICENSE_FEE_LABEL"
           }, 
           {
-            jsonPath: `Properties[0].propertyDetails.paymentDetails[0].licenseFee[${i}].licenseFee`
+            jsonPath: `Properties[0].propertyDetails.paymentConfig.paymentConfigItems[${i}].groundRentAmount`
           }
         );
       
@@ -1250,7 +1257,7 @@ export const getReviewAllotmentMultipleSectionDetails = (state, dispatch, screen
             labelKey: "ES_START_YEAR_LABEL"
           }, 
           {
-            jsonPath: `Properties[0].propertyDetails.paymentDetails[0].licenseFee[${i}].startYear`
+            jsonPath: `Properties[0].propertyDetails.paymentConfig.paymentConfigItems[${i}].groundRentStartMonth`
           }
         )
 
@@ -1260,96 +1267,11 @@ export const getReviewAllotmentMultipleSectionDetails = (state, dispatch, screen
             labelKey: "ES_END_YEAR_LABEL"
           }, 
           {
-            jsonPath: `Properties[0].propertyDetails.paymentDetails[0].licenseFee[${i}].endYear`
+            jsonPath: `Properties[0].propertyDetails.paymentConfig.paymentConfigItems[${i}].groundRentEndMonth`
           }
         )
       }
       break;
-
-    case "partners":
-      for (var i=0; i<count; i++) {
-        detailsObj[`partnerName_${i}`] = getLabelWithValue(
-          {
-            labelName: "Partner Name",
-            labelKey: "ES_PARTNER_NAME_LABEL"
-          }, 
-          {
-            jsonPath: `Properties[0].propertyDetails.partners[${i}].partnerDetails.partnerName`
-          }
-        );
-      
-        detailsObj[`guardianName_${i}`] = getLabelWithValue(
-          {
-            labelName: "Father/Husband Name",
-            labelKey: "ES_FATHER_HUSBAND_NAME_LABEL"
-          }, 
-          {
-            jsonPath: `Properties[0].propertyDetails.partners[${i}].partnerDetails.guardianName`
-          }
-        )
-
-        detailsObj[`guardianRelation_${i}`] = getLabelWithValue(
-          {
-            labelName: "Relationship",
-            labelKey: "ES_RELATIONSHIP_LABEL"
-          }, 
-          {
-            jsonPath: `Properties[0].propertyDetails.partners[${i}].partnerDetails.guardianRelation`
-          }
-        )
-
-        detailsObj[`partnerAddress_${i}`] = getLabelWithValue(
-          {
-            labelName: "Partner Address",
-            labelKey: "ES_PARTNER_ADDRESS_LABEL"
-          }, 
-          {
-            jsonPath: `Properties[0].propertyDetails.partners[${i}].partnerDetails.address`
-          }
-        )
-
-        detailsObj[`partnerMobileNumber_${i}`] = getLabelWithValue(
-          {
-            labelName: "Partner Mobile Number",
-            labelKey: "ES_PARTNER_MOBILE_LABEL"
-          }, 
-          {
-            jsonPath: `Properties[0].propertyDetails.partners[${i}].partnerDetails.mobileNumber`
-          }
-        )
-
-        detailsObj[`partnerShare_${i}`] = getLabelWithValue(
-          {
-            labelName: "Partner Share",
-            labelKey: "ES_PARTNER_SHARE_LABEL"
-          }, 
-          {
-            jsonPath: `Properties[0].propertyDetails.partners[0].partnerDetails.share`
-          }
-        )
-        
-        detailsObj[`partnerShare_${i}`] = getLabelWithValue(
-          {
-            labelName: "Partner Share",
-            labelKey: "ES_PARTNER_SHARE_LABEL"
-          }, 
-          {
-            jsonPath: `Properties[0].propertyDetails.partners[0].partnerDetails.share`
-          }
-        )
-
-        detailsObj[`partnerCPNumber_${i}`] = getLabelWithValue(
-          {
-            labelName: "Partner CP Number",
-            labelKey: "ES_PARTNER_CP_NUMBER_LABEL"
-          }, 
-          {
-            jsonPath: `Properties[0].propertyDetails.partners[0].partnerDetails.cpNumber`
-          }
-        )
-      }
-      break;
-
   }
   dispatch(
     handleField(
