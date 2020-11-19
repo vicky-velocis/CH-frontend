@@ -306,22 +306,22 @@ export const purchaseOrderHeader = getCommonCard({
           const poNumber = getQueryArg(window.location.href, "poNumber");        
           if(!step &&!poNumber)
           {
-          dispatch(
-            handleField(
-              `create-purchase-order`,
-              "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.supplierGem",
-              "props.value",
-              ''
-            )
-          );
-          dispatch(
-            handleField(
-              `create-purchase-order`,
-              "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.externalPoNumber",
-              "props.value",
-              ''
-            )
-          );
+          // dispatch(
+          //   handleField(
+          //     `create-purchase-order`,
+          //     "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.supplierGem",
+          //     "props.value",
+          //     ''
+          //   )
+          // );
+          // dispatch(
+          //   handleField(
+          //     `create-purchase-order`,
+          //     "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.externalPoNumber",
+          //     "props.value",
+          //     ''
+          //   )
+          // );
             }
         }
         else{
@@ -365,6 +365,22 @@ export const purchaseOrderHeader = getCommonCard({
               false
             )
           ); 
+          dispatch(
+            handleField(
+              `create-purchase-order`,
+              "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.supplierGem",
+              "props.value",
+              ''
+            )
+          );
+          dispatch(
+            handleField(
+              `create-purchase-order`,
+              "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.externalPoNumber",
+              "props.value",
+              ''
+            )
+          );
         }
         
       }

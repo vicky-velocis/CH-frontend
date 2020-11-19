@@ -55,6 +55,11 @@ export const callBackForNext = async (state, dispatch) => {
     const {purchaseOrders}  = state.screenConfiguration.preparedFinalObject;
     const {rateType} = purchaseOrders[0];
     const {supplier} = purchaseOrders[0];
+    const fields = get(
+      state.screenConfiguration.screenConfig[`create-purchase-order`],
+      "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children",
+      {}
+    );
     let priceList = [{rateContractNumber:"",rateContractDate:"",agreementNumber:"",agreementDate:"",agreementStartDate:"",agreementEndDate:""}];
     if(rateType)
     {
@@ -117,41 +122,43 @@ export const callBackForNext = async (state, dispatch) => {
         dispatch(prepareFinalObject("purchaseOrders[0].priceList", priceList)); 
         const {externalPoNumber} = purchaseOrders[0];
 
-        
-          if(!externalPoNumber){
-          const errorMessage = {
-          labelName: "Enter valid external PO number",
-          labelKey: "STORE_VALIDATION_EXTERNAL_PO_NUMBER"
-        };
-        dispatch(toggleSnackbar(true, errorMessage, "warning"));
-        return;
+        if(fields.supplierGem!==undefined )
+        {
+          if(fields.supplierGem.isFieldValid ===true)
+          {          
+            if(!externalPoNumber){
+            const errorMessage = {
+            labelName: "Enter valid external PO number",
+            labelKey: "STORE_VALIDATION_EXTERNAL_PO_NUMBER"
+          };
+          dispatch(toggleSnackbar(true, errorMessage, "warning"));
+          return;
+        }
+    }
       }
 
     }
   }
     //
-
+    
     if (!ispurchaseOrderHeaderValid) {
-if(rateType !== undefined)
-{
+        if(rateType !== undefined)
+        {
       if(rateType.toLocaleUpperCase() !== 'GEM')
       {
       const tenantId = getQueryArg(window.location.href, "tenantId");
       const poNumber = getQueryArg(window.location.href, "poNumber");
       const step = getQueryArg(window.location.href, "step");
+      
       if(tenantId && poNumber)
       {
         isFormValid = true;
       }
       else if(step)
       isFormValid = true;
-      else
+      else 
       {
-        const fields = get(
-          state.screenConfiguration.screenConfig[`create-purchase-order`],
-          "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children",
-          {}
-        );
+        
         if(fields.purchaseType!==undefined 
           &&fields.storeName!==undefined 
           &&fields.purchaseOrderDate!==undefined 
@@ -185,23 +192,50 @@ if(rateType !== undefined)
       }
       else
       {
-         dispatch(
-          handleField(
-            `create-purchase-order`,
-            "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.supplierGem",
-            "props.value",
-            ''
-          )
-        );
-        dispatch(
-          handleField(
-            `create-purchase-order`,
-            "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.externalPoNumber",
-            "props.value",
-            ''
-          )
-        );
-        isFormValid = false;
+        //  dispatch(
+        //   handleField(
+        //     `create-purchase-order`,
+        //     "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.supplierGem",
+        //     "props.value",
+        //     ''
+        //   )
+        // );
+        // dispatch(
+        //   handleField(
+        //     `create-purchase-order`,
+        //     "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.externalPoNumber",
+        //     "props.value",
+        //     ''
+        //   )
+        // );
+        // isFormValid = false;
+        if(fields.purchaseType!==undefined 
+          &&fields.storeName!==undefined 
+          &&fields.purchaseOrderDate!==undefined 
+          &&fields.rateType!==undefined       
+          &&fields.deliveryTerms!==undefined       
+          &&fields.supplierGem!==undefined 
+          &&fields.expectedDeliveryDate!==undefined 
+          
+         ) 
+          {
+            if(fields.purchaseType.isFieldValid ===false 
+              ||fields.storeName.isFieldValid ===false 
+              ||fields.purchaseOrderDate.isFieldValid ===false 
+              ||fields.rateType.isFieldValid ===false           
+              ||fields.deliveryTerms.isFieldValid ===false           
+              ||fields.supplierGem.isFieldValid ===false 
+              ||fields.expectedDeliveryDate.isFieldValid ===false                
+              )
+              {
+                isFormValid = false;
+              }
+              else
+              {
+               
+                isFormValid = true;
+              }
+          }
       }
       
     }
