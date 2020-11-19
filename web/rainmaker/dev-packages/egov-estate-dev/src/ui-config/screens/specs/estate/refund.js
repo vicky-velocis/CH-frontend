@@ -187,7 +187,7 @@ const saveButton = {
 
 const callBackForSaveOrSubmit = async (state, dispatch) => {
   try {
-    let reqBody = get(
+    let properties = get(
       state.screenConfiguration.preparedFinalObject,
       "Properties"
     )
@@ -198,7 +198,8 @@ const callBackForSaveOrSubmit = async (state, dispatch) => {
       "",
       [], 
       {
-        Properties: reqBody
+        Properties: properties
+
       }
     );
     if (!!response) {

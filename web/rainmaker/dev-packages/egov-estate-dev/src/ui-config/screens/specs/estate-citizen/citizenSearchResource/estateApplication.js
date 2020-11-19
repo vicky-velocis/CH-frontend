@@ -18,7 +18,8 @@ import {
 } from "./searchFunctions";
 import get from "lodash/get";
 import {
-  ESTATE_APPROVED_STATE
+  ESTATE_APPROVED_STATE,
+  BB_PM_APPROVED_STATE
 } from "../../../../../ui-constants";
 import {
   displayCustomErr,
@@ -308,7 +309,7 @@ export const estateApplication = getCommonCard({
         // required: true,
         visible: false,
         jsonPath: "searchScreenSiteNo.sectorNumber",
-        sourceJsonPath: "searchScreenMdmsData.EstateServices.SectorNumber",
+        sourceJsonPath: "searchScreenMdmsData.EstateServices.sector",
         gridDefination: {
             xs: 12,
             sm: 6
@@ -373,8 +374,9 @@ export const estateApplication = getCommonCard({
           action: "condition",
           callBack: (state, dispatch) => {
             const branchType = getQueryArg(window.location.href, "branchType") || "ESTATE_BRANCH";
+            const approvedState = branchType == "BUILDING_BRANCH" ? BB_PM_APPROVED_STATE : ESTATE_APPROVED_STATE;
             searchApiCall(state, dispatch, [
-              { key: "state", value: ESTATE_APPROVED_STATE },
+              { key: "state", value: approvedState },
               { key: "branchType", value: branchType }
             ])
           }

@@ -271,6 +271,12 @@ export const getExcelData = async (excelUrl, fileStoreId, screenKey, componentJs
 
       let { Bidders } = response;
 
+      Bidders = Bidders.map(item => {
+        item.state = "";
+        item.action = "";
+        return item;
+      })
+
       store.dispatch(
         prepareFinalObject(
           "Properties[0].propertyDetails.bidders",
@@ -318,20 +324,15 @@ export const populateBiddersTable = (biddersList, screenKey, componentJsonPath) 
                 let { Properties } = store.getState().screenConfiguration.preparedFinalObject;
                 let bidderData = store.getState().screenConfiguration.preparedFinalObject.BidderData;
 
-                biddersList.map((item, index) => {
+                biddersList = biddersList.map((item, index) => {
                   if (bidderData[1] == item.bidderName) {
-                    item.refundStatus = isMarked ? "Initiated" : "";
-                    store.dispatch(
-                      handleField(
-                        `refund`,
-                        `components.div.children.auctionTableContainer.props.data[${index}]`,
-                        `ES_REFUND_STATUS`,
-                        item.refundStatus
-                      )
-                    )
+                    item.refundStatus = isMarked ? "Initiated" : "-";
                   }
                   return item;
-                })
+                });
+
+                populateBiddersTable(biddersList, screenKey, componentJsonPath)
+
                 let refundedBidders = biddersList.filter(item => item.refundStatus == "Initiated");
                 store.dispatch(
                   handleField(
@@ -349,10 +350,12 @@ export const populateBiddersTable = (biddersList, screenKey, componentJsonPath) 
                     (biddersList.length !== refundedBidders.length)
                   )
                 )
-                let action = (biddersList.length == refundedBidders.length) ? "SUBMIT" : "";
-                let state = (biddersList.length == refundedBidders.length) ? "" : Properties[0].state;
 
-                let properties = [{...Properties[0], action: action, state: state, propertyDetails: {...Properties[0].propertyDetails, bidders: biddersList}}]
+                if (biddersList.length == refundedBidders.length) {
+                  biddersList = biddersList.map(item => ({...item, action: "SUBMIT"}));
+                }
+
+                let properties = [{...Properties[0], propertyDetails: {...Properties[0].propertyDetails, bidders: biddersList}}]
                 store.dispatch(
                   prepareFinalObject(
                     "Properties",
@@ -428,24 +431,27 @@ export const setDocuments = async (
 
 export const setXLSTableData = async({demands, payments ,componentJsonPath, screenKey}) => {
   let data = demands.map(item => {
-    const findItem = payments.find(payData => moment(new Date(payData.receiptDate)).format("MMM YYYY") === moment(new Date(item.demandDate)).format("MMM YYYY"));
+    const findItem = payments.find(payData => moment(new Date(payData.paymentDate)).format("MMM YYYY") === moment(new Date(item.generationDate)).format("MMM YYYY"));
     return !!findItem ? {...item, ...findItem} : {...item}
   })
+  if(demands[0].generationDate === 0){
+    data.shift();
+  }
   
   data  = data.map(item => ({
-    [ES_MONTH]:  !!item.demandDate && moment(new Date(item.demandDate)).format("MMM YYYY") || '',
-    [ES_RENT_DUE]: !!item.rent && item.rent.toFixed(2) || ' ',
-    [ES_RENT_RECEIVED]:!!item.collectedRent && item.collectedRent.toFixed(2) || ' ',
+    [ES_MONTH]:  !!item.generationDate && moment(new Date(item.generationDate)).format("MMM YYYY") || '',
+    [ES_RENT_DUE]: !!item.rent && item.rent || ' ',
+    [ES_RENT_RECEIVED]: !!item.rentReceived && item.rentReceived || '0',
     [ES_RECEIPT_NO]: !!item.receiptNo && item.receiptNo || ' ',
-    [ES_DATE] : ' ',
-    [ES_RENT_DUE_DATE]: !!item.demandDate && moment(new Date(item.demandDate)).format("DD MMM YYYY") || '',
-    [ES_PENALTY_INTEREST]: !!item.penaltyInterest && item.penaltyInterest.toFixed(2) || '',
-    [ES_ST_GST_RATE]:!!item.gst && item.gst || '',
-    [ES_ST_GST_DUE]: !!item.collectedGST && item.collectedGST.toFixed(2) || '',
-    [ES_PAID]: !!item.paid && item.paid.toFixed(2) || '',
+    [ES_DATE] :  !!item.paymentDate && moment(new Date(item.paymentDate)).format("DD MMM YYYY") || '',
+    [ES_RENT_DUE_DATE]: !!item.generationDate && moment(new Date(item.generationDate)).format("DD MMM YYYY") || '',
+    // [ES_PENALTY_INTEREST]: !!item.penaltyInterest && item.penaltyInterest|| '',
+    [ES_ST_GST_RATE]:'18%',
+    [ES_ST_GST_DUE]: !!item.gst && item.gst || '',
+    // [ES_PAID]: !!item.paid && item.paid || '',
     [ES_DATE_OF_RECEIPT]: !!item.receiptDate && moment(new Date(item.receiptDate)).format("DD MMM YYYY") || '',
-    [ES_NO_OF_DAYS]: !!item.noOfDays && item.noOfDays || '',
-    [ES_INTEREST_ON_DELAYED_PAYMENT]: !!item.gstInterest && item.gstInterest.toFixed(2) || ''
+    // [ES_NO_OF_DAYS]: !!item.noOfDays && item.noOfDays || '',
+    // [ES_INTEREST_ON_DELAYED_PAYMENT]: !!item.gstInterest && item.gstInterest || ''
   }))
   if(data.length > 1) {
     store.dispatch(
