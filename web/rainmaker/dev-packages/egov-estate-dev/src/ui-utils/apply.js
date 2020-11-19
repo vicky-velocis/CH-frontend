@@ -152,6 +152,9 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
     );
     const tenantId = getQueryArg(window.location.href, "tenantId");
     const id = get(queryObject[0], "id");
+    var currOwners = [];
+    var prevOwners = [];
+    var owners = [];
 
     let response;
     set(queryObject[0], "tenantId", tenantId);
@@ -160,7 +163,7 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
     set(queryObject[0], "propertyDetails.companyRegistrationDate", convertDateToEpoch(queryObject[0].propertyDetails.companyRegistrationDate))
     set(queryObject[0], "propertyDetails.emdDate", convertDateToEpoch(queryObject[0].propertyDetails.emdDate))
 
-    var prevOwners = get(
+    prevOwners = get(
       queryObject[0],
       "propertyDetails.purchaser",
       []
@@ -175,7 +178,7 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
       })
     }
 
-    var owners = get(
+    owners = get(
       queryObject[0],
       "propertyDetails.owners",
       []
@@ -351,8 +354,8 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
       })
       
       if (screenName != "apply-building-branch") {
-        var currOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == true);
-        var prevOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == false);
+        currOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == true);
+        prevOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == false);
 
         Properties = [{...Properties[0], propertyDetails: {...Properties[0].propertyDetails, owners: currOwners, purchaser: prevOwners, ratePerSqft: ratePerSqft, areaSqft: areaSqft}}]
       }
