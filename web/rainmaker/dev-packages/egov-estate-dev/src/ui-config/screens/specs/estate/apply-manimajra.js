@@ -1,6 +1,5 @@
 import {
   getCommonHeader,
-  dispatchMultipleFieldChangeAction,
   getCommonContainer
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import {
@@ -23,28 +22,17 @@ import {
 import commonConfig from "config/common.js";
 import {
   footer,
-  changeStep
 } from './applyResourceManimajra/footer';
 import {
   getQueryArg
 } from "egov-ui-framework/ui-utils/commons";
 import {
-  prepareDocumentTypeObjMaster,
-  preparePrevOwnerDocumentTypeObjMaster
-} from "../utils";
-import {
   handleScreenConfigurationFieldChange as handleField
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import {
-  get
-} from "lodash";
-import {
   getSearchResults,
-  populateBiddersTable
 } from "../../../../ui-utils/commons";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
-import * as previousDocsData from './applyResource/previousOwnerDocs.json';
-// import { toggleEntityOwnersDivsBasedOnEntityType, toggleEntityOwnersDivsBasedOnPropertyRegisteredTo, getActionDefinationForAuctionDetailsFields } from './applyResource/propertyDetails'
 import { ESTATE_SERVICES_MDMS_MODULE } from "../../../../ui-constants";
 import { setDocumentData, setPrevOwnerDocs } from "./apply"
 
