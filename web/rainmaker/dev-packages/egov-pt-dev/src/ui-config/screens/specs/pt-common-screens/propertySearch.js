@@ -83,9 +83,9 @@ const screenConfig = {
     dispatch(fetchLocalizationLabel(getLocale(), tenantId, tenantId));
     if(process.env.REACT_APP_NAME == "Citizen"){
       let userName = JSON.parse(getUserInfo()).userName;
-      let tenant =  JSON.parse(getUserInfo()).permanentCity;
+     // let tenant =  JSON.parse(getUserInfo()).permanentCity;
       dispatch( prepareFinalObject( "searchScreen.mobileNumber",  userName ));
-      dispatch( prepareFinalObject( "searchScreen.tenantId", tenant ));
+      dispatch( prepareFinalObject( "searchScreen.tenantId", tenantId ));
       getPropertyResults(state, dispatch);
       // setModule("rainmaker-pt");
       // dispatch(fetchLocalizationLabel(getLocale(), tenantId, tenantId));

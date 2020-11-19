@@ -207,6 +207,18 @@ import {
         // );
         dispatch(prepareFinalObject("purchaseOrders[0].purchaseOrderDate",new Date().toISOString().substr(0,10))); 
       }
+      let purchaseOrders = get(
+        state.screenConfiguration.preparedFinalObject,
+        "purchaseOrders",
+        []
+      );
+      if(purchaseOrders && purchaseOrders[0])
+      {
+        if(purchaseOrders[0].purchaseOrderDetails[0].indentNumber)
+        {
+          indentNumber = purchaseOrders[0].purchaseOrderDetails[0].indentNumber
+        }
+      }
       if(indentNumber){     
           dispatch(prepareFinalObject("purchaseOrders[0].purchaseType", "Indent"));   
           dispatch(prepareFinalObject("purchaseOrders[0].indentNumbers", [indentNumber]));

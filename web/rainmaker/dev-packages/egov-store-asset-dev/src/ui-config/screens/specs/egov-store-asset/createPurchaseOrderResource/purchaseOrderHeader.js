@@ -492,7 +492,7 @@ export const purchaseOrderHeader = getCommonCard({
       }),
       beforeFieldChange: async (action, state, dispatch) => {
         if(action.value){
-          dispatch(prepareFinalObject("purchaseOrders[0].supplier.code", action.value));  
+         // dispatch(prepareFinalObject("purchaseOrders[0].supplier.code", action.value));  
        
       }
      }
