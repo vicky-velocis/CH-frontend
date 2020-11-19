@@ -315,12 +315,14 @@ const modifiedOwner = PropertiesTempOwners.map((owner) => {
 })
 
   let Property = Properties[0];
-  if(Property.propertyDetails.purchaser.length > 0){
+  if(Property.propertyDetails.owners.length > 0){
     let propertyOwners = Property.propertyDetails.owners;
     const owners = propertyOwners.map((owner , index) => {
        owner.ownerDetails.ownerDocuments = modifiedOwner[index].ownerDetails.ownerDocuments
+       owner.ownerDetails.guardianRelation = getLocaleLabels(owner.ownerDetails.guardianRelation, owner.ownerDetails.guardianRelation)
        return owner
     })
+
   }
 
 let previousOwners = PropertiesTemp[0].propertyDetails.purchaser;
@@ -348,9 +350,13 @@ if(Property.propertyDetails.purchaser.length > 0){
   let purchasers = Property.propertyDetails.purchaser;
   const purchaser = purchasers.map((purchaser , index) => {
      purchaser.ownerDetails.ownerDocuments = modifedPurchaser[index].ownerDetails.ownerDocuments
+     purchaser.ownerDetails.guardianRelation = getLocaleLabels(purchaser.ownerDetails.guardianRelation, purchaser.ownerDetails.guardianRelation)
+     purchaser.ownerDetails.dob = moment(new Date(purchaser.ownerDetails.dob)).format("DD-MMM-YYYY")
      return purchaser
   })
+ 
 }
+
 
   const DOWNLOADRECEIPT = {
     GET: {
