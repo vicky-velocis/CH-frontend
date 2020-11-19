@@ -87,7 +87,7 @@ const areaofPropertyField = {
   jsonPath: "Properties[0].propertyDetails.areaSqft"
 }
 
-export const propertyInfoDetails = getCommonCard({
+export const propertyDetails = getCommonCard({
   header: propertyDetailsHeader,
   detailsContainer: getCommonContainer({
       fileNumber: getTextField(fileNumberField),

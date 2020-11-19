@@ -166,6 +166,16 @@ const getData = async (action, state, dispatch) => {
   }
   setDocumentData(action, state, dispatch, 0, "formwizardThirdStep");
   setPrevOwnerDocs(action, state, dispatch, 0, "formwizardFifthStep");
+
+  // hide isCurrentOwner radio button for create pm manimajra
+  dispatch(
+    handleField(
+      action.screenKey,
+      "components.div.children.formwizardSecondStep.children.ownerDetails.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.scheama.children.cardContent.children.ownerCard.children.isCurrentOwner",
+      "visible",
+      false
+    )
+  )
 }
 
 const applyManimajra = {

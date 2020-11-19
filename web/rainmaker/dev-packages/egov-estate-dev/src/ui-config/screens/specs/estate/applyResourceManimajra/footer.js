@@ -310,7 +310,7 @@ const callBackForNext = async (state, dispatch) => {
           `apply-manimajra.components.div.children.formwizardFifthStep.children.previousOwnerDocuments_${i}.children.cardContent.children.header.children.key.props.labelKey`,
           `Documents - ${purchaserName}`
         )
-        const reviewPurchaserDetails = getReviewPurchaser(true, i);
+        const reviewPurchaserDetails = getReviewPurchaser(true, i, 3, "apply-manimajra");
         set(
           reviewPurchaserDetails,
           "children.cardContent.children.headerDiv.children.header.children.key.props.labelKey",
@@ -394,7 +394,7 @@ const callBackForNext = async (state, dispatch) => {
           prepareFinalObject(`PropertiesTemp[0].propertyDetails.purchaser[${i}].ownerDetails.reviewDocDataPrevOwner`, reviewDocData)
         );
 
-        const reviewDocuments = getReviewDocuments(true, "apply-manimajra", `PropertiesTemp[0].propertyDetails.purchaser[${i}].ownerDetails.reviewDocDataPrevOwner`, 5);
+        const reviewDocuments = getReviewDocuments(true, "apply-manimajra", `PropertiesTemp[0].propertyDetails.purchaser[${i}].ownerDetails.reviewDocDataPrevOwner`, 4);
         set(
           reviewDocuments,
           "children.cardContent.children.headerDiv.children.header.children.key.props.labelKey",
@@ -435,7 +435,7 @@ const callBackForNext = async (state, dispatch) => {
           dispatch
         )
 
-        const reviewCourtCaseDetails = getReviewCourtCase(true, i);
+        const reviewCourtCaseDetails = getReviewCourtCase(true, i, 6, "apply-manimajra");
         set(
           state.screenConfiguration.screenConfig,
           `apply-manimajra.components.div.children.formwizardEighthStep.children.reviewDetails.children.cardContent.children.reviewCourtCaseDetails_${i}`,
