@@ -130,6 +130,21 @@ const totalSecurityFeeDueLabel = {
   labelKey: "ES_SECURITY_FEE_DUE_LABEL"
 }
 
+const totalExtensionFeeLabel = {
+  labelName: "Total Extension Fee ",
+  labelKey: "ES_TOTAL_EXTENSION_FEE_LABEL"
+}
+
+const totalExtensionFeeCollectedLabel = {
+  labelName: "Extension Fee collected",
+  labelKey: "ES_TOTAL_EXTENSION_FEE_COLLECTED_LABEL"
+}
+
+const totalExtensionFeeDueLabel = {
+  labelName: "Extension Fee Due",
+  labelKey: "ES_EXTENSION_FEE_DUE_LABEL"
+}
+
 
 export const editSection = {
     componentPath: "Button",
@@ -317,6 +332,42 @@ export const securityInfo = (isEditable) => ({
     ),
     totalPenaltyPaid: getLabelWithValue(
       totalSecurityFeeDueLabel, {
+        jsonPath: "SecurityFee.totalPenaltyPaid"
+      }
+    )
+  })
+})
+
+export const extensionFeeInfo = (isEditable) => ({
+  headerDiv: {
+    ...headerDiv,
+    children: {
+      header: {
+        gridDefination: {
+          xs: 12,
+          sm: 10
+        },
+        ...getCommonSubHeader({
+          labelName: " Extension Fee Summary",
+          labelKey: "ES_EXTENSION_FEE_SUMMARY"
+        })
+      },
+      editSection: masterEntryEditSection(isEditable, 0)
+    }
+  },
+  viewFour: getCommonContainer({
+    totalExtensionFee: getLabelWithValue(
+      totalExtensionFeeLabel, {
+        jsonPath: "SecurityFee.totalPenalty"
+      }
+    ),
+    totalExtensionFeeCollectedLabel: getLabelWithValue(
+      totalExtensionFeeCollectedLabel, {
+        jsonPath: "SecurityFee.totalPenaltyDue"
+      }
+    ),
+    totalExtensionFeePaid: getLabelWithValue(
+      totalExtensionFeeDueLabel, {
         jsonPath: "SecurityFee.totalPenaltyPaid"
       }
     )
