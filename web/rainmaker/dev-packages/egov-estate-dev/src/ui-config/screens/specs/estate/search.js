@@ -31,7 +31,7 @@ import {searchResults} from './searchResource/searchResults';
 import {
   getUserInfo
 } from "egov-ui-kit/utils/localStorageUtils";
-import { WF_ALLOTMENT_OF_SITE, WF_BB_PROPERTY_MASTER } from "../../../../ui-constants";
+import { WF_ALLOTMENT_OF_SITE, WF_BB_PROPERTY_MASTER, WF_MM_PROPERTY_MASTER } from "../../../../ui-constants";
 
 var branchType = getQueryArg(window.location.href, "branchType")
 const userInfo = JSON.parse(getUserInfo());
@@ -48,6 +48,7 @@ switch(branchType) {
     findItem = roles.find(item => item.code === "ES_BB_DISPATCH_OFFICER");
     break;
   case "MANIMAJRA_BRANCH":
+    findItem = roles.find(item => item.code === "ES_MM_DISPATCH_OFFICER");
     break;
   default:
     break;
@@ -72,6 +73,7 @@ const estateSearchAndResult = {
         wkfConstant = WF_BB_PROPERTY_MASTER;
         break;
       case "MANIMAJRA_BRANCH":
+        wkfConstant = WF_MM_PROPERTY_MASTER;
         break;
       default:
         break;
