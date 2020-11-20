@@ -158,7 +158,15 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
     set(queryObject[0], "propertyDetails.dateOfAuction", convertDateToEpoch(queryObject[0].propertyDetails.dateOfAuction))
     set(queryObject[0], "propertyDetails.lastNocDate", convertDateToEpoch(queryObject[0].propertyDetails.lastNocDate))
     set(queryObject[0], "propertyDetails.companyRegistrationDate", convertDateToEpoch(queryObject[0].propertyDetails.companyRegistrationDate))
-    set(queryObject[0], "propertyDetails.emdDate", convertDateToEpoch(queryObject[0].propertyDetails.emdDate))
+    set(queryObject[0], "propertyDetails.emdDate", convertDateToEpoch(queryObject[0].propertyDetails.emdDate));
+
+    if (queryObject[0].propertyDetails.estateDemands && queryObject[0].propertyDetails.estateDemands.length) {
+      set(queryObject[0], "propertyDetails.estateDemands[0].generationDate", convertDateToEpoch(queryObject[0].propertyDetails.estateDemands[0].generationDate))
+    }
+
+    if (queryObject[0].propertyDetails.estateDemands && queryObject[0].propertyDetails.estateDemands.length) {
+      set(queryObject[0], "propertyDetails.estateDemands[0].isPrevious", true);
+    }
 
     var prevOwners = get(
       queryObject[0],
