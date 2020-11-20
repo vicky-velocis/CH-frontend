@@ -135,7 +135,7 @@ const totalExtensionFeeLabel = {
   labelKey: "ES_TOTAL_EXTENSION_FEE_LABEL"
 }
 
-const totalExtensionFeeCollectedLabel = {
+const totalExtensionFeePaidLabel = {
   labelName: "Extension Fee collected",
   labelKey: "ES_TOTAL_EXTENSION_FEE_COLLECTED_LABEL"
 }
@@ -361,13 +361,13 @@ export const extensionFeeInfo = (isEditable) => ({
         jsonPath: "ExtensionStatementSummary.totalExtensionFee"
       }
     ),
-    totalExtensionFeeCollectedLabel: getLabelWithValue(
-      totalExtensionFeeCollectedLabel, {
+    totalExtensionFeeDue: getLabelWithValue(
+      totalExtensionFeeDueLabel, {
         jsonPath: "ExtensionStatementSummary.totalExtensionFeeDue"
       }
     ),
     totalExtensionFeePaid: getLabelWithValue(
-      totalExtensionFeeDueLabel, {
+      totalExtensionFeePaidLabel, {
         jsonPath: "ExtensionStatementSummary.totalExtensionFeePaid"
       }
     )
