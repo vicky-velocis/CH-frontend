@@ -486,11 +486,11 @@ export const rentDetails = getCommonGrayCard({
             onMultiItemAdd: (state, multiItemContent) => {
               let rent = get(
                 state.screenConfiguration.preparedFinalObject,
-                "Properties[0].propertyDetails.paymentDetails[0].rent",
+                "Properties[0].propertyDetails.paymentConfig.paymentConfigItems",
                 []
               );
-              if (rent.length && rent[rent.length - 1].endYear) {
-                let lastAddedEndYear = rent[rent.length - 1].endYear;
+              if (rent.length && rent[rent.length - 1].groundRentEndMonth) {
+                let lastAddedEndYear = rent[rent.length - 1].groundRentEndMonth;
                 multiItemContent.startYear.props.value = Number(lastAddedEndYear) + 1;
               } 
               // else {
@@ -501,17 +501,17 @@ export const rentDetails = getCommonGrayCard({
             onMultiItemDelete: (state, deletedIndex, changeField) => {
               let rent = get(
                 state.screenConfiguration.preparedFinalObject,
-                "Properties[0].propertyDetails.paymentDetails[0].rent",
+                "Properties[0].propertyDetails.paymentConfig.paymentConfigItems",
                 []
               );
               if(deletedIndex !== rent.length - 1) {
                 const previewYearObj = rent.filter((item, index) => index < deletedIndex && item.isDeleted !== false).pop()
                 const nextYearObj = rent.findIndex((item, index) => index > deletedIndex && item.isDeleted !== false)
                 nextYearObj !== -1 && changeField(
-                  "allotment",
-                  `components.div.children.formwizardSixthStepAllotment.children.groundRentDetails.children.cardContent.children.rentContainer.children.cardContent.children.detailsContainer.children.multipleRentContainer.children.multipleRentInfo.props.items[${nextYearObj}].item${nextYearObj}.children.cardContent.children.rentCard.children.startYear`,
+                  screenName,
+                  `components.div.children.${paymentStep}.children.groundRentDetails.children.cardContent.children.rentContainer.children.cardContent.children.detailsContainer.children.multipleRentContainer.children.multipleRentInfo.props.items[${nextYearObj}].item${nextYearObj}.children.cardContent.children.rentCard.children.startYear`,
                   "props.value",
-                  !!previewYearObj && !!previewYearObj.endYear ? Number(previewYearObj.endYear)+1 : 0
+                  !!previewYearObj && !!previewYearObj.groundRentEndMonth ? Number(previewYearObj.groundRentEndMonth)+1 : 0
                 )
               }
             }
@@ -747,11 +747,11 @@ export const licenseFeeForYearDetails = getCommonGrayCard({
             onMultiItemAdd: (state, multiItemContent) => {
               let rent = get(
                 state.screenConfiguration.preparedFinalObject,
-                "Properties[0].propertyDetails.paymentDetails[0].licenseFees",
+                "Properties[0].propertyDetails.paymentConfig.paymentConfigItems",
                 []
               );
-              if (rent.length && rent[rent.length - 1].endYear) {
-                let lastAddedEndYear = rent[rent.length - 1].endYear;
+              if (rent.length && rent[rent.length - 1].groundRentEndMonth) {
+                let lastAddedEndYear = rent[rent.length - 1].groundRentEndMonth;
                 multiItemContent.startYear.props.value = Number(lastAddedEndYear) + 1;
               } 
               // else {
@@ -762,17 +762,17 @@ export const licenseFeeForYearDetails = getCommonGrayCard({
             onMultiItemDelete: (state, deletedIndex, changeField) => {
               let rent = get(
                 state.screenConfiguration.preparedFinalObject,
-                "Properties[0].propertyDetails.paymentDetails[0].licenseFees",
+                "Properties[0].propertyDetails.paymentConfig.paymentConfigItems",
                 []
               );
               if(deletedIndex !== rent.length - 1) {
                 const previewYearObj = rent.filter((item, index) => index < deletedIndex && item.isDeleted !== false).pop()
                 const nextYearObj = rent.findIndex((item, index) => index > deletedIndex && item.isDeleted !== false)
                 nextYearObj !== -1 && changeField(
-                  "allotment",
-                  `components.div.children.formwizardSixthStepAllotment.children.licenseFeeDetails.children.cardContent.children.licenseFeeForYearContainer.children.cardContent.children.detailsContainer.children.multipleLicenseContainer.children.multipleLicenseInfo.props.items[${nextYearObj}].item${nextYearObj}.children.cardContent.children.licenseCard.children.startYear`,
+                  screenName,
+                  `components.div.children.${paymentStep}.children.licenseFeeDetails.children.cardContent.children.licenseFeeForYearContainer.children.cardContent.children.detailsContainer.children.multipleLicenseContainer.children.multipleLicenseInfo.props.items[${nextYearObj}].item${nextYearObj}.children.cardContent.children.licenseCard.children.startYear`,
                   "props.value",
-                  !!previewYearObj && !!previewYearObj.endYear ? Number(previewYearObj.endYear)+1 : 0
+                  !!previewYearObj && !!previewYearObj.groundRentEndMonth ? Number(previewYearObj.groundRentEndMonth)+1 : 0
                 )
               }
             }
