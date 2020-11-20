@@ -27,10 +27,14 @@ function getLabelWithValue(labelName, path) {
 }
 
 let screenName = "apply";
-let paymentStep = "formwizardEighthStep"
+let paymentStep = "formwizardEighthStep";
+let summaryStep = "formwizardTenthStep";
+let reviewContainer = "reviewDetails";
 if ((window.location.href).includes("allotment")) {
     screenName = "allotment";
     paymentStep = "formwizardSixthStepAllotment";
+    summaryStep = "formwizardSeventhStepAllotment";
+    reviewContainer = "reviewAllotmentDetails"
 }
 
 var data = []
@@ -232,7 +236,7 @@ const getDemandRadioButton = {
   beforeFieldChange: (action, state, dispatch) => {
     dispatch(
       handleField(
-        screenName,
+        action.screenKey,
         `components.div.children.${paymentStep}.children.groundRentDetails`,
         "visible",
         !!(action.value == "true")
@@ -240,7 +244,7 @@ const getDemandRadioButton = {
     )
     dispatch(
       handleField(
-        screenName,
+        action.screenKey,
         `components.div.children.${paymentStep}.children.licenseFeeDetails`,
         "visible",
         !!(action.value == "false")
@@ -248,24 +252,24 @@ const getDemandRadioButton = {
     )
     dispatch(
       handleField(
-        "allotment",
-        "components.div.children.formwizardSeventhStepAllotment.children.reviewAllotmentDetails.children.cardContent.children.reviewGroundRent",
+        action.screenKey,
+        `components.div.children.${summaryStep}.children.${reviewContainer}.children.cardContent.children.reviewGroundRent`,
         "visible",
         !!(action.value == "true")
       )
     )
     dispatch(
       handleField(
-        "allotment",
-        "components.div.children.formwizardSeventhStepAllotment.children.reviewAllotmentDetails.children.cardContent.children.reviewLicenseFee",
+        action.screenKey,
+        `components.div.children.${summaryStep}.children.${reviewContainer}.children.cardContent.children.reviewLicenseFee`,
         "visible",
         !!(action.value == "false")
       )
     )
     dispatch(
       handleField(
-        "allotment",
-        "components.div.children.formwizardSeventhStepAllotment.children.reviewAllotmentDetails.children.cardContent.children.reviewAdvanceRent",
+        action.screenKey,
+        `components.div.children.${summaryStep}.children.${reviewContainer}.children.cardContent.children.reviewAdvanceRent`,
         "visible",
         !!(action.value)
       )
@@ -302,11 +306,15 @@ const groundRentGenerationTypeField = {
     ]
   },
   beforeFieldChange: (action, state, dispatch) => {
+    let jsonpath = action.componentJsonpath.split(".");
+    jsonpath.pop();
+    jsonpath = jsonpath.join(".")
+
     if (action.value == "Monthly") {
       dispatch(
         handleField(
-          "allotment",
-          "components.div.children.formwizardSixthStepAllotment.children.groundRentDetails.children.cardContent.children.detailsContainer.children.dateToGenerateDemandRent",
+          action.screenKey,
+          `${jsonpath}.dateToGenerateDemandRent`,
           "visible",
           true
         )
@@ -315,8 +323,8 @@ const groundRentGenerationTypeField = {
     else {
       dispatch(
         handleField(
-          "allotment",
-          "components.div.children.formwizardSixthStepAllotment.children.groundRentDetails.children.cardContent.children.detailsContainer.children.dateToGenerateDemandRent",
+          action.screenKey,
+          `${jsonpath}.dateToGenerateDemandRent`,
           "visible",
           false
         )
