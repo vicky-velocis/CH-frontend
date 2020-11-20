@@ -416,8 +416,7 @@ const endYearField = {
   },
   maxLength: 100,
   props: {
-    type: "number",
-    helperText: "HIII"
+    type: "number"
   },
   jsonPath: "Properties[0].propertyDetails.paymentConfig.paymentConfigItems[0].groundRentEndMonth"
 }
@@ -433,7 +432,7 @@ const commonRentInformation = () => {
         labelKey: "ES_TILL_LABEL_IN_YEARS"
       },
       {
-        jsonPath: "Properties[0].propertyDetails.paymentDetails[0].rent[0].endYear",
+        jsonPath: "Properties[0].propertyDetails.paymentConfig.paymentConfigItems[0].groundRentEndMonth",
         callBack: (value) => (Number(value)/12).toFixed(2)
       }
       )
@@ -692,7 +691,7 @@ const commonLicenseInformation = () => {
         labelKey: "ES_TILL_LABEL_IN_YEARS"
       },
       {
-        jsonPath: "Properties[0].propertyDetails.paymentDetails[0].licenseFees[0].endYear",
+        jsonPath: "Properties[0].propertyDetails.paymentConfig.paymentConfigItems[0].groundRentEndMonth",
         callBack: (value) => (Number(value)/12).toFixed(2)
       }
       )
