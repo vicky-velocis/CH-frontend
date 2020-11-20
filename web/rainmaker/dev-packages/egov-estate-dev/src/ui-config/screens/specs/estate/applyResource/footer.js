@@ -367,7 +367,7 @@ const callBackForNext = async (state, dispatch) => {
           "apply"
         )
 
-        const purchaserName = propertyPurchasers ? propertyPurchasers[i] ? propertyPurchasers[i].ownerDetails.ownerName : "" : "";
+        const purchaserName = propertyPurchasers ? propertyPurchasers[i] ? propertyPurchasers[i].ownerDetails.ownerName ? propertyPurchasers[i].ownerDetails.ownerName : "NA" : "NA" : "NA";
 
         if (i > 0) {
           var documentDetailsString = JSON.stringify(get(
