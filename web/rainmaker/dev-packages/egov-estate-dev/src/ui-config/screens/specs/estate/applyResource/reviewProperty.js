@@ -18,6 +18,7 @@ import {
 }
 from "./footerAllotment"
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { changeStep as changeStepManimajra} from "../applyResourceManimajra/footer";
 
 const allocationTypeLabel = {
   labelName: "Type of Allocation",
@@ -79,7 +80,7 @@ const lastNocDateLabel = {
   labelName: "Last NOC Date",
   labelKey: "ES_LAST_NOC_DATE_LABEL"
 }
-const propertyTypeLabel = {
+export const propertyTypeLabel = {
   labelName: "Property Type",
   labelKey: "ES_PROPERTY_TYPE_LABEL"
 }
@@ -127,14 +128,18 @@ const masterEntryEditSection = (isEditable, step = 0, screenkey = "apply") => ({
   onClickDefination: {
     action: "condition",
     callBack: (state, dispatch) => {
-      if (screenkey == "apply") {
-        changeStep(state, dispatch, screenkey, "", step);
-      }
-      else if (screenkey == "allotment") {
-        changeStepAllotment(state, dispatch, screenkey, "", step)
-      }
-      else {
-        
+      switch(screenkey) {
+        case "apply":
+          changeStep(state, dispatch, screenkey, "", step);
+          break;
+        case "allotment":
+          changeStepAllotment(state, dispatch, screenkey, "", step);
+          break;
+        case "apply-manimajra": 
+          changeStepManimajra(state, dispatch, screenkey, "", step);
+          break;
+        default:
+          break;
       }
     }
   }
@@ -411,7 +416,7 @@ const modeOfTransferLabel = {
   labelKey: "ES_MODE_OF_TRANSFER_LABEL"
 }
 
-export const getReviewPurchaser = (isEditable = true, purchaser = 0) => {
+export const getReviewPurchaser = (isEditable = true, purchaser = 0, step = 4, screenKey = "apply") => {
   return getCommonGrayCard({
     headerDiv: {
       ...headerDiv,
@@ -426,7 +431,7 @@ export const getReviewPurchaser = (isEditable = true, purchaser = 0) => {
             labelKey: "ES_PREVIOUS_OWNER_DETAILS_HEADER"
           })
         },
-        editSection: masterEntryEditSection(isEditable, 4)
+        editSection: masterEntryEditSection(isEditable, step, screenKey)
       }
     },
     viewFour: getCommonContainer({

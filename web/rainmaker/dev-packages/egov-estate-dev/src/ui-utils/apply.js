@@ -283,7 +283,7 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
       //   "propertyDetails.purchaser",
       //   []
       // )
-      if (screenName == "allotment") {
+      if (screenName == "allotment" || screenName == "apply-manimajra") {
         tabsArr.splice(-2, 2);
       }
       else if (screenName == "apply-building-branch") {
@@ -406,8 +406,10 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
 
     dispatch(prepareFinalObject("Properties", Properties));
 
-    if (screenName == "apply") {
-      if (activeIndex == 4 || activeIndex == 5) {
+    let activeIndexArr = screenName == "apply-manimajra" ? [3,4] : [4,5];
+
+    if (screenName == "apply" || screenName == "apply-manimajra") {
+      if (activeIndex == activeIndexArr[0] || activeIndex == activeIndexArr[1]) {
         prevOwners.map((item, index) => {
           setDocsForEditFlow(state, dispatch, `Properties[0].propertyDetails.purchaser[${index}].ownerDetails.ownerDocuments`, `PropertiesTemp[0].propertyDetails.purchaser[${index}].ownerDetails.uploadedDocsInRedux`);
         })
