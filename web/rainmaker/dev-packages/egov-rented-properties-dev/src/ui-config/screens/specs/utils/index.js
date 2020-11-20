@@ -811,6 +811,15 @@ export const download = (receiptQueryString, Properties, data, generatedBy,type,
         }]
       }]
       
+      const roleExists = ifUserRoleExists("CITIZEN");
+      if(roleExists){
+          Properties[0]["offlinePaymentDetails"] = []
+          let transactionNumber = {
+            "transactionNumber" : Payments[0].transactionNumber
+          }
+          Properties[0].offlinePaymentDetails.push(transactionNumber)
+      }
+      
       httpRequest("post", DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, queryStr, {
           Payments,
           Properties,
