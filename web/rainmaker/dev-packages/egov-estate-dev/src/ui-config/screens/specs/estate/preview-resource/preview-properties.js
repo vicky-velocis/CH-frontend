@@ -358,17 +358,17 @@ export const extensionFeeInfo = (isEditable) => ({
   viewFour: getCommonContainer({
     totalExtensionFee: getLabelWithValue(
       totalExtensionFeeLabel, {
-        jsonPath: "SecurityFee.totalPenalty"
+        jsonPath: "ExtensionStatementSummary.totalExtensionFee"
       }
     ),
     totalExtensionFeeCollectedLabel: getLabelWithValue(
       totalExtensionFeeCollectedLabel, {
-        jsonPath: "SecurityFee.totalPenaltyDue"
+        jsonPath: "ExtensionStatementSummary.totalExtensionFeeDue"
       }
     ),
     totalExtensionFeePaid: getLabelWithValue(
       totalExtensionFeeDueLabel, {
-        jsonPath: "SecurityFee.totalPenaltyPaid"
+        jsonPath: "ExtensionStatementSummary.totalExtensionFeePaid"
       }
     )
   })
