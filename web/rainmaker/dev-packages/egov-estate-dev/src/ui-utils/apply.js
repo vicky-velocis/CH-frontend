@@ -161,7 +161,15 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
     set(queryObject[0], "propertyDetails.dateOfAuction", convertDateToEpoch(queryObject[0].propertyDetails.dateOfAuction))
     set(queryObject[0], "propertyDetails.lastNocDate", convertDateToEpoch(queryObject[0].propertyDetails.lastNocDate))
     set(queryObject[0], "propertyDetails.companyRegistrationDate", convertDateToEpoch(queryObject[0].propertyDetails.companyRegistrationDate))
-    set(queryObject[0], "propertyDetails.emdDate", convertDateToEpoch(queryObject[0].propertyDetails.emdDate))
+    set(queryObject[0], "propertyDetails.emdDate", convertDateToEpoch(queryObject[0].propertyDetails.emdDate));
+
+    if (queryObject[0].propertyDetails.estateDemands && queryObject[0].propertyDetails.estateDemands.length) {
+      set(queryObject[0], "propertyDetails.estateDemands[0].generationDate", convertDateToEpoch(queryObject[0].propertyDetails.estateDemands[0].generationDate))
+    }
+
+    if (queryObject[0].propertyDetails.estateDemands && queryObject[0].propertyDetails.estateDemands.length) {
+      set(queryObject[0], "propertyDetails.estateDemands[0].isPrevious", true);
+    }
 
     prevOwners = get(
       queryObject[0],
@@ -387,14 +395,14 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
     dispatch(prepareFinalObject("Properties", Properties));
 
     if (screenName == "apply") {
-      if (activeIndex == 2 || activeIndex == 3) {
-        currOwners.map((item, index) => {
-          setDocsForEditFlow(state, dispatch, `Properties[0].propertyDetails.owners[${index}].ownerDetails.ownerDocuments`, `PropertiesTemp[0].propertyDetails.owners[${index}].ownerDetails.uploadedDocsInRedux`);
-        })
-      }
       if (activeIndex == 4 || activeIndex == 5) {
         prevOwners.map((item, index) => {
           setDocsForEditFlow(state, dispatch, `Properties[0].propertyDetails.purchaser[${index}].ownerDetails.ownerDocuments`, `PropertiesTemp[0].propertyDetails.purchaser[${index}].ownerDetails.uploadedDocsInRedux`);
+        })
+      }
+      else {
+        currOwners.map((item, index) => {
+          setDocsForEditFlow(state, dispatch, `Properties[0].propertyDetails.owners[${index}].ownerDetails.ownerDocuments`, `PropertiesTemp[0].propertyDetails.owners[${index}].ownerDetails.uploadedDocsInRedux`);
         })
       }
     }
@@ -427,9 +435,9 @@ export const addPenalty = async (state, dispatch, activeIndex) => {
     let properties = JSON.parse(JSON.stringify(get(state.screenConfiguration.preparedFinalObject, "Properties", [])))
     const propertyId = properties[0].id;
     const fileNumber = properties[0].fileNumber
-    set(queryObject[0], "tenantId", tenantId);
-    set(queryObject[0], "propertyId", propertyId);
-    set(queryObject[0], "branchType", "estateBranch");
+    set(queryObject[0], "property", {
+      "id":propertyId
+    });
     let response;
     if(queryObject) {  
       response = await httpRequest(
