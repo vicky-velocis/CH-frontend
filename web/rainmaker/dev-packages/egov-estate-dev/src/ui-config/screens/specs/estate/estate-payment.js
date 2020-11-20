@@ -290,7 +290,7 @@ import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
           [],
           { Properties : payload })
           if(!!response && !!response.Properties.length) {
-            const {rentPaymentConsumerCode, tenantId} = response.Properties[0]
+            const {rentPaymentConsumerCode,fileNumber, tenantId} = response.Properties[0]
             let billingBuisnessService=response.Properties[0].propertyDetails.billingBusinessService
             type === "ONLINE" ? dispatch(
               setRoute(
@@ -298,7 +298,7 @@ import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
               )
             ) : dispatch(
               setRoute(
-              `acknowledgement?purpose=pay&applicationNumber=${rentPaymentConsumerCode}&status=success&tenantId=${tenantId}&type=${billingBuisnessService}`
+              `acknowledgement?purpose=pay&applicationNumber=${rentPaymentConsumerCode}&status=success&tenantId=${tenantId}&type=${billingBuisnessService}&fileNumber=${fileNumber}`
               )
             )
           dispatch(prepareFinalObject("Properties", response.Properties))
