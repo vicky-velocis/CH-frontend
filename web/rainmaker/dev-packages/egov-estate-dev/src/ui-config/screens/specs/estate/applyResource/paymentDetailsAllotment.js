@@ -480,7 +480,7 @@ export const rentDetails = getCommonGrayCard({
             },
             headerName: "Rent",
             headerJsonPath: "children.cardContent.children.header.children.Rent.props.label",
-            sourceJsonPath: "Properties[0].propertyDetails.paymentDetails[0].rent",
+            sourceJsonPath: "Properties[0].propertyDetails.paymentConfig.paymentConfigItems",
             prefixSourceJsonPath: "children.cardContent.children.rentCard.children",
             afterPrefixJsonPath: "children.value.children.key",
             onMultiItemAdd: (state, multiItemContent) => {
@@ -740,7 +740,7 @@ export const licenseFeeForYearDetails = getCommonGrayCard({
             headerName: "License Fee for Year",
             // headerJsonPath: "children.cardContent.children.header.children.key.props.labelKey",
             headerJsonPath: "children.cardContent.children.header.children.License Fee.props.label",
-            sourceJsonPath: "Properties[0].propertyDetails.paymentDetails[0].licenseFees",
+            sourceJsonPath: "Properties[0].propertyDetails.paymentConfig.paymentConfigItems",
             prefixSourceJsonPath: "children.cardContent.children.licenseCard.children",
 
             afterPrefixJsonPath: "children.value.children.key",
