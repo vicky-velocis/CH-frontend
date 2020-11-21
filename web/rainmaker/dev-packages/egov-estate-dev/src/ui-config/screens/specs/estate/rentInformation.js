@@ -8,7 +8,7 @@ import {getReviewPayment} from './preview-resource/payment-details'
 import {onTabChange, headerrow, tabs} from './search-preview'
 import {paymentDetailsTable} from './applyResource/applyConfig'
 import { getBreak } from "egov-ui-framework/ui-config/screens/specs/utils";
-import {getReviewGroundRent,getReviewAdvanceRent,getReviewLicenseFee,getReviewSecurity} from "../estate/applyResource/reviewProperty"
+import {getReviewGroundRent,getReviewAdvanceRent,getReviewLicenseFee,getReviewSecurity} from "./applyResource/reviewProperty"
 
 var reviewGroundRent = getReviewGroundRent(false);
 var reviewLicenseFee = getReviewLicenseFee(false);
@@ -39,7 +39,7 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
       if(isGroundRent){
         dispatch(
           handleField(
-            "payment-details",
+            "rentInformation",
             "components.div.children",
             "reviewDetails",
             reviewGroundDetails
@@ -48,7 +48,7 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
       }else{
         dispatch(
           handleField(
-            "payment-details",
+            "rentInformation",
             "components.div.children",
             "reviewDetails",
             LicenceDetails
@@ -60,9 +60,9 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
 }
 
 
-const EstatePaymentDetails = {
+const rentInformation = {
   uiFramework: "material-ui",
-  name: "payment-details",
+  name: "rentInformation",
   beforeInitScreen: (action, state, dispatch) => {
     const fileNumber = getQueryArg(window.location.href, "fileNumber");
     beforeInitFn(action, state, dispatch, fileNumber);
@@ -107,4 +107,4 @@ const EstatePaymentDetails = {
   }
 };
 
-export default EstatePaymentDetails;
+export default rentInformation;
