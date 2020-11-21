@@ -3,23 +3,56 @@ import {
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import { prepareFinalObject,handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import { getSearchResults ,setXLSTableData } from "../../../../ui-utils/commons";
-import {getReviewPayment} from './preview-resource/payment-details'
+import { getSearchResults  } from "../../../../ui-utils/commons";
 import {onTabChange, headerrow, tabs} from './search-preview'
-import {paymentDetailsTable} from './applyResource/applyConfig'
 import { getBreak } from "egov-ui-framework/ui-config/screens/specs/utils";
+import {getReviewGroundRent,getReviewAdvanceRent,getReviewLicenseFee,getReviewSecurity} from "../estate/applyResource/reviewProperty"
+
+var reviewGroundRent = getReviewGroundRent(false);
+var reviewLicenseFee = getReviewLicenseFee(false);
+var reviewAdvanceRent = getReviewAdvanceRent(false);
+var reviewSecurity = getReviewSecurity(false);
+
+const reviewGroundDetails = getCommonCard({
+  reviewGroundRent,
+  reviewAdvanceRent,
+  reviewSecurity,
+})
+
+const LicenceDetails = getCommonCard({
+  reviewLicenseFee,
+  reviewAdvanceRent,
+  reviewSecurity,
+})
 
 const beforeInitFn = async (action, state, dispatch, fileNumber) => {
   if(fileNumber){
       let queryObject = [
           { key: "fileNumber", value: fileNumber }
         ];
-   const response =  await getSearchResults(queryObject);
+   const response =  await getSearchResults(queryObject)
     if(!!response) {
-      let {estateDemands, estatePayments} = response.Properties[0].propertyDetails;
-      estateDemands = estateDemands || []
-      estatePayments = estatePayments || []
-      setXLSTableData({demands:estateDemands,payments:estatePayments, componentJsonPath: "components.div.children.paymentDetailsTable", screenKey: "payment-details"})
+      dispatch(prepareFinalObject("Properties", response.Properties))
+      const isGroundRent = response.Properties[0].propertyDetails.paymentConfig.isGroundRent
+      if(isGroundRent){
+        dispatch(
+          handleField(
+            "payment-details",
+            "components.div.children",
+            "reviewDetails",
+            reviewGroundDetails
+          )
+        );
+      }else{
+        dispatch(
+          handleField(
+            "payment-details",
+            "components.div.children",
+            "reviewDetails",
+            LicenceDetails
+          )
+        );
+      }
     }
   }
 }
@@ -66,7 +99,7 @@ const EstatePaymentDetails = {
             type: "array",
           },
           breakAfterSearch: getBreak(),
-          paymentDetailsTable
+          reviewDetails : reviewGroundDetails 
       }
     }
   }
