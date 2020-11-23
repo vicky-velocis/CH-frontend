@@ -778,7 +778,7 @@ export const  downloadReceipt =async (
         applicationData=state
     }
 
-
+console.log(applicationData, "nero applicationData")
     const receiptQueryString = [
         { key: "consumerCodes", value: applicationNumber },
         {
