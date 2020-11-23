@@ -136,7 +136,7 @@ const onRowClick = rowData => {
     return window.location.href = `search-preview-building-branch?fileNumber=${rowData[0]}&tenantId=${tenantId}`;
   }
 
-  if (branchType == "MANIMAJRA_BRANCH") {
+  if (branchType == "MANI_MAJRA") {
     if (rowData[2].toUpperCase() === ESTATE_DRAFTED_STATE) {
       return window.location.href = `apply-manimajra?fileNumber=${rowData[0]}&tenantId=${tenantId}`;
     }
