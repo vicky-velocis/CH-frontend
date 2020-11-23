@@ -4,9 +4,10 @@ import {
 import { getQueryArg, setDocuments } from "egov-ui-framework/ui-utils/commons";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getSearchResults } from "../../../../ui-utils/commons";
-import {onTabChange, headerrow, tabs} from './search-preview'
+import {onTabChange, headerrow, tabs, tabsAllotment} from './search-preview'
 
 let fileNumber = getQueryArg(window.location.href, "fileNumber");
+let isPropertyMasterOrAllotmentOfSite;
 
 export const noticesDetails = getCommonCard({
 
@@ -19,6 +20,7 @@ export const searchResults = async (action, state, dispatch, fileNumber) => {
   let payload = await getSearchResults(queryObject);
   if(payload) {
     let properties = payload.Properties;
+    isPropertyMasterOrAllotmentOfSite = properties[0].propertyMasterOrAllotmentOfSite;
 
     let applicationDocuments = properties[0].propertyDetails.applicationDocuments || [];
     const removedDocs = applicationDocuments.filter(item => !item.active)
@@ -82,8 +84,8 @@ const EstateNotices = {
             moduleName: "egov-estate",
             componentPath: "CustomTabContainer",
             props: {
-              tabs,
-              activeIndex: 8,
+              tabs: (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment,
+              activeIndex: (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? 8 : 5,
               onTabChange
             },
             type: "array",
