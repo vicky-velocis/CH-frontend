@@ -2,7 +2,10 @@ import {
     getCommonCard
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { getQueryArg, setDocuments } from "egov-ui-framework/ui-utils/commons";
-import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { 
+  prepareFinalObject,
+  handleScreenConfigurationFieldChange as handleField
+} from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getSearchResults } from "../../../../ui-utils/commons";
 import {onTabChange, headerrow, tabs, tabsAllotment} from './search-preview'
 
@@ -27,6 +30,22 @@ export const searchResults = async (action, state, dispatch, fileNumber) => {
     applicationDocuments = applicationDocuments.filter(item => !!item.active)
     properties = [{...properties[0], propertyDetails: {...properties[0].propertyDetails, applicationDocuments}}]
     dispatch(prepareFinalObject("Properties[0]", properties[0]));
+    dispatch(
+      handleField(
+        action.screenKey,
+        "components.div.children.tabSection",
+        "props.tabs",
+        (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment
+      )
+    )
+    dispatch(
+      handleField(
+        action.screenKey,
+        "components.div.children.tabSection",
+        "props.activeIndex",
+        (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? 8 : 5,
+      )
+    )
     dispatch(
       prepareFinalObject(
         "PropertiesTemp[0].removedDocs",
@@ -84,7 +103,7 @@ const EstateNotices = {
             moduleName: "egov-estate",
             componentPath: "CustomTabContainer",
             props: {
-              tabs: (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment,
+              tabs: tabs,
               activeIndex: (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? 8 : 5,
               onTabChange
             },

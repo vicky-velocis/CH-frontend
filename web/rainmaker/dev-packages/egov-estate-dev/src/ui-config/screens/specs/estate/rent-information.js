@@ -40,6 +40,23 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
       dispatch(
         handleField(
           action.screenKey,
+          "components.div.children.tabSection",
+          "props.tabs",
+          (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment
+        )
+      )
+      dispatch(
+        handleField(
+          action.screenKey,
+          "components.div.children.tabSection",
+          "props.activeIndex",
+          (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? 7 : 4,
+        )
+      )
+
+      dispatch(
+        handleField(
+          action.screenKey,
           "components.div.children.reviewRentInfo.children.cardContent.children.premiumAmountDetails",
           "visible",
           !!(isPropertyMasterOrAllotmentOfSite == "ALLOTMENT_OF_SITE")
@@ -142,7 +159,7 @@ components: {
           moduleName: "egov-estate",
           componentPath: "CustomTabContainer",
           props: {
-            tabs: (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment,
+            tabs: tabs,
             activeIndex: (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? 7 : 4,
             onTabChange
           },

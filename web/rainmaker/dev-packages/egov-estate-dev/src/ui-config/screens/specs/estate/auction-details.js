@@ -57,6 +57,15 @@ const searchResults = async (action, state, dispatch, fileNumber) => {
       let { bidders } = properties[0].propertyDetails;
       populateBiddersTable(bidders, "auction-details", "components.div.children.auctionTableContainer")
     }
+
+    dispatch(
+      handleField(
+        action.screenKey,
+        "components.div.children.tabSection",
+        "props.tabs",
+        (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment
+      )
+    )
   }
 }
 
@@ -108,7 +117,7 @@ const auctionDetails = {
           moduleName: "egov-estate",
           componentPath: "CustomTabContainer",
           props: {
-            tabs: (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment,
+            tabs: tabs,
             activeIndex: 1,
             onTabChange
           },

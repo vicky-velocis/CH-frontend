@@ -70,6 +70,15 @@ export const searchResults = async (action, state, dispatch, fileNumber) => {
       ...properties , estateRentSummary : estateRentSummary
     }
 
+    dispatch(
+      handleField(
+        action.screenKey,
+        "components.div.children.tabSection",
+        "props.tabs",
+        (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment
+      )
+    )
+
     /* based on selected category toggle display of sub-category field */
     dispatch(
       handleField(
@@ -299,7 +308,7 @@ const estateDetailPreview = {
             moduleName: "egov-estate",
             componentPath: "CustomTabContainer",
             props: {
-              tabs: (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment,
+              tabs: tabs,
               activeIndex: 0,
               onTabChange
             },

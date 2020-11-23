@@ -91,6 +91,15 @@ export const searchResults = async (action, state, dispatch, fileNumber) => {
 
     dispatch(prepareFinalObject("Properties", properties));
 
+    dispatch(
+      handleField(
+        action.screenKey,
+        "components.div.children.tabSection",
+        "props.tabs",
+        (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment
+      )
+    )
+
     let applicationState = properties[0].state;
     let entityType = properties[0].propertyDetails.entityType;
     let companyDetails;
@@ -370,7 +379,7 @@ const EstateOwnerDetails = {
             moduleName: "egov-estate",
             componentPath: "CustomTabContainer",
             props: {
-              tabs: (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment,
+              tabs: tabs,
               activeIndex: 2,
               onTabChange
             },

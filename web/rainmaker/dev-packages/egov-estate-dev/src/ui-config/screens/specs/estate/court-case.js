@@ -30,6 +30,23 @@ if(payload) {
   let properties = payload.Properties;
   isPropertyMasterOrAllotmentOfSite = properties[0].propertyMasterOrAllotmentOfSite;
     dispatch(prepareFinalObject("Properties", properties));
+
+    dispatch(
+      handleField(
+        action.screenKey,
+        "components.div.children.tabSection",
+        "props.tabs",
+        (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment
+      )
+    )
+    dispatch(
+      handleField(
+        action.screenKey,
+        "components.div.children.tabSection",
+        "props.activeIndex",
+        (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? 9 : 6,
+      )
+    )
     
     let containers={}
     if(properties[0].propertyDetails.courtCases){
@@ -92,7 +109,7 @@ components: {
           moduleName: "egov-estate",
           componentPath: "CustomTabContainer",
           props: {
-            tabs: (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment,
+            tabs: tabs,
             activeIndex: (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? 9 : 6,
             onTabChange
           },
