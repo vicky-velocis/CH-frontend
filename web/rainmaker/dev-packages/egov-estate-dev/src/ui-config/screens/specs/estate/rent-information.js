@@ -19,6 +19,7 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
       let demandGenerationType = properties[0].propertyDetails.paymentConfig.isGroundRent;
       let installments = properties[0].propertyDetails.paymentConfig.premiumAmountConfigItems ? properties[0].propertyDetails.paymentConfig.premiumAmountConfigItems : []
       let rentInfo = properties[0].propertyDetails.paymentConfig.paymentConfigItems ? properties[0].propertyDetails.paymentConfig.paymentConfigItems : [];
+      let propertyMasterOrAllotmentOfSite = properties[0].propertyMasterOrAllotmentOfSite;
 
       let rentData = rentInfo.map(item => ({
         [getTextToLocalMapping("Rent amount")]: item.groundRentAmount || 0,
@@ -33,6 +34,31 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
       }))
 
       let isInterestFixedLabel = properties[0].propertyDetails.paymentConfig.isIntrestApplicable ? "ES_FIXED_INTEREST_LABEL" : "ES_YEARLY_INTEREST_LABEL";
+
+      dispatch(
+        handleField(
+          action.screenKey,
+          "components.div.children.reviewRentInfo.children.cardContent.children.premiumAmountDetails",
+          "visible",
+          !!(propertyMasterOrAllotmentOfSite == "ALLOTMENT_OF_SITE")
+        )
+      )
+      dispatch(
+        handleField(
+          action.screenKey,
+          "components.div.children.reviewRentInfo.children.cardContent.children.installmentTable",
+          "visible",
+          !!(propertyMasterOrAllotmentOfSite == "ALLOTMENT_OF_SITE")
+        )
+      )
+      dispatch(
+        handleField(
+          action.screenKey,
+          "components.div.children.reviewRentInfo.children.cardContent.children.breakAfterSearch1",
+          "visible",
+          !!(propertyMasterOrAllotmentOfSite == "ALLOTMENT_OF_SITE")
+        )
+      )
 
       dispatch(
         handleField(
