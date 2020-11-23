@@ -926,7 +926,7 @@ const getInterestFixedRadioButton = {
       dispatch(
         handleField(
           action.screenKey,
-          "components.div.children.formwizardEighthStep.children.interestDetails.children.cardContent.children.detailsContainer.children.percentageOfInterest",
+          `components.div.children.${paymentStep}.children.interestDetails.children.cardContent.children.detailsContainer.children.percentageOfInterest`,
           "props.label.labelKey",
           isInterestFixedLabel
         )
@@ -934,7 +934,7 @@ const getInterestFixedRadioButton = {
       dispatch(
         handleField(
           action.screenKey,
-          "components.div.children.formwizardEighthStep.children.interestDetails.children.cardContent.children.detailsContainer.children.percentageOfInterest",
+          `components.div.children.${paymentStep}.children.interestDetails.children.cardContent.children.detailsContainer.children.percentageOfInterest`,
           "props.placeholder.labelKey",
           isInterestFixedPlaceholder
         )

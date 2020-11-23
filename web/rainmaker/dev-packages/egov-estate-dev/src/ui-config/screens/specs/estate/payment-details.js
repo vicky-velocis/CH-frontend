@@ -22,7 +22,17 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
       // estatePayments = estatePayments || []
       // setXLSTableData({demands:estateDemands,payments:estatePayments, componentJsonPath: "components.div.children.paymentDetailsTable", screenKey: "payment-details"})
       let properties = response.Properties;
+      let propertyMasterOrAllotmentOfSite = properties[0].propertyMasterOrAllotmentOfSite;
       dispatch(prepareFinalObject("Properties[0]", properties[0]));
+
+      dispatch(
+        handleField(
+          "payment-details",
+          "components.div.children.reviewConsolidatedPayments",
+          "visible",
+          !!(propertyMasterOrAllotmentOfSite == "PROPERTY_MASTER")
+        )
+      )
     }
   }
 }

@@ -662,21 +662,14 @@ const callBackForNext = async (state, dispatch) => {
   }
 
   if (activeStep === PAYMENT_DETAILS_STEP) {
-    var isGroundRentDetailsValid = validateFields(
-      `components.div.children.formwizardNinthStep.children.groundRentDetails.children.cardContent.children.detailsContainer.children`,
+    var isPaymentDetailsValid = validateFields(
+      `components.div.children.formwizardNinthStep.children.paymentDetails.children.cardContent.children.detailsContainer.children`,
       state,
       dispatch,
       "apply"
     )
 
-    var isServiceTaxDetailsValid = validateFields(
-      `components.div.children.formwizardNinthStep.children.serviceTaxDetails.children.cardContent.children.detailsContainer.children`,
-      state,
-      dispatch,
-      "apply"
-    )
-
-    if (isGroundRentDetailsValid && isServiceTaxDetailsValid) {
+    if (isPaymentDetailsValid) {
       const res = await applyEstates(state, dispatch, activeStep);
       if (!res) {
         return
