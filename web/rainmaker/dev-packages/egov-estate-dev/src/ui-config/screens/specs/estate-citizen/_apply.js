@@ -173,13 +173,21 @@ const getData = async (action, state, dispatch) => {
               id: "apply_form3"
             },
             children: {
-              summary:getCommonCard({  
               reviewDetails: third_step,
-              declarationSummary: declarationSummary
-              }),
-              // declarationSummary: getCommonCard({
-              //   declarationSummary: declarationSummary
-              // })
+              declarationSummary: {
+                uiFramework: "custom-containers-local",
+                moduleName: "egov-estate",
+                componentPath: "CheckboxContainer",
+                jsonPath: "temp[0].declaration",
+                props: {
+                  label: {
+                    labelName: "Is Primary Owner ?",
+                    labelKey: "BPA_IS_PRIMARY_OWNER_LABEL"
+                  },
+                  jsonPath: "temp[0].declaration"
+                },
+                type: "array"
+              }
             },
             visible: false
           } ,
@@ -188,34 +196,6 @@ const getData = async (action, state, dispatch) => {
       }
     }
 }
-const declarationDetails = getCommonContainer({
-  checkbox:{
-   uiFramework: "ui-containers-local",
-   moduleName: "egov-estate-dev",
-   componentPath: "CheckboxContainer",
-   props: {
-     content:'ES_DECLARATION_BOX'
-   },
-  //  visible: process.env.REACT_APP_NAME === "Citizen" ? true : false
-  visible: true
- }
- });
-
-
-export const declarationSummary = getCommonContainer({
- header: {
-   uiFramework: "custom-atoms",
-   componentPath: "Container",
-   props: {
-     style: { margin: "10px" }
-   },
-   children: {
-     body: declarationDetails
-   }
- },
-
-});
-
 
 const commonApply = {
     uiFramework: "material-ui",
