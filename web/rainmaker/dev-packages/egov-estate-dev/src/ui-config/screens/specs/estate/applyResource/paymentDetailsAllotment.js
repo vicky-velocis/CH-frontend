@@ -919,17 +919,37 @@ const getInterestFixedRadioButton = {
     // required: true
   },
   // required: true,
-  type: "array"
+  type: "array",
+  afterFieldChange: (action, state, dispatch) => {
+    let isInterestFixedLabel = (action.value == "true") ? "ES_FIXED_INTEREST_LABEL" : "ES_YEARLY_INTEREST_LABEL";
+    let isInterestFixedPlaceholder = (action.value == "true") ? "ES_FIXED_INTEREST_PLACEHOLDER" : "ES_YEARLY_INTEREST_PLACEHOLDER";
+      dispatch(
+        handleField(
+          action.screenKey,
+          "components.div.children.formwizardEighthStep.children.interestDetails.children.cardContent.children.detailsContainer.children.percentageOfInterest",
+          "props.label.labelKey",
+          isInterestFixedLabel
+        )
+      )
+      dispatch(
+        handleField(
+          action.screenKey,
+          "components.div.children.formwizardEighthStep.children.interestDetails.children.cardContent.children.detailsContainer.children.percentageOfInterest",
+          "props.placeholder.labelKey",
+          isInterestFixedPlaceholder
+        )
+      )
+  }
 }
 
 const percentageOfInterestField = {
   label: {
-      labelName: "Percentage of interest",
-      labelKey: "ES_PERCENTAGE_OF_INTEREST_LABEL"
+      labelName: "Yearly interest",
+      labelKey: "ES_YEARLY_INTEREST_LABEL"
   },
   placeholder: {
-      labelName: "Enter percentage of interest",
-      labelKey: "ES_PERCENTAGE_OF_INTEREST_PLACEHOLDER"
+      labelName: "Enter yearly interest",
+      labelKey: "ES_YEARLY_INTEREST_PLACEHOLDER"
   },
   gridDefination: {
       xs: 12,
