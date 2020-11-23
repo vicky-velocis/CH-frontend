@@ -6,41 +6,63 @@ import { prepareFinalObject,handleScreenConfigurationFieldChange as handleField 
 import { getSearchResults ,setXLSTableData } from "../../../../ui-utils/commons";
 import {getReviewPayment} from './preview-resource/payment-details'
 import {onTabChange, headerrow, tabs} from './search-preview'
-// import {paymentDetailsTable} from './applyResource/applyConfig'
+import {paymentDetailsTable} from './applyResource/applyConfig'
 import { getBreak } from "egov-ui-framework/ui-config/screens/specs/utils";
-import { getReviewConsolidatedPaymentDetails} from "./applyResource/reviewProperty"
+import {getReviewGroundRent,getReviewAdvanceRent,getReviewLicenseFee,getReviewSecurity} from "./applyResource/reviewProperty"
+
+var reviewGroundRent = getReviewGroundRent(false);
+var reviewLicenseFee = getReviewLicenseFee(false);
+var reviewAdvanceRent = getReviewAdvanceRent(false);
+var reviewSecurity = getReviewSecurity(false);
+
+const reviewGroundDetails = getCommonCard({
+  reviewGroundRent,
+  reviewAdvanceRent,
+  reviewSecurity,
+})
+
+const LicenceDetails = getCommonCard({
+  reviewLicenseFee,
+  reviewAdvanceRent,
+  reviewSecurity,
+})
 
 const beforeInitFn = async (action, state, dispatch, fileNumber) => {
   if(fileNumber){
       let queryObject = [
           { key: "fileNumber", value: fileNumber }
         ];
-   const response =  await getSearchResults(queryObject);
+   const response =  await getSearchResults(queryObject)
     if(!!response) {
-      // let {estateDemands, estatePayments} = response.Properties[0].propertyDetails;
-      // estateDemands = estateDemands || []
-      // estatePayments = estatePayments || []
-      // setXLSTableData({demands:estateDemands,payments:estatePayments, componentJsonPath: "components.div.children.paymentDetailsTable", screenKey: "payment-details"})
-      let properties = response.Properties;
-      let propertyMasterOrAllotmentOfSite = properties[0].propertyMasterOrAllotmentOfSite;
-      dispatch(prepareFinalObject("Properties[0]", properties[0]));
-
-      dispatch(
-        handleField(
-          "payment-details",
-          "components.div.children.reviewConsolidatedPayments",
-          "visible",
-          !!(propertyMasterOrAllotmentOfSite == "PROPERTY_MASTER")
-        )
-      )
+      dispatch(prepareFinalObject("Properties", response.Properties))
+      const isGroundRent = response.Properties[0].propertyDetails.paymentConfig.isGroundRent
+      if(isGroundRent){
+        dispatch(
+          handleField(
+            "rentInformation",
+            "components.div.children",
+            "reviewDetails",
+            reviewGroundDetails
+          )
+        );
+      }else{
+        dispatch(
+          handleField(
+            "rentInformation",
+            "components.div.children",
+            "reviewDetails",
+            LicenceDetails
+          )
+        );
+      }
     }
   }
 }
 
 
-const EstatePaymentDetails = {
+const rentInformation = {
   uiFramework: "material-ui",
-  name: "payment-details",
+  name: "rentInformation",
   beforeInitScreen: (action, state, dispatch) => {
     const fileNumber = getQueryArg(window.location.href, "fileNumber");
     beforeInitFn(action, state, dispatch, fileNumber);
@@ -79,13 +101,10 @@ const EstatePaymentDetails = {
             type: "array",
           },
           breakAfterSearch: getBreak(),
-          reviewConsolidatedPayments : getCommonCard({
-            consolidatedPaymentDetails: getReviewConsolidatedPaymentDetails(false, "apply")
-          })
-          
+          reviewDetails : reviewGroundDetails 
       }
     }
   }
 };
 
-export default EstatePaymentDetails;
+export default rentInformation;
