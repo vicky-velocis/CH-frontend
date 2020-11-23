@@ -331,7 +331,7 @@ const callBackForNext = async (state, dispatch) => {
         set(
           reviewDocuments,
           "children.cardContent.children.headerDiv.children.header.children.key.props.labelKey",
-          `Documents - ${propertyOwners ? propertyOwners[i] ? propertyOwners[i].ownerDetails.ownerName : "" : ""}`
+          `Documents - ${propertyOwners ? propertyOwners[i] ? propertyOwners[i].ownerDetails.ownerName ? propertyOwners[i].ownerDetails.ownerName : "NA" : "NA" : "NA"}`
         )
         set(
           state.screenConfiguration.screenConfig,
@@ -370,7 +370,7 @@ const callBackForNext = async (state, dispatch) => {
           "apply"
         )
 
-        const purchaserName = propertyPurchasers ? propertyPurchasers[i] ? propertyPurchasers[i].ownerDetails.ownerName : "" : "";
+        const purchaserName = propertyPurchasers ? propertyPurchasers[i] ? propertyPurchasers[i].ownerDetails.ownerName ? propertyPurchasers[i].ownerDetails.ownerName : "NA" : "NA" : "NA";
 
         if (i > 0) {
           var documentDetailsString = JSON.stringify(get(
@@ -482,7 +482,7 @@ const callBackForNext = async (state, dispatch) => {
         set(
           reviewDocuments,
           "children.cardContent.children.headerDiv.children.header.children.key.props.labelKey",
-          `Documents - ${propertyPrevOwners ? propertyPrevOwners[i] ? propertyPrevOwners[i].ownerDetails.ownerName : "" : ""}`
+          `Documents - ${propertyPrevOwners ? propertyPrevOwners[i] ? propertyPrevOwners[i].ownerDetails.ownerName ? propertyPrevOwners[i].ownerDetails.ownerName: "NA" : "NA" : "NA"}`
         )
         set(
           state.screenConfiguration.screenConfig,
@@ -763,7 +763,7 @@ const setOwnersOrPartners = (state, dispatch, container) => {
         "apply"
       )
 
-      var ownerName = propertyOwners ? propertyOwners[i] ? propertyOwners[i].ownerDetails.ownerName : "" : "";
+      var ownerName = propertyOwners ? propertyOwners[i] ? propertyOwners[i].ownerDetails.ownerName ?  propertyOwners[i].ownerDetails.ownerName : "NA" : "NA" : "NA";
       
       if (i > 0) {
         var documentDetailsString = JSON.stringify(get(
