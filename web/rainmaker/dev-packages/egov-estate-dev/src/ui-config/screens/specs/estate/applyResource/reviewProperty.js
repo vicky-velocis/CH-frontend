@@ -9,6 +9,7 @@ import {
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import {
   convertEpochToDate,
+  getTextToLocalMapping
 } from "../../utils";
 import {
   changeStep
@@ -941,6 +942,15 @@ export const getReviewGroundRent = (isEditable = true, step = 5, screenKey = "al
           jsonPath: `Properties[0].propertyDetails.paymentConfig.groundRentGenerationType`
         }
       ),
+      dateToGenerateDemandRent: getLabelWithValue(
+        {
+          labelName: "Date to Generate the Demand/Rent",
+          labelKey: "ES_DATE_TO_GENERATE_DEMAND_RENT_LABEL"
+        }, 
+        {
+          jsonPath: `Properties[0].propertyDetails.paymentConfig.groundRentGenerateDemand`,
+        }
+      ),
       billingStartDate: getLabelWithValue(
         {
           labelName: "Billing Start Date",
@@ -951,15 +961,6 @@ export const getReviewGroundRent = (isEditable = true, step = 5, screenKey = "al
           callBack: convertEpochToDate
         }
       ),
-      dateToGenerateDemandRent: getLabelWithValue(
-        {
-          labelName: "Date to Generate the Demand/Rent",
-          labelKey: "ES_DATE_TO_GENERATE_DEMAND_RENT_LABEL"
-        }, 
-        {
-          jsonPath: `Properties[0].propertyDetails.paymentConfig.groundRentGenerateDemand`,
-        }
-      )
     }),
     viewRents: getCommonContainer({})
   })
@@ -1099,6 +1100,87 @@ export const getReviewSecurity = (isEditable = true, step = 5, screenKey = "allo
       )
     })
   })
+}
+
+export const getReviewInterest = (isEditable = true, step = 5, screenKey = "allotment") => {
+  return getCommonGrayCard({
+    headerDiv: {
+      ...headerDiv,
+      children: {
+        header: {
+          gridDefination: {
+            xs: 12,
+            sm: 10
+          },
+          ...getCommonSubHeader({
+            labelName: "Interest Details",
+            labelKey: "ES_INTEREST_DETAILS_HEADER"
+          })
+        },
+        editSection: masterEntryEditSection(isEditable, step, screenKey)
+      }
+    },
+    viewInterest: getCommonContainer({
+      interestFixed: getLabelWithValue(
+        {
+          labelName: "Interest fixed?",
+          labelKey: "ES_INTEREST_FIXED_LABEL"
+        }, 
+        {
+          jsonPath: `Properties[0].propertyDetails.paymentConfig.isIntrestApplicable`
+        }
+      ),
+      percentageOfInterest: getLabelWithValue(
+        {
+          labelName: "Percentage of interest",
+          labelKey: "ES_PERCENTAGE_OF_INTEREST_LABEL"
+        }, 
+        {
+          jsonPath: `Properties[0].propertyDetails.paymentConfig.rateOfInterest`,
+        }
+      )
+    })
+  })
+}
+
+export const rentDetailsTable =  {
+  uiFramework: "custom-molecules",
+  componentPath: "Table",
+  props: {
+    columns: [
+      getTextToLocalMapping("Rent amount"),
+      getTextToLocalMapping("Start month"),
+      getTextToLocalMapping("End month"),
+      getTextToLocalMapping("Till"),
+    ],
+    options: {
+      pagination: false,
+      filter: false,
+      download: false,
+      print: false,
+      search:false,
+      viewColumns:false,
+      responsive: "stacked",
+      selectableRows: false,
+      hover: true,
+      rowsPerPageOptions: [10, 15, 20]
+    },
+    customSortColumn: {
+      column: "Application Date",
+      sortingFn: (data, i, sortDateOrder) => {
+        const epochDates = data.reduce((acc, curr) => {
+          acc.push([...curr, getEpochForDate(curr[4], "dayend")]);
+          return acc;
+        }, []);
+        const order = sortDateOrder === "asc" ? true : false;
+        const finalData = sortByEpoch(epochDates, !order).map(item => {
+          item.pop();
+          return item;
+        });
+        return { data: finalData, currentOrder: !order ? "asc" : "desc" };
+      }
+    }
+  }
 }
 
 export const getReviewAuction = (isEditable = true, screenName) => {
@@ -1468,6 +1550,75 @@ export const getReviewProprietorshipDetails = (isEditable = true, screenkey = "a
         },
         {
           jsonPath: "Properties[0].propertyDetails.owners[0].ownerDetails.cpNumber"
+        }
+      )
+    })
+  })
+}
+
+export const getReviewConsolidatedPaymentDetails = (isEditable = true, screenkey = "apply") => {
+  return getCommonGrayCard({
+    headerDiv: {
+      ...headerDiv,
+      children: {
+        header: {
+          gridDefination: {
+            xs: 12,
+            sm: 10
+          },
+          ...getCommonSubHeader({
+            labelName: "Consolidated Payment Details",
+            labelKey: "ES_CONSOLIDATED_PAYMENT_DETAILS"
+          })
+        },
+        editSection: masterEntryEditSection(isEditable, 2, screenkey)
+      }
+    },
+    viewFour: getCommonContainer({
+      consolidatedRent: getLabelWithValue(
+        {
+          labelName: "Consolidated Rent",
+          labelKey: "ES_CONSOLIDATED_RENT_LABEL"
+        }, 
+        {
+          jsonPath: "Properties[0].propertyDetails.estateDemands[0].rent",
+        }
+      ),
+      consolidatedGst: getLabelWithValue(
+        {
+          labelName: "Consolidated GST",
+          labelKey: "ES_CONSOLIDATED_GST_LABEL"
+        },
+        {
+          jsonPath: "Properties[0].propertyDetails.estateDemands[0].gst"
+        }
+      ),
+      consolidatedInterestOnRent: getLabelWithValue(
+        {
+          labelName: "Consolidated Interest on Rent",
+          labelKey: "ES_CONSOLIDATED_INTEREST_ON_RENT_LABEL"
+        },
+        {
+          jsonPath: "Properties[0].propertyDetails.estateDemands[0].penaltyInterest"
+        }
+      ),
+      consolidatedInterestOnGst: getLabelWithValue(
+        {
+          labelName: "Consolidated Interest on GST",
+          labelKey: "ES_CONSOLIDATED_INTEREST_ON_GST_LABEL"
+        },
+        {
+          jsonPath: "Properties[0].propertyDetails.estateDemands[0].gstInterest"
+        }
+      ),
+      consolidatedTill: getLabelWithValue(
+        {
+          labelName: "Consolidated Till",
+          labelKey: "ES_CONSOLIDATED_TILL_LABEL"
+        },
+        {
+          jsonPath: "Properties[0].propertyDetails.estateDemands[0].generationDate",
+          callBack: convertEpochToDate
         }
       )
     })

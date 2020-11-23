@@ -6,8 +6,9 @@ import { prepareFinalObject,handleScreenConfigurationFieldChange as handleField 
 import { getSearchResults ,setXLSTableData } from "../../../../ui-utils/commons";
 import {getReviewPayment} from './preview-resource/payment-details'
 import {onTabChange, headerrow, tabs} from './search-preview'
-import {paymentDetailsTable} from './applyResource/applyConfig'
+// import {paymentDetailsTable} from './applyResource/applyConfig'
 import { getBreak } from "egov-ui-framework/ui-config/screens/specs/utils";
+import { getReviewConsolidatedPaymentDetails} from "./applyResource/reviewProperty"
 
 const beforeInitFn = async (action, state, dispatch, fileNumber) => {
   if(fileNumber){
@@ -16,10 +17,12 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
         ];
    const response =  await getSearchResults(queryObject);
     if(!!response) {
-      let {estateDemands, estatePayments} = response.Properties[0].propertyDetails;
-      estateDemands = estateDemands || []
-      estatePayments = estatePayments || []
-      setXLSTableData({demands:estateDemands,payments:estatePayments, componentJsonPath: "components.div.children.paymentDetailsTable", screenKey: "payment-details"})
+      // let {estateDemands, estatePayments} = response.Properties[0].propertyDetails;
+      // estateDemands = estateDemands || []
+      // estatePayments = estatePayments || []
+      // setXLSTableData({demands:estateDemands,payments:estatePayments, componentJsonPath: "components.div.children.paymentDetailsTable", screenKey: "payment-details"})
+      let properties = response.Properties;
+      dispatch(prepareFinalObject("Properties[0]", properties[0]));
     }
   }
 }
@@ -66,7 +69,10 @@ const EstatePaymentDetails = {
             type: "array",
           },
           breakAfterSearch: getBreak(),
-          paymentDetailsTable
+          reviewConsolidatedPayments : getCommonCard({
+            consolidatedPaymentDetails: getReviewConsolidatedPaymentDetails(false, "apply")
+          })
+          
       }
     }
   }

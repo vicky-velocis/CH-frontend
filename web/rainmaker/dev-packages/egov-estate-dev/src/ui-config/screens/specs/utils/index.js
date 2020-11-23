@@ -1894,6 +1894,30 @@ export const getTextToLocalMapping = label => {
         "ES_REFUND_STATUS",
         localisationLabels
       );
+    case "Rent amount":
+      return getLocaleLabels(
+        "Rent amount",
+        "ES_RENT_AMOUNT_LABEL",
+        localisationLabels
+      );
+    case "Start month":
+      return getLocaleLabels(
+        "Start month",
+        "ES_START_MONTH_LABEL",
+        localisationLabels
+      );
+    case "End month":
+      return getLocaleLabels(
+        "End month",
+        "ES_END_MONTH_LABEL",
+        localisationLabels
+      );
+    case "Till":
+      return getLocaleLabels(
+        "Till",
+        "ES_TILL_LABEL_IN_YEARS",
+        localisationLabels
+      );
   }
 };
 
