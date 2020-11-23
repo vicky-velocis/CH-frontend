@@ -123,7 +123,7 @@ const getData = async (action, state, dispatch) => {
         [{
           propertyMasterOrAllotmentOfSite: "PROPERTY_MASTER",
           propertyDetails: {
-            branchType: "MANIMAJRA_BRANCH"
+            branchType: "MANI_MAJRA"
           }
         }]
       )
