@@ -6,17 +6,32 @@ import {
   getCommonTitle,
   getPattern,
   getCommonContainer,
-  getCommonGrayCard
+  getCommonGrayCard,
+  getLabelWithValue as _getLabelWithValue
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import {
   prepareFinalObject,
   handleScreenConfigurationFieldChange as handleField
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import {
-  getTodaysDateInYMD
+  getTodaysDateInYMD,
+  _getPattern
 } from "../../utils";
 import get from "lodash/get";
 import { set } from "lodash";
+
+function getLabelWithValue(labelName, path) {
+  const label = _getLabelWithValue(labelName, path);
+  label.gridDefination.sm = 3;
+  return label;
+}
+
+let screenName = "apply";
+let paymentStep = "formwizardEighthStep"
+if ((window.location.href).includes("allotment")) {
+    screenName = "allotment";
+    paymentStep = "formwizardSixthStepAllotment";
+}
 
 var data = []
 new Array(28).fill(undefined).map((val,idx) => {
@@ -215,42 +230,46 @@ const getDemandRadioButton = {
   required: true,
   type: "array",
   beforeFieldChange: (action, state, dispatch) => {
-    if (action.value == "GROUNDRENT") {
-      dispatch(
-        handleField(
-          "allotment",
-          "components.div.children.formwizardSixthStepAllotment.children.groundRentDetails",
-          "visible",
-          true
-        )
+    dispatch(
+      handleField(
+        screenName,
+        `components.div.children.${paymentStep}.children.groundRentDetails`,
+        "visible",
+        !!(action.value == "GROUNDRENT")
       )
-      dispatch(
-        handleField(
-          "allotment",
-          "components.div.children.formwizardSixthStepAllotment.children.licenseFeeDetails",
-          "visible",
-          false
-        )
+    )
+    dispatch(
+      handleField(
+        screenName,
+        `components.div.children.${paymentStep}.children.licenseFeeDetails`,
+        "visible",
+        !!(action.value == "LICENSEFEE")
       )
-    }
-    else {
-      dispatch(
-        handleField(
-          "allotment",
-          "components.div.children.formwizardSixthStepAllotment.children.licenseFeeDetails",
-          "visible",
-          true
-        )
+    )
+    dispatch(
+      handleField(
+        "allotment",
+        "components.div.children.formwizardSeventhStepAllotment.children.reviewAllotmentDetails.children.cardContent.children.reviewGroundRent",
+        "visible",
+        !!(action.value == "GROUNDRENT")
       )
-      dispatch(
-        handleField(
-          "allotment",
-          "components.div.children.formwizardSixthStepAllotment.children.groundRentDetails",
-          "visible",
-          false
-        )
+    )
+    dispatch(
+      handleField(
+        "allotment",
+        "components.div.children.formwizardSeventhStepAllotment.children.reviewAllotmentDetails.children.cardContent.children.reviewLicenseFee",
+        "visible",
+        !!(action.value == "LICENSEFEE")
       )
-    }
+    )
+    dispatch(
+      handleField(
+        "allotment",
+        "components.div.children.formwizardSeventhStepAllotment.children.reviewAllotmentDetails.children.cardContent.children.reviewAdvanceRent",
+        "visible",
+        !!(action.value)
+      )
+    )
   }
 };
 
@@ -346,16 +365,16 @@ const dateToGenerateDemandRentField = {
 
 const rentAmountField = {
   label: {
-      labelName: "Rent Amount",
-      labelKey: "ES_RENT_AMOUNT_LABEL"
+      labelName: "Monthly Rent",
+      labelKey: "ES_MONTHLY_RENT_LABEL"
   },
   placeholder: {
-      labelName: "Enter Rent Amount",
-      labelKey: "ES_RENT_AMOUNT_PLACEHOLDER"
+      labelName: "Enter Monthly Rent",
+      labelKey: "ES_MONTHLY_RENT_PLACEHOLDER"
   },
   gridDefination: {
       xs: 12,
-      sm: 4
+      sm: 3
   },
   maxLength: 100,
   jsonPath: "Properties[0].propertyDetails.paymentDetails[0].rent[0].rentAmount"
@@ -363,57 +382,66 @@ const rentAmountField = {
 
 const startYearField = {
   label: {
-      labelName: "Start Year",
-      labelKey: "ES_START_YEAR_LABEL"
+      labelName: "Start Month",
+      labelKey: "ES_START_MONTH_LABEL"
   },
   placeholder: {
-      labelName: "Enter Start Year",
-      labelKey: "ES_START_YEAR_PLACEHOLDER"
+      labelName: "Enter Start Month",
+      labelKey: "ES_START_MONTH_PLACEHOLDER"
   },
   gridDefination: {
       xs: 12,
-      sm: 4
+      sm: 3
   },
   maxLength: 100,
+  props: {
+    disabled: true,
+    value: 0
+  },
   jsonPath: "Properties[0].propertyDetails.paymentDetails[0].rent[0].startYear"
 }
 
 const endYearField = {
   label: {
-      labelName: "End Year",
-      labelKey: "ES_END_YEAR_LABEL"
+      labelName: "End Month",
+      labelKey: "ES_END_MONTH_LABEL"
   },
   placeholder: {
-      labelName: "Enter End Year",
-      labelKey: "ES_END_YEAR_PLACEHOLDER"
+      labelName: "Enter End Month",
+      labelKey: "ES_END_MONTH_PLACEHOLDER"
   },
   gridDefination: {
       xs: 12,
-      sm: 4
+      sm: 3
   },
   maxLength: 100,
+  props: {
+    type: "number",
+    helperText: "HIII"
+  },
   jsonPath: "Properties[0].propertyDetails.paymentDetails[0].rent[0].endYear"
 }
 
 const commonRentInformation = () => {
   return getCommonGrayCard({
-    header: getCommonTitle({
-      labelName: "Rent",
-      labelKey: "ES_RENT"
-    }, {
-      style: {
-        marginBottom: 18
-      }
-    }),
     rentCard: getCommonContainer({
       rentAmount: getTextField(rentAmountField),
       startYear: getTextField(startYearField),
-      endYear: getTextField(endYearField)
+      endYear: getTextField(endYearField),
+      totalMonths: getLabelWithValue({
+        labelName: "Till",
+        labelKey: "ES_TILL_LABEL_IN_YEARS"
+      },
+      {
+        jsonPath: "Properties[0].propertyDetails.paymentDetails[0].rent[0].endYear",
+        callBack: (value) => (Number(value)/12).toFixed(2)
+      }
+      )
     })
   });
 };
 
-export const rentDetails = getCommonCard({
+export const rentDetails = getCommonGrayCard({
   detailsContainer: getCommonContainer({
     multipleRentContainer: {
       uiFramework: "custom-atoms",
@@ -424,8 +452,17 @@ export const rentDetails = getCommonCard({
         }
       },
       children: {
+        header: getCommonTitle({
+          labelName: "Rent",
+          labelKey: "ES_RENT"
+        }, {
+          style: {
+            marginBottom: 18
+          }
+        }),
         multipleRentInfo: {
-          uiFramework: "custom-containers",
+          uiFramework: "custom-containers-local",
+          moduleName: "egov-estate",
           componentPath: "MultiItem",
           props: {
             scheama: commonRentInformation(),
@@ -435,22 +472,41 @@ export const rentDetails = getCommonCard({
               labelKey: "ES_COMMON_ADD_RENT_LABEL"
             },
             headerName: "Rent",
-            // headerJsonPath: "children.cardContent.children.header.children.key.props.labelKey",
             headerJsonPath: "children.cardContent.children.header.children.Rent.props.label",
             sourceJsonPath: "Properties[0].propertyDetails.paymentDetails[0].rent",
             prefixSourceJsonPath: "children.cardContent.children.rentCard.children",
+            afterPrefixJsonPath: "children.value.children.key",
             onMultiItemAdd: (state, multiItemContent) => {
               let rent = get(
                 state.screenConfiguration.preparedFinalObject,
                 "Properties[0].propertyDetails.paymentDetails[0].rent",
                 []
               );
-              if (rent.length) {
+              if (rent.length && rent[rent.length - 1].endYear) {
                 let lastAddedEndYear = rent[rent.length - 1].endYear;
-                multiItemContent.startYear.props.value = lastAddedEndYear;
-              }
-                
+                multiItemContent.startYear.props.value = Number(lastAddedEndYear) + 1;
+              } 
+              // else {
+              //   multiItemContent.startYear.props.disabled = false
+              // }
               return multiItemContent;
+            },
+            onMultiItemDelete: (state, deletedIndex, changeField) => {
+              let rent = get(
+                state.screenConfiguration.preparedFinalObject,
+                "Properties[0].propertyDetails.paymentDetails[0].rent",
+                []
+              );
+              if(deletedIndex !== rent.length - 1) {
+                const previewYearObj = rent.filter((item, index) => index < deletedIndex && item.isDeleted !== false).pop()
+                const nextYearObj = rent.findIndex((item, index) => index > deletedIndex && item.isDeleted !== false)
+                nextYearObj !== -1 && changeField(
+                  "allotment",
+                  `components.div.children.formwizardSixthStepAllotment.children.groundRentDetails.children.cardContent.children.rentContainer.children.cardContent.children.detailsContainer.children.multipleRentContainer.children.multipleRentInfo.props.items[${nextYearObj}].item${nextYearObj}.children.cardContent.children.rentCard.children.startYear`,
+                  "props.value",
+                  !!previewYearObj && !!previewYearObj.endYear ? Number(previewYearObj.endYear)+1 : 0
+                )
+              }
             }
           },
           type: "array"
@@ -581,7 +637,7 @@ const licenseFeeField = {
   },
   gridDefination: {
       xs: 12,
-      sm: 4
+      sm: 3
   },
   maxLength: 100,
   jsonPath: "Properties[0].propertyDetails.paymentDetails[0].licenseFees[0].licenseFee"
@@ -589,16 +645,20 @@ const licenseFeeField = {
 
 const startYearLfField = {
   label: {
-      labelName: "Start Year",
-      labelKey: "ES_START_YEAR_LABEL"
+      labelName: "Start Month",
+      labelKey: "ES_START_MONTH_LABEL"
   },
   placeholder: {
-      labelName: "Enter Start Year",
-      labelKey: "ES_START_YEAR_PLACEHOLDER"
+      labelName: "Enter Start Month",
+      labelKey: "ES_START_MONTH_PLACEHOLDER"
   },
   gridDefination: {
       xs: 12,
-      sm: 4
+      sm: 3
+  },
+  props: {
+    disabled: true,
+    value: 0
   },
   maxLength: 100,
   jsonPath: "Properties[0].propertyDetails.paymentDetails[0].licenseFees[0].startYear"
@@ -606,16 +666,16 @@ const startYearLfField = {
 
 const endYearLfField = {
   label: {
-      labelName: "End Year",
-      labelKey: "ES_END_YEAR_LABEL"
+      labelName: "End Month",
+      labelKey: "ES_END_MONTH_LABEL"
   },
   placeholder: {
-      labelName: "Enter End Year",
-      labelKey: "ES_END_YEAR_PLACEHOLDER"
+      labelName: "Enter End Month",
+      labelKey: "ES_END_MONTH_PLACEHOLDER"
   },
   gridDefination: {
       xs: 12,
-      sm: 4
+      sm: 3
   },
   maxLength: 100,
   jsonPath: "Properties[0].propertyDetails.paymentDetails[0].licenseFees[0].endYear"
@@ -624,23 +684,24 @@ const endYearLfField = {
 
 const commonLicenseInformation = () => {
   return getCommonGrayCard({
-    header: getCommonTitle({
-      labelName: "License Fee for Year",
-      labelKey: "ES_LICENSE_FEE_FOR_YEAR"
-    }, {
-      style: {
-        marginBottom: 18
-      }
-    }),
     licenseCard: getCommonContainer({
       licenseFee: getTextField(licenseFeeField),
       startYear: getTextField(startYearLfField),
-      endYear: getTextField(endYearLfField)
+      endYear: getTextField(endYearLfField),
+      totalMonths: getLabelWithValue({
+        labelName: "Till",
+        labelKey: "ES_TILL_LABEL_IN_YEARS"
+      },
+      {
+        jsonPath: "Properties[0].propertyDetails.paymentDetails[0].licenseFees[0].endYear",
+        callBack: (value) => (Number(value)/12).toFixed(2)
+      }
+      )
     })
   });
 };
 
-export const licenseFeeForYearDetails = getCommonCard({
+export const licenseFeeForYearDetails = getCommonGrayCard({
   detailsContainer: getCommonContainer({
     multipleLicenseContainer: {
       uiFramework: "custom-atoms",
@@ -651,8 +712,17 @@ export const licenseFeeForYearDetails = getCommonCard({
         }
       },
       children: {
+        header: getCommonTitle({
+          labelName: "License Fee for Year",
+          labelKey: "ES_LICENSE_FEE_FOR_YEAR"
+        }, {
+          style: {
+            marginBottom: 18
+          }
+        }),
         multipleLicenseInfo: {
-          uiFramework: "custom-containers",
+          uiFramework: "custom-containers-local",
+          moduleName: "egov-estate",
           componentPath: "MultiItem",
           props: {
             scheama: commonLicenseInformation(),
@@ -666,18 +736,39 @@ export const licenseFeeForYearDetails = getCommonCard({
             headerJsonPath: "children.cardContent.children.header.children.License Fee.props.label",
             sourceJsonPath: "Properties[0].propertyDetails.paymentDetails[0].licenseFees",
             prefixSourceJsonPath: "children.cardContent.children.licenseCard.children",
+
+            afterPrefixJsonPath: "children.value.children.key",
             onMultiItemAdd: (state, multiItemContent) => {
-              let licenseFees = get(
+              let rent = get(
                 state.screenConfiguration.preparedFinalObject,
                 "Properties[0].propertyDetails.paymentDetails[0].licenseFees",
                 []
               );
-              if (licenseFees.length) {
-                let lastAddedEndYear = licenseFees[licenseFees.length - 1].endYear;
-                multiItemContent.startYear.props.value = lastAddedEndYear;
-              }
-                
+              if (rent.length && rent[rent.length - 1].endYear) {
+                let lastAddedEndYear = rent[rent.length - 1].endYear;
+                multiItemContent.startYear.props.value = Number(lastAddedEndYear) + 1;
+              } 
+              // else {
+              //   multiItemContent.startYear.props.disabled = false
+              // }
               return multiItemContent;
+            },
+            onMultiItemDelete: (state, deletedIndex, changeField) => {
+              let rent = get(
+                state.screenConfiguration.preparedFinalObject,
+                "Properties[0].propertyDetails.paymentDetails[0].licenseFees",
+                []
+              );
+              if(deletedIndex !== rent.length - 1) {
+                const previewYearObj = rent.filter((item, index) => index < deletedIndex && item.isDeleted !== false).pop()
+                const nextYearObj = rent.findIndex((item, index) => index > deletedIndex && item.isDeleted !== false)
+                nextYearObj !== -1 && changeField(
+                  "allotment",
+                  `components.div.children.formwizardSixthStepAllotment.children.licenseFeeDetails.children.cardContent.children.licenseFeeForYearContainer.children.cardContent.children.detailsContainer.children.multipleLicenseContainer.children.multipleLicenseInfo.props.items[${nextYearObj}].item${nextYearObj}.children.cardContent.children.licenseCard.children.startYear`,
+                  "props.value",
+                  !!previewYearObj && !!previewYearObj.endYear ? Number(previewYearObj.endYear)+1 : 0
+                )
+              }
             }
           },
           type: "array"
@@ -746,6 +837,33 @@ const dateOfPaymentField = {
   // }
 }
 
+const getMonthsOfRentRadioButton = {
+  uiFramework: "custom-containers",
+  componentPath: "RadioGroupContainer",
+  gridDefination: {
+    xs: 12,
+    sm: 6,
+  },
+  jsonPath: "Properties[0].propertyDetails.paymentDetails[0].monthsOfRent",
+  props: {
+    buttons: [{
+        labelName: "2 months of rent",
+        labelKey: "ES_TWO_MONTHS_RENT_LABEL",
+        value: "TWOMONTHSRENT"
+      },
+      {
+        label: "3 months rent",
+        labelKey: "ES_THREE_MONTHS_RENT_LABEL",
+        value: "THREEMONTHSRENT"
+      }
+    ],
+    jsonPath: "Properties[0].propertyDetails.paymentDetails[0].monthsOfRent",
+    // required: true
+  },
+  // required: true,
+  type: "array"
+}
+
 const securityDetailsHeader = getCommonTitle({
   labelName: "Security Details",
   labelKey: "ES_SECURITY_DETAILS_HEADER"
@@ -760,6 +878,75 @@ export const securityDetails = getCommonCard({
   header: securityDetailsHeader,
   detailsContainer: getCommonContainer({
       securityFeeAmount: getTextField(securityFeeAmountField),
-      securityFeeDateOfPayment: getDateField(dateOfPaymentField)
+      monthsOfRent: getMonthsOfRentRadioButton,
+      securityFeeDateOfPayment: getDateField(dateOfPaymentField),
+      
+  })
+})
+
+/******************** Interest Details ********************/
+const getInterestFixedRadioButton = {
+  uiFramework: "custom-containers",
+  componentPath: "RadioGroupContainer",
+  gridDefination: {
+    xs: 12,
+    sm: 6,
+  },
+  jsonPath: "Properties[0].propertyDetails.paymentDetails[0].interestFixed",
+  props: {
+    label: {
+      name: "Interest fixed?",
+      key: "ES_INTEREST_FIXED_LABEL"
+    },
+    buttons: [{
+        labelName: "Yes",
+        labelKey: "ES_COMMON_YES",
+        value: "true"
+      },
+      {
+        label: "No",
+        labelKey: "ES_COMMON_NO",
+        value: "false"
+      }
+    ],
+    jsonPath: "Properties[0].propertyDetails.paymentDetails[0].interestFixed",
+    // required: true
+  },
+  // required: true,
+  type: "array"
+}
+
+const percentageOfInterestField = {
+  label: {
+      labelName: "Percentage of interest",
+      labelKey: "ES_PERCENTAGE_OF_INTEREST_LABEL"
+  },
+  placeholder: {
+      labelName: "Enter percentage of interest",
+      labelKey: "ES_PERCENTAGE_OF_INTEREST_PLACEHOLDER"
+  },
+  gridDefination: {
+      xs: 12,
+      sm: 6
+  },
+  pattern: _getPattern("float"),
+  jsonPath: "Properties[0].propertyDetails.paymentDetails[0].percentageOfInterest"
+}
+
+const interestDetailsHeader = getCommonTitle({
+  labelName: "Interest Details",
+  labelKey: "ES_INTEREST_DETAILS_HEADER"
+}, {
+  style: {
+      marginBottom: 18,
+      marginTop: 18
+  }
+})
+
+export const interestDetails = getCommonCard({
+  header: interestDetailsHeader,
+  detailsContainer: getCommonContainer({
+    interestFixed: getInterestFixedRadioButton,
+    percentageOfInterest: getTextField(percentageOfInterestField)
   })
 })

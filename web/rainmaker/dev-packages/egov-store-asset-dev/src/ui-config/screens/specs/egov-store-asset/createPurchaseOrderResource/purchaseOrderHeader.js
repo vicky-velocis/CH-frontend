@@ -12,6 +12,7 @@ import { getSearchResults ,getSTOREPattern} from "../../../../../ui-utils/common
 import { getMaterialIndentSearchResults } from "../../../../../ui-utils/storecommonsapi";
 import { prepareFinalObject, handleScreenConfigurationFieldChange as  handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
+import get from "lodash/get";
 
 let indentNumber="";
 indentNumber = getQueryArg(window.location.href, "indentNumber");
@@ -261,7 +262,7 @@ export const purchaseOrderHeader = getCommonCard({
         {
          
           dispatch(prepareFinalObject("purchaseOrders[0].rateType", "Gem")); 
-          dispatch(prepareFinalObject("purchaseOrders[0].supplier.code", null));
+         //dispatch(prepareFinalObject("purchaseOrders[0].supplier.code", null));
           dispatch(
             handleField(
               "create-purchase-order",
@@ -302,8 +303,35 @@ export const purchaseOrderHeader = getCommonCard({
               true
             )
           );
+          const step = getQueryArg(window.location.href, "step"); 
+          const poNumber = getQueryArg(window.location.href, "poNumber");        
+          if(!step &&!poNumber)
+          {
+          // dispatch(
+          //   handleField(
+          //     `create-purchase-order`,
+          //     "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.supplierGem",
+          //     "props.value",
+          //     ''
+          //   )
+          // );
+          // dispatch(
+          //   handleField(
+          //     `create-purchase-order`,
+          //     "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.externalPoNumber",
+          //     "props.value",
+          //     ''
+          //   )
+          // );
+            }
         }
         else{
+          let purchaseOrders = get(
+            state.screenConfiguration.preparedFinalObject,
+            "purchaseOrders",
+            []
+          );
+         
           dispatch(
             handleField(
               "create-purchase-order",
@@ -344,6 +372,38 @@ export const purchaseOrderHeader = getCommonCard({
               false
             )
           ); 
+          dispatch(
+            handleField(
+              `create-purchase-order`,
+              "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.supplierGem",
+              "props.value",
+              ''
+            )
+          );
+          dispatch(
+            handleField(
+              `create-purchase-order`,
+              "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.externalPoNumber",
+              "props.value",
+              ''
+            )
+          );
+          if(state.screenConfiguration.preparedFinalObject.searchMaster && state.screenConfiguration.preparedFinalObject.searchMaster.supplierName)
+          {
+            const {supplierName} = state.screenConfiguration.preparedFinalObject.searchMaster;
+            if(purchaseOrders && purchaseOrders[0])
+            {
+              const {supplier} = purchaseOrders[0];
+              if(supplier)
+              {
+                const supplierObj =  supplierName.filter(ele => ele.code === supplier.code);
+                if (supplierObj && supplierObj[0]){
+                  dispatch(prepareFinalObject("purchaseOrders[0].supplier.name", supplierObj[0].name));         
+                }
+              }
+            }
+            
+           }
         }
         
       }
@@ -413,14 +473,17 @@ export const purchaseOrderHeader = getCommonCard({
 
             }
             else{
-              
-              priceList[0].rateContractNumber  =  response.priceLists[0].rateContractNumber;
-              priceList[0].rateContractDate   = new Date(response.priceLists[0].rateContractDate).toISOString().substr(0,10);
-              priceList[0].agreementNumber   =   response.priceLists[0].agreementNumber;
-              priceList[0].agreementDate   =   new Date(response.priceLists[0].agreementDate).toISOString().substr(0,10);
-              priceList[0].agreementStartDate   = new Date(response.priceLists[0].agreementStartDate).toISOString().substr(0,10);
-              priceList[0].agreementEndDate   =  new Date(response.priceLists[0].agreementEndDate).toISOString().substr(0,10);
 
+              if(response.priceLists[0])
+                {
+                    priceList[0].rateContractNumber  =  response.priceLists[0].rateContractNumber;
+                    priceList[0].rateContractDate   = new Date(response.priceLists[0].rateContractDate).toISOString().substr(0,10);
+                    priceList[0].agreementNumber   =   response.priceLists[0].agreementNumber;
+                    priceList[0].agreementDate   =   new Date(response.priceLists[0].agreementDate).toISOString().substr(0,10);
+                    priceList[0].agreementStartDate   = new Date(response.priceLists[0].agreementStartDate).toISOString().substr(0,10);
+                    priceList[0].agreementEndDate   =  new Date(response.priceLists[0].agreementEndDate).toISOString().substr(0,10);
+
+                }
             }
           }
            
@@ -434,12 +497,7 @@ export const purchaseOrderHeader = getCommonCard({
            if (supplierObj && supplierObj[0]){
              dispatch(prepareFinalObject("purchaseOrders[0].supplier.name", supplierObj[0].name));         
            }
-           else
-           {
-            // const {purchaseOrders}  = state.screenConfiguration.preparedFinalObject;
-            // const {supplier} = purchaseOrders[0];
-            // dispatch(prepareFinalObject("purchaseOrders[0].supplier.name", supplier.code));
-           }
+           
           }
         });     
        }
@@ -457,8 +515,9 @@ export const purchaseOrderHeader = getCommonCard({
         gridDefination: {
           xs: 6
         },
+        isFieldValid:true,
         pattern: getPattern("non-empty-alpha-numeric"),
-        jsonPath: "purchaseOrders[0].supplier.code",
+        jsonPath: "purchaseOrders[0].supplier.name",
        // sourceJsonPath: "searchMaster.supplierName",
         // props: {
         //   className: "hr-generic-selectfield",
@@ -468,6 +527,7 @@ export const purchaseOrderHeader = getCommonCard({
       }),
       beforeFieldChange: async (action, state, dispatch) => {
         if(action.value){
+         // dispatch(prepareFinalObject("purchaseOrders[0].supplier.code", action.value));  
        
       }
      }

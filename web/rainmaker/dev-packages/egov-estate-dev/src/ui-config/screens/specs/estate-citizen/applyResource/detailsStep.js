@@ -198,7 +198,8 @@ const getField = async (item, fieldData = {}, state) => {
       })
       }
       case "DROP_DOWN": {
-        const values = !!item.dataSource ? await getOptions(item.dataSource) : []
+        let values = !!item.dataSource ? await getOptions(item.dataSource) : []
+        values = values.map(datum => ({...datum, label: getLocaleLabels(datum.label, datum.label)}))
         return getSelectField({
           ...fieldProps,
           ...rest,
@@ -260,6 +261,32 @@ const getField = async (item, fieldData = {}, state) => {
               },
               ...rest
           }
+      }
+      case "MULTI_SELECT": {
+        const options = !!item.dataSource ? await getOptions(item.dataSource) : []
+        return {
+          moduleName: "egov-estate",
+          uiFramework: "custom-containers-local",
+          componentPath: "MultiSelectContainer",
+          gridDefination: {
+            xs: 12,
+            sm: 12,
+            md: 6
+          },
+          props: {
+            label: {
+              name: labelItem,
+              key: labelItem
+            },
+            placeholder: {
+              name: placeholder,
+              key: placeholder
+            },
+            options,
+            jsonPath: rest.jsonPath,
+            required
+          }
+        }
       }
       default: return getTextField({
         ...fieldProps,

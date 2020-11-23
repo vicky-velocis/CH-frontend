@@ -14,14 +14,7 @@ import {
   getCommonTitle,
   getLabel
 } from "egov-ui-framework/ui-config/screens/specs/utils";
-import commonConfig from "config/common.js";
-import {
-  httpRequest
-} from "../../../../ui-utils";
-import get from "lodash/get";
-import {
-  ESTATE_SERVICES_MDMS_MODULE
-} from "../../../../ui-constants";
+
 import {
   getSearchResults
 } from "../../../../ui-utils/commons";
@@ -31,6 +24,8 @@ import {
 import {
   getQueryArg
 } from "egov-ui-framework/ui-utils/commons";
+import {addPenalty} from '../../../../ui-utils/apply'
+import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 
 const header = getCommonHeader({
   labelName: "Penalty",
@@ -47,6 +42,7 @@ const beforeInitFn = async (action, state, dispatch) => {
   const response = await getSearchResults(queryObject)
   if (!!response.Properties && !!response.Properties.length) {
     dispatch(prepareFinalObject("Properties", response.Properties))
+    dispatch(prepareFinalObject("propertyPenalties", []))
   }
 }
 
@@ -67,7 +63,7 @@ const getPenaltyTypeRadioButton = {
       xs: 12,
       sm: 6,
   },
-  jsonPath: "Properties[0].propertyDetails.penaltyType",
+  jsonPath: "propertyPenalties[0].violationType",
   props: {
       label: {
           name: "Penalty Type",
@@ -76,14 +72,14 @@ const getPenaltyTypeRadioButton = {
       buttons: [{
           labelName: "Penalty for violation of T&C",
           labelKey: "ES_COMMON_PENALTY_FOR_VIOLATION_T&C",
-          value: "PENALTY_FOR_VIOLATION_T&C"
+          value: "violating T & C"
       },
       {
           label: "Penalty for Cheque bounce",
           labelKey: "ES_COMMON_PENALTY_FOR_CHEQUE_BOUNCE",
-          value: "PENALTY_FOR_CHEQUE_BOUNCE"
+          value: "check bounse"
       }],
-      jsonPath: "Properties[0].propertyDetails.penaltyType",
+      jsonPath: "propertyPenalties[0].violationType",
       required: true,
   },
   required: true,
@@ -105,7 +101,7 @@ const amountField = {
   },
   pattern: getPattern("Amount"),
   required: true,
-  jsonPath: "Properties[0].propertyDetails.penaltyAmount"
+  jsonPath: "propertyPenalties[0].penaltyAmount"
 }
 
 export const penaltyDetails = getCommonCard({
@@ -143,7 +139,7 @@ export const getCommonApplyFooter = children => {
 };
 
 const callBackForSubmit = (state, dispatch) => {
-  console.log("callBackForSubmit");
+  addPenalty(state,dispatch)
 }
 
 const submitFooter = getCommonApplyFooter({
@@ -175,6 +171,28 @@ const submitFooter = getCommonApplyFooter({
   }
 })
 
+export const onTabChange = async(tabIndex, dispatch, state) => {
+  const fileNumber = getQueryArg(window.location.href, "fileNumber");
+  const propertyId = getQueryArg(window.location.href, "propertyId")
+  let path = "";
+  if (tabIndex === 0) {
+    path = `/estate/estate-penalty?propertyId=${propertyId}&fileNumber=${fileNumber}`;
+  }
+  else if (tabIndex === 1) {
+    path = `/estate/generatePenaltyStatement?propertyId=${propertyId}&fileNumber=${fileNumber}`
+  }
+  dispatch(setRoute(path))
+}
+
+export const tabs = [
+  {
+    tabButton: { labelName: "Add Penalty", labelKey: "ES_PENALTY_HEADER" }
+  },
+  {
+    tabButton: { labelName: "Penalty Statement", labelKey: "ES_PENALTY_STATEMENT" }
+  }
+]
+
 const estatePenalty = {
   uiFramework: "material-ui",
   name: "estate-penalty",
@@ -202,6 +220,17 @@ const estatePenalty = {
               ...header
             }
           }
+        },
+        tabSection: {
+          uiFramework: "custom-containers-local",
+          moduleName: "egov-estate",
+          componentPath: "CustomTabContainer",
+          props: {
+            tabs,
+            activeIndex: 0,
+            onTabChange
+          },
+          type: "array",
         },
         detailsContainer,
         footer: submitFooter
