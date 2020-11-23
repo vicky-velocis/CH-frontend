@@ -173,8 +173,13 @@ const getData = async (action, state, dispatch) => {
               id: "apply_form3"
             },
             children: {
+              summary:getCommonCard({  
               reviewDetails: third_step,
               declarationSummary: declarationSummary
+              }),
+              // declarationSummary: getCommonCard({
+              //   declarationSummary: declarationSummary
+              // })
             },
             visible: false
           } ,
@@ -185,9 +190,9 @@ const getData = async (action, state, dispatch) => {
 }
 const declarationDetails = getCommonContainer({
   checkbox:{
-   uiFramework: "ui-atoms-local",
+   uiFramework: "ui-containers-local",
    moduleName: "egov-estate-dev",
-   componentPath: "Checkbox",
+   componentPath: "CheckboxContainer",
    props: {
      content:'ES_DECLARATION_BOX'
    },
