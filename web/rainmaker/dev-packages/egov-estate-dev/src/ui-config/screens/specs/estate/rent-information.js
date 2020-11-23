@@ -6,7 +6,7 @@ import { prepareFinalObject,handleScreenConfigurationFieldChange as handleField 
 import { getSearchResults ,setXLSTableData } from "../../../../ui-utils/commons";
 import {onTabChange, headerrow, tabs} from './search-preview'
 import { getBreak } from "egov-ui-framework/ui-config/screens/specs/utils";
-import { getReviewLicenseFee, getReviewInterest, getReviewSecurity, getReviewGroundRent, rentDetailsTable, getReviewPremiumAmount, installmentTable } from "./applyResource/reviewProperty";
+import { getReviewLicenseFee, getReviewInterest, getReviewSecurity, getReviewGroundRent, rentDetailsTable, getReviewPremiumAmount, installmentTable, getReviewAdvanceRent } from "./applyResource/reviewProperty";
 import { getTextToLocalMapping } from "../utils"
 
 const beforeInitFn = async (action, state, dispatch, fileNumber) => {
@@ -155,6 +155,7 @@ components: {
           breakAfterSearch2: getBreak(),
           rentTable: rentDetailsTable,
           licenseFeeDetails: getReviewLicenseFee(false, 0, "apply"),
+          advanceRentDetails: getReviewAdvanceRent(false, 0, "apply"),
           interestDetails: getReviewInterest(false, 0, "apply"),
           securityDetails: getReviewSecurity(false, 0, "apply")
         })
