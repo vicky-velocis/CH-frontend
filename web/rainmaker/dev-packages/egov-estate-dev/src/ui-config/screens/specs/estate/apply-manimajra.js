@@ -135,7 +135,7 @@ const getData = async (action, state, dispatch) => {
       name: "categories"
     },
     {
-      name: "propertyTypeMB"
+      name: "propertyTypeMM"
     },
     {
       name: "modeOfTransfer"
