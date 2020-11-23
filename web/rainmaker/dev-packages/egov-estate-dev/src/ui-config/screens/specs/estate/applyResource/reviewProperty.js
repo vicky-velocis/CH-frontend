@@ -881,7 +881,7 @@ export const getReviewCourtCase = (isEditable = true, owner = 0, step = 6, scree
   })
 }
 
-export const getReviewPremiumAmount = (isEditable = true) => {
+export const getReviewPremiumAmount = (isEditable = true, step = 5, screenKey = "allotment") => {
   return getCommonGrayCard({
     headerDiv: {
       ...headerDiv,
@@ -896,7 +896,7 @@ export const getReviewPremiumAmount = (isEditable = true) => {
             labelKey: "ES_PREMIUM_AMOUNT_DETAILS_HEADER"
           })
         },
-        editSection: masterEntryEditSection(isEditable, 5, "allotment")
+        editSection: masterEntryEditSection(isEditable, step, screenKey)
       }
     },
     viewPremiumAmount: getCommonContainer({
@@ -912,6 +912,44 @@ export const getReviewPremiumAmount = (isEditable = true) => {
     }),
     viewInstallments: getCommonContainer({})
   })
+}
+
+export const installmentTable =  {
+  uiFramework: "custom-molecules",
+  componentPath: "Table",
+  props: {
+    columns: [
+      getTextToLocalMapping("Installment"),
+      getTextToLocalMapping("Due date of installment")
+    ],
+    options: {
+      pagination: false,
+      filter: false,
+      download: false,
+      print: false,
+      search:false,
+      viewColumns:false,
+      responsive: "stacked",
+      selectableRows: false,
+      hover: true,
+      rowsPerPageOptions: [10, 15, 20]
+    },
+    customSortColumn: {
+      column: "Application Date",
+      sortingFn: (data, i, sortDateOrder) => {
+        const epochDates = data.reduce((acc, curr) => {
+          acc.push([...curr, getEpochForDate(curr[4], "dayend")]);
+          return acc;
+        }, []);
+        const order = sortDateOrder === "asc" ? true : false;
+        const finalData = sortByEpoch(epochDates, !order).map(item => {
+          item.pop();
+          return item;
+        });
+        return { data: finalData, currentOrder: !order ? "asc" : "desc" };
+      }
+    }
+  }
 }
 
 export const getReviewGroundRent = (isEditable = true, step = 5, screenKey = "allotment") => {

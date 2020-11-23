@@ -1918,6 +1918,18 @@ export const getTextToLocalMapping = label => {
         "ES_TILL_LABEL_IN_YEARS",
         localisationLabels
       );
+    case "Installment":
+      return getLocaleLabels(
+        "Installment",
+        "ES_INSTALLMENT_LABEL",
+        localisationLabels
+      );
+    case "Due date of installment":
+      return getLocaleLabels(
+        "Due Date for Installment",
+        "ES_DUE_DATE_INSTALLMENT_LABEL",
+        localisationLabels
+      );
   }
 };
 

@@ -171,7 +171,7 @@ export const installmentDetails = getCommonCard({
             headerName: "Installment",
             // headerJsonPath: "children.cardContent.children.header.children.key.props.labelKey",
             headerJsonPath: "children.cardContent.children.header.children.Installment.props.label",
-            sourceJsonPath: "Properties[0].propertyDetails.paymentDetails[0].installments",
+            sourceJsonPath: "Properties[0].propertyDetails.paymentConfig.premiumAmountConfigItems",
             prefixSourceJsonPath: "children.cardContent.children.installmentCard.children",
             onMultiItemAdd: (state, multiItemContent) => {
               // muliItemContent["dueDateForInstallment"]["visible"] = true;

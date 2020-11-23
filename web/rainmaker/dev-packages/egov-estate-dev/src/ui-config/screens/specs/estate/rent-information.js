@@ -1,12 +1,12 @@
 import {
-  getCommonCard
+  getCommonCard, convertEpochToDate
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import { prepareFinalObject,handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getSearchResults ,setXLSTableData } from "../../../../ui-utils/commons";
 import {onTabChange, headerrow, tabs} from './search-preview'
 import { getBreak } from "egov-ui-framework/ui-config/screens/specs/utils";
-import { getReviewLicenseFee, getReviewInterest, getReviewSecurity, getReviewGroundRent, rentDetailsTable } from "./applyResource/reviewProperty";
+import { getReviewLicenseFee, getReviewInterest, getReviewSecurity, getReviewGroundRent, rentDetailsTable, getReviewPremiumAmount, installmentTable } from "./applyResource/reviewProperty";
 import { getTextToLocalMapping } from "../utils"
 
 const beforeInitFn = async (action, state, dispatch, fileNumber) => {
@@ -17,16 +17,20 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
       let properties = response.Properties;
       dispatch(prepareFinalObject("Properties[0]", properties[0]));
       let demandGenerationType = properties[0].propertyDetails.paymentConfig.isGroundRent;
+      let installments = properties[0].propertyDetails.paymentConfig.premiumAmountConfigItems ? properties[0].propertyDetails.paymentConfig.premiumAmountConfigItems : []
       let rentInfo = properties[0].propertyDetails.paymentConfig.paymentConfigItems ? properties[0].propertyDetails.paymentConfig.paymentConfigItems : [];
 
-      let data = rentInfo.map(item => ({
+      let rentData = rentInfo.map(item => ({
         [getTextToLocalMapping("Rent amount")]: item.groundRentAmount || 0,
         [getTextToLocalMapping("Start month")]: item.groundRentStartMonth || 0,
         [getTextToLocalMapping("End month")]: item.groundRentEndMonth || 0,
         [getTextToLocalMapping("Till")]: (item.groundRentEndMonth/12).toFixed(2) || 0,
       }));
 
-      debugger
+      let installmentData = installments.map(item => ({
+        [getTextToLocalMapping("Installment")]: item.premiumAmount || 0,
+        [getTextToLocalMapping("Due date of installment")]: convertEpochToDate(item.premiumAmountDate) || "-",
+      }))
 
       let isInterestFixedLabel = properties[0].propertyDetails.paymentConfig.isIntrestApplicable ? "ES_FIXED_INTEREST_LABEL" : "ES_YEARLY_INTEREST_LABEL";
 
@@ -43,7 +47,15 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
           action.screenKey,
           "components.div.children.reviewRentInfo.children.cardContent.children.rentTable",
           "props.data",
-          data
+          rentData
+        )
+      );
+      dispatch(
+        handleField(
+          action.screenKey,
+          "components.div.children.reviewRentInfo.children.cardContent.children.installmentTable",
+          "props.data",
+          installmentData
         )
       );
 
@@ -110,12 +122,15 @@ components: {
         },
         breakAfterSearch: getBreak(),
         reviewRentInfo : getCommonCard({
-          groundRentDetails: getReviewGroundRent(false, "apply"),
-          breakAfterSearch: getBreak(),
+          premiumAmountDetails: getReviewPremiumAmount(false, 0, "apply"),
+          breakAfterSearch1: getBreak(),
+          installmentTable: installmentTable,
+          groundRentDetails: getReviewGroundRent(false, 0, "apply"),
+          breakAfterSearch2: getBreak(),
           rentTable: rentDetailsTable,
-          licenseFeeDetails: getReviewLicenseFee(false, "apply"),
-          interestDetails: getReviewInterest(false, "apply"),
-          securityDetails: getReviewSecurity(false, "apply")
+          licenseFeeDetails: getReviewLicenseFee(false, 0, "apply"),
+          interestDetails: getReviewInterest(false, 0, "apply"),
+          securityDetails: getReviewSecurity(false, 0, "apply")
         })
     }
   }
