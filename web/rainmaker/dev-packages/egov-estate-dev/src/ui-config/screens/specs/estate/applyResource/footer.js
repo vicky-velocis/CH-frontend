@@ -1932,17 +1932,6 @@ export const downloadPrintContainer = (
             switch(applicationType){
               
               case 'LeaseholdToFreehold':
-                  if(process.env.REACT_APP_NAME === "Citizen"){
-                    downloadMenu = [
-                      applicationDownloadObject,
-                      LetterDownloadObject
-                    ]
-                  
-                    printMenu = [
-                      applicationPrintObject,
-                      LetterPrintObject
-                    ]
-                  }else{
                     downloadMenu = [
                       applicationDownloadObject,
                       NoticeDownloadObject,
@@ -1954,7 +1943,6 @@ export const downloadPrintContainer = (
                       NoticePrintObject,
                       LetterPrintObject
                     ]
-                  }
                   
                   break;
               case 'IssuanceOfNotice':
