@@ -103,7 +103,7 @@ const EstateNotices = {
             moduleName: "egov-estate",
             componentPath: "CustomTabContainer",
             props: {
-              tabs: tabs,
+              tabs: (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment,
               activeIndex: (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? 8 : 5,
               onTabChange
             },

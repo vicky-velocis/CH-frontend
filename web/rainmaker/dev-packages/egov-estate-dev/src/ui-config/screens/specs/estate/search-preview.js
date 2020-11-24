@@ -128,7 +128,6 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
 
 export const onTabChange = async(tabIndex, dispatch, state) => {
   fileNumber = getQueryArg(window.location.href, "fileNumber");
-  debugger
 
   isPropertyMasterOrAllotmentOfSite = get(
     state.screenConfiguration.preparedFinalObject,
@@ -137,8 +136,6 @@ export const onTabChange = async(tabIndex, dispatch, state) => {
   );
   
   let path = "";
-  let screenKey;
-  let type;
   if (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") {
     if (tabIndex === 0) {
       path = `/estate/search-preview?fileNumber=${fileNumber}&tenantId=${tenantId}&type=apply`;
@@ -194,22 +191,6 @@ export const onTabChange = async(tabIndex, dispatch, state) => {
       path = `/estate/court-case?fileNumber=${fileNumber}&tenantId=${tenantId}&type=allotment`
     }
   }
-  dispatch(
-    handleField(
-      action.screenKey,
-      "components.div.children.tabSection",
-      "props.tabs",
-      (type == "apply") ? tabs : tabsAllotment
-    )
-  )
-  dispatch(
-    handleField(
-      action.screenKey,
-      "components.div.children.tabSection",
-      "props.activeIndex",
-      (type == "apply") ? 7 : 4,
-    )
-  )
   dispatch(setRoute(path))
 }
 

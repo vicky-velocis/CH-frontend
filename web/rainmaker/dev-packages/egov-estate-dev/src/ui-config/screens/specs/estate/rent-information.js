@@ -40,24 +40,31 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
 
       let isInterestFixedLabel = properties[0].propertyDetails.paymentConfig.isIntrestApplicable ? "ES_FIXED_INTEREST_LABEL" : "ES_YEARLY_INTEREST_LABEL";
 
-      // dispatch(
-      //   handleField(
-      //     action.screenKey,
-      //     "components.div.children.tabSection",
-      //     "props.tabs",
-      //     (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment
-      //   )
-      // )
-      
+      dispatch(
+        handleField(
+          action.screenKey,
+          "components.div.children.tabSection",
+          "props.tabs",
+          (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment
+        )
+      )
+      dispatch(
+        handleField(
+          action.screenKey,
+          "components.div.children.tabSection",
+          "props.activeIndex",
+          (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? 7 : 4,
+        )
+      )
 
-      // dispatch(
-      //   handleField(
-      //     action.screenKey,
-      //     "components.div.children.reviewRentInfo.children.cardContent.children.premiumAmountDetails",
-      //     "visible",
-      //     !!(isPropertyMasterOrAllotmentOfSite == "ALLOTMENT_OF_SITE")
-      //   )
-      // )
+      dispatch(
+        handleField(
+          action.screenKey,
+          "components.div.children.reviewRentInfo.children.cardContent.children.premiumAmountDetails",
+          "visible",
+          !!(isPropertyMasterOrAllotmentOfSite == "ALLOTMENT_OF_SITE")
+        )
+      )
       dispatch(
         handleField(
           action.screenKey,
@@ -174,7 +181,7 @@ components: {
           moduleName: "egov-estate",
           componentPath: "CustomTabContainer",
           props: {
-            tabs: tabs,
+            tabs: (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment,
             activeIndex: (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? 7 : 4,
             onTabChange
           },
