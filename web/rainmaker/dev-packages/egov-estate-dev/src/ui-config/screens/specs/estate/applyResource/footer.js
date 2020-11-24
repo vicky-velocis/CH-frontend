@@ -1636,15 +1636,26 @@ export const downloadPrintContainer = (
           case 'NOC':
           case 'Mortgage':
           case 'ScfToSco':
-
-              downloadMenu = [
-                applicationDownloadObject,
-                LetterDownloadObject
-              ]
-              printMenu = [
-                applicationPrintObject,
-                LetterPrintObject
-              ]
+          if(process.env.REACT_APP_NAME === "Citizen"){
+            downloadMenu = [
+              applicationDownloadObject
+              
+            ]
+            printMenu = [
+              applicationPrintObject
+              
+            ]
+          }else{
+            downloadMenu = [
+              applicationDownloadObject,
+              LetterDownloadObject
+            ]
+            printMenu = [
+              applicationPrintObject,
+              LetterPrintObject
+            ]
+          }
+            
             break;    
           
           case 'ChangeInTrade':
@@ -1670,21 +1681,21 @@ export const downloadPrintContainer = (
         case 'LeaseholdToFreehold':
             if(process.env.REACT_APP_NAME === "Citizen"){
               downloadMenu = [
-                applicationDownloadObject,
-                LetterDownloadObject
+                applicationDownloadObject   
               ]
             
               printMenu = [
-                applicationPrintObject,LetterPrintObject
+                applicationPrintObject
               ]
             }else{
               downloadMenu = [
                 applicationDownloadObject,
+                LetterDownloadObject,
                 NoticeDownloadObject
               ]
             
               printMenu = [
-                applicationPrintObject,NoticePrintObject
+                applicationPrintObject,LetterPrintObject,NoticePrintObject
               ]
             }
           
@@ -1693,11 +1704,11 @@ export const downloadPrintContainer = (
         case 'UnRegisteredWill':
             if(process.env.REACT_APP_NAME === "Citizen"){
               downloadMenu = [
-                applicationDownloadObject,EmailDownloadObject,LetterDownloadObject
+                applicationDownloadObject,
               ]
             
               printMenu = [
-                applicationPrintObject,EmailPrintObject,LetterPrintObject
+                applicationPrintObject,
               ]
             }else{
               downloadMenu = [
@@ -1714,11 +1725,11 @@ export const downloadPrintContainer = (
         case 'RegisteredWill':
             if(process.env.REACT_APP_NAME === "Citizen"){
               downloadMenu = [
-                applicationDownloadObject,EmailDownloadObject,LetterDownloadObject
+                applicationDownloadObject
               ]
             
               printMenu = [
-                applicationPrintObject,EmailPrintObject,LetterPrintObject
+                applicationPrintObject
               ]
             }else{
               downloadMenu = [
@@ -1735,11 +1746,11 @@ export const downloadPrintContainer = (
         case 'IntestateDeath':
             if(process.env.REACT_APP_NAME === "Citizen"){
               downloadMenu = [
-                applicationDownloadObject,EmailDownloadObject,LetterDownloadObject
+                applicationDownloadObject,EmailDownloadObject
               ]
             
               printMenu = [
-                applicationPrintObject,EmailPrintObject,LetterPrintObject
+                applicationPrintObject,EmailPrintObject
               ]
             }else{
               downloadMenu = [
