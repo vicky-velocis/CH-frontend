@@ -54,7 +54,7 @@ export const personalDetails = getCommonCard({
             ...getTextField({
                 label: {
                     labelName: "Email Address",
-                    labelKey: "BK_PCC_EMAIL_LABEL",
+                    labelKey: "BK_OSB_EMAIL_LABEL",
                 },
                 placeholder: {
                     labelName: "Enter Email Address",

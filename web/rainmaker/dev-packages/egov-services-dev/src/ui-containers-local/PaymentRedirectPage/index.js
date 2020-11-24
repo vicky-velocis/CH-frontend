@@ -74,6 +74,10 @@ class PaymentRedirect extends Component {
                 let apiUrl = "/bookings/api/_update";
                 if(bookingType === "PACC"){
                     apiUrl = 'bookings/park/community/_update';
+                    if(payload.bkApplicationStatus == "RE_INITIATED"){
+                      payload.bkFromDate = payload.bkStartingDate;
+                      payload.bkToDate = payload.bkEndingDate;
+                    }
                 }
                 response = await httpRequest(
                     "post",

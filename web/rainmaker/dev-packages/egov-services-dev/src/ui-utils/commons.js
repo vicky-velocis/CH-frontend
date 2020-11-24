@@ -363,7 +363,7 @@ let method = action === "INITIATE" || action === "RE_INITIATE" ? "CREATE" : "UPD
         set(payload, "bkAction", action);
         set(payload, "businessService", "PACC");
         let reInitiate = false;
-        if(action == "RE_INITIATE"){
+        if(action == "RE_INITIATE" && payload.bkApplicationStatus != "RE_INITIATED"){
             reInitiate = true;
         }
         // let reInitiate = false;

@@ -173,7 +173,7 @@ const callBackForNext = async (state, dispatch) => {
 
             let action = "INITIATE";
             let appStatus = get(state, "screenConfiguration.preparedFinalObject.Booking.bkApplicationStatus", "");
-            if(appStatus == "APPLIED"){
+            if(appStatus == "APPLIED" || appStatus == "RE_INITIATED"){
                 action = "RE_INITIATE";
             }
             console.log(appStatus, "Nero appStatus");
