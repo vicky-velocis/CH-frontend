@@ -64,68 +64,41 @@ const colonyField = {
         dispatch(prepareFinalObject("colonySelectedCode", colonySelectedCode))
         dispatch(prepareFinalObject("applyScreenMdmsData.propertyAreas", propertyAreas))
         dispatch(prepareFinalObject("Properties[0].propertyDetails.rentPerSqyd", rentPerSqyd))
-        let interestRatePerYear = get(state.screenConfiguration.screenConfig["apply"],"components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.interestRatePerYear.props.value");
-        let rentIncrementPercentage = get(state.screenConfiguration.screenConfig["apply"],"components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPercentage.props.value");
-        let rentIncrementPeriod = get(state.screenConfiguration.screenConfig["apply"], "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPeriod.props.value");
-
-        // compare mdms colony data values for rent with field values if same dispatch 
-        //if not same dont dispatch
-
+        
+        let currentColony = get(state.screenConfiguration.preparedFinalObject,"Properties[0].colony");
         rentedPropertyColonies.map(item => {
           // check if colonies are same
           // What if changing colony again how to keep track of change in value? -- push then to an array. see the last item if not same as previous dispatch new values.
-            if (action.value === item.code) {
-              if((colonySelectedCode[colonySelectedCode.length - 1] === colonySelectedCode[colonySelectedCode.length - 2]) && !!interestRatePerYear && !!rentIncrementPercentage && !!rentIncrementPeriod && (item.interestRateOrYear !== parseInt(interestRatePerYear) || item.rentIncrementPercentage !== parseInt(rentIncrementPercentage) || item.rentIncrementPeriod !== parseInt(rentIncrementPeriod))){
+          
+          if (action.value === item.code) {
+            if(action.value !== currentColony) {
+              // dispatch rent details
+    
+              dispatch(
+                    handleField(
+                        "apply",
+                        "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.interestRatePerYear",
+                        "props.value",
+                        item.interestRateOrYear.toString()
+                    )
+                )
                 dispatch(
-                  handleField(
-                      "apply",
-                      "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.interestRatePerYear",
-                      "props.value",
-                      interestRatePerYear.toString()
-                  )
-              )
-              dispatch(
-                  handleField(
-                      "apply",
-                      "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPercentage",
-                      "props.value",
-                      rentIncrementPercentage.toString()
-                  )
-              )
-              dispatch(
-                  handleField(
-                      "apply",
-                      "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPeriod",
-                      "props.value",
-                      rentIncrementPeriod.toString()
-                  )
-              )
-              }
-              else{
+                    handleField(
+                        "apply",
+                        "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPercentage",
+                        "props.value",
+                        item.rentIncrementPercentage.toString()
+                    )
+                )
                 dispatch(
-                  handleField(
-                      "apply",
-                      "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.interestRatePerYear",
-                      "props.value",
-                      item.interestRateOrYear.toString()
-                  )
-              )
-              dispatch(
-                  handleField(
-                      "apply",
-                      "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPercentage",
-                      "props.value",
-                      item.rentIncrementPercentage.toString()
-                  )
-              )
-              dispatch(
-                  handleField(
-                      "apply",
-                      "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPeriod",
-                      "props.value",
-                      item.rentIncrementPeriod.toString()
-                  )
-              )
+                    handleField(
+                        "apply",
+                        "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPeriod",
+                        "props.value",
+                        item.rentIncrementPeriod.toString()
+                    )
+                )
+              
               }
                 
             }
