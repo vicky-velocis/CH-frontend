@@ -573,8 +573,7 @@ const getData = async (action, state, dispatch) => {
     }
     ]
   }]
-
-   dispatch(
+    dispatch(
     handleField(
       action.screenKey,
       "components.div.children.formwizardSecondStep.children.AllotmentAuctionDetails.children.cardContent.children.biddersListContainer.children.cardContent.children.documentList",
@@ -631,7 +630,9 @@ const getData = async (action, state, dispatch) => {
   if (!!fileNumber) {
     await getPMDetailsByFileNumber(action, state, dispatch, fileNumber, action.screenKey)
   }
+  let owner;
   setDocumentData(action, state, dispatch);
+  // setDocumentData(action, state, dispatch, owner = 1);
   setPrevOwnerDocs(action, state, dispatch);
   setBiddersDoc(action, state, dispatch);
 

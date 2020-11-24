@@ -91,6 +91,7 @@ const callBackForNext = async (state, dispatch) => {
   let hasFieldToaster = true;
   let ownerOnePosAllotDateValid = true;
   let ownerTwoPosAllotDateValid = true;
+  let auctionEMDDateValid = true;
   let rentYearMismatch = false;
   let licenseFeeYearMismatch = false;
 
@@ -141,8 +142,20 @@ const callBackForNext = async (state, dispatch) => {
       dispatch,
       "apply"
     )
+    let auctionDate = get(state.screenConfiguration.screenConfig["apply"], "components.div.children.formwizardSecondStep.children.AllotmentAuctionDetails.children.cardContent.children.detailsContainer.children.cardContent.children.auctionCard.children.dateOfAuction.props.value");
 
-    if (isAuctionValid) {
+    let emdDate = get(state.screenConfiguration.screenConfig["apply"], "components.div.children.formwizardSecondStep.children.AllotmentAuctionDetails.children.cardContent.children.detailsContainer.children.cardContent.children.auctionCard.children.emdAmountDate.props.value");
+
+    
+    let auctionDateEpoch = convertDateToEpoch(auctionDate)
+    let emdDateEpoch = convertDateToEpoch(emdDate)
+  
+    let typeOfAllocationSelected = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.typeOfAllocation");
+    auctionEMDDateValid = auctionDateEpoch - emdDateEpoch > 0 ? true : false
+  
+
+    if(typeOfAllocationSelected !== "ALLOCATION_TYPE.ALLOTMENT"){
+    if (isAuctionValid && auctionEMDDateValid) {
       const res = await applyEstates(state, dispatch, activeStep);
       if (!res) {
         return
@@ -150,6 +163,7 @@ const callBackForNext = async (state, dispatch) => {
     } else {
       isFormValid = false;
     }
+  }
   }
 
   if (activeStep === ENTITY_OWNER_DETAILS_STEP) {
@@ -700,12 +714,20 @@ const callBackForNext = async (state, dispatch) => {
     if (isFormValid) {
       changeStep(state, dispatch, "apply");
     }else if(!(ownerOnePosAllotDateValid || ownerTwoPosAllotDateValid)){
-        let errorMessage = {
-          labelName: "Date of possession should be on and after date of allotment",
-          labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
-      };
+      let errorMessage = {
+        labelName: "Date of possession should be on and after date of allotment",
+        labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
+    };
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
     } 
+    else if(!auctionEMDDateValid){
+    
+    let errorMessage = {
+      labelName: "EMD date should be before date of auction",
+      labelKey: "ES_ERR_EMD_DATE_BEFORE_AUCTION_DATE"
+  };
+    dispatch(toggleSnackbar(true, errorMessage, "warning"));
+    }
     else if (hasFieldToaster) {
       let errorMessage = {
         labelName: "Please fill all mandatory fields and upload the documents !",
