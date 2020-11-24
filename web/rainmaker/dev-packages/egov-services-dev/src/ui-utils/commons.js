@@ -321,7 +321,9 @@ export const createUpdatePCCApplication = async (state, dispatch, action) => {
     let response = "";
     let tenantId = process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId();
 
-    let method = action === "INITIATE" || action === "MODIFY" ? "CREATE" : "UPDATE";
+    //let method = action === "INITIATE" || action === "MODIFY" ? "CREATE" : "UPDATE";
+let method = action === "INITIATE" || action === "RE_INITIATE" ? "CREATE" : "UPDATE";
+
     try {
         let payload = get(
             state.screenConfiguration.preparedFinalObject,
@@ -360,18 +362,18 @@ export const createUpdatePCCApplication = async (state, dispatch, action) => {
         set(payload, "tenantId", tenantId);
         set(payload, "bkAction", action);
         set(payload, "businessService", "PACC");
-        // let reInitiate = true;
-        // if(payload.bkApplicationStatus == "RE_INITIATED"){
-        //     reInitiate = false;
-        // }
         let reInitiate = false;
-        if(action == "MODIFY"){
+        if(action == "RE_INITIATE"){
             reInitiate = true;
         }
+        // let reInitiate = false;
+        // if(action == "MODIFY"){
+        //     reInitiate = true;
+        // }
         set(payload, "reInitiateStatus", reInitiate);
 
         set(payload, "financialYear", `${getCurrentFinancialYear()}`);
-
+console.log(payload, "Nero Payload");
         if(action == "CANCEL"){
             // payload.bkFromDate = null;
             // payload.bkToDate = null;

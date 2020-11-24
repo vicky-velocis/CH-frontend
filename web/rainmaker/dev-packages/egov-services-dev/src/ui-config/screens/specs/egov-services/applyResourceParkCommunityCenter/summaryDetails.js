@@ -214,6 +214,6 @@ export const summaryDetails = getCommonCard({
     estimateSummary: estimateSummary,
     pccApplicantSummary: pccApplicantSummary,
     pccSummary: pccSummary,
-    changedVenueDatepccSummary: changedVenueDatepccSummary,
+  //  changedVenueDatepccSummary: changedVenueDatepccSummary,
     documentsSummary: documentsSummary
 });
