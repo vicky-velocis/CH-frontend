@@ -14,6 +14,9 @@ import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 import { getReviewAuction, getPropertyDetails,getAllotmentDetails,getAdditionalDetails ,getReviewRentSummary} from "./preview-resource/preview-properties";
 import { getTenantId} from "egov-ui-kit/utils/localStorageUtils";
 import { WF_ALLOTMENT_OF_SITE } from "../../../../ui-constants";
+import {
+  get
+} from "lodash";
 
 
 let fileNumber = getQueryArg(window.location.href, "fileNumber");
@@ -125,62 +128,88 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
 
 export const onTabChange = async(tabIndex, dispatch, state) => {
   fileNumber = getQueryArg(window.location.href, "fileNumber");
+  debugger
+
+  isPropertyMasterOrAllotmentOfSite = get(
+    state.screenConfiguration.preparedFinalObject,
+    "Properties[0].propertyMasterOrAllotmentOfSite",
+    ""
+  );
+  
   let path = "";
+  let screenKey;
+  let type;
   if (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") {
     if (tabIndex === 0) {
-      path = `/estate/search-preview?fileNumber=${fileNumber}&tenantId=${tenantId}`;
+      path = `/estate/search-preview?fileNumber=${fileNumber}&tenantId=${tenantId}&type=apply`;
     }
     else if (tabIndex === 1) {
-      path = `/estate/auction-details?fileNumber=${fileNumber}&tenantId=${tenantId}`
+      path = `/estate/auction-details?fileNumber=${fileNumber}&tenantId=${tenantId}&type=apply`
     }
     else if (tabIndex === 2) {
-      path = `/estate/owner-details?fileNumber=${fileNumber}&tenantId=${tenantId}`
+      path = `/estate/owner-details?fileNumber=${fileNumber}&tenantId=${tenantId}&type=apply`
     }
     else if (tabIndex === 3) {
-      path = `/estate/document-details?fileNumber=${fileNumber}&tenantId=${tenantId}`
+      path = `/estate/document-details?fileNumber=${fileNumber}&tenantId=${tenantId}&type=apply`
     }
     else if (tabIndex === 4) {
-      path = `/estate/purchaser-details?fileNumber=${fileNumber}&tenantId=${tenantId}`
+      path = `/estate/purchaser-details?fileNumber=${fileNumber}&tenantId=${tenantId}&type=apply`
     }
     else if (tabIndex === 5) {
-      path = `/estate/previous-owner-document-details?fileNumber=${fileNumber}&tenantId=${tenantId}`
+      path = `/estate/previous-owner-document-details?fileNumber=${fileNumber}&tenantId=${tenantId}&type=apply`
     }
     else if (tabIndex === 6) {
-      path = `/estate/payment-details?fileNumber=${fileNumber}&tenantId=${tenantId}`
+      path = `/estate/payment-details?fileNumber=${fileNumber}&tenantId=${tenantId}&type=apply`
     }
     else if (tabIndex === 7) {
-      path = `/estate/rent-information?fileNumber=${fileNumber}&tenantId=${tenantId}`
+      path = `/estate/rent-information?fileNumber=${fileNumber}&tenantId=${tenantId}&type=apply`
     }
     else if (tabIndex === 8) {
-      path = `/estate/notices?fileNumber=${fileNumber}&tenantId=${tenantId}`
+      path = `/estate/notices?fileNumber=${fileNumber}&tenantId=${tenantId}&type=apply`
     }
     else if (tabIndex === 9) {
-      path = `/estate/court-case?fileNumber=${fileNumber}&tenantId=${tenantId}`
+      path = `/estate/court-case?fileNumber=${fileNumber}&tenantId=${tenantId}&type=apply`
     }
   }
   else {
     if (tabIndex === 0) {
-      path = `/estate/search-preview?fileNumber=${fileNumber}&tenantId=${tenantId}`;
+      path = `/estate/search-preview?fileNumber=${fileNumber}&tenantId=${tenantId}&type=allotment`;
     }
     else if (tabIndex === 1) {
-      path = `/estate/auction-details?fileNumber=${fileNumber}&tenantId=${tenantId}`
+      path = `/estate/auction-details?fileNumber=${fileNumber}&tenantId=${tenantId}&type=allotment`
     }
     else if (tabIndex === 2) {
-      path = `/estate/owner-details?fileNumber=${fileNumber}&tenantId=${tenantId}`
+      path = `/estate/owner-details?fileNumber=${fileNumber}&tenantId=${tenantId}&type=allotment`
     }
     else if (tabIndex === 3) {
-      path = `/estate/document-details?fileNumber=${fileNumber}&tenantId=${tenantId}`
+      path = `/estate/document-details?fileNumber=${fileNumber}&tenantId=${tenantId}&type=allotment`
     }
     else if (tabIndex === 4) {
-      path = `/estate/rent-information?fileNumber=${fileNumber}&tenantId=${tenantId}`
+      path = `/estate/rent-information?fileNumber=${fileNumber}&tenantId=${tenantId}&type=allotment`
     }
     else if (tabIndex === 5) {
-      path = `/estate/notices?fileNumber=${fileNumber}&tenantId=${tenantId}`
+      path = `/estate/notices?fileNumber=${fileNumber}&tenantId=${tenantId}&type=allotment`
     }
     else if (tabIndex === 6) {
-      path = `/estate/court-case?fileNumber=${fileNumber}&tenantId=${tenantId}`
+      path = `/estate/court-case?fileNumber=${fileNumber}&tenantId=${tenantId}&type=allotment`
     }
   }
+  dispatch(
+    handleField(
+      action.screenKey,
+      "components.div.children.tabSection",
+      "props.tabs",
+      (type == "apply") ? tabs : tabsAllotment
+    )
+  )
+  dispatch(
+    handleField(
+      action.screenKey,
+      "components.div.children.tabSection",
+      "props.activeIndex",
+      (type == "apply") ? 7 : 4,
+    )
+  )
   dispatch(setRoute(path))
 }
 

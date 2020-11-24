@@ -7,7 +7,10 @@ import { getSearchResults ,setXLSTableData } from "../../../../ui-utils/commons"
 import {onTabChange, headerrow, tabs, tabsAllotment} from './search-preview'
 import { getBreak } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { getReviewLicenseFee, getReviewInterest, getReviewSecurity, getReviewGroundRent, rentDetailsTable, getReviewPremiumAmount, installmentTable, getReviewAdvanceRent } from "./applyResource/reviewProperty";
-import { getTextToLocalMapping } from "../utils"
+import { getTextToLocalMapping } from "../utils";
+import {
+  get
+} from "lodash";
 
 let isPropertyMasterOrAllotmentOfSite;
 
@@ -37,31 +40,24 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
 
       let isInterestFixedLabel = properties[0].propertyDetails.paymentConfig.isIntrestApplicable ? "ES_FIXED_INTEREST_LABEL" : "ES_YEARLY_INTEREST_LABEL";
 
-      dispatch(
-        handleField(
-          action.screenKey,
-          "components.div.children.tabSection",
-          "props.tabs",
-          (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment
-        )
-      )
-      dispatch(
-        handleField(
-          action.screenKey,
-          "components.div.children.tabSection",
-          "props.activeIndex",
-          (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? 7 : 4,
-        )
-      )
+      // dispatch(
+      //   handleField(
+      //     action.screenKey,
+      //     "components.div.children.tabSection",
+      //     "props.tabs",
+      //     (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment
+      //   )
+      // )
+      
 
-      dispatch(
-        handleField(
-          action.screenKey,
-          "components.div.children.reviewRentInfo.children.cardContent.children.premiumAmountDetails",
-          "visible",
-          !!(isPropertyMasterOrAllotmentOfSite == "ALLOTMENT_OF_SITE")
-        )
-      )
+      // dispatch(
+      //   handleField(
+      //     action.screenKey,
+      //     "components.div.children.reviewRentInfo.children.cardContent.children.premiumAmountDetails",
+      //     "visible",
+      //     !!(isPropertyMasterOrAllotmentOfSite == "ALLOTMENT_OF_SITE")
+      //   )
+      // )
       dispatch(
         handleField(
           action.screenKey,
@@ -130,6 +126,25 @@ uiFramework: "material-ui",
 name: "rent-information",
 beforeInitScreen: (action, state, dispatch) => {
   const fileNumber = getQueryArg(window.location.href, "fileNumber");
+  const type = getQueryArg(window.location.href, "type");
+
+
+  dispatch(
+    handleField(
+      action.screenKey,
+      "components.div.children.tabSection",
+      "props.tabs",
+      (type == "apply") ? tabs : tabsAllotment
+    )
+  )
+  dispatch(
+    handleField(
+      action.screenKey,
+      "components.div.children.tabSection",
+      "props.activeIndex",
+      (type == "apply") ? 7 : 4,
+    )
+  )
   beforeInitFn(action, state, dispatch, fileNumber);
   return action;
 },
