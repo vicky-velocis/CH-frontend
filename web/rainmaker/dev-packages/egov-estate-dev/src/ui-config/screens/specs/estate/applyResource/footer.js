@@ -635,7 +635,6 @@ const callBackForNext = async (state, dispatch) => {
       "apply.components.div.children.formwizardEighthStep.children.demandSelect.children.cardContent.children.detailsContainer.children.demand.props.value"
     )
 
-    debugger
     if (selectedDemand == "true") {
       if (isGroundRentValid && isSecurityDetailsValid && isRentDetailsValid && isDemandValid && !rentYearMismatch && isInterestDetailsValid) {
         const res = await applyEstates(state, dispatch, activeStep, "apply");
