@@ -1275,14 +1275,14 @@ export const downloadNotice = (Applications, applicationType,noticeType, mode = 
 
 
 
-export const prepareDocumentTypeObj = documents => {
+export const prepareDocumentTypeObj = (documents, ownerIndex) => {
   let documentsArr =
     documents.length > 0 ?
     documents.reduce((documentsArr, item, ind) => {
       documentsArr.push({
         name: item.code,
         required: item.required,
-        jsonPath: `Properties[0].propertyDetails.owners[0].ownerDetails.ownerDocuments[${ind}]`,
+        jsonPath: `Properties[0].propertyDetails.owners[${ownerIndex}].ownerDetails.ownerDocuments[${ind}]`,
         statement: item.description
       });
       return documentsArr;
