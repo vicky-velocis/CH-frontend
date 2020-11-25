@@ -42,6 +42,7 @@ import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
   }
   
   const beforeInitFn = async(action, state, dispatch)=>{
+    dispatch(prepareFinalObject("Properties", []))
     getMdmsData(dispatch);
     let propertyId = getQueryArg(window.location.href, "propertyId")
     const fileNumber = getQueryArg(window.location.href, "fileNumber")
@@ -202,7 +203,7 @@ import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
       labelKey: "ES_ENTER_TRANSACTION_ID_PLACEHOLDER"
     },
     required: true,
-    jsonPath: "payment.transactionId",
+    jsonPath: "payment.transactionNumber",
     visible: process.env.REACT_APP_NAME !== "Citizen"
   }
 
@@ -297,7 +298,7 @@ import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
           }
         ]
         try {
-          const url = paymentType === "PAYMENTTYPE.PENALTY" ? "/est-services/violation/_penalty_payment" : paymentType === "PAYMENTTYPE.EXTENSIONFEE" ? "/est-services/extension-fee/_create" : "/est-services/property-master/_payrent"
+          const url = paymentType === "PAYMENTTYPE.PENALTY" ? "/est-services/violation/_penalty_payment" : paymentType === "PAYMENTTYPE.EXTENSIONFEE" ? "/est-services/extension-fee/_payment" : "/est-services/property-master/_payrent"
           const response = await httpRequest("post",
           url,
           "",

@@ -32,7 +32,6 @@ import {
 } from "egov-ui-framework/ui-utils/commons";
 import {
   prepareDocumentTypeObjMaster,
-  prepareCompanyDocumentTypeObjMaster,
   preparePrevOwnerDocumentTypeObjMaster,
   prepareBiddersDocumentTypeObjMaster
 } from "../utils";
@@ -46,10 +45,8 @@ import {
   getSearchResults,
   populateBiddersTable
 } from "../../../../ui-utils/commons";
-import * as companyDocsData from './applyResource/company-docs.json';
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 import * as previousDocsData from './applyResource/previousOwnerDocs.json';
-import * as biddersListData from './applyResource/biddersListDoc.json';
 import { toggleEntityOwnersDivsBasedOnEntityType, toggleEntityOwnersDivsBasedOnPropertyRegisteredTo, getActionDefinationForAuctionDetailsFields } from './applyResource/propertyDetails'
 import { ESTATE_SERVICES_MDMS_MODULE } from "../../../../ui-constants";
 
@@ -254,10 +251,17 @@ export const setPrevOwnerDocs = (action, state, dispatch, prevOwnerIndex = 0, do
   dispatch(prepareFinalObject("applyScreenMdmsData.estateApplicationsPrevOwnerDocs", previousOwnerDocs))
 }
 
-const setBiddersDoc = (action, state, dispatch) => {
+const setBiddersDoc = async (action, state, dispatch) => {
+  const documentTypePayload = [{
+    moduleName: ESTATE_SERVICES_MDMS_MODULE,
+    masterDetails: [{
+      name: "biddersListDoc"
+    }]
+  }]
+  const documentRes = await getMdmsData(dispatch, documentTypePayload);
   const {
     EstateServices
-  } = biddersListData && biddersListData.MdmsRes ? biddersListData.MdmsRes : {}
+  } = documentRes && documentRes.MdmsRes ? documentRes.MdmsRes : {}
   const {
     biddersListDoc = []
   } = EstateServices || {}
@@ -277,6 +281,23 @@ const setBiddersDoc = (action, state, dispatch) => {
     )
   );
   dispatch(prepareFinalObject(`temp[0].documents`, documentTypes))
+
+  dispatch(
+    handleField(
+      action.screenKey,
+      "components.div.children.formwizardSecondStep.children.AllotmentAuctionDetails.children.cardContent.children.biddersListContainer.children.cardContent.children.documentList",
+      "props.screenKey",
+      "apply"
+    )
+  )
+  dispatch(
+    handleField(
+      action.screenKey,
+      "components.div.children.formwizardSecondStep.children.AllotmentAuctionDetails.children.cardContent.children.biddersListContainer.children.cardContent.children.documentList",
+      "props.componentJsonPath",
+      "components.div.children.formwizardSecondStep.children.AllotmentAuctionDetails.children.cardContent.children.auctionTableContainer"
+    )
+  )
 }
 
 const header = getCommonContainer({
