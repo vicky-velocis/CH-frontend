@@ -791,7 +791,9 @@ export const downloadReceipt = async (
         console.log(applicationData, "nero applicationData")
     }
 
-
+const refundDetailsResp = await getRefundDetails(applicationNumber, tenantId);
+console.log(refundDetailsResp, "Nero refundDetailsResp");
+let bankName = refundDetailsResp.data[0].gateway;
     const receiptQueryString = [
         { key: "consumerCodes", value: applicationNumber },
         {
@@ -901,6 +903,7 @@ export const downloadReceipt = async (
                 paymentItemExtraColumnLabel: "Booking Period",
 
                 paymentMode: payloadReceiptDetails.Payments[0].paymentMode,
+                bankName: bankName,
                 receiptNo:
                     payloadReceiptDetails.Payments[0].paymentDetails[0]
                         .receiptNumber,
@@ -959,6 +962,7 @@ export const downloadReceipt = async (
                         ? "Booking Period"
                         : "Date & Time",
                 paymentMode: payloadReceiptDetails.Payments[0].paymentMode,
+                bankName: bankName,
                 receiptNo:
                     payloadReceiptDetails.Payments[0].paymentDetails[0]
                         .receiptNumber,
