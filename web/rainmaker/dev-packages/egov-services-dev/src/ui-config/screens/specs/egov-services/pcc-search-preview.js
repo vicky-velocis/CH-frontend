@@ -279,7 +279,8 @@ const setSearchResponse = async (
 
         bookingStatus = recData[0].bkApplicationStatus;
         console.log(recData[0], "Booking");
-        if (bookingStatus === "APPLIED" || bookingStatus === "MODIFIED") {
+        //if (bookingStatus === "APPLIED" || bookingStatus === "MODIFIED") {
+        if(recData[0].bkPaymentStatus == "SUCCESS" || recData[0].bkPaymentStatus == "success"){
             await generageBillCollection(
                 state,
                 dispatch,

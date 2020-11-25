@@ -792,7 +792,7 @@ export const downloadReceipt = async (
     }
 
 const refundDetailsResp = await getRefundDetails(applicationNumber, tenantId);
-console.log(refundDetailsResp, "Nero refundDetailsResp");
+
 let bankName = refundDetailsResp.data[0].gateway;
     const receiptQueryString = [
         { key: "consumerCodes", value: applicationNumber },
