@@ -808,7 +808,7 @@ export const licenseFeeDetails = getCommonCard({
 
 
 /******************** Security Fee Details ********************/ 
-const securityFeeAmountField = {
+/* const securityFeeAmountField = {
   label: {
       labelName: "Security Fee Amount",
       labelKey: "ES_SECURITY_FEE_AMOUNT_LABEL"
@@ -823,7 +823,7 @@ const securityFeeAmountField = {
   },
   maxLength: 100,
   jsonPath: "Properties[0].propertyDetails.paymentConfig.securityAmount"
-}
+} */
 
 const dateOfPaymentField = {
   label: {
@@ -883,7 +883,7 @@ const securityDetailsHeader = getCommonTitle({
 export const securityDetails = getCommonCard({
   header: securityDetailsHeader,
   detailsContainer: getCommonContainer({
-      securityFeeAmount: getTextField(securityFeeAmountField),
+      // securityFeeAmount: getTextField(securityFeeAmountField),
       monthsOfRent: getMonthsOfRentRadioButton,
       securityFeeDateOfPayment: getDateField(dateOfPaymentField),
       
