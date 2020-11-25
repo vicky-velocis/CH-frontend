@@ -218,13 +218,20 @@ import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
   export const offlinePaymentDetails = getCommonCard({
       header: offlinePaymentDetailsHeader,
       detailsContainer: getCommonContainer({
-        paymentType: getSelectField(paymentType),
+        // paymentType: getSelectField(paymentType),
         Amount: getTextField(paymentAmount),
         dateOfPayment: getDateField(paymentDate),
         bankName: getTextField(bankName),
         transactionId: getTextField(transactionId),
       })
   })
+
+  export const offlinePaymentType = getCommonCard({
+    header: offlinePaymentDetailsHeader,
+    detailsContainer: getCommonContainer({
+      paymentType: getSelectField(paymentType)
+    })
+})
   
   const propertyDetails = getCommonCard(propertyInfo(false))
 
@@ -264,11 +271,28 @@ import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
     },
     children: {
       propertyDetails,
+      offlinePaymentType,
       rentSummaryDetails,
       offlinePaymentDetails
     },
     visible: true
   }
+
+  const detailsContainerCitizen = {
+    uiFramework: "custom-atoms",
+    componentPath: "Form",
+    props: {
+      id: "apply_form1"
+    },
+    children: {
+      propertyDetails,
+      rentSummaryDetails,
+      offlinePaymentDetails
+    },
+    visible: true
+  }
+  
+
 
   const goToPayment = async (state, dispatch, type) => {
     let isValid = true;
@@ -393,7 +417,7 @@ const payment = {
                 }
               }
             },
-            detailsContainer,
+            detailsContainer :  process.env.REACT_APP_NAME !== "Citizen" ? detailsContainer : detailsContainerCitizen,
             footer: paymentFooter
           }
         }
