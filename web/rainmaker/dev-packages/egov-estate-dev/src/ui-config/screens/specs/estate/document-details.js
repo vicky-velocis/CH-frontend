@@ -6,11 +6,17 @@ import { prepareFinalObject,handleScreenConfigurationFieldChange as handleField 
 import { getSearchResults } from "../../../../ui-utils/commons";
 import {getReviewDocuments} from "./applyResource/reviewDocuments"
 import {onTabChange, headerrow, tabs, tabsAllotment} from './search-preview'
-import { setDocuments } from '../../../../ui-utils/commons'
+import { setDocuments } from '../../../../ui-utils/commons';
+import {
+  BUILDING_BRANCH_TABS as tabsBB,
+  MANIMAJRA_BRANCH_TABS as tabsMM
+} from "../../../../ui-constants"
 
 
 let fileNumber = getQueryArg(window.location.href, "fileNumber");
 let isPropertyMasterOrAllotmentOfSite;
+let branchTabs = tabs;
+let activeIndex = 3;
 
 const documentContainer = {
   uiFramework: "custom-atoms",
@@ -32,16 +38,39 @@ export const searchResults = async (action, state, dispatch, fileNumber) => {
     let properties = payload.Properties;
     let owners = properties[0].propertyDetails.owners;
     let currOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == true);
+    let branchType = properties[0].propertyDetails.branchType;
     isPropertyMasterOrAllotmentOfSite = properties[0].propertyMasterOrAllotmentOfSite;
     properties = [{...properties[0], propertyDetails: {...properties[0].propertyDetails, owners: currOwners}}]
     dispatch(prepareFinalObject("Properties", properties));
+
+    switch(branchType) {
+      case "ESTATE_BRANCH":
+        branchTabs = (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment;
+        break;
+      case "BUILDING_BRANCH":
+        branchTabs = tabsBB;
+        activeIndex = 2;
+        break;
+      case "MANI_MAJRA":
+        branchTabs = tabsMM;
+        activeIndex = 2;
+        break;
+    }
 
     dispatch(
       handleField(
         action.screenKey,
         "components.div.children.tabSection",
         "props.tabs",
-        (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment
+        branchTabs
+      )
+    )
+    dispatch(
+      handleField(
+        action.screenKey,
+        "components.div.children.tabSection",
+        "props.activeIndex",
+        activeIndex,
       )
     )
 
@@ -112,8 +141,8 @@ const DocumentReviewDetails = {
             moduleName: "egov-estate",
             componentPath: "CustomTabContainer",
             props: {
-              tabs: tabs,
-              activeIndex: 3,
+              tabs,
+              activeIndex: activeIndex,
               onTabChange
             },
             type: "array",

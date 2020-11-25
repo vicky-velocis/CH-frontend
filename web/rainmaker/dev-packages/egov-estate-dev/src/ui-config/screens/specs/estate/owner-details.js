@@ -26,7 +26,9 @@ import {
   httpRequest
 } from "../../../../ui-utils";
 import {
-  ESTATE_APPROVED_STATE
+  ESTATE_APPROVED_STATE,
+  BUILDING_BRANCH_TABS as tabsBB,
+  MANIMAJRA_BRANCH_TABS as tabsMM
 } from "../../../../ui-constants"
 
 const userInfo = JSON.parse(getUserInfo());
@@ -37,7 +39,8 @@ const findItem = roles.find(item => item.code === "ES_EB_SECTION_OFFICER");
 
 let fileNumber = getQueryArg(window.location.href, "fileNumber");
 let isPropertyMasterOrAllotmentOfSite;
-
+let branchTabs = tabs;
+let activeIndex = 2;
 
 // const OwnerDetails = getOwnerDetails(false);
 // const AllotmentDetails = getAllotmentDetails(false);
@@ -86,17 +89,40 @@ export const searchResults = async (action, state, dispatch, fileNumber) => {
     let owners = properties[0].propertyDetails.owners;
     let currOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == true);
     let companyOrFirm = properties[0].propertyDetails.companyOrFirm;
+    let branchType = properties[0].propertyDetails.branchType;
+
     isPropertyMasterOrAllotmentOfSite = properties[0].propertyMasterOrAllotmentOfSite;
     properties = [{...properties[0], propertyDetails: {...properties[0].propertyDetails, owners: currOwners}}]
 
     dispatch(prepareFinalObject("Properties", properties));
 
+    switch(branchType) {
+      case "ESTATE_BRANCH":
+        branchTabs = (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment;
+        break;
+      case "BUILDING_BRANCH":
+        branchTabs = tabsBB;
+        activeIndex = 1;
+        break;
+      case "MANI_MAJRA":
+        branchTabs = tabsMM;
+        activeIndex = 1;
+        break;
+    }
     dispatch(
       handleField(
         action.screenKey,
         "components.div.children.tabSection",
         "props.tabs",
-        (isPropertyMasterOrAllotmentOfSite == "PROPERTY_MASTER") ? tabs : tabsAllotment
+        branchTabs
+      )
+    )
+    dispatch(
+      handleField(
+        action.screenKey,
+        "components.div.children.tabSection",
+        "props.activeIndex",
+        activeIndex,
       )
     )
 
@@ -379,8 +405,8 @@ const EstateOwnerDetails = {
             moduleName: "egov-estate",
             componentPath: "CustomTabContainer",
             props: {
-              tabs: tabs,
-              activeIndex: 2,
+              tabs,
+              activeIndex: activeIndex,
               onTabChange
             },
             type: "array",

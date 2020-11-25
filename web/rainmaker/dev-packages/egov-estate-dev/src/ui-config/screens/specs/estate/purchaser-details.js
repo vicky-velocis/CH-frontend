@@ -5,10 +5,15 @@ import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import { prepareFinalObject,handleScreenConfigurationFieldChange as handleField  } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getSearchResults } from "../../../../ui-utils/commons";
 import { getPurchaserDetails } from "./preview-resource/purchaser-details";
-import {onTabChange, headerrow, tabs} from './search-preview'
+import {onTabChange, headerrow, tabs} from './search-preview';
+import {
+  BUILDING_BRANCH_TABS as tabsBB,
+  MANIMAJRA_BRANCH_TABS as tabsMM
+} from "../../../../ui-constants";
 
 let fileNumber = getQueryArg(window.location.href, "fileNumber");
-
+let branchTabs = tabs;
+let activeIndex = 4;
 
 // const purchaserDetails = getPurchaserDetails(false);
 
@@ -37,6 +42,7 @@ export const searchResults = async (action, state, dispatch, fileNumber) => {
     let properties = payload.Properties;
     let owners = properties[0].propertyDetails.owners;
     let prevOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == false);
+    let branchType = properties[0].propertyDetails.branchType;
     properties = [{...properties[0], propertyDetails: {...properties[0].propertyDetails, purchaser: prevOwners}}]
     dispatch(prepareFinalObject("Properties", properties));
     
@@ -48,6 +54,37 @@ export const searchResults = async (action, state, dispatch, fileNumber) => {
       });
       
     }
+
+    switch(branchType) {
+      case "ESTATE_BRANCH":
+        branchTabs = tabs;
+        activeIndex = 4;
+        break;
+      case "BUILDING_BRANCH":
+        branchTabs = tabsBB;
+        break;
+      case "MANI_MAJRA":
+        branchTabs = tabsMM;
+        activeIndex = 3;
+        break;
+    }
+
+    dispatch(
+      handleField(
+        action.screenKey,
+        "components.div.children.tabSection",
+        "props.tabs",
+        branchTabs
+      )
+    )
+    dispatch(
+      handleField(
+        action.screenKey,
+        "components.div.children.tabSection",
+        "props.activeIndex",
+        activeIndex,
+      )
+    )
     
     dispatch(
       handleField(
@@ -103,7 +140,7 @@ const EstatePurchaserDetails = {
             componentPath: "CustomTabContainer",
             props: {
               tabs,
-              activeIndex: 4,
+              activeIndex: activeIndex,
               onTabChange
             },
             type: "array",
