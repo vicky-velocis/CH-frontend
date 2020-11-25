@@ -784,11 +784,11 @@ export const downloadReceipt = async (
                 );*/
 
         applicationData = recData[0];
-        console.log(applicationData, "nero applicationData 1")
+
     }
     else if (flag === 'true') {
         applicationData = state
-        console.log(applicationData, "nero applicationData")
+        
     }
 
 const refundDetailsResp = await getRefundDetails(applicationNumber, tenantId);

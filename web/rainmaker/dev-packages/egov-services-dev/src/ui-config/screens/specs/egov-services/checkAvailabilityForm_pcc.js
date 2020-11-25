@@ -195,23 +195,24 @@ const callBackForBook = async (state, dispatch) => {
     };
     dispatch(toggleSnackbar(true, warrningMsg, "warning"));
   } else {
+
+    let daysCount = calculateBetweenDaysCount(
+        availabilityCheckData.bkFromDate,
+        availabilityCheckData.bkToDate
+    );
+    
+    if(daysCount > 4){
+      let warrningMsg = {
+        labelName: "You can not book venue for more than 4 days",
+        labelKey: "",
+      };
+      dispatch(toggleSnackbar(true, warrningMsg, "warning"));
+      return false;
+    }
+
+
     if (oldAvailabilityCheckData !== undefined) {
-      console.log(
-        convertDateInYMD(availabilityCheckData.bkFromDate),
-        oldAvailabilityCheckData.bkFromDate,
-        convertDateInYMD(availabilityCheckData.bkToDate),
-        oldAvailabilityCheckData.bkToDate,
-        availabilityCheckData.bkBookingVenue,
-        oldAvailabilityCheckData.bkBookingVenue
-      );
-      console.log(
-        convertDateInYMD(availabilityCheckData.bkFromDate) ===
-        oldAvailabilityCheckData.bkFromDate &&
-        convertDateInYMD(availabilityCheckData.bkToDate) ===
-        oldAvailabilityCheckData.bkToDate &&
-        availabilityCheckData.bkBookingVenue ===
-        oldAvailabilityCheckData.bkBookingVenue
-      );
+
       if (
         convertDateInYMD(availabilityCheckData.bkFromDate) ===
         oldAvailabilityCheckData.bkFromDate &&
@@ -263,6 +264,15 @@ const callBackForBook = async (state, dispatch) => {
   }
 };
 
+const calculateBetweenDaysCount = (startDate, endDate) => {
+    const oneDay = 24 * 60 * 60 * 1000;
+    const firstDate = new Date(startDate);
+    const secondDate = new Date(endDate);
+
+    const daysCount =
+        Math.round(Math.abs((firstDate - secondDate) / oneDay))+1;
+    return daysCount;
+};
 const callBackForResetCalender = (state, dispatch, action) => {
   const availabilityCheckData = get(
     state,
