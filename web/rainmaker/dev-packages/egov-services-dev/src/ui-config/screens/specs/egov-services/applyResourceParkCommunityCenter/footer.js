@@ -119,7 +119,7 @@ const callBackForNext = async (state, dispatch) => {
         // prepareDocumentsUploadData(state, dispatch);
         let tenantId = getTenantId().split(".")[0];
         let paymentStatus = get(state, "screenConfiguration.preparedFinalObject.Booking.bkPaymentStatus", "");
-        let appStatus = get(state, "screenConfiguration.preparedFinalObject.Booking.bkApplicationStatus", "");
+       /* let appStatus = get(state, "screenConfiguration.preparedFinalObject.Booking.bkApplicationStatus", "");
         if ((paymentStatus === "SUCCESS" || paymentStatus === "succes") && appStatus == "APPLIED") {
             let businessService = get(state, "screenConfiguration.preparedFinalObject.Booking.businessService", "");
             let applicationNumber = get(state, "screenConfiguration.preparedFinalObject.Booking.bkApplicationNumber", "");
@@ -169,23 +169,23 @@ const callBackForNext = async (state, dispatch) => {
 
                 dispatch(prepareFinalObject("documentsPreview", documentsPreview));
 
-        }else {
+        }else { */
+
+            let action = "INITIATE";
+            let appStatus = get(state, "screenConfiguration.preparedFinalObject.Booking.bkApplicationStatus", "");
+            if(appStatus == "APPLIED" || appStatus == "RE_INITIATED"){
+                action = "RE_INITIATE";
+            }
+            console.log(appStatus, "Nero appStatus");
             let response = await createUpdatePCCApplication(
                 state,
                 dispatch,
-                "INITIATE"
+                action
+               // paymentStatus === "SUCCESS" || paymentStatus === "succes" ? "RE_INITIATE" : "INITIATE"
+
             );
             let responseStatus = get(response, "status", "");
             if (responseStatus == "SUCCESS" || responseStatus == "success") {
-                // DISPLAY SUCCESS MESSAGE
-                // let successMessage = {
-                //     labelName: "APPLICATION INITIATED SUCCESSFULLY! ",
-                //     labelKey: "", //UPLOAD_FILE_TOAST
-                // };
-                // dispatch(toggleSnackbar(true, successMessage, "success"));
-
-                // GET FEE DETAILS
-
                 let applicationNumber = get(
                     response,
                     "data.bkApplicationNumber",
@@ -236,7 +236,7 @@ const callBackForNext = async (state, dispatch) => {
                 };
                 dispatch(toggleSnackbar(true, errorMessage, "error"));
             }
-        }
+       // }
     }
     if (activeStep === 3) {
         // prepareDocumentsUploadData(state, dispatch);

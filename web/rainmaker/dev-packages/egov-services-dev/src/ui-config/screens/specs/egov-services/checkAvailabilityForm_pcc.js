@@ -188,7 +188,7 @@ const callBackForBook = async (state, dispatch) => {
   );
   console.log(availabilityCheckData, "availabilityCheckData");
   console.log(oldAvailabilityCheckData, "oldAvailabilityCheckData");
-  if (availabilityCheckData === undefined) {
+  if (availabilityCheckData === undefined || !("bkToDate" in availabilityCheckData) || (availabilityCheckData.bkToDate == null)) {
     let warrningMsg = {
       labelName: "Please Select Date Range",
       labelKey: "",
