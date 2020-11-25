@@ -703,7 +703,7 @@ export const downloadPaymentReceipt = (receiptQueryString, payload, data, genera
         }]
       }]
       switch(type){
-        case 'rent-payment':
+        case 'rent-payment':         
            queryStr = [{
               key: "key",
               value: "rent-payment-receipt"
@@ -713,6 +713,15 @@ export const downloadPaymentReceipt = (receiptQueryString, payload, data, genera
               value: receiptQueryString[1].value.split('.')[0]
             }
           ]
+            if(process.env.REACT_APP_NAME === "Citizen"){
+              payload[0].propertyDetails["offlinePaymentDetails"] = []
+            
+              let transactionNumber = {
+                "transactionNumber" : Payments[0].transactionNumber
+              }
+              payload[0].propertyDetails.offlinePaymentDetails.push(transactionNumber)
+             }
+
             httpRequest("post", DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, queryStr, {
               Payments,
               Properties : payload,
