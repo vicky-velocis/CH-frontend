@@ -283,6 +283,8 @@ export const getMdmsData = async queryObject => {
 };
 
 export const downloadSummary = (Properties, PropertiesTemp ,mode = "download") => {
+
+  const isGroundRent = Properties[0].propertyDetails.paymentConfig.isGroundRent
   let queryStr = [{
     key: "key",
     value: `property-summary`
@@ -354,9 +356,21 @@ if(Property.propertyDetails.purchaser.length > 0){
      purchaser.ownerDetails.dob = moment(new Date(purchaser.ownerDetails.dob)).format("DD-MMM-YYYY")
      return purchaser
   })
- 
 }
 
+if(isGroundRent){
+  Property.propertyDetails["groundRentDetails"] = {
+    "groundRentGenerationType" : Property.propertyDetails.paymentConfig.groundRentGenerationType,
+    "groundRentGenerateDemand" : Property.propertyDetails.paymentConfig.groundRentGenerateDemand,
+    "groundRentBillStartDate"  : Property.propertyDetails.paymentConfig.groundRentBillStartDate
+  }
+}else{
+  Property.propertyDetails["licenceDetails"] = {
+    "groundRentGenerationType" : Property.propertyDetails.paymentConfig.groundRentGenerationType,
+    "groundRentGenerateDemand" : Property.propertyDetails.paymentConfig.groundRentGenerateDemand,
+    "groundRentBillStartDate"  : Property.propertyDetails.paymentConfig.groundRentBillStartDate
+  }
+}
 
   const DOWNLOADRECEIPT = {
     GET: {
