@@ -9,6 +9,7 @@ import { propertyInfo } from "./preview-resource/preview-properties";
 import { getQueryArg, getTodaysDateInYMD } from "egov-ui-framework/ui-utils/commons";
 import { convertDateToEpoch, validateFields, getRentSummaryCard } from "../utils";
 import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
+import {penaltyStatmentResult} from './searchResource/functions'
 
   const header = getCommonHeader({
     labelName: "Rent Payment",
@@ -54,6 +55,7 @@ import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
     if(!!response.Properties && !!response.Properties.length) {
        dispatch(prepareFinalObject("Properties", response.Properties))
     }
+    dispatch(prepareFinalObject("payment.paymentType","PAYMENTTYPE.RENT"))
   }
 
   const propertyDetailsHeader = getCommonTitle(
@@ -107,6 +109,60 @@ import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
       },
     required: false,
     jsonPath: "payment.paymentType",
+    beforeFieldChange: async function beforeFieldChange(action, state, dispatch) {
+      // if (action.value) {
+      //   const penaltyCard = getCommonCard({
+      //     header: getCommonTitle({
+      //       labelName: "Penalty Summary",
+      //       labelKey: "ES_PENALTY_SUMMARY_HEADER"
+      //     }, {
+      //       style: {
+      //         marginBottom: 18,
+      //         marginTop: 18
+      //       }
+      //     }),
+      //     detailsContainer: getCommonGrayCard({
+      //       rentSection: getRentSummaryCard({
+      //         sourceJsonPath: "Properties[0].estateRentSummary",
+      //         dataArray: ["balanceGSTPenalty", "collectedGSTPenalty", "balanceRentPenalty","gstpenalty"]
+      //       })
+      //     })
+      //   })
+
+      //   switch(action.value){
+      //     case 'PAYMENTTYPE.PENALTY':
+      //         let properties = state.screenConfiguration.prepareFinalObject
+      //         const propertyId = properties[0].id;   
+      //         let Criteria = {
+      //           fromdate: properties[0].propertyDetails.auditDetails.createdTime || "",
+      //           todate:   ""
+      //         }
+      //         Criteria = {...Criteria, propertyid: propertyId}
+      //         let response = await penaltyStatmentResult (state,dispatch, Criteria)
+      //         console.log(response)
+      //         dispatch(handleField(
+      //           "estate-payment",
+      //           "components.div.children.detailsContainer.children.rentSummaryDetails.children",
+      //           "rentCard",
+      //           penaltyCard     
+      //       ));
+      //       break;
+      //     default : 
+      //         const rentCard = getCommonCard({
+      //           header: rentSummaryHeader,
+      //           detailsContainer: rentSummary
+      //         })
+
+      //         dispatch(handleField(
+      //           "estate-payment",
+      //           "components.div.children.detailsContainer.children.rentSummaryDetails.children",
+      //           "rentCard",
+      //           rentCard     
+      //         ));
+      //       break;  
+      //   }
+      // }
+    },
     optionValue: "code",
     optionLabel: "name",
     sourceJsonPath: "searchScreenMdmsData.EstateServices.paymentType",
