@@ -13,7 +13,8 @@ import {
   formwizardSixthStep,
   formwizardSeventhStep,
   formwizardEighthStep,
-  formwizardNinthStep
+  formwizardNinthStep,
+  formwizardTenthStep
 } from './applyResource/applyConfig'
 import {
   httpRequest
@@ -23,7 +24,8 @@ import {
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import commonConfig from "config/common.js";
 import {
-  footer
+  footer,
+  changeStep
 } from './applyResource/footer';
 import {
   getQueryArg
@@ -78,8 +80,8 @@ const setPaymentDocumentData = async (action, state, dispatch,owner = 0) => {
   const paymentDocuments=[{
     type:"PAYMENT_DOCUMENT",
     description: {
-      labelName: "ONLY_CSV",
-      labelKey: "ONLY_CSV",
+      labelName: "ONLY_XLSX",
+      labelKey: "ONLY_XLSX",
     },
       formatProps :{
         accept : ".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel",
@@ -87,8 +89,8 @@ const setPaymentDocumentData = async (action, state, dispatch,owner = 0) => {
       maxFileSize: 6000,
       moduleName: "Estate",
       statement: {
-       labelName: "UPLOAD_CSV",
-       labelKey: "UPLOAD_CSV"
+       labelName: "UPLOAD_XLSX",
+       labelKey: "UPLOAD_XLSX"
   }
   }]
   const documentsType=[
@@ -96,13 +98,13 @@ const setPaymentDocumentData = async (action, state, dispatch,owner = 0) => {
     name: "PAYMENT_DOCUMENT",
     required: true,
     jsonPath: `paymentDocuments`,
-    statement: "UPLOAD_CSV"
+    statement: "UPLOAD_XLSX"
     }
   ]
   dispatch(
     handleField(
         "apply",
-        `components.div.children.formwizardEighthStep.children.paymentDocumentsDetails.children.cardContent.children.documentList`,
+        `components.div.children.formwizardNinthStep.children.paymentDocumentsDetails.children.cardContent.children.documentList`,
         "props.inputProps",
         paymentDocuments
     )
@@ -374,7 +376,7 @@ export const setData = (properties, screenName, dispatch, state) => {
     case "apply":
       stepFirst = "formwizardFirstStep";
       stepSecond = "formwizardSecondStep";
-      stepSummary = "formwizardNinthStep";
+      stepSummary = "formwizardTenthStep";
       reviewContainer = "reviewDetails";
       break;
     case "allotment":
@@ -540,7 +542,13 @@ export const getPMDetailsByFileNumber = async (
   if (payload) {
     let properties = payload.Properties;
     let owners = properties[0].propertyDetails.owners;
-    owners = owners.map(item => ({...item, share: (item.share).toString()}))
+
+    if (screenName == "apply") {
+      owners = owners.map(item => ({...item, share: (item.share).toString(), ownerDetails: {...item.ownerDetails, isPreviousOwnerRequired: (item.ownerDetails.isPreviousOwnerRequired).toString()}}));
+    }
+    else {
+      owners = owners.map(item => ({...item, share: (item.share).toString()}));
+    }
 
     let currOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == true);
     let prevOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == false);
@@ -588,6 +596,9 @@ const getData = async (action, state, dispatch) => {
     },
     {
       name: "allocationType"
+    },
+    {
+      name: "sector"
     }
     ]
   }]
@@ -618,6 +629,27 @@ const getData = async (action, state, dispatch) => {
       "components.div.children.formwizardSecondStep.children.AllotmentAuctionDetails.children.cardContent.children.auctionTableContainer"
     )
   )
+
+  dispatch(
+    handleField(
+      "apply",
+      "components.div.children.formwizardEighthStep.children.groundRentDetails",
+      "visible",
+      false
+    )
+  )
+  dispatch(
+    handleField(
+      "apply",
+      "components.div.children.formwizardEighthStep.children.licenseFeeDetails",
+      "visible",
+      false
+    )
+  )
+  const stepNumber = getQueryArg(window.location.href, "stepNumber");
+  if(!!stepNumber) {
+    changeStep(state, dispatch, "apply", "", Number(stepNumber))
+  }
 }
 
 const applyEstate = {
@@ -658,6 +690,7 @@ const applyEstate = {
         formwizardSeventhStep,
         formwizardEighthStep,
         formwizardNinthStep,
+        formwizardTenthStep,
         footer
       }
     }

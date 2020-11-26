@@ -47,13 +47,17 @@ export const searchResultsAccountStatement = {
         }
       }
     ],
+    style:{
+      align : "right"
+    },
     options: {
       filter: false,
       download: false,
       responsive: "stacked",
       selectableRows: false,
       hover: true,
-      rowsPerPageOptions: [10, 15, 20]
+      pagination: false,
+      // rowsPerPageOptions: [10, 15, 20]
     //   onRowClick: (row, index) => {
     //     onRowClick(row);
     //   }
@@ -65,17 +69,81 @@ export const accountStatementResults = {
   ...searchResultsAccountStatement,
   visible: false,
   props: {...searchResultsAccountStatement.props, 
+  ...searchResultsAccountStatement.props.style,
     columns: [
       DATE,
-      AMOUNT,
+      {
+        name: AMOUNT,
+        options: {
+          customBodyRender: value => (
+            <span style={{ display: 'flex', justifyContent: 'right', flexDirection: 'row-reverse',marginBottom:'none'}}>
+          {value}
+        </span> 
+          )
+        }
+      },
       PAYMENTTYPE,
       RENTTYPE,
-      PRINCIPALDUE,
-      GSTDUE,
-      INTERESTDUE,
-      GSTPENALTYDUE,
-      TOTALDUE,
-      ACCOUNTBALANCE,
+      {
+        name: PRINCIPALDUE,
+        options: {
+          customBodyRender: value => (
+            <span style={{ display: 'flex', justifyContent: 'right', flexDirection: 'row-reverse',marginBottom:'none'}}>
+          {value}
+        </span> 
+          )
+        }
+      },
+      {
+        name: GSTDUE,
+        options: {
+          customBodyRender: value => (
+            <span style={{ display: 'flex', justifyContent: 'right', flexDirection: 'row-reverse',marginBottom:'none'}}>
+          {value}
+        </span> 
+          )
+        }
+      },
+      {
+        name: INTERESTDUE,
+        options: {
+          customBodyRender: value => (
+            <span style={{ display: 'flex', justifyContent: 'right', flexDirection: 'row-reverse',marginBottom:'none'}}>
+          {value}
+        </span> 
+          )
+        }
+      },
+      {
+        name: GSTPENALTYDUE,
+        options: {
+          customBodyRender: value => (
+            <span style={{ display: 'flex', justifyContent: 'right',align: 'right', flexDirection: 'row-reverse',marginBottom:'none'}}>
+          {value}
+        </span> 
+          )
+        }
+      },
+      {
+        name: TOTALDUE,
+        options: {
+          customBodyRender: value => (
+            <span style={{ display: 'flex', justifyContent: 'right', align: 'right',flexDirection: 'row-reverse',marginBottom:'none'}}>
+          {value}
+        </span> 
+          )
+        }
+      },
+      {
+        name: ACCOUNTBALANCE,
+        options: {
+          customBodyRender: value => (
+            <span style={{ display: 'flex', justifyContent: 'right', align: 'right',flexDirection: 'row-reverse',marginBottom:'none'}}>
+          {value}
+        </span> 
+          )
+        }
+      },
       RECEIPT_NO
     ],
     options: {...searchResultsAccountStatement.props.options,

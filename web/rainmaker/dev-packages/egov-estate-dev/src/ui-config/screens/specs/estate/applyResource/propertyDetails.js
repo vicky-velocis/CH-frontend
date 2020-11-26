@@ -22,8 +22,10 @@ import {
    
 
 let screenName = "apply";
+let paymentStep = "formwizardEighthStep"
 if ((window.location.href).includes("allotment")) {
     screenName = "allotment";
+    paymentStep = "formwizardSixthStepAllotment";
 }
 
 export const getActionDefinationForAuctionDetailsFields = (disabled = true, step) => {
@@ -204,7 +206,7 @@ const categoryField = {
     afterFieldChange: (action, state, dispatch) => {
         let screenName = "apply";
         let step = "formwizardFirstStep";
-        let stepSummary = "formwizardNinthStep";
+        let stepSummary = "formwizardTenthStep";
         let reviewContainer = "reviewDetails";
                 
         if ((window.location.href).includes("allotment")) {
@@ -329,9 +331,9 @@ const sectorNumberField = {
         labelName: "Select Sector Number",
         labelKey: "ES_SECTOR_NUMBER_PLACEHOLDER"
     },
-    // required: true,
+    required: true,
     jsonPath: "Properties[0].sectorNumber",
-    sourceJsonPath: "applyScreenMdmsData.EstateServices.SectorNumber",
+    sourceJsonPath: "applyScreenMdmsData.EstateServices.sector",
     gridDefination: {
         xs: 12,
         sm: 6
@@ -401,8 +403,8 @@ const propertyTypeField = {
     beforeFieldChange: (action, state, dispatch) => {
         dispatch(
             handleField(
-                "allotment",
-                "components.div.children.formwizardSixthStepAllotment.children.demandSelect",
+                screenName,
+                `components.div.children.${paymentStep}.children.demandSelect`,
                 "visible",
                 !!(action.value == "PROPERTY_TYPE.LEASEHOLD")
             )
@@ -568,7 +570,7 @@ export const toggleEntityOwnersDivsBasedOnPropertyRegisteredTo = (value, dispatc
     let screenName = "apply";
     let stepNameFirst = "formwizardFirstStep";
     let stepNameThird = "formwizardThirdStep";
-    let stepNameReview = "formwizardNinthStep";
+    let stepNameReview = "formwizardTenthStep";
     let reviewContainer = "reviewDetails";
 
     if ((window.location.href.includes("allotment"))) {
@@ -664,7 +666,7 @@ export const toggleEntityOwnersDivsBasedOnPropertyRegisteredTo = (value, dispatc
 export const toggleEntityOwnersDivsBasedOnEntityType = (value, dispatch) => {
     let screenName = "apply";
     let stepName = "formwizardThirdStep";
-    let stepNameReview = "formwizardNinthStep";
+    let stepNameReview = "formwizardTenthStep";
     let reviewContainer = "reviewDetails";
 
     if ((window.location.href.includes("allotment"))) {

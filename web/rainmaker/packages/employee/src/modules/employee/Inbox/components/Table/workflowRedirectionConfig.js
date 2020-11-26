@@ -24,11 +24,20 @@ export const getWFConfig = (module, businessService, taskId) => {
     }
   }
   else if (businessService == "NULM") {
-		  return {
-			INITIATED: "/egov-nulm/view-susv",
-			DEFAULT: "/egov-nulm/view-susv",
-		  };
-	}
+     if (taskId.includes('SUSVR')) {
+      return {
+        INITIATED: "/egov-nulm/view-svru",
+        DEFAULT: "/egov-nulm/view-svru",
+      };
+    }
+    else if (taskId.includes('SUSV')) {
+      return {
+        INITIATED: "/egov-nulm/view-susv",
+        DEFAULT: "/egov-nulm/view-susv",
+      };
+    }
+  }
+
   else if (businessService == "Engineering" || businessService == "IT" || businessService == "Caretaker" || businessService == "MOH") {
     if (taskId.includes('MRNIN')) {
       return {
@@ -222,10 +231,22 @@ export const getWFConfig = (module, businessService, taskId) => {
       };
     }
     case "ESTATEPROPERTIES":
-      if(businessService === "ES-EB-AllotmentOfSite") {
+      if(businessService === "ES-EB-AllotmentOfSite" || businessService === "ES-EB-PropertyMaster") {
         return {
           INITIATED: 'estate/search-preview',
           DEFAULT: 'estate/search-preview'
+        }
+      } else {
+        return {
+          INITIATED: "/estate/preview",
+          DEFAULT: "/estate/preview"
+        }
+      }
+    case "ESTATESERVICES":
+      if(businessService === "ES-BB-PropertyMaster") {
+        return {
+          INITIATED: "/estate/search-preview-building-branch",
+          DEFAULT: "/estate/search-preview-building-branch"
         }
       } else {
         return {

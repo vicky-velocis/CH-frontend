@@ -7,7 +7,8 @@ import { ESTATE_SERVICES_MDMS_MODULE } from "../../../../ui-constants";
 import { getSearchResults } from "../../../../ui-utils/commons";
 import { propertyInfo } from "./preview-resource/preview-properties";
 import { getQueryArg, getTodaysDateInYMD } from "egov-ui-framework/ui-utils/commons";
-import { convertDateToEpoch } from "../utils";
+import { convertDateToEpoch, validateFields, getRentSummaryCard } from "../utils";
+import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 
   const header = getCommonHeader({
     labelName: "Rent Payment",
@@ -43,8 +44,10 @@ import { convertDateToEpoch } from "../utils";
   const beforeInitFn = async(action, state, dispatch)=>{
     getMdmsData(dispatch);
     let propertyId = getQueryArg(window.location.href, "propertyId")
+    const fileNumber = getQueryArg(window.location.href, "fileNumber")
     const queryObject = [
-      {key: "propertyId", value: propertyId}
+      {key: "propertyIds", value: propertyId},
+      {key: "fileNumber", value: fileNumber}
     ]
     const response = await getSearchResults(queryObject)
     if(!!response.Properties && !!response.Properties.length) {
@@ -67,8 +70,8 @@ import { convertDateToEpoch } from "../utils";
 
   const offlinePaymentDetailsHeader = getCommonTitle(
     {
-        labelName: "Offline Payment Details",
-        labelKey: "ES_OFFLINE_PAYMENT_DETAILS_HEADER"
+        labelName: "Payment Details",
+        labelKey: "ES_PAYMENT_DETAILS_HEADER"
     },
     {
         style: {
@@ -116,7 +119,7 @@ import { convertDateToEpoch } from "../utils";
       labelKey: "ES_SELECT_PAYMENT_TYPE_PLACEHOLDER"
   },
     required: true,
-    jsonPath: "Properties[0].paymentType",
+    jsonPath: "payment.paymentType",
     visible: process.env.REACT_APP_NAME !== "Citizen"
   }
 
@@ -132,6 +135,7 @@ import { convertDateToEpoch } from "../utils";
     required: true,
     pattern: getPattern("Date"),
     jsonPath: "payment.dateOfPayment",
+    visible: process.env.REACT_APP_NAME !== "Citizen",
     props: {
       inputProps: {
         max: getTodaysDateInYMD()
@@ -222,6 +226,34 @@ import { convertDateToEpoch } from "../utils";
   
   const propertyDetails = getCommonCard(propertyInfo(false))
 
+  const rentSummaryHeader = getCommonTitle({
+    labelName: "Rent Summary",
+    labelKey: "ES_RENT_SUMMARY_HEADER"
+  }, {
+    style: {
+      marginBottom: 18,
+      marginTop: 18
+    }
+  })
+  
+  const rentSummary = getCommonGrayCard({
+    rentSection: getRentSummaryCard({
+      sourceJsonPath: "Properties[0].estateRentSummary",
+      dataArray: ["balanceRent", "balanceGST", "balanceGSTPenalty", "balanceRentPenalty", "balanceAmount"]
+    })
+  });
+
+  const rentSummaryDetails = {
+    uiFramework: "custom-atoms",
+    componentPath: "Div",
+    children: {
+    rentCard: getCommonCard({
+      header: rentSummaryHeader,
+      detailsContainer: rentSummary
+    })
+    }
+  }
+
   const detailsContainer = {
     uiFramework: "custom-atoms",
     componentPath: "Form",
@@ -230,9 +262,52 @@ import { convertDateToEpoch } from "../utils";
     },
     children: {
       propertyDetails,
+      rentSummaryDetails,
       offlinePaymentDetails
     },
     visible: true
+  }
+
+  const goToPayment = async (state, dispatch, type) => {
+    let isValid = true;
+    isValid = validateFields("components.div.children.detailsContainer.children.offlinePaymentDetails.children.cardContent.children.detailsContainer.children", state, dispatch, "estate-payment")
+    if(!!isValid) {
+      const propertyId = getQueryArg(window.location.href, "propertyId")
+      const offlinePaymentDetails = get(state.screenConfiguration.preparedFinalObject, "payment")
+      const {paymentAmount, ...rest} = offlinePaymentDetails
+      if(!!propertyId) {
+        const payload = [
+          { id: propertyId, 
+            propertyDetails: {
+              offlinePaymentDetails: [{...rest, amount: paymentAmount}]
+            }
+          }
+        ]
+        try {
+          const response = await httpRequest("post",
+          "/est-services/property-master/_payrent",
+          "",
+          [],
+          { Properties : payload })
+          if(!!response && !!response.Properties.length) {
+            const {rentPaymentConsumerCode, tenantId} = response.Properties[0]
+            let billingBuisnessService=response.Properties[0].propertyDetails.billingBusinessService
+            type === "ONLINE" ? dispatch(
+              setRoute(
+               `/estate-citizen/pay?consumerCode=${rentPaymentConsumerCode}&tenantId=${tenantId}&businessService=${billingBuisnessService}`
+              )
+            ) : dispatch(
+              setRoute(
+              `acknowledgement?purpose=pay&applicationNumber=${rentPaymentConsumerCode}&status=success&tenantId=${tenantId}&type=${billingBuisnessService}`
+              )
+            )
+          dispatch(prepareFinalObject("Properties", response.Properties))
+          }
+        } catch (error) {
+          console.log("error", error)
+        }
+      }
+    }
   }
   
   export const getCommonApplyFooter = children => {
@@ -265,15 +340,38 @@ import { convertDateToEpoch } from "../utils";
           labelKey: "COMMON_MAKE_PAYMENT"
         })
       },
-      // onClickDefination: {
-      //   action: "condition",
-      //   callBack: (state, dispatch) => {
-      //     goToPayment(state, dispatch, ONLINE)
-      //   },
-      // },
+      onClickDefination: {
+        action: "condition",
+        callBack: (state, dispatch) => {
+          const paymentType = process.env.REACT_APP_NAME === "Citizen" ? "ONLINE" : "OFFLINE"
+          goToPayment(state, dispatch, paymentType)
+        },
+      },
       visible: true
     }
   })
+
+  export const onTabChange = async(tabIndex, dispatch, state) => {
+    const fileNumber = getQueryArg(window.location.href, "fileNumber");
+    const propertyId = getQueryArg(window.location.href, "propertyId")
+    let path = "";
+    if (tabIndex === 0) {
+      path = `/estate/estate-payment?propertyId=${propertyId}&fileNumber=${fileNumber}`;
+    }
+    else if (tabIndex === 1) {
+      path = `/estate/penaltyStatement?propertyId=${propertyId}&fileNumber=${fileNumber}`
+    }
+    dispatch(setRoute(path))
+  }
+
+  export const tabs = [
+    {
+      tabButton: { labelName: "Rent Payment", labelKey: "ES_RENT_PAYMENT" }
+    },
+    {
+      tabButton: { labelName: "Penalty Statement", labelKey: "ES_PENALTY_STATEMENT" }
+    },
+  ]
 
 const payment = {
     uiFramework: "material-ui",
@@ -302,6 +400,17 @@ const payment = {
                   ...header
                 }
               }
+            },
+            tabSection: {
+              uiFramework: "custom-containers-local",
+              moduleName: "egov-estate",
+              componentPath: "CustomTabContainer",
+              props: {
+                tabs,
+                activeIndex: 0,
+                onTabChange
+              },
+              type: "array",
             },
             detailsContainer,
             footer: paymentFooter

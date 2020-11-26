@@ -191,7 +191,7 @@ import {
       getData(action, state, dispatch);
       let indentNumber="";
       indentNumber = getQueryArg(window.location.href, "indentNumber");
-      const step = getQueryArg(window.location.href, "tenantId");
+      const step = getQueryArg(window.location.href, "step");
       const poNumber = getQueryArg(window.location.href, "poNumber");
       if(!step && !poNumber){
         dispatch(prepareFinalObject("purchaseOrders[0]",null));
@@ -206,6 +206,25 @@ import {
         //   { disabled: true }
         // );
         dispatch(prepareFinalObject("purchaseOrders[0].purchaseOrderDate",new Date().toISOString().substr(0,10))); 
+      }
+      let purchaseOrders = get(
+        state.screenConfiguration.preparedFinalObject,
+        "purchaseOrders",
+        []
+      );
+      if(purchaseOrders && purchaseOrders[0])
+      {
+        if(purchaseOrders[0].purchaseOrderDetails)
+        {
+          if(purchaseOrders[0].purchaseOrderDetails && purchaseOrders[0].purchaseOrderDetails[0])
+          {
+            if(purchaseOrders[0].purchaseOrderDetails[0].indentNumber)
+            {
+              indentNumber = purchaseOrders[0].purchaseOrderDetails[0].indentNumber
+            }
+          }
+        
+      }
       }
       if(indentNumber){     
           dispatch(prepareFinalObject("purchaseOrders[0].purchaseType", "Indent"));   
@@ -316,6 +335,44 @@ import {
             { max: new Date().toISOString().slice(0, 10)}
           )
         );  
+
+      }
+      let rateType =  get(state.screenConfiguration.preparedFinalObject, "purchaseOrders[0].rateType",'')
+      if(rateType ==='Gem')
+      {
+        set(
+          action.screenConfig,
+          "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.supplier.props.style",
+          { display: "none" }
+        );
+        set(
+          action.screenConfig,
+          "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.externalPoNumber.props.style",
+          { display: "inline-block" }
+        );
+        set(
+          action.screenConfig,
+          "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.supplierGem.props.style",
+          { display: "inline-block" }
+        );
+
+      }
+      else{
+        set(
+          action.screenConfig,
+          "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.supplier.props.style",
+          { display: "inline-block",width:"40%" }
+        );
+        set(
+          action.screenConfig,
+          "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.supplierGem.props.style",
+          { display: "none" }
+        );
+        set(
+          action.screenConfig,
+          "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.externalPoNumber.props.style",
+          { display: "none" }
+        );
 
       }
       return action;

@@ -208,6 +208,9 @@ const getData = async (action, state, dispatch) => {
       },
       {
         name: "allocationType"
+      },
+      {
+        name: "sector"
       }
     ]
   }]
@@ -233,6 +236,30 @@ const getData = async (action, state, dispatch) => {
     handleField(
       "allotment",
       "components.div.children.formwizardSixthStepAllotment.children.licenseFeeDetails",
+      "visible",
+      false
+    )
+  )
+  dispatch(
+    handleField(
+      "allotment",
+      "components.div.children.formwizardSeventhStepAllotment.children.reviewAllotmentDetails.children.cardContent.children.reviewGroundRent",
+      "visible",
+      false
+    )
+  )
+  dispatch(
+    handleField(
+      "allotment",
+      "components.div.children.formwizardSeventhStepAllotment.children.reviewAllotmentDetails.children.cardContent.children.reviewLicenseFee",
+      "visible",
+      false
+    )
+  )
+  dispatch(
+    handleField(
+      "allotment",
+      "components.div.children.formwizardSeventhStepAllotment.children.reviewAllotmentDetails.children.cardContent.children.reviewAdvanceRent",
       "visible",
       false
     )

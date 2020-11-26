@@ -61,9 +61,9 @@ const styles = {
     lineHeight: "19px"
   }
   const labelHeader = {
-    color: "rgba(0, 0, 0, 0.87)",
+    color: "rgb(255, 0, 0)",
     fontFamily: "Roboto",
-    fontSize: "25px",
+    fontSize: "14px",
     fontWeight: 400,
     letterSpacing: "0.67px",
     lineHeight: "19px"
@@ -90,7 +90,7 @@ class MultipleDocuments extends Component {
         }
         {!btnhide && (
             <LabelContainer
-              labelName= "No Notices generated."
+              labelName= "No notices generated."
               style={labelHeader}
           />)
         }
@@ -144,7 +144,8 @@ class MultipleDocuments extends Component {
                                 fontSize: 14,
                                 color: !!content.callBack || !!content.url ? "#FE7A51" : "rgba(0, 0, 0, 0.87",
                                 cursor: !!content.callBack || !!content.url ? "pointer" : "auto",
-                                wordWrap: "break-word"
+                                wordWrap: "break-word",
+                                whiteSpace:"pre-line"
                               }}
                             />
                           </Grid>
@@ -152,7 +153,7 @@ class MultipleDocuments extends Component {
                       );
                     })}
                       {btnhide && (datum.applicationDocuments.map((content) => (
-                          <Grid xs={6} sm={3} 
+                          <Grid xs={12} sm={3} 
                           style={{
                               marginBottom: "8px",
                               marginTop: "8px",
