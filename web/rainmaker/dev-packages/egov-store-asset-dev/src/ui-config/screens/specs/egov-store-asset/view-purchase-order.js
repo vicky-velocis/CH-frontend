@@ -16,6 +16,7 @@ import {
     showHideAdhocPopup,
     validateFields
   } from "../utils";
+  import { IndentConfigType } from "../../../../ui-utils/sampleResponses";
   import { httpRequest } from "../../../../ui-utils";
   import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
   import { getSearchResults } from "../../../../ui-utils/commons";
@@ -153,6 +154,8 @@ printMenu = [receiptPrintObject];
        TotalQty = TotalQty+ orderQuantity
        set(purchaseOrders[0], `purchaseOrderDetails[${index}].totalValue`,totalvalue);
      } 
+     if(purchaseOrders[0].rateType==='Gem')
+     set(purchaseOrders[0], `supplier.name`,purchaseOrders[0].supplier.code);
      dispatch(prepareFinalObject(`purchaseOrders[0].totalIndentQty`, indentQuantity));
      dispatch(prepareFinalObject(`purchaseOrders[0].totalvalue`, totalvalue));
      dispatch(prepareFinalObject(`purchaseOrders[0].totalQty`, TotalQty));
@@ -171,15 +174,42 @@ printMenu = [receiptPrintObject];
       getSearchResults(queryObject, dispatch,"purchaseOrder")
       .then(response =>{
         if(response){
+         
           dispatch(prepareFinalObject("purchaseOrders", [...response.purchaseOrders]));       
           furnishindentData(state, dispatch);
+
+          //call indent api for Approved indent
+
+          let queryObjectI = [
+            {
+              key: "tenantId",
+              value: tenantId
+            },
+            {
+              key: "indentType",
+              value: IndentConfigType().IndntType.INEDENT
+            },
+            {
+              key: "indentStatus",
+              value: IndentConfigType().indentStatus
+            },
+          ];
+          getSearchResults(queryObjectI, dispatch,"indents")
+          .then(response =>{
+            if(response){
+              dispatch(prepareFinalObject("indents", [...response.indents])); 
+            }
+          });
       if(response.purchaseOrders && response.purchaseOrders[0].supplier.code){
         const queryObject = [{ key: "tenantId", value: getTenantId()},{ key: "suppliers", value: response.purchaseOrders[0].supplier.code}];
-       
+        if(response.purchaseOrders[0].rateType !=="Gem")
+        {
+
         getSearchResults(queryObject, dispatch,"priceList")
         .then(response =>{
           if(response){
             let priceList = [{rateContractNumber:"",rateContractDate:"",agreementNumber:"",agreementDate:"",agreementStartDate:"",agreementEndDate:""}];
+            
             priceList[0].rateContractNumber  =  response.priceLists[0].rateContractNumber;
             priceList[0].rateContractDate   = new Date(response.priceLists[0].rateContractDate).toISOString().substr(0,10);
             priceList[0].agreementNumber   =   response.priceLists[0].agreementNumber;
@@ -189,7 +219,9 @@ printMenu = [receiptPrintObject];
             dispatch(prepareFinalObject("searchMaster.priceList", response.priceLists));  
                 dispatch(prepareFinalObject("purchaseOrders[0].priceList", priceList));          
            }  
-        });     
+        }); 
+      }
+        
        }
       }
     });  

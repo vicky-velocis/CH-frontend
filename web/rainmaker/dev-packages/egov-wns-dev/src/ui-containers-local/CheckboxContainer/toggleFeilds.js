@@ -2,24 +2,24 @@ import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-fra
 import set from "lodash/set";
 
 export const toggleWater = (onFieldChange, value) => {
-  onFieldChange(
-    "apply",
-    "components.div.children.formwizardFirstStep.children.OwnerInfoCard.children.cardContent.children.tradeUnitCardContainer.children.pipeSize",
-    "props.value",
-    ""
-  );
-  onFieldChange(
-    "apply",
-    "components.div.children.formwizardFirstStep.children.OwnerInfoCard.children.cardContent.children.tradeUnitCardContainer.children.numberOfTaps",
-    "props.value",
-    ""
-  );
-  onFieldChange(
-    "apply",
-    "components.div.children.formwizardFirstStep.children.OwnerInfoCard.children.cardContent.children.tradeUnitCardContainer.children.waterApplicationType",
-    "props.value",
-    ""
-  );
+  // onFieldChange(
+  //   "apply",
+  //   "components.div.children.formwizardFirstStep.children.OwnerInfoCard.children.cardContent.children.tradeUnitCardContainer.children.pipeSize",
+  //   "props.value",
+  //   ""
+  // );
+  // onFieldChange(
+  //   "apply",
+  //   "components.div.children.formwizardFirstStep.children.OwnerInfoCard.children.cardContent.children.tradeUnitCardContainer.children.numberOfTaps",
+  //   "props.value",
+  //   ""
+  // );
+  // onFieldChange(
+  //   "apply",
+  //   "components.div.children.formwizardFirstStep.children.OwnerInfoCard.children.cardContent.children.tradeUnitCardContainer.children.waterApplicationType",
+  //   "props.value",
+  //   ""
+  // );
   onFieldChange(
     "apply",
     "components.div.children.formwizardFirstStep.children.OwnerInfoCard.children.cardContent.children.tradeUnitCardContainer.children.pipeSize",
@@ -267,7 +267,7 @@ export const toggleConnHolderDetails=(onFieldChange, value)=>{
     "apply",
     "components.div.children.formwizardFirstStep.children.connectionHolderDetails.children.cardContent.children.holderDetails.children.holderDetails",
     "visible",
-    value
+    true
   );
 }
 

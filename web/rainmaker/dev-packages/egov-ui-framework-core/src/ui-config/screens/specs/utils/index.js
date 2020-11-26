@@ -608,6 +608,8 @@ export const getPattern = type => {
       return /^[a-z0-9]+$/i;
     case "alpha-only":
       return /^[a-z]+$/i;
+      case "alpha-only-with-space":
+      return /^[a-z ]+$/i;
     case "numeric-only":
       return /^[0-9]*$/i;
       case "twodigit-number":
@@ -636,6 +638,10 @@ export const getPattern = type => {
       return /^[a-zA-Z.0-9 @#/%&]{1,256}$/i;
     case "ECVehicleRegistrationNo":
       return /^[a-zA-Z0-9 -]{1,10}$/i;
+    case "ECNatureOfViolation":
+      return /^[a-zA-Z.0-9 @#%&-:\n\r]{1,256}$/i;
+    case "ECItemRemark":
+      return /^[a-zA-Z.0-9 @#%&-:\n\r]{1,256}$/i;
 
       //validation patterns for HC....don't use
       case "NoOfTree":

@@ -1,4 +1,4 @@
-import { getCommonCard, getCommonHeader, getStepperObject } from "egov-ui-framework/ui-config/screens/specs/utils";
+import { dispatchMultipleFieldChangeAction, getCommonCard, getCommonHeader, getStepperObject } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import {footer, stepsData} from './footer'
@@ -30,6 +30,29 @@ export const getApplicationConfig = async({dispatch, applicationType}) => {
   }
 }
 
+const hideFooter = async (action, state, dispatch) => {
+  const screenConfig = get(state.screenConfiguration, "screenConfig");
+  const {_apply} = screenConfig;
+  if(!!_apply) {
+    const actionDefination = [{
+                path: "components.div.children.footer.children.previousButton",
+                property: "visible",
+                value: false
+            },
+            {
+                path: "components.div.children.footer.children.nextButton",
+                property: "visible",
+                value: true
+            },
+            {
+                path: "components.div.children.footer.children.submitButton",
+                property: "visible",
+                value: false
+            }]
+    await dispatchMultipleFieldChangeAction("_apply", actionDefination, dispatch);
+  }
+}
+
 
 const getData = async (action, state, dispatch) => {
   await dispatch(prepareFinalObject("Applications", []))
@@ -37,6 +60,7 @@ const getData = async (action, state, dispatch) => {
   let applicationType = getQueryArg(window.location.href, "applicationType");
   const applicationNumber = getQueryArg(window.location.href, "applicationNumber")
   let propertyId = getQueryArg(window.location.href, "propertyId")
+  let fileNumber = getQueryArg(window.location.href, "fileNumber")
   let property = {};
   if(!!applicationNumber) {
     const applicationQueryObject = [
@@ -50,13 +74,15 @@ const getData = async (action, state, dispatch) => {
       applicationType = `${branchType}_${moduleType}_${type}`;
       property = Applications[0].property
       propertyId = Applications[0].property.id
+      fileNumber = Applications[0].property.fileNumber
     } catch (error) {
       return {}
     }
   } 
   // else {
     const queryObject = [
-      {key: "propertyId", value: propertyId}
+      {key: "propertyIds", value: propertyId},
+      {key: "fileNumber", value: fileNumber}
     ]
     const response = await getSearchResults(queryObject)
     if(!!response.Properties && !!response.Properties.length) {
@@ -64,7 +90,7 @@ const getData = async (action, state, dispatch) => {
        dispatch(prepareFinalObject("Applications[0].property.id", propertyId ))
     }
   // }
-
+    await hideFooter(action, state, dispatch)
     const owners = property.propertyDetails.owners.filter(item => !!item.ownerDetails.isCurrentOwner)
     property = {...property, propertyDetails: {...property.propertyDetails, owners}}
     
@@ -93,7 +119,6 @@ const getData = async (action, state, dispatch) => {
     );
 
     const applyFooter = footer;
-
     const first_step_sections = await setFirstStep(state, dispatch, { data_config, format_config: first_step})
     const second_step_sections = await setDocumentData(state, dispatch, { format_config: second_step, documentList})
     let third_step = await setThirdStep({state, dispatch, applicationType, preview})

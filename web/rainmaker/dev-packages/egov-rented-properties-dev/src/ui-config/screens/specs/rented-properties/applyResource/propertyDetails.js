@@ -49,7 +49,7 @@ export const colonyFieldDup = {
   props: {
     disabled: true
   }}
-
+let colonySelectedCode = [];
 const colonyField = {
     ...colonyFieldConfig,
     beforeFieldChange: (action, state, dispatch) => {
@@ -59,36 +59,75 @@ const colonyField = {
           code: item.code,
           label: item.sqyd
         })) : [];
+        colonySelectedCode.push(findItem.code)
         const rentPerSqyd = !!findItem ? findItem.costPerSqyd : ""
+        dispatch(prepareFinalObject("colonySelectedCode", colonySelectedCode))
         dispatch(prepareFinalObject("applyScreenMdmsData.propertyAreas", propertyAreas))
         dispatch(prepareFinalObject("Properties[0].propertyDetails.rentPerSqyd", rentPerSqyd))
+        let interestRatePerYear = get(state.screenConfiguration.screenConfig["apply"],"components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.interestRatePerYear.props.value");
+        let rentIncrementPercentage = get(state.screenConfiguration.screenConfig["apply"],"components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPercentage.props.value");
+        let rentIncrementPeriod = get(state.screenConfiguration.screenConfig["apply"], "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPeriod.props.value");
+
+        // compare mdms colony data values for rent with field values if same dispatch 
+        //if not same dont dispatch
 
         rentedPropertyColonies.map(item => {
+          // check if colonies are same
+          // What if changing colony again how to keep track of change in value? -- push then to an array. see the last item if not same as previous dispatch new values.
             if (action.value === item.code) {
+              if((colonySelectedCode[colonySelectedCode.length - 1] === colonySelectedCode[colonySelectedCode.length - 2]) && !!interestRatePerYear && !!rentIncrementPercentage && !!rentIncrementPeriod && (item.interestRateOrYear !== parseInt(interestRatePerYear) || item.rentIncrementPercentage !== parseInt(rentIncrementPercentage) || item.rentIncrementPeriod !== parseInt(rentIncrementPeriod))){
                 dispatch(
-                    handleField(
-                        "apply",
-                        "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.interestRatePerYear",
-                        "props.value",
-                        item.interestRateOrYear.toString()
-                    )
-                )
+                  handleField(
+                      "apply",
+                      "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.interestRatePerYear",
+                      "props.value",
+                      interestRatePerYear.toString()
+                  )
+              )
+              dispatch(
+                  handleField(
+                      "apply",
+                      "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPercentage",
+                      "props.value",
+                      rentIncrementPercentage.toString()
+                  )
+              )
+              dispatch(
+                  handleField(
+                      "apply",
+                      "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPeriod",
+                      "props.value",
+                      rentIncrementPeriod.toString()
+                  )
+              )
+              }
+              else{
                 dispatch(
-                    handleField(
-                        "apply",
-                        "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPercentage",
-                        "props.value",
-                        item.rentIncrementPercentage.toString()
-                    )
-                )
-                dispatch(
-                    handleField(
-                        "apply",
-                        "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPeriod",
-                        "props.value",
-                        item.rentIncrementPeriod.toString()
-                    )
-                )
+                  handleField(
+                      "apply",
+                      "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.interestRatePerYear",
+                      "props.value",
+                      item.interestRateOrYear.toString()
+                  )
+              )
+              dispatch(
+                  handleField(
+                      "apply",
+                      "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPercentage",
+                      "props.value",
+                      item.rentIncrementPercentage.toString()
+                  )
+              )
+              dispatch(
+                  handleField(
+                      "apply",
+                      "components.div.children.formwizardFirstStep.children.rentDetails.children.cardContent.children.detailsContainer.children.rentIncrementPeriod",
+                      "props.value",
+                      item.rentIncrementPeriod.toString()
+                  )
+              )
+              }
+                
             }
         })
         if(action.value === 'COLONY.KUMHAR' || action.value === 'COLONY.MILK'){
@@ -129,6 +168,7 @@ export const pincodeField = {
     minLength: 6,
     maxLength: 6,
     required: true,
+    pattern:getPattern("Pincode"),
     errorMessage: "RP_ERR_PINCODE_FIELD",
     afterFieldChange: (action, state, dispatch) => {
       if (action.value.length > 6) {
@@ -241,8 +281,8 @@ export const transitNumberLookUp = {
     },
     title: {
       value:
-        "If you have already assessed your property, then please search your property by your transit Number",
-      key: "If you have already assessed your property, then please search your property by your transit Number"
+        "If you have already assessed your property, then please search your property by your transit number",
+      key: "If you have already assessed your property, then please search your property by your transit number"
     },
     infoIcon: "info_circle",
     errorMessage: "RP_SITE_PLOT_SEARCH_PLACEHOLDER"
@@ -396,6 +436,24 @@ const transitNumberField = {
                 "RP_ERR_AREA_FIELD_MAXLENGTH"
               )
           )
+      }
+      else if(action.value.length < 2){
+        dispatch(
+          handleField(
+            "apply",
+            action.componentJsonpath,
+            "errorMessage",
+            "RP_ERR_AREA_FIELD_MINLENGTH"
+          )
+      )
+      dispatch(
+          handleField(
+            "apply",
+            action.componentJsonpath,
+            "props.errorMessage",
+            "RP_ERR_AREA_FIELD_MINLENGTH"
+          )
+      )
       }
       else {
           dispatch(
