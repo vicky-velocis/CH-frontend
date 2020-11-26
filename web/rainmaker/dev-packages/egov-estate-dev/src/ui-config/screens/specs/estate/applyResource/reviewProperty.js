@@ -1084,7 +1084,7 @@ export const getReviewGroundRent = (isEditable = true, step = 5, screenKey = "al
 //   })
 // }
 
-export const getReviewAdvanceRent = (isEditable = true) => {
+export const getReviewAdvanceRent = (isEditable = true, step = 5, screenKey = "allotment") => {
   return getCommonGrayCard({
     headerDiv: {
       ...headerDiv,
@@ -1099,7 +1099,7 @@ export const getReviewAdvanceRent = (isEditable = true) => {
             labelKey: "ES_ADVANCE_RENT_DETAILS_HEADER"
           })
         },
-        editSection: masterEntryEditSection(isEditable, 5, "allotment")
+        editSection: masterEntryEditSection(isEditable, step, screenKey)
       }
     },
     viewAdvanceRent: getCommonContainer({
@@ -1689,7 +1689,7 @@ export const getReviewConsolidatedPaymentDetails = (isEditable = true, screenkey
             labelKey: "ES_CONSOLIDATED_PAYMENT_DETAILS"
           })
         },
-        editSection: masterEntryEditSection(isEditable, 2, screenkey)
+        editSection: masterEntryEditSection(isEditable, 8, screenkey)
       }
     },
     viewFour: getCommonContainer({
