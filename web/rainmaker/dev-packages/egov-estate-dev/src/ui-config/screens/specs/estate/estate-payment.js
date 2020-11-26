@@ -109,59 +109,62 @@ import {penaltyStatmentResult} from './searchResource/functions'
       },
     required: false,
     jsonPath: "payment.paymentType",
-    beforeFieldChange: async function beforeFieldChange(action, state, dispatch) {
-      // if (action.value) {
-      //   const penaltyCard = getCommonCard({
-      //     header: getCommonTitle({
-      //       labelName: "Penalty Summary",
-      //       labelKey: "ES_PENALTY_SUMMARY_HEADER"
-      //     }, {
-      //       style: {
-      //         marginBottom: 18,
-      //         marginTop: 18
-      //       }
-      //     }),
-      //     detailsContainer: getCommonGrayCard({
-      //       rentSection: getRentSummaryCard({
-      //         sourceJsonPath: "Properties[0].estateRentSummary",
-      //         dataArray: ["balanceGSTPenalty", "collectedGSTPenalty", "balanceRentPenalty","gstpenalty"]
-      //       })
-      //     })
-      //   })
+    beforeFieldChange: async (action, state, dispatch) => {
+      if (action.value) {
+        const penaltyCard = getCommonCard({
+          header: getCommonTitle({
+            labelName: "Penalty Summary",
+            labelKey: "ES_PENALTY_SUMMARY_HEADER"
+          }, {
+            style: {
+              marginBottom: 18,
+              marginTop: 18
+            }
+          }),
+          detailsContainer: getCommonGrayCard({
+            rentSection: getRentSummaryCard({
+              sourceJsonPath: "PenaltyStatementSummary",
+              dataArray: ["totalPenalty", "totalPenaltyDue", "totalPenaltyPaid"]
+            })
+          })
+        })
 
-      //   switch(action.value){
-      //     case 'PAYMENTTYPE.PENALTY':
-      //         let properties = state.screenConfiguration.prepareFinalObject
-      //         const propertyId = properties[0].id;   
-      //         let Criteria = {
-      //           fromdate: properties[0].propertyDetails.auditDetails.createdTime || "",
-      //           todate:   ""
-      //         }
-      //         Criteria = {...Criteria, propertyid: propertyId}
-      //         let response = await penaltyStatmentResult (state,dispatch, Criteria)
-      //         console.log(response)
-      //         dispatch(handleField(
-      //           "estate-payment",
-      //           "components.div.children.detailsContainer.children.rentSummaryDetails.children",
-      //           "rentCard",
-      //           penaltyCard     
-      //       ));
-      //       break;
-      //     default : 
-      //         const rentCard = getCommonCard({
-      //           header: rentSummaryHeader,
-      //           detailsContainer: rentSummary
-      //         })
+        switch(action.value){
+          case 'PAYMENTTYPE.PENALTY':
+              let Properties = get(state.screenConfiguration.preparedFinalObject, "Properties")
+              const {id} = Properties[0];   
+              let Criteria = {
+                fromdate: Properties[0].propertyDetails.auditDetails.createdTime || "",
+                todate:   ""
+              }
+              Criteria = {...Criteria, propertyid: id}
+              debugger
+              console.log(Criteria)
+              let response = await penaltyStatmentResult (state,dispatch, Criteria)
+              console.log(response)
+              dispatch(prepareFinalObject("PenaltyStatementSummary", response.PenaltyStatementSummary))
+              dispatch(handleField(
+                "estate-payment",
+                "components.div.children.detailsContainer.children.rentSummaryDetails.children",
+                "rentCard",
+                penaltyCard     
+            ));
+            break;
+          default : 
+              const rentCard = getCommonCard({
+                header: rentSummaryHeader,
+                detailsContainer: rentSummary
+              })
 
-      //         dispatch(handleField(
-      //           "estate-payment",
-      //           "components.div.children.detailsContainer.children.rentSummaryDetails.children",
-      //           "rentCard",
-      //           rentCard     
-      //         ));
-      //       break;  
-      //   }
-      // }
+              dispatch(handleField(
+                "estate-payment",
+                "components.div.children.detailsContainer.children.rentSummaryDetails.children",
+                "rentCard",
+                rentCard     
+              ));
+            break;  
+        }
+      }
     },
     optionValue: "code",
     optionLabel: "name",
