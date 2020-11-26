@@ -19,6 +19,8 @@ import {
   getUserInfo
 } from "egov-ui-kit/utils/localStorageUtils";
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
+import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 
 let userInfo = JSON.parse(getUserInfo());
 
@@ -47,11 +49,9 @@ export const setDocsForEditFlow = async (state, dispatch, sourceJsonPath, destin
     sourceJsonPath,
     []
   ) || []
-  applicationDocuments = applicationDocuments.filter(item => !!item.isActive)
+  applicationDocuments = applicationDocuments.filter(item => !!item && !!item.isActive && !!item.fileStoreId)
   let uploadedDocuments = {};
-  let fileStoreIds =
-    applicationDocuments &&
-    applicationDocuments.map(item => item.fileStoreId).join(",");
+  let fileStoreIds = applicationDocuments && applicationDocuments.map(item => item && item.fileStoreId).filter(item => !!item).join(",");
   const fileUrlPayload =
     fileStoreIds && (await getFileUrlFromAPI(fileStoreIds));
   applicationDocuments &&
@@ -70,7 +70,7 @@ export const setDocsForEditFlow = async (state, dispatch, sourceJsonPath, destin
               )) ||
             `Document - ${index + 1}`,
           fileStoreId: item.fileStoreId,
-          fileUrl: Object.values(fileUrlPayload)[index],
+          fileUrl: fileUrlPayload[item.fileStoreId],
           documentType: item.documentType,
           tenantId: item.tenantId,
           id: item.id
@@ -86,7 +86,7 @@ export const setDocsForEditFlow = async (state, dispatch, sourceJsonPath, destin
 export const applyforApplication = async (state, dispatch, activeIndex) => {
   try {
     let queryObject = JSON.parse(JSON.stringify(get(state.screenConfiguration.preparedFinalObject, "Applications", {})))
-    const tenantId = userInfo.permanentCity;
+    const tenantId = userInfo.permanentCity || getTenantId();
     set(queryObject[0], "tenantId", tenantId);
 
     const id = get(queryObject[0], "id");
@@ -160,28 +160,29 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
     set(queryObject[0], "propertyDetails.companyRegistrationDate", convertDateToEpoch(queryObject[0].propertyDetails.companyRegistrationDate))
     set(queryObject[0], "propertyDetails.emdDate", convertDateToEpoch(queryObject[0].propertyDetails.emdDate))
 
-    var purchaserDetails = get(
+    var prevOwners = get(
       queryObject[0],
       "propertyDetails.purchaser",
       []
     )
     
-    if (purchaserDetails) {
-      purchaserDetails.map((item, index) => {
+    if (prevOwners.length) {
+      prevOwners = prevOwners.filter(item => item.ownerDetails.isPreviousOwnerRequired == "true");
+      prevOwners.map((item, index) => {
         if (typeof item.isDeleted === "undefined") {
           set(queryObject[0], `propertyDetails.purchaser[${index}].ownerDetails.dob`, convertDateToEpoch(queryObject[0].propertyDetails.purchaser[index].ownerDetails.dob))
         }
       })
     }
 
-    var ownerDetails = get(
+    var owners = get(
       queryObject[0],
       "propertyDetails.owners",
       []
     )
     
-    if (ownerDetails) {
-      ownerDetails.map((item, index) => {
+    if (owners.length) {
+      owners.map((item, index) => {
         if (typeof item.isDeleted === "undefined") {
           set(queryObject[0], `propertyDetails.owners[${index}].ownerDetails.possesionDate`, convertDateToEpoch(queryObject[0].propertyDetails.owners[index].ownerDetails.possesionDate));
           set(queryObject[0], `propertyDetails.owners[${index}].ownerDetails.dateOfAllotment`, convertDateToEpoch(queryObject[0].propertyDetails.owners[index].ownerDetails.dateOfAllotment));
@@ -248,22 +249,22 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
         /*****************************************************************************************/
       }
     } else {
-      let tabsArr = [0,1,2,3,4,5,6,7];
-      let owners = get(
-        queryObject[0],
-        "propertyDetails.owners",
-        []
-      )
-      let prevOwners = get(
-        queryObject[0],
-        "propertyDetails.purchaser",
-        []
-      )
+      let tabsArr = [0,1,2,3,4,5,6,7,8];
+      // let owners = get(
+      //   queryObject[0],
+      //   "propertyDetails.owners",
+      //   []
+      // )
+      // let prevOwners = get(
+      //   queryObject[0],
+      //   "propertyDetails.purchaser",
+      //   []
+      // )
       if (screenName == "allotment") {
-        tabsArr.pop();
+        tabsArr.splice(-2, 2);
       }
       else if (screenName == "apply-building-branch") {
-        tabsArr = tabsArr.splice(0, tabsArr.length - 5);
+        tabsArr = tabsArr.splice(0, tabsArr.length - 6);
       }
       if (tabsArr.indexOf(activeIndex) !== -1) {
         set(queryObject[0], "action", "")
@@ -286,6 +287,7 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
       if (owners) {
         owners.map((item, index) => {
           let ownerDocuments = get(queryObject[0], `propertyDetails.owners[${index}].ownerDetails.ownerDocuments`) || [];
+          ownerDocuments = ownerDocuments.filter(item => !!item && !!item.fileStoreId);
           ownerDocuments = ownerDocuments.map(item => ({
             ...item,
             isActive: true
@@ -327,7 +329,7 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
     ratePerSqft = !!ratePerSqft ? ratePerSqft.toString() : ratePerSqft;
     areaSqft = !!areaSqft ? areaSqft.toString() : areaSqft;
 
-    let owners = get(
+    owners = get(
       Properties[0],
       "propertyDetails.owners",
       []
@@ -337,6 +339,11 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
       owners.map((item, index) => {
         item.share = (item.share).toString();
         let ownerDocuments = Properties[0].propertyDetails.owners[index].ownerDetails.ownerDocuments || [];
+        let isPreviousOwnerRequired = Properties[0].propertyDetails.owners[index].ownerDetails.isPreviousOwnerRequired;
+        if (typeof isPreviousOwnerRequired != "undefined" && isPreviousOwnerRequired != null) {
+          isPreviousOwnerRequired = isPreviousOwnerRequired.toString();
+          Properties[0].propertyDetails.owners[index].ownerDetails.isPreviousOwnerRequired = isPreviousOwnerRequired;
+        }
         const removedDocs = ownerDocuments.filter(item => !item.isActive)
         ownerDocuments = ownerDocuments.filter(item => item.isActive)
         Properties[0].propertyDetails.owners[index].ownerDetails.ownerDocuments = ownerDocuments;
@@ -344,17 +351,8 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
       })
       
       if (screenName != "apply-building-branch") {
-        let currOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == true);
-        let prevOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == false);
-
-        
-        currOwners.map((item, index) => {
-          setDocsForEditFlow(state, dispatch, `Properties[0].propertyDetails.owners[${index}].ownerDetails.ownerDocuments`, `PropertiesTemp[0].propertyDetails.owners[${index}].ownerDetails.uploadedDocsInRedux`);
-        })
-
-        prevOwners.map((item, index) => {
-          setDocsForEditFlow(state, dispatch, `Properties[0].propertyDetails.purchaser[${index}].ownerDetails.ownerDocuments`, `PropertiesTemp[0].propertyDetails.purchaser[${index}].ownerDetails.uploadedDocsInRedux`);
-        })
+        var currOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == true);
+        var prevOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == false);
 
         Properties = [{...Properties[0], propertyDetails: {...Properties[0].propertyDetails, owners: currOwners, purchaser: prevOwners, ratePerSqft: ratePerSqft, areaSqft: areaSqft}}]
       }
@@ -372,13 +370,36 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
 
     let {estateRentSummary} = Properties[0]
     if(!!estateRentSummary){
-        estateRentSummary.outstanding =  (parseInt(estateRentSummary.balanceRent) + 
-        parseInt(estateRentSummary.balanceGST) + parseInt(estateRentSummary.balanceGSTPenalty) +
-        parseInt(estateRentSummary.balanceRentPenalty)).toFixed(1)
-    }
+      estateRentSummary.outstanding =  (Number(estateRentSummary.balanceRent) + 
+      Number(estateRentSummary.balanceGST) + Number(estateRentSummary.balanceGSTPenalty) +
+      Number(estateRentSummary.balanceRentPenalty)).toFixed(2)
+      estateRentSummary.balanceGST =  Number(estateRentSummary.balanceGST).toFixed(2)
+      estateRentSummary.balanceRent = Number(estateRentSummary.balanceRent).toFixed(2)
+      estateRentSummary.collectedRent = Number(estateRentSummary.collectedRent).toFixed(2)
+      estateRentSummary.balanceGSTPenalty = Number(estateRentSummary.balanceGSTPenalty).toFixed(2)
+      estateRentSummary.balanceRentPenalty = Number(estateRentSummary.balanceRentPenalty).toFixed(2)
+  }
     Properties = [{...Properties[0], estateRentSummary: estateRentSummary}]
 
     dispatch(prepareFinalObject("Properties", Properties));
+
+    if (screenName == "apply") {
+      if (activeIndex == 2 || activeIndex == 3) {
+        currOwners.map((item, index) => {
+          setDocsForEditFlow(state, dispatch, `Properties[0].propertyDetails.owners[${index}].ownerDetails.ownerDocuments`, `PropertiesTemp[0].propertyDetails.owners[${index}].ownerDetails.uploadedDocsInRedux`);
+        })
+      }
+      if (activeIndex == 4 || activeIndex == 5) {
+        prevOwners.map((item, index) => {
+          setDocsForEditFlow(state, dispatch, `Properties[0].propertyDetails.purchaser[${index}].ownerDetails.ownerDocuments`, `PropertiesTemp[0].propertyDetails.purchaser[${index}].ownerDetails.uploadedDocsInRedux`);
+        })
+      }
+    }
+    else {
+      currOwners.map((item, index) => {
+        setDocsForEditFlow(state, dispatch, `Properties[0].propertyDetails.owners[${index}].ownerDetails.ownerDocuments`, `PropertiesTemp[0].propertyDetails.owners[${index}].ownerDetails.uploadedDocsInRedux`);
+      })
+    }
     
     // dispatch(
     //   prepareFinalObject(
@@ -395,3 +416,42 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
     return false;
   }
 }
+
+export const addPenalty = async (state, dispatch, activeIndex) => {
+  try {
+    let queryObject = JSON.parse(JSON.stringify(get(state.screenConfiguration.preparedFinalObject, "propertyPenalties", [])))
+    const tenantId = userInfo.permanentCity || getTenantId();
+    let properties = JSON.parse(JSON.stringify(get(state.screenConfiguration.preparedFinalObject, "Properties", [])))
+    const propertyId = properties[0].id;
+    const fileNumber = properties[0].fileNumber
+    set(queryObject[0], "tenantId", tenantId);
+    set(queryObject[0], "propertyId", propertyId);
+    set(queryObject[0], "branchType", "estateBranch");
+    let response;
+    if(queryObject) {  
+      response = await httpRequest(
+        "post",
+        "/est-services/violation/_penalty",
+        "",
+        [],
+        { propertyPenalties : queryObject }
+      );
+    } 
+      let {PropertyPenalties} = response
+      if(response){
+        dispatch(
+          setRoute(
+          `acknowledgement?purpose=penalty&fileNumber=${fileNumber}&status=success&tenantId=${tenantId}`
+          )
+        )
+      }
+      dispatch(prepareFinalObject("PropertyPenalties", PropertyPenalties));
+      return true;
+  } catch (error) {
+    dispatch(toggleSnackbar(true, { labelName: error.message }, "error"));
+    console.log(error);
+    return false;
+  }
+}
+
+

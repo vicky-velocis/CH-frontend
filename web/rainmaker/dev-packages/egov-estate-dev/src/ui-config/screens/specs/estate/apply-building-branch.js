@@ -24,7 +24,7 @@ import {
   getQueryArg
 } from "egov-ui-framework/ui-utils/commons";
 import commonConfig from "config/common.js";
-import * as docsData from './applyResourceBuildingBranch/buildingBranchOwnerDocs.json';
+//import * as docsData from './applyResourceBuildingBranch/buildingBranchOwnerDocs.json';
 import {
   prepareDocumentTypeObjMaster
 } from "../utils";
@@ -129,6 +129,9 @@ const getData = async(action, state, dispatch) => {
     },
     {
       name: "allocationType"
+    },
+    {
+      name: "sector"
     }
     ]
   }]
@@ -137,13 +140,20 @@ const getData = async(action, state, dispatch) => {
   dispatch(prepareFinalObject("applyScreenMdmsData", response.MdmsRes));
 
   if (!!fileNumber) {
-    await getPMDetailsByFileNumber(action, state, dispatch, fileNumber)
+    await getPMDetailsByFileNumber(action, state, dispatch, fileNumber, "apply-building-branch")
   }
 
   setDocumentData(action, state, dispatch);
 }
 
-export const setDocumentData = (action, state, dispatch, ownerIndex = 0) => {
+export const setDocumentData = async (action, state, dispatch, ownerIndex = 0) => {
+  const documentTypePayload = [{
+    moduleName: ESTATE_SERVICES_MDMS_MODULE,
+    masterDetails: [{
+      name: "buildingBranchOwnerDocs"
+    }]
+  }]
+  const docsData = await getMdmsData(dispatch, documentTypePayload);
   const {
     EstateServices
   } = docsData && docsData.MdmsRes ? docsData.MdmsRes : {}

@@ -4,7 +4,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
 import Switch from '@material-ui/core/Switch';
 //import Cities from "./cities";
-
+import set from "lodash/set";
 import get from "lodash/get";
 import PropTypes from "prop-types";
 import cloneDeep from "lodash/cloneDeep";
@@ -96,32 +96,36 @@ class CustomizeTable extends React.Component {
     const  localisationArray = Object.values(localizationLabels);
     const {columns : stateColumn} = this.state;
     const { title } = this.state;
-    let columnName = []
+    let columnName = [];
+    let tempColumnName = "";
     columns.forEach(column => {
       // Handling the case where column name is an object with options
-      column = typeof column === "object" ? get(column, "name") : column;
-
-      const locMessageObj =  localisationArray.find(locMessage => locMessage.code === column);
-
-      if(locMessageObj){
-      
-         columnName.push(locMessageObj.message);
+      tempColumnName = typeof column === "object" ? get(column, "name") : column;
+      const locMessageObj =  localisationArray.find(locMessage => locMessage.code === tempColumnName);
+      if (locMessageObj) {
+        if (typeof column === "object") {
+          const tempObject = {...column,name:locMessageObj.message,label:locMessageObj.message}
+          // set(column, "name", locMessageObj.message);
+          // set(column, "label", locMessageObj.message);
+          columnName.push(tempObject);
+        } else {
+          columnName.push(locMessageObj.message);
+        }
       }
       else{
         columnName.push(column);
       }
-
     });
-    console.log("columnNames",columnName);
-    
-    const checkFlag = _.isEqual(columnName.sort(), stateColumn.sort());
+    let oldColumnData = [...stateColumn];
+    let newColumnData = [...columnName];
+    const checkFlag = _.isEqual(newColumnData.sort(), oldColumnData.sort());
     if(!checkFlag){
       this.setState({columns : columnName});
     }
     const locMessageTitleObj = localisationArray.find(locMessage => locMessage.code === title);
-    
-    if (title && title != undefined && locMessageTitleObj!=undefined && locMessageTitleObj[0]!=undefined)  { 
-      this.setState({title : locMessageTitleObj[0].message});
+    if (title && title != undefined && locMessageTitleObj != undefined) {
+      if(locMessageTitleObj.message!=title)
+        this.setState({title : locMessageTitleObj.message});
     }
     
   }

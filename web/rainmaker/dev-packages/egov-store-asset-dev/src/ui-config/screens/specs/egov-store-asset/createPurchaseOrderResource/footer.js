@@ -41,47 +41,62 @@ export const callBackForNext = async (state, dispatch) => {
       dispatch,
       "create-purchase-order"
     );
-      const {advancePercentage} = purchaseOrders[0];
-      const {supplier} = purchaseOrders[0];
-      if(advancePercentage && ( 0 > parseInt(advancePercentage,10) || parseInt(advancePercentage,10) > 100 )){
-        const errorMessage = {
-          labelName: "Percentage should be between 0 and 100",
-          labelKey: "STORE_ERR_PERCENTAGE_IS_VALID"
-        };
-        dispatch(toggleSnackbar(true, errorMessage, "warning"));
-        return;
-      }
+      // const {advancePercentage} = purchaseOrders[0];
+      
+      // if(advancePercentage && ( 0 > parseInt(advancePercentage,10) || parseInt(advancePercentage,10) > 100 )){
+      //   const errorMessage = {
+      //     labelName: "Percentage should be between 0 and 100",
+      //     labelKey: "STORE_ERR_PERCENTAGE_IS_VALID"
+      //   };
+      //   dispatch(toggleSnackbar(true, errorMessage, "warning"));
+      //   return;
+      // }
     //set price list
-    const queryObject = [{ key: "tenantId", value: getTenantId()},{ key: "suppliers", value: supplier.code}];
-       
+    const {purchaseOrders}  = state.screenConfiguration.preparedFinalObject;
+    const {rateType} = purchaseOrders[0];
+    const {supplier} = purchaseOrders[0];
+    const fields = get(
+      state.screenConfiguration.screenConfig[`create-purchase-order`],
+      "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children",
+      {}
+    );
+    let priceList = [{rateContractNumber:"",rateContractDate:"",agreementNumber:"",agreementDate:"",agreementStartDate:"",agreementEndDate:""}];
+    if(rateType)
+    {
+     if(rateType.toLocaleUpperCase() !== 'GEM')
+     { 
+      const queryObject = [{ key: "tenantId", value: getTenantId()},{ key: "suppliers", value: supplier.code}]; 
     getSearchResults(queryObject, dispatch,"priceList")
     .then(response =>{
       if(response){
-        const {purchaseOrders}  = state.screenConfiguration.preparedFinalObject;
-        const {rateType} = purchaseOrders[0];
-        let priceList = [{rateContractNumber:"",rateContractDate:"",agreementNumber:"",agreementDate:"",agreementStartDate:"",agreementEndDate:""}];
+       
+        
        if(rateType)
        {
         if(rateType.toLocaleUpperCase() === 'GEM')
         {
-          
-          priceList[0].rateContractNumber  =  "";
-          priceList[0].rateContractDate   = new Date().toISOString().slice(0, 10);
-          priceList[0].agreementNumber   =   "";
-          priceList[0].agreementDate   =   new Date().toISOString().slice(0, 10);
-          priceList[0].agreementStartDate   = new Date().toISOString().slice(0, 10);
-          priceList[0].agreementEndDate   =  new Date().toISOString().slice(0, 10);
+          priceList =null;          
+          // priceList[0].rateContractNumber  =  "";
+          // priceList[0].rateContractDate   = new Date().toISOString().slice(0, 10);
+          // priceList[0].agreementNumber   =   "";
+          // priceList[0].agreementDate   =   new Date().toISOString().slice(0, 10);
+          // priceList[0].agreementStartDate   = new Date().toISOString().slice(0, 10);
+          // priceList[0].agreementEndDate   =  new Date().toISOString().slice(0, 10);
+          const {purchaseOrders}  = state.screenConfiguration.preparedFinalObject;
+          const {supplier} = purchaseOrders[0];
+          dispatch(prepareFinalObject("purchaseOrders[0].supplier.name", supplier.code));
 
         }
         else{
-          
-          priceList[0].rateContractNumber  =  response.priceLists[0].rateContractNumber;
+          if(response.priceLists[0])
+          {
+          priceList[0].rateContractNumber  =  response.priceLists[0].rateContractNumber === null?'':response.priceLists[0].rateContractNumber;
           priceList[0].rateContractDate   = new Date(response.priceLists[0].rateContractDate).toISOString().substr(0,10);
-          priceList[0].agreementNumber   =   response.priceLists[0].agreementNumber;
+          priceList[0].agreementNumber   =   response.priceLists[0].agreementNumber === null?'':response.priceLists[0].agreementNumber;
           priceList[0].agreementDate   =   new Date(response.priceLists[0].agreementDate).toISOString().substr(0,10);
           priceList[0].agreementStartDate   = new Date(response.priceLists[0].agreementStartDate).toISOString().substr(0,10);
           priceList[0].agreementEndDate   =  new Date(response.priceLists[0].agreementEndDate).toISOString().substr(0,10);
-
+          }
         }
       }
        
@@ -90,11 +105,143 @@ export const callBackForNext = async (state, dispatch) => {
            
        }
       });
+    }
+    else
+    {
+      priceList =null;          
+      // priceList[0].rateContractNumber  =  "";
+      // priceList[0].rateContractDate   = new Date().toISOString().slice(0, 10);
+      // priceList[0].agreementNumber   =   "";
+      // priceList[0].agreementDate   =   new Date().toISOString().slice(0, 10);
+      // priceList[0].agreementStartDate   = new Date().toISOString().slice(0, 10);
+      // priceList[0].agreementEndDate   =  new Date().toISOString().slice(0, 10);
+      const {purchaseOrders}  = state.screenConfiguration.preparedFinalObject;
+      const {supplier} = purchaseOrders[0];
+      dispatch(prepareFinalObject("purchaseOrders[0].supplier.name", supplier.name));
+     // dispatch(prepareFinalObject("searchMaster.priceList", response.priceLists));  
+        dispatch(prepareFinalObject("purchaseOrders[0].priceList", priceList)); 
+        const {externalPoNumber} = purchaseOrders[0];
 
+        if(fields.supplierGem!==undefined )
+        {
+          if(fields.supplierGem.isFieldValid ===true)
+          {          
+            if(!externalPoNumber){
+            const errorMessage = {
+            labelName: "Enter valid external PO number",
+            labelKey: "STORE_VALIDATION_EXTERNAL_PO_NUMBER"
+          };
+          dispatch(toggleSnackbar(true, errorMessage, "warning"));
+          return;
+        }
+    }
+      }
+
+    }
+  }
     //
-
+    
     if (!ispurchaseOrderHeaderValid) {
-      isFormValid = false;
+        if(rateType !== undefined)
+        {
+      if(rateType.toLocaleUpperCase() !== 'GEM')
+      {
+      const tenantId = getQueryArg(window.location.href, "tenantId");
+      const poNumber = getQueryArg(window.location.href, "poNumber");
+      const step = getQueryArg(window.location.href, "step");
+      
+      if(tenantId && poNumber)
+      {
+        isFormValid = true;
+      }
+      else if(step)
+      isFormValid = true;
+      else 
+      {
+        
+        if(fields.purchaseType!==undefined 
+          &&fields.storeName!==undefined 
+          &&fields.purchaseOrderDate!==undefined 
+          &&fields.rateType!==undefined       
+          &&fields.deliveryTerms!==undefined       
+          &&fields.supplier!==undefined 
+          &&fields.expectedDeliveryDate!==undefined 
+          
+         ) 
+          {
+            if(fields.purchaseType.isFieldValid ===false 
+              ||fields.storeName.isFieldValid ===false 
+              ||fields.purchaseOrderDate.isFieldValid ===false 
+              ||fields.rateType.isFieldValid ===false           
+              ||fields.deliveryTerms.isFieldValid ===false           
+              ||fields.supplier.isFieldValid ===false 
+              ||fields.expectedDeliveryDate.isFieldValid ===false                
+              )
+              {
+                isFormValid = false;
+              }
+              else
+              {
+               
+                isFormValid = true;
+              }
+          }
+     
+      }
+
+      }
+      else
+      {
+        //  dispatch(
+        //   handleField(
+        //     `create-purchase-order`,
+        //     "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.supplierGem",
+        //     "props.value",
+        //     ''
+        //   )
+        // );
+        // dispatch(
+        //   handleField(
+        //     `create-purchase-order`,
+        //     "components.div.children.formwizardFirstStep.children.purchaseOrderHeader.children.cardContent.children.purchaseOrderHeaderContainer.children.externalPoNumber",
+        //     "props.value",
+        //     ''
+        //   )
+        // );
+        // isFormValid = false;
+        if(fields.purchaseType!==undefined 
+          &&fields.storeName!==undefined 
+          &&fields.purchaseOrderDate!==undefined 
+          &&fields.rateType!==undefined       
+          &&fields.deliveryTerms!==undefined       
+          &&fields.supplierGem!==undefined 
+          &&fields.expectedDeliveryDate!==undefined 
+          
+         ) 
+          {
+            if(fields.purchaseType.isFieldValid ===false 
+              ||fields.storeName.isFieldValid ===false 
+              ||fields.purchaseOrderDate.isFieldValid ===false 
+              ||fields.rateType.isFieldValid ===false           
+              ||fields.deliveryTerms.isFieldValid ===false           
+              ||fields.supplierGem.isFieldValid ===false 
+              ||fields.expectedDeliveryDate.isFieldValid ===false                
+              )
+              {
+                isFormValid = false;
+              }
+              else
+              {
+               
+                isFormValid = true;
+              }
+          }
+      }
+      
+    }
+    else
+    isFormValid = false
+     
     }
   }
   if (activeStep === 1) {
@@ -342,11 +489,26 @@ export const changeStep = (
     "components.div.children.stepper.props.activeStep",
     0
   );
+  const {purchaseOrders}  = state.screenConfiguration.preparedFinalObject;
+  const {rateType} = purchaseOrders[0];
   if (defaultActiveStep === -1) {
     activeStep = mode === "next" ? activeStep + 1 : activeStep - 1;
+    if(rateType.toLocaleUpperCase() === 'GEM' && mode ==='previous')
+    {
+      activeStep = activeStep-1;
+    }
   } else {
     activeStep = defaultActiveStep;
   }
+ 
+      if(rateType.toLocaleUpperCase() === 'GEM' && mode ==='next')
+      {
+        activeStep = activeStep +1;
+      }
+      else if(rateType.toLocaleUpperCase() === 'GEM' && mode ==='previous')
+      {
+        activeStep = activeStep;
+      }
 
   const isPreviousButtonVisible = activeStep > 0 ? true : false;
   const isNextButtonVisible = activeStep < 2 ? true : false;
@@ -374,10 +536,10 @@ export const changeStep = (
     }
   ];
   dispatchMultipleFieldChangeAction("create-purchase-order", actionDefination, dispatch);
-  renderSteps(activeStep, dispatch);
+  renderSteps(activeStep, dispatch,state);
 };
 
-export const renderSteps = (activeStep, dispatch) => {
+export const renderSteps = (activeStep, dispatch,state) => {
   switch (activeStep) {
     case 0:
       dispatchMultipleFieldChangeAction(
@@ -389,13 +551,31 @@ export const renderSteps = (activeStep, dispatch) => {
       );
       break;
     case 1:
-      dispatchMultipleFieldChangeAction(
-        "create-purchase-order",
-        getActionDefinationForStepper(
-          "components.div.children.formwizardSecondStep"
-        ),
-        dispatch
-      );
+      const {purchaseOrders}  = state.screenConfiguration.preparedFinalObject;
+      const {rateType} = purchaseOrders[0];
+      if(rateType.toLocaleUpperCase() !== 'GEM')
+      {
+        dispatchMultipleFieldChangeAction(
+          "create-purchase-order",
+          getActionDefinationForStepper(
+            "components.div.children.formwizardSecondStep"
+          ),
+          dispatch
+        );
+
+      }
+      else
+      {
+        dispatchMultipleFieldChangeAction(
+          "create-purchase-order",
+          getActionDefinationForStepper(
+            "components.div.children.formwizardThirdStep"
+          ),
+          dispatch
+        );
+
+      }
+     
       break;
     case 2:
       dispatchMultipleFieldChangeAction(

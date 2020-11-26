@@ -37,6 +37,7 @@ import {
   premiumAmountDetails,
   groundRentDetails,
   licenseFeeDetails,
+  interestDetails,
   securityDetails,
   demandSelect
 } from './paymentDetailsAllotment';
@@ -95,6 +96,10 @@ export const ownerDocumentDetails_0 = getCommonCard({
 
 export const paymentDocumentsDetails = getCommonCard({
   ...documentCardConfig,
+  header: getCommonTitle({
+    labelName: "Documents",
+    labelKey: "ES_UPLOAD_PAYMENT_DOCS_HEADER"
+  }),
   documentList : {
     ...documentList,
     props: {
@@ -105,7 +110,7 @@ export const paymentDocumentsDetails = getCommonCard({
        removedJsonPath: "PropertiesTemp[0].propertyDetails.owners[0].ownerDetails.removedDocs",
        getUrl: "/est-services/estate/_calculation",
        screenKey: "apply",
-       componentJsonPath: "components.div.children.formwizardEighthStep.children.paymentDetailsTable",
+       componentJsonPath: "components.div.children.formwizardNinthStep.children.paymentDetailsTable",
       // removedJsonPath: "PropertiesTemp[0].removedPaymentDocs"
     }
   }
@@ -128,23 +133,23 @@ export const paymentDetailsTable =  {
           setCellProps: () => ({ style: { minWidth: "150px", maxWidth: "150px" }})
         }
       },
-      ES_PENALTY_INTEREST,
+      // ES_PENALTY_INTEREST,
       ES_ST_GST_RATE,
       ES_ST_GST_DUE,
-      ES_PAID,
+      // ES_PAID,
       ES_DATE_OF_RECEIPT,
-      {
-        name: ES_NO_OF_DAYS,
-        options: {
-          setCellProps: () => ({ style: { minWidth: "150px", maxWidth: "150px" }}),
-        }
-      },
-      {
-        name: ES_INTEREST_ON_DELAYED_PAYMENT,
-        options: {
-          setCellProps: () => ({ style: { minWidth: "200px", maxWidth: "200px" }}),
-        }
-      },
+      // {
+      //   name: ES_NO_OF_DAYS,
+      //   options: {
+      //     setCellProps: () => ({ style: { minWidth: "150px", maxWidth: "150px" }}),
+      //   }
+      // },
+      // {
+      //   name: ES_INTEREST_ON_DELAYED_PAYMENT,
+      //   options: {
+      //     setCellProps: () => ({ style: { minWidth: "200px", maxWidth: "200px" }}),
+      //   }
+      // },
       
     ],
     options: {
@@ -234,6 +239,10 @@ export const stepsData = [{
 {
   labelName: "Court Case",
   labelKey: "ES_COMMON_COURT_CASE_DETAILS"
+},
+{
+  labelName: "Rent Information",
+  labelKey: "ES_COMMON_RENT_INFORMATION"
 },
 {
   labelName: "Payment Details",
@@ -349,6 +358,22 @@ export const formwizardEighthStep = {
     id: "apply_form8"
   },
   children: {
+    demandSelect,
+    groundRentDetails,
+    licenseFeeDetails,
+    interestDetails,
+    securityDetails
+  },
+  visible: false
+}
+
+export const formwizardNinthStep = {
+  uiFramework: "custom-atoms",
+  componentPath: "Form",
+  props: {
+    id: "apply_form9"
+  },
+  children: {
     paymentDocumentsDetails,
     breakAfterSearch: getBreak(),
     paymentDetailsTable
@@ -359,7 +384,7 @@ export const formwizardEighthStep = {
   visible: false
 }
 
-export const formwizardNinthStep = {
+export const formwizardTenthStep = {
   uiFramework: "custom-atoms",
   componentPath: "Form",
   props: {
@@ -485,6 +510,7 @@ export const formwizardSixthStepAllotment = {
     demandSelect,
     groundRentDetails,
     licenseFeeDetails,
+    interestDetails,
     securityDetails
   },
   visible: false

@@ -22,7 +22,7 @@ import {
   getUserInfo
 } from "egov-ui-kit/utils/localStorageUtils";
 import orderBy from "lodash/orderBy";
-import { WF_ALLOTMENT_OF_SITE } from "../../ui-constants";
+import { WF_ALLOTMENT_OF_SITE, WF_BB_PROPERTY_MASTER } from "../../ui-constants";
 
 class WorkFlowContainer extends React.Component {
   state = {
@@ -46,6 +46,11 @@ class WorkFlowContainer extends React.Component {
     ];
     switch(this.props.moduleName) {
       case WF_ALLOTMENT_OF_SITE : 
+        queryObject = [...queryObject,
+          { key: "businessIds", value: fileNumber }
+      ]
+      break;
+      case WF_BB_PROPERTY_MASTER : 
         queryObject = [...queryObject,
           { key: "businessIds", value: fileNumber }
       ]
@@ -103,6 +108,8 @@ class WorkFlowContainer extends React.Component {
         return "purpose=apply&status=success";
       case "FORWARD":
       case "RESUBMIT":
+      case "FORWARD_COMMERCIAL":
+      case "FORWARD_RESIDENTIAL":
         return "purpose=forward&status=success";
       case "MARK":
         return "purpose=mark&status=success";
@@ -123,6 +130,10 @@ class WorkFlowContainer extends React.Component {
         return "purpose=sendbacktocitizen&status=success";
       case "SUBMIT_APPLICATION":
         return "purpose=apply&status=success";
+      case "MODIFY": 
+        return "purpose=modify&status=success";
+      case "SUBMIT": 
+        return "purpose=submit&status=success";
     }
   };
 
@@ -182,6 +193,7 @@ class WorkFlowContainer extends React.Component {
         let path = "";
         switch(this.props.moduleName) {
           case WF_ALLOTMENT_OF_SITE: 
+          case WF_BB_PROPERTY_MASTER: 
             path = `&fileNumber=${data[0].fileNumber}&tenantId=${tenant}&type=${this.props.moduleName}`
             break;
           default: {
@@ -249,7 +261,7 @@ class WorkFlowContainer extends React.Component {
   getRedirectUrl = (action, businessId, moduleName) => {
     const {preparedFinalObject, dataPath} = this.props
     let data = get(preparedFinalObject, dataPath, []) || []
-    const {billingBusinessService} = data[0]
+    const {billingBusinessService} = !!data.length ? data[0] : ""
     console.log("modulenamewater", moduleName);
     const isAlreadyEdited = getQueryArg(window.location.href, "edited");
     const tenant = getQueryArg(window.location.href, "tenantId");
@@ -431,7 +443,9 @@ class WorkFlowContainer extends React.Component {
       prepareFinalObject,
       dataPath,
       moduleName,
-      documentProps
+      documentProps,
+      screenName,
+      validateFn
     } = this.props;
     const workflowContract =
       ProcessInstances &&
@@ -458,6 +472,8 @@ class WorkFlowContainer extends React.Component {
             dataPath={dataPath}
             moduleName={moduleName}
             documentProps={documentProps}
+            screenName={screenName}
+            validateFn={validateFn}
           />}
       </div>
     );

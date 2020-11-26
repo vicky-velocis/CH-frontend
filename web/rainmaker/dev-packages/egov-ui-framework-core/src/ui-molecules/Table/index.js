@@ -12,7 +12,8 @@ class Table extends React.Component {
     data: [],
     columns: [],
     customSortOrder: "asc",
-    title:undefined
+    title: undefined,
+    originalData: [],
   };
 
   getMuiTheme = () =>
@@ -33,6 +34,10 @@ class Table extends React.Component {
           }
         },
         MuiTypography: {
+          root: {
+            fontSize: "24px",
+            color: "#000"
+          },
           caption: {
             fontSize: "14px"
           }
@@ -51,13 +56,13 @@ class Table extends React.Component {
     });
 
   formatData = (data, columns) => {
+    
     return (
       data &&
       [...data].reduce((acc, curr) => {
         let dataRow = [];
         // Object.keys(columns).forEach(column => {
         columns.forEach(column => {
-          debugger
           // Handling the case where column name is an object with options
           column = typeof column === "object" ? get(column, "name") : column;
           let columnValue = get(curr, `${column}`, "");
@@ -76,13 +81,16 @@ class Table extends React.Component {
   columnLocalisation = (localizationLabels, columns) => {
     const  localisationArray = Object.values(localizationLabels);
     const {columns : stateColumn} = this.state;
-    const { title } = this.state;
+    const { title,originalData } = this.state;
+
+    let tempColumnName = "";
     let columnName = []
     columns.forEach(column => {
       // Handling the case where column name is an object with options
-      column = typeof column === "object" ? get(column, "name") : column;
 
-      const locMessageObj =  localisationArray.find(locMessage => locMessage.code === column);
+      tempColumnName = typeof column === "object" ? get(column, "name") : column;
+
+      const locMessageObj =  localisationArray.find(locMessage => locMessage.code === tempColumnName);
 
       if(locMessageObj){
       
@@ -93,18 +101,24 @@ class Table extends React.Component {
       }
 
     });
-    console.log("columnNames",columnName);
     
-    const checkFlag = _.isEqual(columnName.sort(), stateColumn.sort());
+    
+    let oldColumnData = [...stateColumn];
+    let newColumnData = [...columnName];
+    const checkFlag = _.isEqual(newColumnData.sort(), oldColumnData.sort());
     if(!checkFlag){
-      this.setState({columns : columnName});
+      const updatedData = this.formatData(originalData, columnName);
+      this.setState({
+        columns: columnName,
+        data:updatedData
+      });
+
     }
-    const locMessageTitleObj = localisationArray.find(locMessage => locMessage.code === title);
     
+    const locMessageTitleObj = localisationArray.find(locMessage => locMessage.code === title);
     if (title && title != undefined && locMessageTitleObj!=undefined && locMessageTitleObj[0]!=undefined)  { 
       this.setState({title : locMessageTitleObj[0].message});
     }
-    
   }
   
   
@@ -116,11 +130,13 @@ class Table extends React.Component {
 
 
   componentWillReceiveProps(nextProps) {
+    
     const { data, columns,title } = nextProps;
     this.updateTable(data, columns,title);
   }
 
   componentDidMount() {
+    
     const { data, columns,title } = this.props;
     this.updateTable(data, columns,title);
   }
@@ -131,11 +147,13 @@ class Table extends React.Component {
     // This is a quick fix, but correct this in other modules also!
     let fixedColumns = Array.isArray(columns) ? columns : Object.keys(columns);
     const updatedData = this.formatData(data, fixedColumns);
+    
     this.setState({
       data: updatedData,
       // columns: Object.keys(columns)
       columns: fixedColumns,
-      title:title
+      title: title,
+      originalData:data
 
     });
   };
