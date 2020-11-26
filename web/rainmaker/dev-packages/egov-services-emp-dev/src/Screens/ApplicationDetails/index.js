@@ -862,7 +862,7 @@ downloadPermissionLetterFunction = async (e) => {
 													rightIcon: "arrow_drop_down",
 													props: {
 														variant: "outlined",
-														style: { marginLeft: 5, marginRight: 15, backgroundColor: "#FE7A51", color: "#fff", border: "none", height: "60px", width: "250px" }
+														style: { marginLeft: 5, marginRight: 15, backgroundColor: "#FE7A51", color: "#fff", border: "none", height: "48px", width: "250px" }
 													},
 													menu: [{
 														label: {

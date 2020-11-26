@@ -29,7 +29,8 @@ convertEpochToDate = (dateEpoch) => {
        
      
         return complaints===null || complaints.length === 0 ? (
-         <div>
+         
+        <div  style={{textAlign: 'center', marginTop: '50px'}}>
           <Label label={noComplaintMessage} dark={true} fontSize={"16px"} labelStyle={{ letterSpacing: "0.7px" }} />
         </div>
           // <div className="no-complaints-message-cont" style={heightOffset && { height: `calc(100vh - ${heightOffset})` }}>
