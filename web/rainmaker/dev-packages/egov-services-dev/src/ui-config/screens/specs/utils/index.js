@@ -1257,6 +1257,13 @@ export const downloadApplication = async (
         state.screenConfiguration.preparedFinalObject,
         "Booking"
     );
+
+    const response = await getSearchResultsView([
+        { key: "tenantId", value: tenantId },
+        { key: "applicationNumber", value: applicationNumber },
+    ]);
+    let recData = get(response, "bookingsModelList", []);
+    
     let documentName = '';
     let document2 = '';
     if (applicationData.businessService != "NLUJM") {
@@ -1265,8 +1272,13 @@ export const downloadApplication = async (
             "documentsPreview"
         );
         documentName = attachedDocuments && attachedDocuments[0].name;
+        console.log(attachedDocuments, "Nero AttachedDocument");
         if (applicationData.businessService == "OSBM") {
-            document2 = attachedDocuments && attachedDocuments[1].name;
+            let attachedDocuments = get(
+                state.screenConfiguration.preparedFinalObject,
+                "approvalDocument"
+            );
+            document2 = attachedDocuments && attachedDocuments[0].name;
         }
     }
     let paymentData = get(
