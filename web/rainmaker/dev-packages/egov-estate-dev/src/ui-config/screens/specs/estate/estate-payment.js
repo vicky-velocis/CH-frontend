@@ -84,6 +84,20 @@ import {penaltyStatmentResult,extensionStatmentResult} from './searchResource/fu
     }
   )
 
+  const offlinePaymentTypeHeader = getCommonTitle(
+    {
+        labelName: "Payment Type",
+        labelKey: "ES_PAYMENT_TYPE_HEADER"
+    },
+    {
+        style: {
+                marginBottom: 18,
+                marginTop: 18
+        }
+    }
+  )
+  
+
   const fileNumberField = {
     label: {
         labelName: "File Number",
@@ -317,7 +331,7 @@ import {penaltyStatmentResult,extensionStatmentResult} from './searchResource/fu
   })
 
   export const offlinePaymentType = getCommonCard({
-    header: offlinePaymentDetailsHeader,
+    header: offlinePaymentTypeHeader,
     detailsContainer: getCommonContainer({
       paymentType: getSelectField(paymentType)
     })
