@@ -73,6 +73,8 @@ const prepareDocumentsView = async (state, dispatch) => {
         {}
     );
 
+    console.log(bookingDocs, "Nero Booking Docs");
+
     if (Object.keys(bookingDocs).length > 0) {
         let keys = Object.keys(bookingDocs);
         let values = Object.values(bookingDocs);
@@ -109,7 +111,7 @@ const prepareDocumentsView = async (state, dispatch) => {
             return doc;
         });
         dispatch(prepareFinalObject("documentsPreview", documentsPreview));
-        
+
         let id1 = keys[1],
             fileName1 = values[1];
 
@@ -139,11 +141,12 @@ const prepareDocumentsView = async (state, dispatch) => {
                             .pop()
                             .slice(13)
                     )) ||
-                `Document - ${index + 1}`;
+                //`Document - ${index + 1}`;
+                `Document - ${2}`;
             return doc;
         });
         dispatch(prepareFinalObject("approvalDocument", documentsPreview1));
-        
+
     }
 };
 
@@ -188,7 +191,7 @@ const setSearchResponse = async (
     } else {
         await generateBill(state, dispatch, applicationNumber, tenantId, recData[0].businessService);
     }
-    
+
     localStorageSet("bookingStatus", bookingStatus);
     HideshowFooter(action, bookingStatus);
 
@@ -228,7 +231,7 @@ const getPaymentGatwayList = async (action, state, dispatch) => {
           }
           payloadprocess.push(pay);
         }
-  
+
       dispatch(prepareFinalObject("applyScreenMdmsData.payment", payloadprocess));
     } catch (e) {
       console.log(e);
@@ -304,7 +307,7 @@ const screenConfig = {
                   moduleName: "egov-services",
                   visible: true,
                 },
-                
+
                 body: getCommonCard({
                     estimateSummary: estimateSummary,
                     applicantSummary : applicantSummary,
