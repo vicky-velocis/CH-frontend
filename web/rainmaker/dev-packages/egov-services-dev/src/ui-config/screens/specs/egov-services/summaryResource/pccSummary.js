@@ -39,26 +39,7 @@ export const pccSummary = getCommonGrayCard({
             className: "sellmeatapplicant-summary",
             scheama: getCommonGrayCard({
                 applicationContainer: getCommonContainer({
-                    // HouseNo: getLabelWithValue(
-                    //     {
-                    //         labelName: "House No.",
-                    //         labelKey: "BK_PCC_HOUSE_NUMBER_LABEL",
-                    //     },
-                    //     {
-                    //         jsonPath: "Booking.bkHouseNo",
-                    //         callBack: (value) => {
-                    //             if (
-                    //                 value === undefined ||
-                    //                 value === "" ||
-                    //                 value === null
-                    //             ) {
-                    //                 return "NA";
-                    //             } else {
-                    //                 return value;
-                    //             }
-                    //         },
-                    //     }
-                    // ),
+
                     BookingType: getLabelWithValue(
                         {
                             labelName: "Booking Type",
@@ -329,8 +310,8 @@ export const changedVenueDatepccSummary = getCommonGrayCard({
                     xs: 8,
                 },
                 ...getCommonSubHeader({
-                    labelName: "Applicant Details",
-                    labelKey: "Modified Application Details",
+                    labelName: "Application Details",
+                    labelKey: "BK_CGB_APPLICATION_DETAILS_HEADER",
                 }),
             },
         },
@@ -342,33 +323,14 @@ export const changedVenueDatepccSummary = getCommonGrayCard({
             className: "sellmeatapplicant-summary",
             scheama: getCommonGrayCard({
                 applicationContainer: getCommonContainer({
-                    // HouseNo: getLabelWithValue(
-                    //     {
-                    //         labelName: "House No.",
-                    //         labelKey: "BK_PCC_HOUSE_NUMBER_LABEL",
-                    //     },
-                    //     {
-                    //         jsonPath: "Booking.bkHouseNo",
-                    //         callBack: (value) => {
-                    //             if (
-                    //                 value === undefined ||
-                    //                 value === "" ||
-                    //                 value === null
-                    //             ) {
-                    //                 return "NA";
-                    //             } else {
-                    //                 return value;
-                    //             }
-                    //         },
-                    //     }
-                    // ),
+
                     BookingType: getLabelWithValue(
                         {
                             labelName: "Booking Type",
                             labelKey: "BK_PCC_BOOKING_TYPE_LABEL",
                         },
                         {
-                            jsonPath: "Booking.bkBookingType",
+                            jsonPath: "paccBooking.bkBookingType",
                             callBack: (value) => {
                                 if (
                                     value === undefined ||
@@ -388,7 +350,7 @@ export const changedVenueDatepccSummary = getCommonGrayCard({
                             labelKey: "BK_PCC_PURPOSE_LABEL",
                         },
                         {
-                            jsonPath: "Booking.bkBookingPurpose",
+                            jsonPath: "paccBooking.bkBookingPurpose",
                             callBack: (value) => {
                                 if (
                                     value === undefined ||
@@ -408,7 +370,7 @@ export const changedVenueDatepccSummary = getCommonGrayCard({
                             labelKey: "BK_PCC_PROPERTY_SECTOR_LABEL",
                         },
                         {
-                            jsonPath: "Booking.bkSector",
+                            jsonPath: "paccBooking.bkSector",
                         }
                     ),
                     Dimension: getLabelWithValue(
@@ -417,7 +379,7 @@ export const changedVenueDatepccSummary = getCommonGrayCard({
                             labelKey: "BK_PCC_DIMENSION_LABEL",
                         },
                         {
-                            jsonPath: "Booking.bkDimension",
+                            jsonPath: "paccBooking.bkDimension",
                             callBack: (value) => {
                                 if (value === undefined || value === "" || value === null) {
                                     return "NA"
@@ -433,7 +395,7 @@ export const changedVenueDatepccSummary = getCommonGrayCard({
                             labelKey: "BK_PCC_LOCATION_LABEL",
                         },
                         {
-                            jsonPath: "Booking.bkLocation",
+                            jsonPath: "paccBooking.bkLocation",
                         }
                     ),
                     FromDate: getLabelWithValue(
@@ -442,7 +404,7 @@ export const changedVenueDatepccSummary = getCommonGrayCard({
                             labelKey: "BK_PCC_FROM_DATE_LABEL",
                         },
                         {
-                            jsonPath: "Booking.bkFromDate",
+                            jsonPath: "paccBooking.bkFromDate",
                             callBack: (value) => {
                                 if (value === undefined || value === "" || value === null) {
                                     return "NA"
@@ -478,7 +440,7 @@ export const changedVenueDatepccSummary = getCommonGrayCard({
                             labelKey: "BK_PCC_TO_DATE_LABEL",
                         },
                         {
-                            jsonPath: "Booking.bkToDate",
+                            jsonPath: "paccBooking.bkToDate",
                             callBack: (value) => {
                                 if (value === undefined || value === "" || value === null) {
                                     return "NA"
@@ -511,7 +473,7 @@ export const changedVenueDatepccSummary = getCommonGrayCard({
                             labelKey: "BK_PCC_CLEANING_CHARGES_LABEL",
                         },
                         {
-                            jsonPath: "Booking.bkCleansingCharges",
+                            jsonPath: "paccBooking.bkCleansingCharges",
                         }
                     ),
                     Rent: getLabelWithValue(
@@ -520,7 +482,7 @@ export const changedVenueDatepccSummary = getCommonGrayCard({
                             labelKey: "BK_PCC_RENT_LABEL",
                         },
                         {
-                            jsonPath: "Booking.bkRent",
+                            jsonPath: "paccBooking.bkRent",
                         }
                     ),
                     // FacilitationCharges: getLabelWithValue(
@@ -538,7 +500,7 @@ export const changedVenueDatepccSummary = getCommonGrayCard({
                             labelKey: "BK_PCC_SURCHARGE_RENT_LABEL",
                         },
                         {
-                            jsonPath: "Booking.bkSurchargeRent",
+                            jsonPath: "paccBooking.bkSurchargeRent",
                         }
                     ),
                     Utgst: getLabelWithValue(
@@ -547,7 +509,7 @@ export const changedVenueDatepccSummary = getCommonGrayCard({
                             labelKey: "BK_PCC_UTGST_LABEL",
                         },
                         {
-                            jsonPath: "Booking.bkUtgst",
+                            jsonPath: "paccBooking.bkUtgst",
                         }
                     ),
                     Cgst: getLabelWithValue(
@@ -556,7 +518,7 @@ export const changedVenueDatepccSummary = getCommonGrayCard({
                             labelKey: "BK_PCC_CGST_LABEL",
                         },
                         {
-                            jsonPath: "Booking.bkCgst",
+                            jsonPath: "paccBooking.bkCgst",
                         }
                     ),
                     bkRefundAmount: getLabelWithValue(
@@ -565,7 +527,7 @@ export const changedVenueDatepccSummary = getCommonGrayCard({
                             labelKey: "BK_PCC_RefundAmount_LABEL",
                         },
                         {
-                            jsonPath: "Booking.bkRefundAmount",
+                            jsonPath: "paccBooking.bkRefundAmount",
                         }
                     ),
                     locationChangeCharge: getLabelWithValue(
@@ -574,7 +536,7 @@ export const changedVenueDatepccSummary = getCommonGrayCard({
                             labelKey: "BK_PCC_locationChangeCharge_LABEL",
                         },
                         {
-                            jsonPath: "Booking.bkLocationChangeAmount",
+                            jsonPath: "paccBooking.bkLocationChangeAmount",
                             callBack: (value) => {
                                 if (
                                     value === undefined ||
@@ -594,7 +556,7 @@ export const changedVenueDatepccSummary = getCommonGrayCard({
                             labelKey: "BK_PCC_CUSTOMER_GST_LABEL",
                         },
                         {
-                            jsonPath: "Booking.bkCustomerGstNo",
+                            jsonPath: "paccBooking.bkCustomerGstNo",
                             callBack: (value) => {
                                 if (
                                     value === undefined ||
@@ -613,7 +575,7 @@ export const changedVenueDatepccSummary = getCommonGrayCard({
             items: [],
             hasAddItem: false,
             isReviewPage: true,
-            sourceJsonPath: "Booking",
+            sourceJsonPath: "paccBooking",
         },
         type: "array",
     },
