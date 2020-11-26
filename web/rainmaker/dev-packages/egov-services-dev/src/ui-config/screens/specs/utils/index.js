@@ -784,14 +784,16 @@ export const downloadReceipt = async (
                 );*/
 
         applicationData = recData[0];
-        console.log(applicationData, "nero applicationData 1")
+
     }
     else if (flag === 'true') {
         applicationData = state
-        console.log(applicationData, "nero applicationData")
+
     }
 
+const refundDetailsResp = await getRefundDetails(applicationNumber, tenantId);
 
+let bankName = refundDetailsResp.data[0].gateway;
     const receiptQueryString = [
         { key: "consumerCodes", value: applicationNumber },
         {
@@ -901,6 +903,7 @@ export const downloadReceipt = async (
                 paymentItemExtraColumnLabel: "Booking Period",
 
                 paymentMode: payloadReceiptDetails.Payments[0].paymentMode,
+                bankName: bankName,
                 receiptNo:
                     payloadReceiptDetails.Payments[0].paymentDetails[0]
                         .receiptNumber,
@@ -959,6 +962,7 @@ export const downloadReceipt = async (
                         ? "Booking Period"
                         : "Date & Time",
                 paymentMode: payloadReceiptDetails.Payments[0].paymentMode,
+                bankName: bankName,
                 receiptNo:
                     payloadReceiptDetails.Payments[0].paymentDetails[0]
                         .receiptNumber,
@@ -2226,4 +2230,14 @@ export const updateBillDemand = async (
     // } catch (e) {
     //     console.log(e);
     // }
+};
+
+export const calculateBetweenDaysCount = (startDate, endDate) => {
+    const oneDay = 24 * 60 * 60 * 1000;
+    const firstDate = new Date(startDate);
+    const secondDate = new Date(endDate);
+
+    const daysCount =
+        Math.round(Math.abs((firstDate - secondDate) / oneDay)) + 1;
+    return daysCount;
 };

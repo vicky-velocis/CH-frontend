@@ -373,7 +373,7 @@ let method = action === "INITIATE" || action === "RE_INITIATE" ? "CREATE" : "UPD
         set(payload, "reInitiateStatus", reInitiate);
 
         set(payload, "financialYear", `${getCurrentFinancialYear()}`);
-console.log(payload, "Nero Payload");
+
         if(action == "CANCEL"){
             // payload.bkFromDate = null;
             // payload.bkToDate = null;

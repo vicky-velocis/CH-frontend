@@ -264,7 +264,7 @@ export const prepareEditFlow = async (
                 availabilityCheckData.bkToDate
             );
 
-            console.log(daysCount, "daysCount");
+
 
             dispatch(
                 prepareFinalObject(
@@ -463,7 +463,7 @@ const screenConfig = {
                 availabilityCheckData.bkToDate
             );
 
-            console.log(daysCount, "Nero Kav daysCount");
+
 
             dispatch(
                 prepareFinalObject(
