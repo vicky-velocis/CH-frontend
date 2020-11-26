@@ -1220,7 +1220,7 @@ export const downloadPrintContainer = (
         { key: "tenantId", value: tenantId }
      ]
       const feeEstimate = temp[0].estimateCardData;
-      downloadPaymentReceipt(receiptQuery, Applications,feeEstimate, userInfo.name,'application-payment');
+      downloadPaymentReceipt(receiptQuery, Applications,feeEstimate, userInfo.name,'application-payment',state);
     },
     leftIcon: "assignment"
   }
@@ -1235,7 +1235,7 @@ export const downloadPrintContainer = (
         { key: "consumerCodes", value:applicationNumber},
         { key: "tenantId", value: tenantId }
      ]
-      downloadPaymentReceipt(receiptQuery, Applications,feeEstimate, userInfo.name,'application-payment','print');
+      downloadPaymentReceipt(receiptQuery, Applications,feeEstimate, userInfo.name,'application-payment',state,'print');
     },
     leftIcon: "assignment"
   }

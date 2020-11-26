@@ -108,7 +108,7 @@ export const applicationSuccessFooter = (
                 { key: "consumerCodes", value:consumerCodes},
                   { key: "tenantId", value: id }
                 ]
-                downloadPaymentReceipt(receiptQuery, Properties,[], userInfo.name,'rent-payment');
+                downloadPaymentReceipt(receiptQuery, Properties,[], userInfo.name,'rent-payment',state,);
               }else{
                 const queryObject = [
                   {
@@ -128,7 +128,7 @@ export const applicationSuccessFooter = (
                     { key: "consumerCodes", value:consumerCodes},
                     { key: "tenantId", value: tenantId }
                 ]
-                downloadPaymentReceipt(receiptQuery, Applications,feeEstimate, userInfo.name,'application-payment');
+                downloadPaymentReceipt(receiptQuery, Applications,feeEstimate, userInfo.name,'application-payment',state);
               }
                   
             }else{
@@ -198,7 +198,7 @@ export const applicationSuccessFooter = (
                 { key: "consumerCodes", value:consumerCodes},
                   { key: "tenantId", value: id }
                 ]
-                downloadPaymentReceipt(receiptQuery, Properties,[], userInfo.name,'rent-payment','print');
+                downloadPaymentReceipt(receiptQuery, Properties,[], userInfo.name,'rent-payment',state,'print');
               }else{
                 const queryObject = [
                   {
@@ -218,7 +218,7 @@ export const applicationSuccessFooter = (
                     { key: "consumerCodes", value:consumerCodes},
                     { key: "tenantId", value: tenantId }
                 ]
-                downloadPaymentReceipt(receiptQuery, Applications,feeEstimate, userInfo.name,'application-payment','print');
+                downloadPaymentReceipt(receiptQuery, Applications,feeEstimate, userInfo.name,'application-payment',state,'print');
               }
                   
             }else{
@@ -326,7 +326,7 @@ export const applicationSuccessFooter = (
                         { key: "consumerCodes", value:consumerCodes},
                         { key: "tenantId", value: id }
                     ]
-                    downloadPaymentReceipt(receiptQuery, Properties,[], userInfo.name,'rent-payment');
+                    downloadPaymentReceipt(receiptQuery, Properties,[], userInfo.name,'rent-payment',state);
                   }
                 }
                 else{
@@ -350,7 +350,7 @@ export const applicationSuccessFooter = (
                       { key: "consumerCodes", value:consumerCodes},
                       { key: "tenantId", value: tenantId }
                   ]
-                  downloadPaymentReceipt(receiptQuery, Applications,feeEstimate, userInfo.name,'application-payment');
+                  downloadPaymentReceipt(receiptQuery, Applications,feeEstimate, userInfo.name,'application-payment',state);
                 }
                 
               break; 
@@ -420,7 +420,7 @@ export const applicationSuccessFooter = (
                       { key: "consumerCodes", value:consumerCodes},
                       { key: "tenantId", value: id }
                   ]
-                  downloadPaymentReceipt(receiptQuery, Properties,[], userInfo.name,'rent-payment','print');
+                  downloadPaymentReceipt(receiptQuery, Properties,[], userInfo.name,'rent-payment',state,'print');
                 }
               }
               else{
@@ -444,7 +444,7 @@ export const applicationSuccessFooter = (
                     { key: "consumerCodes", value:consumerCodes},
                     { key: "tenantId", value: tenantId }
                 ]
-                downloadPaymentReceipt(receiptQuery, Applications,feeEstimate, userInfo.name,'application-payment',print);
+                downloadPaymentReceipt(receiptQuery, Applications,feeEstimate, userInfo.name,'application-payment',state,'print');
               }
               
               break; 
