@@ -33,7 +33,8 @@ import {
 import {
   prepareDocumentTypeObjMaster,
   preparePrevOwnerDocumentTypeObjMaster,
-  prepareBiddersDocumentTypeObjMaster
+  prepareBiddersDocumentTypeObjMaster,
+  prepareAccStmtDocumentTypeObjMaster
 } from "../utils";
 import {
   handleScreenConfigurationFieldChange as handleField
@@ -47,6 +48,7 @@ import {
 } from "../../../../ui-utils/commons";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 import * as previousDocsData from './applyResource/previousOwnerDocs.json';
+import * as legacyAccStmtData from "./applyResource/legacyAccountStmtDoc.json";
 import { toggleEntityOwnersDivsBasedOnEntityType, toggleEntityOwnersDivsBasedOnPropertyRegisteredTo, getActionDefinationForAuctionDetailsFields } from './applyResource/propertyDetails'
 import { ESTATE_SERVICES_MDMS_MODULE } from "../../../../ui-constants";
 
@@ -298,6 +300,30 @@ const setBiddersDoc = async (action, state, dispatch) => {
       "components.div.children.formwizardSecondStep.children.AllotmentAuctionDetails.children.cardContent.children.auctionTableContainer"
     )
   )
+}
+
+export const setLegacyAccStmtDoc = (action, state, dispatch) => {
+  debugger
+  const {
+    EstateServices
+  } = legacyAccStmtData && legacyAccStmtData.MdmsRes ? legacyAccStmtData.MdmsRes : {}
+  const {
+    legacyAccountStmtDoc = []
+  } = EstateServices || {}
+  const findMasterItem = legacyAccountStmtDoc.find(item => item.code === "MasterEst")
+  const masterDocuments = !!findMasterItem ? findMasterItem.documentList : [];
+  var documentTypes;
+  documentTypes = prepareAccStmtDocumentTypeObjMaster(masterDocuments);
+
+  dispatch(
+    handleField(
+      action.screenKey,
+      `components.div.children.formwizardNinthStep.children.documentDetails.children.cardContent.children.documentList`,
+      "props.inputProps",
+      masterDocuments
+    )
+  );
+  dispatch(prepareFinalObject(`tempAccStmt[0].documents`, documentTypes))
 }
 
 const header = getCommonContainer({
@@ -656,6 +682,7 @@ const getData = async (action, state, dispatch) => {
   // setDocumentData(action, state, dispatch, owner = 1);
   setPrevOwnerDocs(action, state, dispatch);
   setBiddersDoc(action, state, dispatch);
+  setLegacyAccStmtDoc(action, state, dispatch);
 
   const stepNumber = getQueryArg(window.location.href, "stepNumber");
   if(!!stepNumber) {
