@@ -172,28 +172,29 @@ const callBackForNext = async (state, dispatch) => {
       "Properties[0].propertyDetails.entityType",
       ""
     )
-    // let ownerOnePossessionDate = get(state.screenConfiguration.screenConfig["apply"], "components.div.children.formwizardThirdStep.children.ownerDetails.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items[0].item0.children.cardContent.children.ownerCard.children.possessionDate.props.value");
-    // let ownerOneDateOfAllotment = get(state.screenConfiguration.screenConfig["apply"], "components.div.children.formwizardThirdStep.children.ownerDetails.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items[0].item0.children.cardContent.children.ownerCard.children.dateOfAllotment.props.value");
-    // let ownerTwoPossessionDate = get(state.screenConfiguration.screenConfig["apply"],"components.div.children.formwizardThirdStep.children.ownerDetails.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items[1].item1.children.cardContent.children.ownerCard.children.possessionDate.props.value") || "";
-    // let ownerTwoDateOfAllotment = get(state.screenConfiguration.screenConfig["apply"],"components.div.children.formwizardThirdStep.children.ownerDetails.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items[1].item1.children.cardContent.children.ownerCard.children.dateOfAllotment.props.value") || "";
     let ownerOnePossessionDate = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.owners[0].ownerDetails.possesionDate");
     let ownerOneDateOfAllotment = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.owners[0].ownerDetails.dateOfAllotment");
-    let ownerTwoPossessionDate = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.owners[1].ownerDetails.possesionDate") || "";
-    let ownerTwoDateOfAllotment = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.owners[1].ownerDetails.dateOfAllotment") || "";
+    let ownerTwoPossessionDate = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.owners[1].ownerDetails.possesionDate") || 0;
+    let ownerTwoDateOfAllotment = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.owners[1].ownerDetails.dateOfAllotment") || 0;
     
     let ownerOnePossessionDateEpoch = convertDateToEpoch(ownerOnePossessionDate)
     let ownerOneDateOfAllotmentEpoch = convertDateToEpoch(ownerOneDateOfAllotment)
     let ownerTwoPossessionDateEpoch = ownerTwoPossessionDate > 0 ? convertDateToEpoch(ownerTwoPossessionDate) : 0
     let ownerTwoDateOfAllotmentEpoch = ownerTwoDateOfAllotment > 0 ? convertDateToEpoch(ownerTwoDateOfAllotment) : 0
 
-    ownerOnePosAllotDateValid = ownerOnePossessionDateEpoch - ownerOneDateOfAllotmentEpoch >= 0 ? true : false
-    // ownerTwoPosAllotDateValid = ownerTwoPossessionDateEpoch - ownerTwoDateOfAllotmentEpoch > 0 ? true : false
-    if((ownerTwoPossessionDateEpoch === 0 || ownerTwoDateOfAllotmentEpoch === 0)){
-      ownerTwoPosAllotDateValid = false;
+    if(ownerOnePossessionDateEpoch !== undefined && ownerOneDateOfAllotmentEpoch !== undefined){
+      ownerOnePosAllotDateValid = ownerOnePossessionDateEpoch - ownerOneDateOfAllotmentEpoch >= 0 ? true : false
+      isFormValid = ownerOnePosAllotDateValid == true ? true : false;
     }
-    else if((ownerTwoDateOfAllotmentEpoch != 0) && (ownerTwoPossessionDateEpoch != 0) && ((ownerTwoPossessionDateEpoch - ownerTwoDateOfAllotmentEpoch === 0) || ownerTwoPossessionDateEpoch - ownerTwoDateOfAllotmentEpoch >= 0)){
-      ownerTwoPosAllotDateValid = true;
-    }
+    if(ownerTwoPossessionDate !== undefined && ownerTwoDateOfAllotment !== undefined){
+        if(((ownerTwoPossessionDateEpoch - ownerTwoDateOfAllotmentEpoch === 0) || ownerTwoPossessionDateEpoch - ownerTwoDateOfAllotmentEpoch >= 0)){
+          ownerTwoPosAllotDateValid = true;
+        }
+        else{
+          ownerTwoPosAllotDateValid = false;
+          isFormValid = false;
+        }
+  }
   
     if (!!entityType) {
       if (entityType == "ET.PARTNERSHIP_FIRM") {
@@ -696,23 +697,34 @@ const callBackForNext = async (state, dispatch) => {
   if (activeStep !== SUMMARY_STEP) {
     if (isFormValid) {
       changeStep(state, dispatch, "apply");
-    }else if(!ownerOnePosAllotDateValid){
-      if(!(ownerTwoPosAllotDateValid && ownerOnePosAllotDateValid)){
-        let errorMessage = {
-          labelName: "Date of possession should be on and after date of allotment",
-          labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
-      };
-        dispatch(toggleSnackbar(true, errorMessage, "warning"));
-      }
-      else{
-        let errorMessage = {
-          labelName: "Date of possession should be on and after date of allotment",
-          labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
-      };
-        dispatch(toggleSnackbar(true, errorMessage, "warning"));
-      }
-      
+    }else if(ownerOnePosAllotDateValid === false){
+      let errorMessage = {
+        labelName: "Date of possession should be on and after date of allotment",
+        labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
+    };
+      dispatch(toggleSnackbar(true, errorMessage, "warning"));
     } 
+    else if(!ownerTwoPosAllotDateValid && ownerOnePosAllotDateValid){
+        let errorMessage = {
+          labelName: "Date of possession should be on and after date of allotment",
+          labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
+      };
+        dispatch(toggleSnackbar(true, errorMessage, "warning"));
+    } 
+    else if(!ownerTwoPosAllotDateValid && !ownerOnePosAllotDateValid){
+      let errorMessage = {
+        labelName: "Date of possession should be on and after date of allotment",
+        labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
+    };
+      dispatch(toggleSnackbar(true, errorMessage, "warning"));
+  } 
+  else if(ownerTwoPosAllotDateValid && !ownerOnePosAllotDateValid){
+    let errorMessage = {
+      labelName: "Date of possession should be on and after date of allotment",
+      labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
+  };
+    dispatch(toggleSnackbar(true, errorMessage, "warning"));
+} 
     else if(!auctionEMDDateValid){
     
     let errorMessage = {
