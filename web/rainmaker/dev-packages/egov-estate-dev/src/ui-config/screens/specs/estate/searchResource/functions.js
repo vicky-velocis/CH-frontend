@@ -12,7 +12,7 @@ import { localStorageGet } from "egov-ui-kit/utils/localStorageUtils";
 import { setBusinessServiceDataToLocalStorage, getLocaleLabels } from "egov-ui-framework/ui-utils/commons";
 import commonConfig from "config/common.js";
 import { httpRequest } from "../../../../../ui-utils"
-import { APPLICATION_TYPE, LAST_MODIFIED_ON,DATE , STATUS , AMOUNT , TYPE ,PENALTY_STATUS } from "./searchResults";
+import { APPLICATION_TYPE, LAST_MODIFIED_ON,DATE , STATUS , AMOUNT ,OFFLINE_PAYMENT_DATE,TRANSACTION_ID, TYPE ,PENALTY_STATUS } from "./searchResults";
 import moment from 'moment'
 import {penaltySummary} from '../../estate/generatePenaltyStatement'
 export const getStatusList = async (state, dispatch, queryObject, screen, path, moduleName) => {
@@ -403,32 +403,32 @@ export const securityStatmentResult = async(state, dispatch ,Criteria) => {
     
     dispatch(
       prepareFinalObject(
-        "SecurityDepositStatementSummary",
+        "SecurityStatementSummary",
         response.SecurityDepositStatementSummary
       )
     );
 
-    // dispatch(
-    //   prepareFinalObject(
-    //     "SecurityPaymentDetails",
-    //     response.PaymentDetails
-    //   )
-    // )
+    dispatch(
+      prepareFinalObject(
+        "SecurityPaymentDetails",
+        response.PaymentDetails
+      )
+    )
 
-    // let data = response.PaymentDetails.map(item => ({
-    //   [getTextToLocalMapping("Date")]: moment(new Date(item.generationDate)).format("DD-MMM-YYYY") || "-",
-    //   [AMOUNT]:(item.amount.toFixed(2)) || "-",
-    //   [STATUS]: (item.status) || "-"
-    // }));
+    let data = response.PaymentDetails.map(item => ({
+      [OFFLINE_PAYMENT_DATE]: moment(new Date(item.dateOfPayment)).format("DD-MMM-YYYY") || "-",
+      [AMOUNT]:(item.amount.toFixed(2)) || "-",
+      [TRANSACTION_ID]: (item.transactionNumber) || "-"
+    }));
     
-    // dispatch(
-    //   handleField(
-    //     "generateExtensionStatement",
-    //     "components.div.children.extensionFeeDetailsTable",
-    //     "props.data",
-    //     data
-    //   )
-    // );
+    dispatch(
+      handleField(
+        "estate-security-fee",
+        "components.div.children.securityDetailsTable",
+        "props.data",
+        data
+      )
+    );
     return response
   } catch (error) {
     console.log(error)

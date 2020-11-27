@@ -183,7 +183,7 @@ import {penaltyStatmentResult,extensionStatmentResult,securityStatmentResult} fr
           }),
           detailsContainer: getCommonGrayCard({
             rentSection: getRentSummaryCard({
-              sourceJsonPath: "SecurityDepositStatementSummary",
+              sourceJsonPath: "SecurityStatementSummary",
               dataArray: ["totalSecurityDeposit","totalSecurityDepositPaid","totalSecurityDepositDue"],
               type:"Security-Fee"
             })
