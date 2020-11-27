@@ -184,7 +184,7 @@ class InboxData extends React.Component {
 	  else if (row[0].subtext == "NULM") {
       queryParams += `&status=${wfStatus}`;
     } 
-    else if(row[0].subtext === "ES-EB-AllotmentOfSite" || row[0].subtext === "ES-EB-PropertyMaster" || row[0].subtext === "ES-BB-PropertyMaster") {
+    else if(row[0].subtext === "ES-EB-AllotmentOfSite" || row[0].subtext === "ES-EB-PropertyMaster" || row[0].subtext === "ES-BB-PropertyMaster" || row[0].subtext === "ES-MM-PropertyMaster") {
       queryParams = `fileNumber=${taskId}&tenantId=${tenantId}`
     } else if(row[0].subtext.startsWith("ES-")) {
       queryParams = `applicationNumber=${taskId}&tenantId=${tenantId}&branchType=${row[0].hiddenText}`
