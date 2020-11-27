@@ -589,6 +589,11 @@ const callBackForNext = async (state, dispatch) => {
       "apply"
     )
 
+    const noOfMonths = get(
+      state.screenConfiguration.preparedFinalObject, 
+      "Properties[0].propertyDetails.paymentConfig.noOfMonths"
+    )
+
     const isGroundRent = get(state.screenConfiguration.preparedFinalObject, "Properties[0].propertyDetails.paymentConfig.isGroundRent")
     const _componentJsonPath = !!isGroundRent ? 
     "apply.components.div.children.formwizardEighthStep.children.groundRentDetails.children.cardContent.children.rentContainer.children.cardContent.children.detailsContainer.children.multipleRentContainer.children.multipleRentInfo.props.items"
@@ -602,7 +607,9 @@ const callBackForNext = async (state, dispatch) => {
       `Properties[0].propertyDetails.paymentConfig.paymentConfigItems`,
       []
     )
-    const reviewJsonPath = !!isGroundRent ? "components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewGroundRent.children.cardContent.children.viewRents" : "components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewLicenseFee.children.cardContent.children.viewLicenses"
+    const reviewJsonPath = !!isGroundRent ? "components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewGroundRent.children.cardContent.children.viewRents" : "components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewLicenseFee.children.cardContent.children.viewLicenses";
+
+    let securityAmount = rentItems[0].groundRentAmount * noOfMonths
 
     const _cardName = !!isGroundRent ? "groundRent" : "licenseFee"
 
@@ -623,6 +630,12 @@ const callBackForNext = async (state, dispatch) => {
       const rentValidation = rentItems.filter(item => !item.groundRentAmount)
       isRentDetailsValid = !rentValidation.length
 
+      dispatch(
+        prepareFinalObject(
+          "Properties[0].propertyDetails.paymentConfig.securityAmount",
+          securityAmount
+        )
+      )
       dispatch(prepareFinalObject("Properties[0].propertyDetails.paymentConfig.paymentConfigItems", rentItems))
       getReviewAllotmentMultipleSectionDetails(state, dispatch, "apply", reviewJsonPath, _cardName, rentItems.length);
     }
