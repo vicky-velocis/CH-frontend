@@ -14,10 +14,11 @@ import {
   getReviewAdvanceRent,
   getReviewSecurity,
   getReviewConsolidatedPaymentDetails,
-  getReviewInterest
+  getReviewInterest,
+  getReviewRentSummary
 } from "./reviewProperty";
-import {getReviewRentSummary} from '../preview-resource/preview-properties'
-const reviewRentSummary = getReviewRentSummary(true);
+// import {getReviewRentSummary} from '../preview-resource/preview-properties'
+// const reviewRentSummary = getReviewRentSummary(true);
 
 const header = getCommonTitle({
   labelName: "Please review your Application and Submit",
@@ -36,7 +37,8 @@ if (typeof getReviewPropertyInfo != "undefined" && typeof getReviewAuction != "u
   var reviewAdvanceRent = getReviewAdvanceRent(true, 7, "apply");
   var reviewSecurity = getReviewSecurity(true, 7, "apply");
   var consolidatedPayment = getReviewConsolidatedPaymentDetails();
-  var reviewInterest = getReviewInterest(true, 7, "apply")
+  var reviewInterest = getReviewInterest(true, 7, "apply");
+  var reviewRentSummary = getReviewRentSummary(true, 7, "apply");
 }
 
 export const reviewDetails = getCommonCard({

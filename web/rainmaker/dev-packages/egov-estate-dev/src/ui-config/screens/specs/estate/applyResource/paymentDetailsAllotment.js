@@ -56,8 +56,6 @@ const advancedRentField = {
       sm: 6
   },
   required: true,
-  minLength: 1,
-  maxLength: 100,
   jsonPath: "Properties[0].propertyDetails.paymentConfig.groundRentAdvanceRent"
 }
 
