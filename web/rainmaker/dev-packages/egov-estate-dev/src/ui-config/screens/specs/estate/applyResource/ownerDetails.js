@@ -301,7 +301,8 @@ const allotmentNumberField = {
 }
 
 const getIsDirectorRadioButton = {
-  uiFramework: "custom-containers",
+  uiFramework: "custom-containers-local",
+  moduleName: "egov-estate",
   componentPath: "RadioGroupContainer",
   gridDefination: {
     xs: 12,
@@ -316,12 +317,12 @@ const getIsDirectorRadioButton = {
     buttons: [{
         labelName: "Yes",
         labelKey: "ES_COMMON_YES",
-        value: "true"
+        value: true
       },
       {
         label: "No",
         labelKey: "ES_COMMON_NO",
-        value: "false"
+        value: false
       }
     ],
     jsonPath: "Properties[0].propertyDetails.owners[0].ownerDetails.isDirector",

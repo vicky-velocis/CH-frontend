@@ -94,6 +94,11 @@ const callBackForNext = async (state, dispatch) => {
   let auctionEMDDateValid = true;
   let rentYearMismatch = false;
   let licenseFeeYearMismatch = false;
+  let propertyType = get(
+    state.screenConfiguration.preparedFinalObject,
+    "Properties[0].propertyDetails.propertyType",
+    ""
+  )
 
   if (activeStep === PROPERTY_DETAILS_STEP) {
     const isPropertyInfoValid = validateFields(
@@ -122,6 +127,23 @@ const callBackForNext = async (state, dispatch) => {
         "components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewPropertyInfo.children.cardContent.children.viewFour.children.entityType",
         "visible",
         propertyRegisteredTo == "ENTITY"
+      )
+    )
+
+    dispatch(
+      handleField(
+        "apply",
+        `components.div.children.formwizardEighthStep`,
+        "props.style",
+        (propertyType == "PROPERTY_TYPE.LEASEHOLD") ? {pointerEvents: "auto", opacity: "1"} : {pointerEvents: "none", opacity: "0.5"}
+      )
+    )
+    dispatch(
+      handleField(
+        "apply",
+        `components.div.children.formwizardNinthStep`,
+        "props.style",
+        (propertyType == "PROPERTY_TYPE.LEASEHOLD") ? {pointerEvents: "auto", opacity: "1"} : {pointerEvents: "none", opacity: "0.5"}
       )
     )
 
@@ -558,127 +580,131 @@ const callBackForNext = async (state, dispatch) => {
   }
 
   if (activeStep === RENT_INFO_DETAILS_STEP) {
-    const isGroundRentValid = validateFields(
-      "components.div.children.formwizardEighthStep.children.groundRentDetails.children.cardContent.children.detailsContainer.children",
-      state,
-      dispatch,
-      "apply"
-    )
-    const isLicenseFeeValid = validateFields(
-      "components.div.children.formwizardEighthStep.children.licenseFeeDetails.children.cardContent.children.detailsContainer.children",
-      state,
-      dispatch,
-      "apply"
-    )
-    const isSecurityDetailsValid = validateFields(
-      "components.div.children.formwizardEighthStep.children.securityDetails.children.cardContent.children.detailsContainer.children",
-      state,
-      dispatch,
-      "apply"
-    )
-    const isDemandValid = validateFields(
-      "components.div.children.formwizardEighthStep.children.demandSelect.children.cardContent.children.detailsContainer.children",
-      state,
-      dispatch,
-      "apply"
-    )
-    const isInterestDetailsValid = validateFields(
-      "components.div.children.formwizardEighthStep.children.interestDetails.children.cardContent.children.detailsContainer.children",
-      state,
-      dispatch,
-      "apply"
-    )
+    if (propertyType == "PROPERTY_TYPE.LEASEHOLD") {
+      const isGroundRentValid = validateFields(
+        "components.div.children.formwizardEighthStep.children.groundRentDetails.children.cardContent.children.detailsContainer.children",
+        state,
+        dispatch,
+        "apply"
+      )
+      const isLicenseFeeValid = validateFields(
+        "components.div.children.formwizardEighthStep.children.licenseFeeDetails.children.cardContent.children.detailsContainer.children",
+        state,
+        dispatch,
+        "apply"
+      )
+      const isSecurityDetailsValid = validateFields(
+        "components.div.children.formwizardEighthStep.children.securityDetails.children.cardContent.children.detailsContainer.children",
+        state,
+        dispatch,
+        "apply"
+      )
+      const isDemandValid = validateFields(
+        "components.div.children.formwizardEighthStep.children.demandSelect.children.cardContent.children.detailsContainer.children",
+        state,
+        dispatch,
+        "apply"
+      )
+      const isInterestDetailsValid = validateFields(
+        "components.div.children.formwizardEighthStep.children.interestDetails.children.cardContent.children.detailsContainer.children",
+        state,
+        dispatch,
+        "apply"
+      )
 
-    const isGroundRent = get(state.screenConfiguration.preparedFinalObject, "Properties[0].propertyDetails.paymentConfig.isGroundRent")
-    const _componentJsonPath = !!isGroundRent ? 
-    "apply.components.div.children.formwizardEighthStep.children.groundRentDetails.children.cardContent.children.rentContainer.children.cardContent.children.detailsContainer.children.multipleRentContainer.children.multipleRentInfo.props.items"
-    : "apply.components.div.children.formwizardEighthStep.children.licenseFeeDetails.children.cardContent.children.licenseFeeForYearContainer.children.cardContent.children.detailsContainer.children.multipleLicenseContainer.children.multipleLicenseInfo.props.items"
-    const _components = get(
-      state.screenConfiguration.screenConfig,
-      _componentJsonPath
-    );
-    let rentItems = get(
-      state.screenConfiguration.preparedFinalObject,
-      `Properties[0].propertyDetails.paymentConfig.paymentConfigItems`,
-      []
-    )
-    const reviewJsonPath = !!isGroundRent ? "components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewGroundRent.children.cardContent.children.viewRents" : "components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewLicenseFee.children.cardContent.children.viewLicenses"
+      const isGroundRent = get(state.screenConfiguration.preparedFinalObject, "Properties[0].propertyDetails.paymentConfig.isGroundRent")
+      const _componentJsonPath = !!isGroundRent ? 
+      "apply.components.div.children.formwizardEighthStep.children.groundRentDetails.children.cardContent.children.rentContainer.children.cardContent.children.detailsContainer.children.multipleRentContainer.children.multipleRentInfo.props.items"
+      : "apply.components.div.children.formwizardEighthStep.children.licenseFeeDetails.children.cardContent.children.licenseFeeForYearContainer.children.cardContent.children.detailsContainer.children.multipleLicenseContainer.children.multipleLicenseInfo.props.items"
+      const _components = get(
+        state.screenConfiguration.screenConfig,
+        _componentJsonPath
+      );
+      let rentItems = get(
+        state.screenConfiguration.preparedFinalObject,
+        `Properties[0].propertyDetails.paymentConfig.paymentConfigItems`,
+        []
+      )
+      const reviewJsonPath = !!isGroundRent ? "components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewGroundRent.children.cardContent.children.viewRents" : "components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewLicenseFee.children.cardContent.children.viewLicenses"
 
-    const _cardName = !!isGroundRent ? "groundRent" : "licenseFee"
+      const _cardName = !!isGroundRent ? "groundRent" : "licenseFee"
 
-    if (_components && _components.length > 0) {
-      for (var i = 0; i < _components.length; i++) {
-        if (!_components[i].isDeleted) {
-        var isRentDetailsValid = validateFields(
-          `${_componentJsonPath}[${i}].item${i}.children.cardContent.children.rentCard.children`,
-          state,
-          dispatch
-        )
+      if (_components && _components.length > 0) {
+        for (var i = 0; i < _components.length; i++) {
+          if (!_components[i].isDeleted) {
+          var isRentDetailsValid = validateFields(
+            `${_componentJsonPath}[${i}].item${i}.children.cardContent.children.rentCard.children`,
+            state,
+            dispatch
+          )
+          }
         }
+
+        const filterRentArr = rentItems.filter(item => !item.isDeleted)
+        rentItems = filterRentArr.map((item, index) => ({...item, groundRentStartMonth: !!index ? Number(filterRentArr[index-1].groundRentEndMonth) + 1 : 0, groundRentEndMonth: item.groundRentEndMonth, groundRentAmount: item.groundRentAmount}))
+
+        const rentValidation = rentItems.filter(item => !item.groundRentAmount)
+        isRentDetailsValid = !rentValidation.length
+
+        dispatch(prepareFinalObject("Properties[0].propertyDetails.paymentConfig.paymentConfigItems", rentItems))
+        getReviewAllotmentMultipleSectionDetails(state, dispatch, "apply", reviewJsonPath, _cardName, rentItems.length);
       }
 
-      const filterRentArr = rentItems.filter(item => !item.isDeleted)
-      rentItems = filterRentArr.map((item, index) => ({...item, groundRentStartMonth: !!index ? Number(filterRentArr[index-1].groundRentEndMonth) + 1 : 0, groundRentEndMonth: item.groundRentEndMonth, groundRentAmount: item.groundRentAmount}))
+      let selectedDemand = get(
+        state.screenConfiguration.screenConfig,
+        "apply.components.div.children.formwizardEighthStep.children.demandSelect.children.cardContent.children.detailsContainer.children.demand.props.value"
+      )
 
-      const rentValidation = rentItems.filter(item => !item.groundRentAmount)
-      isRentDetailsValid = !rentValidation.length
-
-      dispatch(prepareFinalObject("Properties[0].propertyDetails.paymentConfig.paymentConfigItems", rentItems))
-      getReviewAllotmentMultipleSectionDetails(state, dispatch, "apply", reviewJsonPath, _cardName, rentItems.length);
-    }
-
-    let selectedDemand = get(
-      state.screenConfiguration.screenConfig,
-      "apply.components.div.children.formwizardEighthStep.children.demandSelect.children.cardContent.children.detailsContainer.children.demand.props.value"
-    )
-
-    if (selectedDemand == "true") {
-      if (isGroundRentValid && isSecurityDetailsValid && isRentDetailsValid && isDemandValid && !rentYearMismatch && isInterestDetailsValid) {
-        const res = await applyEstates(state, dispatch, activeStep, "apply");
-        if (!res) {
-          return
+      if (selectedDemand == "true") {
+        if (isGroundRentValid && isSecurityDetailsValid && isRentDetailsValid && isDemandValid && !rentYearMismatch && isInterestDetailsValid) {
+          const res = await applyEstates(state, dispatch, activeStep, "apply");
+          if (!res) {
+            return
+          }
+        } else {
+          isFormValid = false;
         }
-      } else {
-        isFormValid = false;
       }
-    }
-    else if (selectedDemand == "false") {
-      if (isLicenseFeeValid && isSecurityDetailsValid && isLicenseFeeDetailsForYearValid && isDemandValid && !licenseFeeYearMismatch && isInterestDetailsValid) {
-        const res = await applyEstates(state, dispatch, activeStep, "apply");
-        if (!res) {
-          return
+      else if (selectedDemand == "false") {
+        if (isLicenseFeeValid && isSecurityDetailsValid && isLicenseFeeDetailsForYearValid && isDemandValid && !licenseFeeYearMismatch && isInterestDetailsValid) {
+          const res = await applyEstates(state, dispatch, activeStep, "apply");
+          if (!res) {
+            return
+          }
+        } else {
+          isFormValid = false;
         }
-      } else {
-        isFormValid = false;
       }
-    }
-    else {
-      if (isSecurityDetailsValid && isInterestDetailsValid) {
-        const res = await applyEstates(state, dispatch, activeStep, "apply");
-        if (!res) {
-          return
+      else {
+        if (isSecurityDetailsValid && isInterestDetailsValid) {
+          const res = await applyEstates(state, dispatch, activeStep, "apply");
+          if (!res) {
+            return
+          }
+        } else {
+          isFormValid = false;
         }
-      } else {
-        isFormValid = false;
       }
     }
   }
 
   if (activeStep === PAYMENT_DETAILS_STEP) {
-    var isPaymentDetailsValid = validateFields(
-      `components.div.children.formwizardNinthStep.children.paymentDetails.children.cardContent.children.detailsContainer.children`,
-      state,
-      dispatch,
-      "apply"
-    )
+    if (propertyType == "PROPERTY_TYPE.LEASEHOLD") {
+      var isPaymentDetailsValid = validateFields(
+        `components.div.children.formwizardNinthStep.children.paymentDetails.children.cardContent.children.detailsContainer.children`,
+        state,
+        dispatch,
+        "apply"
+      )
 
-    if (isPaymentDetailsValid) {
-      const res = await applyEstates(state, dispatch, activeStep);
-      if (!res) {
-        return
+      if (isPaymentDetailsValid) {
+        const res = await applyEstates(state, dispatch, activeStep);
+        if (!res) {
+          return
+        }
+      } else {
+        isFormValid = false;
       }
-    } else {
-      isFormValid = false;
     }
   }
 

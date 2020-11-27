@@ -408,21 +408,21 @@ export const setData = (properties, screenName, dispatch, state) => {
   /*************************************************************************************************/
 
   /* based on the propertyType toggle display of groundRent and licenseFee containers */
-  dispatch(
+  /* dispatch(
     handleField(
       screenName,
         `components.div.children.${stepPayment}.children.demandSelect`,
         "visible",
         !!(propertyType == "PROPERTY_TYPE.LEASEHOLD")
     )
-  ) 
+  )  */
 
   dispatch(
     handleField(
       screenName,
       `components.div.children.${stepPayment}.children.groundRentDetails`,
       "visible",
-      !!isGroundRent
+      !!isGroundRent && !!(propertyType == "PROPERTY_TYPE.LEASEHOLD")
     )
   )
   dispatch(
@@ -430,7 +430,7 @@ export const setData = (properties, screenName, dispatch, state) => {
       screenName,
       `components.div.children.${stepPayment}.children.licenseFeeDetails`,
       "visible",
-      !isGroundRent
+      !isGroundRent && !!(propertyType == "PROPERTY_TYPE.LEASEHOLD")
     )
   )
 
@@ -439,7 +439,7 @@ export const setData = (properties, screenName, dispatch, state) => {
       screenName,
       `components.div.children.${stepSummary}.children.${reviewContainer}.children.cardContent.children.reviewGroundRent`,
       "visible",
-      !!isGroundRent
+      !!isGroundRent && !!(propertyType == "PROPERTY_TYPE.LEASEHOLD")
     )
   )
   dispatch(
@@ -447,7 +447,7 @@ export const setData = (properties, screenName, dispatch, state) => {
       screenName,
       `components.div.children.${stepSummary}.children.${reviewContainer}.children.cardContent.children.reviewLicenseFee`,
       "visible",
-      !isGroundRent
+      !isGroundRent && !!(propertyType == "PROPERTY_TYPE.LEASEHOLD")
     )
   )
   /*************************************************************************************************/
@@ -611,6 +611,18 @@ const getData = async (action, state, dispatch) => {
     )
   )
 
+  const response = await getMdmsData(dispatch, mdmsPayload);
+  dispatch(prepareFinalObject("applyScreenMdmsData", response.MdmsRes));
+
+  if (!!fileNumber) {
+    await getPMDetailsByFileNumber(action, state, dispatch, fileNumber, action.screenKey)
+  }
+  let owner;
+  setDocumentData(action, state, dispatch);
+  // setDocumentData(action, state, dispatch, owner = 1);
+  setPrevOwnerDocs(action, state, dispatch);
+  setBiddersDoc(action, state, dispatch);
+
   dispatch(
     handleField(
       action.screenKey,
@@ -644,18 +656,6 @@ const getData = async (action, state, dispatch) => {
       false
     )
   )
-
-  const response = await getMdmsData(dispatch, mdmsPayload);
-  dispatch(prepareFinalObject("applyScreenMdmsData", response.MdmsRes));
-
-  if (!!fileNumber) {
-    await getPMDetailsByFileNumber(action, state, dispatch, fileNumber, action.screenKey)
-  }
-  let owner;
-  setDocumentData(action, state, dispatch);
-  // setDocumentData(action, state, dispatch, owner = 1);
-  setPrevOwnerDocs(action, state, dispatch);
-  setBiddersDoc(action, state, dispatch);
 
   const stepNumber = getQueryArg(window.location.href, "stepNumber");
   if(!!stepNumber) {
