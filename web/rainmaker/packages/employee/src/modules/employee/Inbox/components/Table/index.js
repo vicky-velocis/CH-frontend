@@ -158,7 +158,6 @@ class InboxData extends React.Component {
       queryParams = `${taskId}`;
     }
 
-    debugger
     //for only pension module
     if(row[0].subtext.toUpperCase()==='RRP_SERVICE' ||row[0].subtext.toUpperCase()=='DOE_SERVICE'||row[0].subtext.toUpperCase()=='DOP_SERVICE')
     {
