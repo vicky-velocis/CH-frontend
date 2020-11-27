@@ -391,6 +391,51 @@ export const extensionStatmentResult = async(state, dispatch ,Criteria) => {
   }
 }
 
+export const securityStatmentResult = async(state, dispatch ,Criteria) => {
+  try {
+    const response = await httpRequest(
+      "post",
+      '/est-services/security_deposit/_statement',
+      "",
+      [],
+      {Criteria}
+    )
+    
+    dispatch(
+      prepareFinalObject(
+        "SecurityDepositStatementSummary",
+        response.SecurityDepositStatementSummary
+      )
+    );
+
+    // dispatch(
+    //   prepareFinalObject(
+    //     "SecurityPaymentDetails",
+    //     response.PaymentDetails
+    //   )
+    // )
+
+    // let data = response.PaymentDetails.map(item => ({
+    //   [getTextToLocalMapping("Date")]: moment(new Date(item.generationDate)).format("DD-MMM-YYYY") || "-",
+    //   [AMOUNT]:(item.amount.toFixed(2)) || "-",
+    //   [STATUS]: (item.status) || "-"
+    // }));
+    
+    // dispatch(
+    //   handleField(
+    //     "generateExtensionStatement",
+    //     "components.div.children.extensionFeeDetailsTable",
+    //     "props.data",
+    //     data
+    //   )
+    // );
+    return response
+  } catch (error) {
+    console.log(error)
+    dispatch(toggleSnackbar(true, error.message, "error"));
+  }
+}
+
 
 export const generatePenaltyStatementApiCall = async (state, dispatch, onInit, offset, limit = 100, hideTable = true) => {
   var isDateValid = true;

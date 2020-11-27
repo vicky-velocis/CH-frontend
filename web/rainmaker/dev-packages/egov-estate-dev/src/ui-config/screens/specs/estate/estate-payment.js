@@ -9,7 +9,7 @@ import { propertyInfo } from "./preview-resource/preview-properties";
 import { getQueryArg, getTodaysDateInYMD } from "egov-ui-framework/ui-utils/commons";
 import { convertDateToEpoch, validateFields, getRentSummaryCard } from "../utils";
 import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
-import {penaltyStatmentResult,extensionStatmentResult} from './searchResource/functions'
+import {penaltyStatmentResult,extensionStatmentResult,securityStatmentResult} from './searchResource/functions'
 
   const header = getCommonHeader({
     labelName: "Rent Payment",
@@ -125,7 +125,6 @@ import {penaltyStatmentResult,extensionStatmentResult} from './searchResource/fu
     jsonPath: "payment.paymentType",
     beforeFieldChange: async (action, state, dispatch) => {
       if (action.value) {
-
         let Properties = get(state.screenConfiguration.preparedFinalObject, "Properties")
         const {id} = Properties[0];   
         let Criteria = {
@@ -171,8 +170,26 @@ import {penaltyStatmentResult,extensionStatmentResult} from './searchResource/fu
             })
           })
         })
-        
 
+        const securityCard = getCommonCard({
+          header: getCommonTitle({
+            labelName: "Security Deposit Summary",
+            labelKey: "ES_SECURITY_DEPOSIT_SUMMARY_HEADER"
+          }, {
+            style: {
+              marginBottom: 18,
+              marginTop: 18
+            }
+          }),
+          detailsContainer: getCommonGrayCard({
+            rentSection: getRentSummaryCard({
+              sourceJsonPath: "SecurityDepositStatementSummary",
+              dataArray: ["totalSecurityDeposit","totalSecurityDepositPaid","totalSecurityDepositDue"],
+              type:"Security-Fee"
+            })
+          })
+        })
+ 
         switch(action.value){
           case 'PAYMENTTYPE.PENALTY':
               let penaltyResponse = await penaltyStatmentResult (state,dispatch, Criteria)
@@ -184,6 +201,7 @@ import {penaltyStatmentResult,extensionStatmentResult} from './searchResource/fu
                 penaltyCard     
             ));
             break;
+
           case "PAYMENTTYPE.EXTENSIONFEE":
               let extensionResponse = await extensionStatmentResult (state,dispatch, Criteria)
               dispatch(prepareFinalObject("ExtensionFeeStatementSummary", extensionResponse.ExtensionFeeStatementSummary))
@@ -193,7 +211,19 @@ import {penaltyStatmentResult,extensionStatmentResult} from './searchResource/fu
                 "rentCard",
                 exntensionCard     
             ));
-            break;  
+            break; 
+
+          case "PAYMENTTYPE.SECURITYFEE":
+              let payload  = {propertyid: id}
+              await securityStatmentResult (state,dispatch, payload)
+              dispatch(handleField(
+                "estate-payment",
+                "components.div.children.detailsContainer.children.rentSummaryDetails.children",
+                "rentCard",
+                securityCard     
+            ));
+            break; 
+
           default : 
               const rentCard = getCommonCard({
                 header: rentSummaryHeader,
