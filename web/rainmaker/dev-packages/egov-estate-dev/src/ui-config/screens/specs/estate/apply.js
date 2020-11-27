@@ -303,7 +303,6 @@ const setBiddersDoc = async (action, state, dispatch) => {
 }
 
 export const setLegacyAccStmtDoc = (action, state, dispatch) => {
-  debugger
   const {
     EstateServices
   } = legacyAccStmtData && legacyAccStmtData.MdmsRes ? legacyAccStmtData.MdmsRes : {}
