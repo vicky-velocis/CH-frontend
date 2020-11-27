@@ -10,6 +10,7 @@ import { getQueryArg, getTodaysDateInYMD } from "egov-ui-framework/ui-utils/comm
 import { convertDateToEpoch, validateFields, getRentSummaryCard } from "../utils";
 import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 import {penaltyStatmentResult,extensionStatmentResult,securityStatmentResult} from './searchResource/functions'
+import { penaltySummary } from "./generatePenaltyStatement";
 
   const header = getCommonHeader({
     labelName: "Rent Payment",
@@ -193,35 +194,44 @@ import {penaltyStatmentResult,extensionStatmentResult,securityStatmentResult} fr
         switch(action.value){
           case 'PAYMENTTYPE.PENALTY':
               let penaltyResponse = await penaltyStatmentResult (state,dispatch, Criteria)
-              dispatch(prepareFinalObject("PenaltyStatementSummary", penaltyResponse.PenaltyStatementSummary))
-              dispatch(handleField(
-                "estate-payment",
-                "components.div.children.detailsContainer.children.rentSummaryDetails.children",
-                "rentCard",
-                penaltyCard     
-            ));
+              if(!!penaltyResponse){
+                dispatch(prepareFinalObject("PenaltyStatementSummary", penaltyResponse.PenaltyStatementSummary))
+                dispatch(handleField(
+                  "estate-payment",
+                  "components.div.children.detailsContainer.children.rentSummaryDetails.children",
+                  "rentCard",
+                  penaltyCard     
+              ));
+              }
+            
             break;
 
           case "PAYMENTTYPE.EXTENSIONFEE":
               let extensionResponse = await extensionStatmentResult (state,dispatch, Criteria)
-              dispatch(prepareFinalObject("ExtensionFeeStatementSummary", extensionResponse.ExtensionFeeStatementSummary))
-              dispatch(handleField(
-                "estate-payment",
-                "components.div.children.detailsContainer.children.rentSummaryDetails.children",
-                "rentCard",
-                exntensionCard     
-            ));
+              if(!!extensionResponse){
+                dispatch(prepareFinalObject("ExtensionFeeStatementSummary", extensionResponse.ExtensionFeeStatementSummary))
+                dispatch(handleField(
+                  "estate-payment",
+                  "components.div.children.detailsContainer.children.rentSummaryDetails.children",
+                  "rentCard",
+                  exntensionCard     
+              ));
+              }
+             
             break; 
 
           case "PAYMENTTYPE.SECURITYFEE":
               let payload  = {propertyid: id}
-              await securityStatmentResult (state,dispatch, payload)
-              dispatch(handleField(
-                "estate-payment",
-                "components.div.children.detailsContainer.children.rentSummaryDetails.children",
-                "rentCard",
-                securityCard     
-            ));
+              let securityDeposit = await securityStatmentResult (state,dispatch, payload)
+              if(!!securityDeposit){
+                dispatch(handleField(
+                  "estate-payment",
+                  "components.div.children.detailsContainer.children.rentSummaryDetails.children",
+                  "rentCard",
+                  securityCard     
+              ));
+              }
+            
             break; 
 
           default : 
