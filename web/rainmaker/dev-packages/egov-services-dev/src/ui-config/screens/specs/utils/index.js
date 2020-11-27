@@ -1263,7 +1263,7 @@ export const downloadApplication = async (
         { key: "applicationNumber", value: applicationNumber },
     ]);
     let recData = get(response, "bookingsModelList", []);
-    
+
     let documentName = '';
     let document2 = '';
     if (applicationData.businessService != "NLUJM") {
@@ -1531,7 +1531,7 @@ export const downloadApplication = async (
             res.filestoreIds[0];
             if (res && res.filestoreIds && res.filestoreIds.length > 0) {
                 res.filestoreIds.map((fileStoreId) => {
-                    downloadReceiptFromFilestoreID(fileStoreId, mode, tenantId);
+                    downloadReceiptFromFilestoreID(fileStoreId, mode);
                 });
             } else {
                 console.log("Error In Application Download");
