@@ -305,7 +305,8 @@ export const applicationSuccessFooter = (
   
                 break;
               case 'pay':
-                if(type === 'ESTATE_SERVICE_ESTATE_BRANCH.PROPERTY_MASTER' || type === "ESTATE_SERVICE_ESTATE_BRANCH.PROPERTY_VIOLATION" || type === "ESTATE_SERVICE_ESTATE_BRANCH.EXTENSION_FEE"){
+                if(type === 'ESTATE_SERVICE_ESTATE_BRANCH.PROPERTY_MASTER' || type === "ESTATE_SERVICE_ESTATE_BRANCH.PROPERTY_VIOLATION" || type === "ESTATE_SERVICE_ESTATE_BRANCH.EXTENSION_FEE"
+                || type === 'ESTATE_SERVICE_ESTATE_BRANCH.SECURITY_DEPOSIT'){
                   let fileNumber = getQueryArg(window.location.href, "fileNumber");
                   const consumerCodes = getQueryArg(window.location.href, "applicationNumber");
                   if(consumerCodes.startsWith('SITE') || consumerCodes.startsWith('ES') ){
@@ -399,7 +400,8 @@ export const applicationSuccessFooter = (
                     downloadSummary(Properties, PropertiesTemp);
                   }
               case 'pay': 
-              if(type === 'ESTATE_SERVICE_ESTATE_BRANCH.PROPERTY_MASTER' || type === "ESTATE_SERVICE_ESTATE_BRANCH.PROPERTY_VIOLATION" || type === "ESTATE_SERVICE_ESTATE_BRANCH.EXTENSION_FEE"){
+              if(type === 'ESTATE_SERVICE_ESTATE_BRANCH.PROPERTY_MASTER' || type === "ESTATE_SERVICE_ESTATE_BRANCH.PROPERTY_VIOLATION" || type === "ESTATE_SERVICE_ESTATE_BRANCH.EXTENSION_FEE"
+              || type === 'ESTATE_SERVICE_ESTATE_BRANCH.SECURITY_DEPOSIT'){
                 let fileNumber = getQueryArg(window.location.href, "fileNumber");
                 const consumerCodes = getQueryArg(window.location.href, "applicationNumber");
                 if(consumerCodes.startsWith('SITE') || consumerCodes.startsWith('ES')){

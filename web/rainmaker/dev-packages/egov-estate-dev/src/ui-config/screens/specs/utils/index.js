@@ -740,7 +740,20 @@ export const downloadPaymentReceipt = (receiptQueryString, payload, data, genera
                  }
                ]
                payload[0]["PenaltyStatementSummary"] = PenaltyStatementSummary
-                break;  
+                break; 
+              case 'PAYMENTTYPE.SECURITYFEE':
+                  const {SecurityDepositStatementSummary} = state.screenConfiguration.preparedFinalObject
+                  queryStr = [{
+                    key: "key",
+                    value: "security-payment-receipt"
+                  },
+                  {
+                    key: "tenantId",
+                    value: receiptQueryString[1].value.split('.')[0]
+                  }
+                ]
+                payload[0]["SecurityDepositStatementSummary"] = SecurityDepositStatementSummary
+                break;   
               default:
                  queryStr = [{
                    key: "key",
