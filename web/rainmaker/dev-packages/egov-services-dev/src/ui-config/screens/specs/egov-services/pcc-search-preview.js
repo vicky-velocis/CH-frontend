@@ -351,7 +351,7 @@ const setSearchResponse = async (
             recData[0].bkToDate
         );
 
-console.log(daysCount, "Nero from file");
+
 
 dispatch(
     prepareFinalObject(
