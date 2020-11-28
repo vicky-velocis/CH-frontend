@@ -124,6 +124,23 @@ const callBackForNext = async (state, dispatch) => {
       )
     )
 
+    dispatch(
+      handleField(
+        "apply",
+        `components.div.children.formwizardEighthStep`,
+        "props.style",
+        (propertyType == "PROPERTY_TYPE.LEASEHOLD") ? {pointerEvents: "auto", opacity: "1"} : {pointerEvents: "none", opacity: "0.5"}
+      )
+    )
+    dispatch(
+      handleField(
+        "apply",
+        `components.div.children.formwizardNinthStep`,
+        "props.style",
+        (propertyType == "PROPERTY_TYPE.LEASEHOLD") ? {pointerEvents: "auto", opacity: "1"} : {pointerEvents: "none", opacity: "0.5"}
+      )
+    )
+
     if (isPropertyInfoValid && isAdditionalValid) {
       const res = await applyEstates(state, dispatch, activeStep);
       if (!res) {
@@ -558,36 +575,37 @@ const callBackForNext = async (state, dispatch) => {
   }
 
   if (activeStep === RENT_INFO_DETAILS_STEP) {
-    const isGroundRentValid = validateFields(
-      "components.div.children.formwizardEighthStep.children.groundRentDetails.children.cardContent.children.detailsContainer.children",
-      state,
-      dispatch,
-      "apply"
-    )
-    const isLicenseFeeValid = validateFields(
-      "components.div.children.formwizardEighthStep.children.licenseFeeDetails.children.cardContent.children.detailsContainer.children",
-      state,
-      dispatch,
-      "apply"
-    )
-    const isSecurityDetailsValid = validateFields(
-      "components.div.children.formwizardEighthStep.children.securityDetails.children.cardContent.children.detailsContainer.children",
-      state,
-      dispatch,
-      "apply"
-    )
-    const isDemandValid = validateFields(
-      "components.div.children.formwizardEighthStep.children.demandSelect.children.cardContent.children.detailsContainer.children",
-      state,
-      dispatch,
-      "apply"
-    )
-    const isInterestDetailsValid = validateFields(
-      "components.div.children.formwizardEighthStep.children.interestDetails.children.cardContent.children.detailsContainer.children",
-      state,
-      dispatch,
-      "apply"
-    )
+    if (propertyType == "PROPERTY_TYPE.LEASEHOLD") {
+      const isGroundRentValid = validateFields(
+        "components.div.children.formwizardEighthStep.children.groundRentDetails.children.cardContent.children.detailsContainer.children",
+        state,
+        dispatch,
+        "apply"
+      )
+      const isLicenseFeeValid = validateFields(
+        "components.div.children.formwizardEighthStep.children.licenseFeeDetails.children.cardContent.children.detailsContainer.children",
+        state,
+        dispatch,
+        "apply"
+      )
+      const isSecurityDetailsValid = validateFields(
+        "components.div.children.formwizardEighthStep.children.securityDetails.children.cardContent.children.detailsContainer.children",
+        state,
+        dispatch,
+        "apply"
+      )
+      const isDemandValid = validateFields(
+        "components.div.children.formwizardEighthStep.children.demandSelect.children.cardContent.children.detailsContainer.children",
+        state,
+        dispatch,
+        "apply"
+      )
+      const isInterestDetailsValid = validateFields(
+        "components.div.children.formwizardEighthStep.children.interestDetails.children.cardContent.children.detailsContainer.children",
+        state,
+        dispatch,
+        "apply"
+      )
 
     const noOfMonths = get(
       state.screenConfiguration.preparedFinalObject, 
@@ -611,21 +629,21 @@ const callBackForNext = async (state, dispatch) => {
 
     let securityAmount = rentItems[0].groundRentAmount * noOfMonths
 
-    const _cardName = !!isGroundRent ? "groundRent" : "licenseFee"
+      const _cardName = !!isGroundRent ? "groundRent" : "licenseFee"
 
-    if (_components && _components.length > 0) {
-      for (var i = 0; i < _components.length; i++) {
-        if (!_components[i].isDeleted) {
-        var isRentDetailsValid = validateFields(
-          `${_componentJsonPath}[${i}].item${i}.children.cardContent.children.rentCard.children`,
-          state,
-          dispatch
-        )
+      if (_components && _components.length > 0) {
+        for (var i = 0; i < _components.length; i++) {
+          if (!_components[i].isDeleted) {
+          var isRentDetailsValid = validateFields(
+            `${_componentJsonPath}[${i}].item${i}.children.cardContent.children.rentCard.children`,
+            state,
+            dispatch
+          )
+          }
         }
-      }
 
-      const filterRentArr = rentItems.filter(item => !item.isDeleted)
-      rentItems = filterRentArr.map((item, index) => ({...item, groundRentStartMonth: !!index ? Number(filterRentArr[index-1].groundRentEndMonth) + 1 : 0, groundRentEndMonth: item.groundRentEndMonth, groundRentAmount: item.groundRentAmount}))
+        const filterRentArr = rentItems.filter(item => !item.isDeleted)
+        rentItems = filterRentArr.map((item, index) => ({...item, groundRentStartMonth: !!index ? Number(filterRentArr[index-1].groundRentEndMonth) + 1 : 0, groundRentEndMonth: item.groundRentEndMonth, groundRentAmount: item.groundRentAmount}))
 
       const rentValidation = rentItems.filter(item => !item.groundRentAmount || !item.groundRentEndMonth)
       isRentDetailsValid = rentValidation.length === 0
@@ -641,26 +659,26 @@ const callBackForNext = async (state, dispatch) => {
         if (!res) {
           return
         }
-      } else {
-        isFormValid = false;
       }
   }
 
   if (activeStep === PAYMENT_DETAILS_STEP) {
-    var isPaymentDetailsValid = validateFields(
-      `components.div.children.formwizardNinthStep.children.paymentDetails.children.cardContent.children.detailsContainer.children`,
-      state,
-      dispatch,
-      "apply"
-    )
+    if (propertyType == "PROPERTY_TYPE.LEASEHOLD") {
+      var isPaymentDetailsValid = validateFields(
+        `components.div.children.formwizardNinthStep.children.paymentDetails.children.cardContent.children.detailsContainer.children`,
+        state,
+        dispatch,
+        "apply"
+      )
 
-    if (isPaymentDetailsValid) {
-      const res = await applyEstates(state, dispatch, activeStep);
-      if (!res) {
-        return
+      if (isPaymentDetailsValid) {
+        const res = await applyEstates(state, dispatch, activeStep);
+        if (!res) {
+          return
+        }
+      } else {
+        isFormValid = false;
       }
-    } else {
-      isFormValid = false;
     }
   }
 
