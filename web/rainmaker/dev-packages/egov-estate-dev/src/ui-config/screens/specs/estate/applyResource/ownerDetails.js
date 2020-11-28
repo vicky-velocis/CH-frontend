@@ -267,6 +267,7 @@ const dateOfAllotmentField = {
     labelKey: "ES_DATE_OF_ALLOTMENT_PLACEHOLDER"
   },
   pattern: getPattern("Date"),
+  required: true,
   jsonPath: "Properties[0].propertyDetails.owners[0].ownerDetails.dateOfAllotment",
   // props: {
   //   inputProps: {

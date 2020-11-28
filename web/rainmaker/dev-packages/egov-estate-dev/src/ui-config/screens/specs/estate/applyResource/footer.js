@@ -92,13 +92,7 @@ const callBackForNext = async (state, dispatch) => {
   let ownerOnePosAllotDateValid = true;
   let ownerTwoPosAllotDateValid = true;
   let auctionEMDDateValid = true;
-  let rentYearMismatch = false;
-  let licenseFeeYearMismatch = false;
-  let propertyType = get(
-    state.screenConfiguration.preparedFinalObject,
-    "Properties[0].propertyDetails.propertyType",
-    ""
-  )
+  let isStartAndEndYearValid = true
 
   if (activeStep === PROPERTY_DETAILS_STEP) {
     const isPropertyInfoValid = validateFields(
@@ -194,28 +188,29 @@ const callBackForNext = async (state, dispatch) => {
       "Properties[0].propertyDetails.entityType",
       ""
     )
-    // let ownerOnePossessionDate = get(state.screenConfiguration.screenConfig["apply"], "components.div.children.formwizardThirdStep.children.ownerDetails.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items[0].item0.children.cardContent.children.ownerCard.children.possessionDate.props.value");
-    // let ownerOneDateOfAllotment = get(state.screenConfiguration.screenConfig["apply"], "components.div.children.formwizardThirdStep.children.ownerDetails.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items[0].item0.children.cardContent.children.ownerCard.children.dateOfAllotment.props.value");
-    // let ownerTwoPossessionDate = get(state.screenConfiguration.screenConfig["apply"],"components.div.children.formwizardThirdStep.children.ownerDetails.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items[1].item1.children.cardContent.children.ownerCard.children.possessionDate.props.value") || "";
-    // let ownerTwoDateOfAllotment = get(state.screenConfiguration.screenConfig["apply"],"components.div.children.formwizardThirdStep.children.ownerDetails.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items[1].item1.children.cardContent.children.ownerCard.children.dateOfAllotment.props.value") || "";
     let ownerOnePossessionDate = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.owners[0].ownerDetails.possesionDate");
     let ownerOneDateOfAllotment = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.owners[0].ownerDetails.dateOfAllotment");
-    let ownerTwoPossessionDate = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.owners[1].ownerDetails.possesionDate") || "";
-    let ownerTwoDateOfAllotment = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.owners[1].ownerDetails.dateOfAllotment") || "";
+    let ownerTwoPossessionDate = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.owners[1].ownerDetails.possesionDate") || 0;
+    let ownerTwoDateOfAllotment = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.owners[1].ownerDetails.dateOfAllotment") || 0;
     
     let ownerOnePossessionDateEpoch = convertDateToEpoch(ownerOnePossessionDate)
     let ownerOneDateOfAllotmentEpoch = convertDateToEpoch(ownerOneDateOfAllotment)
     let ownerTwoPossessionDateEpoch = ownerTwoPossessionDate > 0 ? convertDateToEpoch(ownerTwoPossessionDate) : 0
     let ownerTwoDateOfAllotmentEpoch = ownerTwoDateOfAllotment > 0 ? convertDateToEpoch(ownerTwoDateOfAllotment) : 0
 
-    ownerOnePosAllotDateValid = ownerOnePossessionDateEpoch - ownerOneDateOfAllotmentEpoch >= 0 ? true : false
-    // ownerTwoPosAllotDateValid = ownerTwoPossessionDateEpoch - ownerTwoDateOfAllotmentEpoch > 0 ? true : false
-    if((ownerTwoPossessionDateEpoch === 0 || ownerTwoDateOfAllotmentEpoch === 0)){
-      ownerTwoPosAllotDateValid = false;
+    if(ownerOnePossessionDateEpoch !== undefined && ownerOneDateOfAllotmentEpoch !== undefined){
+      ownerOnePosAllotDateValid = ownerOnePossessionDateEpoch - ownerOneDateOfAllotmentEpoch >= 0 ? true : false
+      isFormValid = ownerOnePosAllotDateValid == true ? true : false;
     }
-    else if((ownerTwoDateOfAllotmentEpoch != 0) && (ownerTwoPossessionDateEpoch != 0) && ((ownerTwoPossessionDateEpoch - ownerTwoDateOfAllotmentEpoch === 0) || ownerTwoPossessionDateEpoch - ownerTwoDateOfAllotmentEpoch >= 0)){
-      ownerTwoPosAllotDateValid = true;
-    }
+    if(ownerTwoPossessionDate !== undefined && ownerTwoDateOfAllotment !== undefined){
+        if(((ownerTwoPossessionDateEpoch - ownerTwoDateOfAllotmentEpoch === 0) || ownerTwoPossessionDateEpoch - ownerTwoDateOfAllotmentEpoch >= 0)){
+          ownerTwoPosAllotDateValid = true;
+        }
+        else{
+          ownerTwoPosAllotDateValid = false;
+          isFormValid = false;
+        }
+  }
   
     if (!!entityType) {
       if (entityType == "ET.PARTNERSHIP_FIRM") {
@@ -612,20 +607,27 @@ const callBackForNext = async (state, dispatch) => {
         "apply"
       )
 
-      const isGroundRent = get(state.screenConfiguration.preparedFinalObject, "Properties[0].propertyDetails.paymentConfig.isGroundRent")
-      const _componentJsonPath = !!isGroundRent ? 
-      "apply.components.div.children.formwizardEighthStep.children.groundRentDetails.children.cardContent.children.rentContainer.children.cardContent.children.detailsContainer.children.multipleRentContainer.children.multipleRentInfo.props.items"
-      : "apply.components.div.children.formwizardEighthStep.children.licenseFeeDetails.children.cardContent.children.licenseFeeForYearContainer.children.cardContent.children.detailsContainer.children.multipleLicenseContainer.children.multipleLicenseInfo.props.items"
-      const _components = get(
-        state.screenConfiguration.screenConfig,
-        _componentJsonPath
-      );
-      let rentItems = get(
-        state.screenConfiguration.preparedFinalObject,
-        `Properties[0].propertyDetails.paymentConfig.paymentConfigItems`,
-        []
-      )
-      const reviewJsonPath = !!isGroundRent ? "components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewGroundRent.children.cardContent.children.viewRents" : "components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewLicenseFee.children.cardContent.children.viewLicenses"
+    const noOfMonths = get(
+      state.screenConfiguration.preparedFinalObject, 
+      "Properties[0].propertyDetails.paymentConfig.noOfMonths"
+    )
+
+    const isGroundRent = get(state.screenConfiguration.preparedFinalObject, "Properties[0].propertyDetails.paymentConfig.isGroundRent")
+    const _componentJsonPath = !!isGroundRent ? 
+    "apply.components.div.children.formwizardEighthStep.children.groundRentDetails.children.cardContent.children.rentContainer.children.cardContent.children.detailsContainer.children.multipleRentContainer.children.multipleRentInfo.props.items"
+    : "apply.components.div.children.formwizardEighthStep.children.licenseFeeDetails.children.cardContent.children.licenseFeeForYearContainer.children.cardContent.children.detailsContainer.children.multipleLicenseContainer.children.multipleLicenseInfo.props.items"
+    const _components = get(
+      state.screenConfiguration.screenConfig,
+      _componentJsonPath
+    );
+    let rentItems = get(
+      state.screenConfiguration.preparedFinalObject,
+      `Properties[0].propertyDetails.paymentConfig.paymentConfigItems`,
+      []
+    )
+    const reviewJsonPath = !!isGroundRent ? "components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewGroundRent.children.cardContent.children.viewRents" : "components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewLicenseFee.children.cardContent.children.viewLicenses";
+
+    let securityAmount = rentItems[0].groundRentAmount * noOfMonths
 
       const _cardName = !!isGroundRent ? "groundRent" : "licenseFee"
 
@@ -643,49 +645,21 @@ const callBackForNext = async (state, dispatch) => {
         const filterRentArr = rentItems.filter(item => !item.isDeleted)
         rentItems = filterRentArr.map((item, index) => ({...item, groundRentStartMonth: !!index ? Number(filterRentArr[index-1].groundRentEndMonth) + 1 : 0, groundRentEndMonth: item.groundRentEndMonth, groundRentAmount: item.groundRentAmount}))
 
-        const rentValidation = rentItems.filter(item => !item.groundRentAmount)
-        isRentDetailsValid = !rentValidation.length
-
+      const rentValidation = rentItems.filter(item => !item.groundRentAmount || !item.groundRentEndMonth)
+      isRentDetailsValid = rentValidation.length === 0
+      isStartAndEndYearValid = rentItems.every(item => item.groundRentEndMonth > item.groundRentStartMonth)
+      if(!!isRentDetailsValid) {
         dispatch(prepareFinalObject("Properties[0].propertyDetails.paymentConfig.paymentConfigItems", rentItems))
         getReviewAllotmentMultipleSectionDetails(state, dispatch, "apply", reviewJsonPath, _cardName, rentItems.length);
       }
-
-      let selectedDemand = get(
-        state.screenConfiguration.screenConfig,
-        "apply.components.div.children.formwizardEighthStep.children.demandSelect.children.cardContent.children.detailsContainer.children.demand.props.value"
-      )
-
-      if (selectedDemand == "true") {
-        if (isGroundRentValid && isSecurityDetailsValid && isRentDetailsValid && isDemandValid && !rentYearMismatch && isInterestDetailsValid) {
-          const res = await applyEstates(state, dispatch, activeStep, "apply");
-          if (!res) {
-            return
-          }
-        } else {
-          isFormValid = false;
-        }
-      }
-      else if (selectedDemand == "false") {
-        if (isLicenseFeeValid && isSecurityDetailsValid && isLicenseFeeDetailsForYearValid && isDemandValid && !licenseFeeYearMismatch && isInterestDetailsValid) {
-          const res = await applyEstates(state, dispatch, activeStep, "apply");
-          if (!res) {
-            return
-          }
-        } else {
-          isFormValid = false;
-        }
-      }
-      else {
-        if (isSecurityDetailsValid && isInterestDetailsValid) {
-          const res = await applyEstates(state, dispatch, activeStep, "apply");
-          if (!res) {
-            return
-          }
-        } else {
-          isFormValid = false;
-        }
-      }
     }
+    const hasValidation = !!isGroundRent ? isGroundRentValid && isSecurityDetailsValid && isRentDetailsValid && isDemandValid && isInterestDetailsValid && isStartAndEndYearValid : isLicenseFeeValid && isSecurityDetailsValid && isRentDetailsValid && isDemandValid && isInterestDetailsValid && isStartAndEndYearValid
+      if (hasValidation) {
+        const res = await applyEstates(state, dispatch, activeStep, "apply");
+        if (!res) {
+          return
+        }
+      }
   }
 
   if (activeStep === PAYMENT_DETAILS_STEP) {
@@ -722,23 +696,34 @@ const callBackForNext = async (state, dispatch) => {
   if (activeStep !== SUMMARY_STEP) {
     if (isFormValid) {
       changeStep(state, dispatch, "apply");
-    }else if(!ownerOnePosAllotDateValid){
-      if(!(ownerTwoPosAllotDateValid && ownerOnePosAllotDateValid)){
-        let errorMessage = {
-          labelName: "Date of possession should be on and after date of allotment",
-          labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
-      };
-        dispatch(toggleSnackbar(true, errorMessage, "warning"));
-      }
-      else{
-        let errorMessage = {
-          labelName: "Date of possession should be on and after date of allotment",
-          labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
-      };
-        dispatch(toggleSnackbar(true, errorMessage, "warning"));
-      }
-      
+    }else if(ownerOnePosAllotDateValid === false){
+      let errorMessage = {
+        labelName: "Date of possession should be on and after date of allotment",
+        labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
+    };
+      dispatch(toggleSnackbar(true, errorMessage, "warning"));
     } 
+    else if(!ownerTwoPosAllotDateValid && ownerOnePosAllotDateValid){
+        let errorMessage = {
+          labelName: "Date of possession should be on and after date of allotment",
+          labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
+      };
+        dispatch(toggleSnackbar(true, errorMessage, "warning"));
+    } 
+    else if(!ownerTwoPosAllotDateValid && !ownerOnePosAllotDateValid){
+      let errorMessage = {
+        labelName: "Date of possession should be on and after date of allotment",
+        labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
+    };
+      dispatch(toggleSnackbar(true, errorMessage, "warning"));
+  } 
+  else if(ownerTwoPosAllotDateValid && !ownerOnePosAllotDateValid){
+    let errorMessage = {
+      labelName: "Date of possession should be on and after date of allotment",
+      labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
+  };
+    dispatch(toggleSnackbar(true, errorMessage, "warning"));
+} 
     else if(!auctionEMDDateValid){
     
     let errorMessage = {
@@ -746,6 +731,12 @@ const callBackForNext = async (state, dispatch) => {
       labelKey: "ES_ERR_EMD_DATE_BEFORE_AUCTION_DATE"
   };
     dispatch(toggleSnackbar(true, errorMessage, "warning"));
+    } else if(!isStartAndEndYearValid) {
+      let errorMessage = {
+        labelName: "End Month should be greater than Start Month",
+        labelKey: "ES_ERR_END_MONTH_START_MONTH"
+      }
+      dispatch(toggleSnackbar(true, errorMessage, "warning"));
     }
     else if (hasFieldToaster) {
       let errorMessage = {
