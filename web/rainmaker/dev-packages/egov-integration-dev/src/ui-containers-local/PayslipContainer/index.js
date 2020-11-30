@@ -104,6 +104,69 @@ class PayslipContainer extends Component {
                 <td><Label labelClassName="" label={get(APIData.PaySlip, `DDOName`, "-") || "-"}/></td> 
                 </tr> 
                  </table>
+                 {
+                    <div style={{ overscrollBehaviorX:"overlay",overflow:"overlay"}}>
+                      <table  id="reportTable"
+                 style={{
+                   width: "100%",
+                   marginBottom:"20px"
+                 }}
+                 className="table table-striped table-bordered">
+                   <thead>
+                   <tr className="report-table-header">
+                   <th  style={{ verticalAlign:"middle", textAlign: "center"}} colSpan="1">
+                  <Label
+                    className="report-header-row-label"
+                    labelStyle={{ wordWrap: "unset", wordBreak: "unset", fontWeight: "bold", }}
+                    label="INTIGRATION_PAYSLIP_HEADER_ALLOWANCES"
+                  />
+                  </th>
+                  <th  style={{ verticalAlign:"middle", textAlign: "center"}} colSpan="1">
+                  <Label
+                    className="report-header-row-label"
+                    labelStyle={{ wordWrap: "unset", wordBreak: "unset", fontWeight: "bold", }}
+                    label="INTIGRATION_PAYSLIP_AMOUNT"
+                  />
+                  </th>
+                  <th  style={{ verticalAlign:"middle", textAlign: "center"}} colSpan="1">
+                  <Label
+                    className="report-header-row-label"
+                    labelStyle={{ wordWrap: "unset", wordBreak: "unset", fontWeight: "bold", }}
+                    label="INTIGRATION_PAYSLIP_HEADER_DEDUCTION"
+                  />
+                  </th>
+                  <th  style={{ verticalAlign:"middle", textAlign: "center"}} colSpan="1">
+                  <Label
+                    className="report-header-row-label"
+                    labelStyle={{ wordWrap: "unset", wordBreak: "unset", fontWeight: "bold", }}
+                    label="INTIGRATION_PAYSLIP_AMOUNT"
+                  />
+                  </th>
+                   </tr>
+                   </thead>
+                   <tbody>
+                     {
+                       APIData&&(
+                       APIData.PaySlip.Allowances.map((item,i)=>{
+                              return(
+                                <tr>
+                                 
+                                  <th>{item.Allowances_Text}</th>
+                                  <th style={{fontWeight: "initial", textAlign:"right"}}>{item.Allowances_Amount}</th>
+                                  <th>{item.Deductions_Text}</th>
+                                  <th style={{fontWeight: "initial", textAlign:"right"}}>{item.Deductions_Amount}</th>
+                                  
+                                 
+                                 
+                                </tr>
+                              )
+                            
+                            }))
+                     }
+                   </tbody>
+                 </table>
+                      </div>
+                 }
                  
               {/* <table  id="reportTable"
                  style={{

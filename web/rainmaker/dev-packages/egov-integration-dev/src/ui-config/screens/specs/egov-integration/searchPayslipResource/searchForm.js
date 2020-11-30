@@ -16,7 +16,7 @@ import {
 import { searchApiCall } from "./functions";
 
 const resetFields = (state, dispatch) => {
-  const textFields = ["SectorId","houseNo",];
+  const textFields = ["month","year","empCode"];
   for (let i = 0; i < textFields.length; i++) {
     if (
       `state.screenConfiguration.screenConfig.payslipsearch.searchForm.children.cardContent.children.searchFormContainer.children.${textFields[i]}.props.value`
@@ -44,7 +44,7 @@ export const searchForm = getCommonCard({
     labelKey: "STORE_HOME_SEARCH_RESULTS_DESC",
   }),
   searchFormContainer: getCommonContainer({
-    employeeId: {
+    empCode: {
       ...getTextField({
         label: {
           labelName: "Employee ID",
@@ -56,7 +56,7 @@ export const searchForm = getCommonCard({
         },
         required: true, 
         errorMessage:"INTIGRATION_ERROR_SF_EMPLOYEE_ID",      
-        jsonPath: "searchScreen.employeeId",     
+        jsonPath: "searchScreen.empCode",     
        
       }),
      

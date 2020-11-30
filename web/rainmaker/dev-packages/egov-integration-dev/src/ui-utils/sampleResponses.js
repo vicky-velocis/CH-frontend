@@ -38,7 +38,46 @@ export const samplePaySlip = () => {
       Designation:'Sanitary Jamadar',
       PayCommission:'5th Pay Commission (State)',
       PayScale:'4900-10680-Grade Pay(1650)',
-      Allowances_Deductions:[
+      Allowances_Deductions:{
+        ItemType:[
+          "A",
+          "A",
+          "A",
+          "A",
+          "A",
+          "A",
+          "A",
+          "A",
+          "D",
+          "D",
+        ],
+        Value:[
+          16620,
+          24257,
+          120,
+          60,
+          300,
+          500,
+          250,
+          831,
+          103,
+          100
+        ],
+        ItemName:[
+          "BASIC PAY",
+          "Dearness Allowance",
+          "City Compensatory Allowance",
+          "Washing Allowance",
+          "Conveyance Allowance",
+          "Medical Allowance",
+          "Mobile Allowance",
+          "IR UT PB HP",
+          "Licence Fee/HRR",
+          "Advance Tax"
+        ]
+
+      },
+      Allowances_Deductions_:[
         {
           ItemType:'A',
           ItemName:'BASIC PAY',
