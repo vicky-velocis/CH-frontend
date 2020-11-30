@@ -632,7 +632,8 @@ const callBackForNext = async (state, dispatch) => {
     )
     const reviewJsonPath = !!isGroundRent ? "components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewGroundRent.children.cardContent.children.viewRents" : "components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewLicenseFee.children.cardContent.children.viewLicenses";
 
-    let securityAmount = rentItems[0].groundRentAmount * noOfMonths
+    let securityAmount = rentItems[0].groundRentAmount * noOfMonths;
+    dispatch(prepareFinalObject("Properties[0].propertyDetails.paymentConfig.securityAmount", securityAmount));
 
       const _cardName = !!isGroundRent ? "groundRent" : "licenseFee"
 

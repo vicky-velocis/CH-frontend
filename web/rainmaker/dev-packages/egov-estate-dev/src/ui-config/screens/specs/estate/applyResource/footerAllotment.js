@@ -73,6 +73,7 @@ const callBackForNext = async (state, dispatch) => {
   let hasFieldToaster = true;
   let rentYearMismatch = false;
   let licenseFeeYearMismatch = false;
+  let isStartAndEndYearValid = true
 
   if (activeStep === PROPERTY_DETAILS_STEP) {
     const isPropertyInfoValid = validateFields(
@@ -337,155 +338,116 @@ const callBackForNext = async (state, dispatch) => {
   }
 
   if (activeStep === PAYMENT_DETAILS_STEP) {
-    const isPremiumAmountValid = validateFields(
-      "components.div.children.formwizardSixthStepAllotment.children.premiumAmountDetails.children.cardContent.children.detailsContainer.children",
-      state,
-      dispatch,
-      "allotment"
-    )
-    const isGroundRentValid = validateFields(
-      "components.div.children.formwizardSixthStepAllotment.children.groundRentDetails.children.cardContent.children.detailsContainer.children",
-      state,
-      dispatch,
-      "allotment"
-    )
-    const isLicenseFeeValid = validateFields(
-      "components.div.children.formwizardSixthStepAllotment.children.licenseFeeDetails.children.cardContent.children.detailsContainer.children",
-      state,
-      dispatch,
-      "allotment"
-    )
-    const isSecurityDetailsValid = validateFields(
-      "components.div.children.formwizardSixthStepAllotment.children.securityDetails.children.cardContent.children.detailsContainer.children",
-      state,
-      dispatch,
-      "allotment"
-    )
-    const isDemandValid = validateFields(
-      "components.div.children.formwizardSixthStepAllotment.children.demandSelect.children.cardContent.children.detailsContainer.children",
-      state,
-      dispatch,
-      "allotment"
-    )
+    if (propertyType == "PROPERTY_TYPE.LEASEHOLD") {
+      const isPremiumAmountValid = validateFields(
+        "components.div.children.formwizardSixthStepAllotment.children.premiumAmountDetails.children.cardContent.children.detailsContainer.children",
+        state,
+        dispatch,
+        "allotment"
+      )
+      const isGroundRentValid = validateFields(
+        "components.div.children.formwizardSixthStepAllotment.children.groundRentDetails.children.cardContent.children.detailsContainer.children",
+        state,
+        dispatch,
+        "allotment"
+      )
+      const isLicenseFeeValid = validateFields(
+        "components.div.children.formwizardSixthStepAllotment.children.licenseFeeDetails.children.cardContent.children.detailsContainer.children",
+        state,
+        dispatch,
+        "allotment"
+      )
+      const isSecurityDetailsValid = validateFields(
+        "components.div.children.formwizardSixthStepAllotment.children.securityDetails.children.cardContent.children.detailsContainer.children",
+        state,
+        dispatch,
+        "allotment"
+      )
+      const isDemandValid = validateFields(
+        "components.div.children.formwizardSixthStepAllotment.children.demandSelect.children.cardContent.children.detailsContainer.children",
+        state,
+        dispatch,
+        "allotment"
+      )
+      const isInterestDetailsValid = validateFields(
+        "components.div.children.formwizardEighthStep.children.interestDetails.children.cardContent.children.detailsContainer.children",
+        state,
+        dispatch,
+        "apply"
+      )
+      let installmentItems = get(
+        state.screenConfiguration.screenConfig,
+        "allotment.components.div.children.formwizardSixthStepAllotment.children.premiumAmountDetails.children.cardContent.children.installmentContainer.children.cardContent.children.detailsContainer.children.multipleInstallmentContainer.children.multipleInstallmentInfo.props.items"
+      );
+      const noOfMonths = get(
+        state.screenConfiguration.preparedFinalObject, 
+        "Properties[0].propertyDetails.paymentConfig.noOfMonths"
+      )
 
-    let installmentItems = get(
-      state.screenConfiguration.screenConfig,
-      "allotment.components.div.children.formwizardSixthStepAllotment.children.premiumAmountDetails.children.cardContent.children.installmentContainer.children.cardContent.children.detailsContainer.children.multipleInstallmentContainer.children.multipleInstallmentInfo.props.items"
-    );
+      if (installmentItems && installmentItems.length > 0) {
+        for (var i = 0; i < installmentItems.length; i++) {
+          if (typeof installmentItems[i].isDeleted !== "undefined") {
+            continue;
+          }
+          var isInstallmentDetailsValid = validateFields(
+            `allotment.components.div.children.formwizardSixthStepAllotment.children.premiumAmountDetails.children.cardContent.children.installmentContainer.children.cardContent.children.detailsContainer.children.multipleInstallmentContainer.children.multipleInstallmentInfo.props.items[${i}].item${i}.children.cardContent.children.installmentCard.children`,
+            state,
+            dispatch
+          )
 
-    if (installmentItems && installmentItems.length > 0) {
-      for (var i = 0; i < installmentItems.length; i++) {
-        if (typeof installmentItems[i].isDeleted !== "undefined") {
-          continue;
+          getReviewAllotmentMultipleSectionDetails(state, dispatch, "allotment", `components.div.children.formwizardSeventhStepAllotment.children.reviewAllotmentDetails.children.cardContent.children.reviewPremiumAmount.children.cardContent.children.viewInstallments`, "premiumAmount", installmentItems.length);
         }
-        var isInstallmentDetailsValid = validateFields(
-          `allotment.components.div.children.formwizardSixthStepAllotment.children.premiumAmountDetails.children.cardContent.children.installmentContainer.children.cardContent.children.detailsContainer.children.multipleInstallmentContainer.children.multipleInstallmentInfo.props.items[${i}].item${i}.children.cardContent.children.installmentCard.children`,
-          state,
-          dispatch
-        )
-
-        getReviewAllotmentMultipleSectionDetails(state, dispatch, "allotment", `components.div.children.formwizardSeventhStepAllotment.children.reviewAllotmentDetails.children.cardContent.children.reviewPremiumAmount.children.cardContent.children.viewInstallments`, "premiumAmount", installmentItems.length);
       }
-    }
 
+    const isGroundRent = get(state.screenConfiguration.preparedFinalObject, "Properties[0].propertyDetails.paymentConfig.isGroundRent")
+    const _componentJsonPath = !!isGroundRent ? 
+    "apply.components.div.children.formwizardEighthStep.children.groundRentDetails.children.cardContent.children.rentContainer.children.cardContent.children.detailsContainer.children.multipleRentContainer.children.multipleRentInfo.props.items"
+    : "apply.components.div.children.formwizardEighthStep.children.licenseFeeDetails.children.cardContent.children.licenseFeeForYearContainer.children.cardContent.children.detailsContainer.children.multipleLicenseContainer.children.multipleLicenseInfo.props.items"
+    const _components = get(
+      state.screenConfiguration.screenConfig,
+      _componentJsonPath
+    );
     let rentItems = get(
-      state.screenConfiguration.screenConfig,
-      "allotment.components.div.children.formwizardSixthStepAllotment.children.groundRentDetails.children.cardContent.children.rentContainer.children.cardContent.children.detailsContainer.children.multipleRentContainer.children.multipleRentInfo.props.items"
-    );
-
-    let rentArr = get(
       state.screenConfiguration.preparedFinalObject,
-      `Properties[0].propertyDetails.paymentDetails[0].rent`,
+      `Properties[0].propertyDetails.paymentConfig.paymentConfigItems`,
       []
     )
+    const reviewJsonPath = !!isGroundRent ? "components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewGroundRent.children.cardContent.children.viewRents" : "components.div.children.formwizardTenthStep.children.reviewDetails.children.cardContent.children.reviewLicenseFee.children.cardContent.children.viewLicenses";
 
-    if (rentItems && rentItems.length > 0) {
-      for (var i = 0; i < rentItems.length; i++) {
-        if (typeof rentItems[i].isDeleted !== "undefined") {
-          continue;
-        }
-        var isRentDetailsValid = validateFields(
-          `allotment.components.div.children.formwizardSixthStepAllotment.children.groundRentDetails.children.cardContent.children.rentContainer.children.cardContent.children.detailsContainer.children.multipleRentContainer.children.multipleRentInfo.props.items[${i}].item${i}.children.cardContent.children.rentCard.children`,
-          state,
-          dispatch
-        )
+    let securityAmount = rentItems[0].groundRentAmount * noOfMonths;
 
-        if (!!rentArr[i] && !!rentArr[i+1]) {
-          if (rentArr[i].endYear !== rentArr[i+1].startYear) {
-            rentYearMismatch = true;
-            isRentDetailsValid = false
+    dispatch(prepareFinalObject("Properties[0].propertyDetails.paymentConfig.securityAmount", securityAmount))
+
+      const _cardName = !!isGroundRent ? "groundRent" : "licenseFee"
+
+      if (_components && _components.length > 0) {
+        for (var i = 0; i < _components.length; i++) {
+          if (!_components[i].isDeleted) {
+          var isRentDetailsValid = validateFields(
+            `${_componentJsonPath}[${i}].item${i}.children.cardContent.children.rentCard.children`,
+            state,
+            dispatch
+          )
           }
         }
 
-        getReviewAllotmentMultipleSectionDetails(state, dispatch, "allotment", `components.div.children.formwizardSeventhStepAllotment.children.reviewAllotmentDetails.children.cardContent.children.reviewGroundRent.children.cardContent.children.viewRents`, "groundRent", rentItems.length);
+        const filterRentArr = rentItems.filter(item => !item.isDeleted)
+        rentItems = filterRentArr.map((item, index) => ({...item, groundRentStartMonth: !!index ? Number(filterRentArr[index-1].groundRentEndMonth) + 1 : 0, groundRentEndMonth: item.groundRentEndMonth, groundRentAmount: item.groundRentAmount}))
+
+      const rentValidation = rentItems.filter(item => !item.groundRentAmount || !item.groundRentEndMonth)
+      isRentDetailsValid = rentValidation.length === 0
+      isStartAndEndYearValid = rentItems.every(item => item.groundRentEndMonth > item.groundRentStartMonth)
+      if(!!isRentDetailsValid) {
+        dispatch(prepareFinalObject("Properties[0].propertyDetails.paymentConfig.paymentConfigItems", rentItems))
+        getReviewAllotmentMultipleSectionDetails(state, dispatch, "apply", reviewJsonPath, _cardName, rentItems.length);
       }
     }
-
-    let licenseFeeItems = get(
-      state.screenConfiguration.screenConfig,
-      "allotment.components.div.children.formwizardSixthStepAllotment.children.licenseFeeDetails.children.cardContent.children.licenseFeeForYearContainer.children.cardContent.children.detailsContainer.children.multipleLicenseContainer.children.multipleLicenseInfo.props.items"
-    );
-    let licenseFeeArr = get(
-      state.screenConfiguration.preparedFinalObject,
-      `Properties[0].propertyDetails.paymentDetails[0].licenseFees`,
-      []
-    )
-
-    if (licenseFeeItems && licenseFeeItems.length > 0) {
-      for (var i = 0; i < licenseFeeItems.length; i++) {
-        if (typeof licenseFeeItems[i].isDeleted !== "undefined") {
-          continue;
-        }
-        var isLicenseFeeDetailsForYearValid = validateFields(
-          `allotment.components.div.children.formwizardSixthStepAllotment.children.licenseFeeDetails.children.cardContent.children.licenseFeeForYearContainer.children.cardContent.children.detailsContainer.children.multipleLicenseContainer.children.multipleLicenseInfo.props.items[${i}].item${i}.children.cardContent.children.licenseCard.children`,
-          state,
-          dispatch
-        )
-
-        if (!!licenseFeeArr[i] && !!licenseFeeArr[i+1]) {
-          if (licenseFeeArr[i].endYear !== licenseFeeArr[i+1].startYear) {
-            licenseFeeYearMismatch = true;
-            isLicenseFeeDetailsForYearValid = false
-          }
-        }
-
-        getReviewAllotmentMultipleSectionDetails(state, dispatch, "allotment", `components.div.children.formwizardSeventhStepAllotment.children.reviewAllotmentDetails.children.cardContent.children.reviewLicenseFee.children.cardContent.children.viewLicenses`, "licenseFee", licenseFeeItems.length)
-      }
-    }
-
-    let selectedDemand = get(
-      state.screenConfiguration.screenConfig,
-      "allotment.components.div.children.formwizardSixthStepAllotment.children.demandSelect.children.cardContent.children.detailsContainer.children.demand.props.value"
-    )
-
-    if (selectedDemand == "true") {
-      if (isPremiumAmountValid && isGroundRentValid && isSecurityDetailsValid && isInstallmentDetailsValid && isRentDetailsValid && isDemandValid && !rentYearMismatch) {
-        const res = await applyEstates(state, dispatch, activeStep, "allotment");
+    const hasValidation = !!isGroundRent ? isPremiumAmountValid && isInstallmentDetailsValid && isGroundRentValid && isSecurityDetailsValid && isRentDetailsValid && isDemandValid && isInterestDetailsValid && isStartAndEndYearValid : isPremiumAmountValid && isInstallmentDetailsValid&& isLicenseFeeValid && isSecurityDetailsValid && isRentDetailsValid && isDemandValid && isInterestDetailsValid && isStartAndEndYearValid
+      if (hasValidation) {
+        const res = await applyEstates(state, dispatch, activeStep, "apply");
         if (!res) {
           return
         }
-      } else {
-        isFormValid = false;
-      }
-    }
-    else if (selectedDemand == "false") {
-      if (isPremiumAmountValid && isLicenseFeeValid && isSecurityDetailsValid && isInstallmentDetailsValid && isLicenseFeeDetailsForYearValid && isDemandValid && !licenseFeeYearMismatch) {
-        const res = await applyEstates(state, dispatch, activeStep, "allotment");
-        if (!res) {
-          return
-        }
-      } else {
-        isFormValid = false;
-      }
-    }
-    else {
-      if (isPremiumAmountValid && isSecurityDetailsValid && isInstallmentDetailsValid) {
-        const res = await applyEstates(state, dispatch, activeStep, "allotment");
-        if (!res) {
-          return
-        }
-      } else {
-        isFormValid = false;
       }
     }
   }
@@ -504,7 +466,15 @@ const callBackForNext = async (state, dispatch) => {
   if (activeStep !== SUMMARY_STEP) {
     if (isFormValid) {
       changeStep(state, dispatch, "allotment");
-    } else if (hasFieldToaster) {
+    } 
+    else if(!isStartAndEndYearValid) {
+      let errorMessage = {
+        labelName: "End Month should be greater than Start Month",
+        labelKey: "ES_ERR_END_MONTH_START_MONTH"
+      }
+      dispatch(toggleSnackbar(true, errorMessage, "warning"));
+    }
+    else if (hasFieldToaster) {
       let errorMessage = {
         labelName: "Please fill all mandatory fields and upload the documents !",
         labelKey: "ES_ERR_FILL_MANDATORY_FIELDS_UPLOAD_DOCS"
