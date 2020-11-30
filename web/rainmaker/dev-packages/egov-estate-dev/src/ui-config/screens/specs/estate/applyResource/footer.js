@@ -417,6 +417,15 @@ const callBackForNext = async (state, dispatch) => {
         )
 
         const purchaserName = propertyPurchasers ? propertyPurchasers[i] ? propertyPurchasers[i].ownerDetails.ownerName ? propertyPurchasers[i].ownerDetails.ownerName : "NA" : "NA" : "NA";
+        
+        dispatch(
+          handleField(
+            "apply",
+            `components.div.children.formwizardSixthStep.children.previousOwnerDocuments_${i}`,
+            "props.style",
+            (propertyPurchasers && propertyPurchasers[i] && propertyPurchasers[i].ownerDetails.isPreviousOwnerRequired && (propertyPurchasers[i].ownerDetails.isPreviousOwnerRequired).toString() == "true") ? {pointerEvents: "auto", opacity: "1"} : {pointerEvents: "none", opacity: "0.5"}
+          )
+        )
 
         if (i > 0) {
           var documentDetailsString = JSON.stringify(get(
