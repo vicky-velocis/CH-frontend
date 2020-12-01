@@ -700,6 +700,7 @@ const callBackForNext = async (state, dispatch) => {
 
   if (activeStep === PAYMENT_DETAILS_STEP) {
     if (propertyType == "PROPERTY_TYPE.LEASEHOLD") {
+      var isLegacyDocUploaded = true;
       var isPaymentDetailsValid = validateFields(
         `components.div.children.formwizardNinthStep.children.paymentDetails.children.cardContent.children.detailsContainer.children`,
         state,
@@ -707,7 +708,30 @@ const callBackForNext = async (state, dispatch) => {
         screenKey
       )
 
-      if (isPaymentDetailsValid) {
+      let uploadedLegacyDocData = get(
+        state.screenConfiguration.preparedFinalObject,
+        `Properties[0].propertyDetails.accountStatementDocument`,
+        []
+      );
+
+      const uploadedTempLegacyDocData = get(
+        state.screenConfiguration.preparedFinalObject,
+        `PropertiesTemp[0].propertyDetails.accountStatementDocument`,
+        []
+      );
+
+      for (var y = 0; y < uploadedTempLegacyDocData.length; y++) {
+        if (
+          uploadedTempLegacyDocData[y].required &&
+          !some(uploadedLegacyDocData, {
+            documentType: uploadedTempLegacyDocData[y].name
+          })
+        ) {
+          isLegacyDocUploaded = false;
+        }
+      }
+
+      if (isPaymentDetailsValid && isLegacyDocUploaded) {
         const res = await applyEstates(state, dispatch, activeStep);
         if (!res) {
           return
