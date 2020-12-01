@@ -56,10 +56,10 @@ const assignmentCard = {
             callBack: checkValueForNA
           }
         ),
-        poOrderedQuantity: getLabelWithValue(
+        balenceQty: getLabelWithValue(
           { labelName: "Balance Quantity", labelKey: "STORE_PURCHASE_ORDER_BLNC_QLTY" },
           {
-            jsonPath: "purchaseOrders[0].purchaseOrderDetails[0].poOrderedQuantity",
+            jsonPath: "purchaseOrders[0].purchaseOrderDetails[0].balenceQty",
           }
         ),
         orderQuantity: getLabelWithValue(
