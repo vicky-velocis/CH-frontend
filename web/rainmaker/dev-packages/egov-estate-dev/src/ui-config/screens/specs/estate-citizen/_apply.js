@@ -101,10 +101,11 @@ const getData = async (action, state, dispatch) => {
     const headerDeclaration = getCommonTitle({labelName: "Declaration", labelKey: "ES_DECLARATION_CHECKBOX_LABEL"})
     
     dispatch(prepareFinalObject("property", property));
+    debugger
 
-    let {fields: data_config, documentList, uiConfig} = await getApplicationConfig({dispatch, applicationType})
-    // const dataConfig = require(`./${applicationType}.json`);
-    // let {fields: data_config, documentList, uiConfig} = dataConfig[applicationType][0];
+    // let {fields: data_config, documentList, uiConfig} = await getApplicationConfig({dispatch, applicationType})
+    const dataConfig = require(`./${applicationType}.json`);
+    let {fields: data_config, documentList, uiConfig} = dataConfig[applicationType][0];
     let {first_step, second_step, dataSources, preview} = uiConfig
     const values = applicationType.split("_")
     dispatch(prepareFinalObject("Applications[0].branchType", values[0] ))
