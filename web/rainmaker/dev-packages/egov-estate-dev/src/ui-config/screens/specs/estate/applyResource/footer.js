@@ -148,7 +148,7 @@ const callBackForNext = async (state, dispatch) => {
       )
     )
 
-    paymentsReviewContArr.map(item => {
+    paymentsReviewContArr.forEach((item, index) => {
       dispatch(
         handleField(
           screenKey,
