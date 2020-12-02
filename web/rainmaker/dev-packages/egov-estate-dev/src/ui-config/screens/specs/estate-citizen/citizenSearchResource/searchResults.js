@@ -65,6 +65,9 @@ const onRowClick = rowData => {
   else if(type == "extension-fee"){
     window.location.href = `addExtensionFee?fileNumber=${rowData[1]}`
   }
+  else if(type == "adhoc-demand"){
+    window.location.href = `adhocDemand?fileNumber=${rowData[1]}`
+  }
   else {
     if (process.env.REACT_APP_NAME === "Citizen" && branchType == "ESTATE_BRANCH") {
       window.location.href = `estate-branch-apply?propertyId=${rowData[4]}&fileNumber=${rowData[1]}`;
