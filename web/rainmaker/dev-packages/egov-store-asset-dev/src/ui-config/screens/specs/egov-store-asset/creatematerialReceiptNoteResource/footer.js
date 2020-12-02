@@ -48,13 +48,13 @@ const getpurchaseOrder = async ( state,dispatch)=>{
       key: "store",
       value: storecode
     });
-    if(suppliercode)
-    {
-    queryObject.push({
-      key: "supplierCode",
-      value: suppliercode
-    });
-  }
+  //   if(suppliercode)
+  //   {
+  //   queryObject.push({
+  //     key: "supplierCode",
+  //     value: suppliercode
+  //   });
+  // }
   queryObject.push({
     key: "status",
     value: "Approved,Partially Receipted"
