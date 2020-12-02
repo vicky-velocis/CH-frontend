@@ -700,6 +700,7 @@ const callBackForNext = async (state, dispatch) => {
 
   if (activeStep === PAYMENT_DETAILS_STEP) {
     if (propertyType == "PROPERTY_TYPE.LEASEHOLD") {
+      var isLegacyDocUploaded = true;
       var isPaymentDetailsValid = validateFields(
         `components.div.children.formwizardNinthStep.children.paymentDetails.children.cardContent.children.detailsContainer.children`,
         state,
@@ -707,7 +708,30 @@ const callBackForNext = async (state, dispatch) => {
         screenKey
       )
 
-      if (isPaymentDetailsValid) {
+      let uploadedLegacyDocData = get(
+        state.screenConfiguration.preparedFinalObject,
+        `Properties[0].propertyDetails.accountStatementDocument`,
+        []
+      );
+
+      const uploadedTempLegacyDocData = get(
+        state.screenConfiguration.preparedFinalObject,
+        `PropertiesTemp[0].propertyDetails.accountStatementDocument`,
+        []
+      );
+
+      for (var y = 0; y < uploadedTempLegacyDocData.length; y++) {
+        if (
+          uploadedTempLegacyDocData[y].required &&
+          !some(uploadedLegacyDocData, {
+            documentType: uploadedTempLegacyDocData[y].name
+          })
+        ) {
+          isLegacyDocUploaded = false;
+        }
+      }
+
+      if (isPaymentDetailsValid && isLegacyDocUploaded) {
         const res = await applyEstates(state, dispatch, activeStep);
         if (!res) {
           return
@@ -787,10 +811,18 @@ const callBackForNext = async (state, dispatch) => {
         case COURT_CASE_DETAILS_STEP:
         case RENT_INFO_DETAILS_STEP:
         case PAYMENT_DETAILS_STEP:
-          errorMessage = {
-            labelName: "Please fill all mandatory fields, then do next !",
-            labelKey: "ES_ERR_FILL_MANDATORY_FIELDS"
-          };
+          if (!isLegacyDocUploaded) {
+            errorMessage = {
+              labelName: "Please fill all mandatory fields and upload the required document !",
+              labelKey: "ES_ERR_FILL_MANDATORY_FIELDS_UPLOAD_DOCS"
+            };
+          }
+          else {
+            errorMessage = {
+              labelName: "Please fill all mandatory fields, then do next !",
+              labelKey: "ES_ERR_FILL_MANDATORY_FIELDS"
+            };
+          }
           break;
         case DOCUMENT_UPLOAD_STEP:
         case PURCHASER_DOCUMENTS_STEP:
