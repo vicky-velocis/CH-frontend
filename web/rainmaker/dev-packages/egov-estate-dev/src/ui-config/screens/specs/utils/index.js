@@ -1854,7 +1854,6 @@ export const getEpochForDate = date => {
 
 export const getTextToLocalMapping = label => {
   const localisationLabels = getTransformedLocalStorgaeLabels();
-  console.log(localisationLabels)
   switch (label) {
     case "Status":
       return getLocaleLabels(
