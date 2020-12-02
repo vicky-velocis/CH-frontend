@@ -815,7 +815,7 @@ export const downloadPaymentReceipt = (receiptQueryString, payload, data, genera
                payload[0]["PenaltyStatementSummary"] = PenaltyStatementSummary
                 break; 
               case 'PAYMENTTYPE.SECURITYFEE':
-                  const {SecurityDepositStatementSummary} = state.screenConfiguration.preparedFinalObject
+                  const {SecurityStatementSummary} = state.screenConfiguration.preparedFinalObject
                   queryStr = [{
                     key: "key",
                     value: "security-payment-receipt"
@@ -825,7 +825,7 @@ export const downloadPaymentReceipt = (receiptQueryString, payload, data, genera
                     value: receiptQueryString[1].value.split('.')[0]
                   }
                 ]
-                payload[0]["SecurityDepositStatementSummary"] = SecurityDepositStatementSummary
+                payload[0]["SecurityDepositStatementSummary"] = SecurityStatementSummary
                 break;   
               default:
                  queryStr = [{
@@ -1854,6 +1854,7 @@ export const getEpochForDate = date => {
 
 export const getTextToLocalMapping = label => {
   const localisationLabels = getTransformedLocalStorgaeLabels();
+  console.log(localisationLabels)
   switch (label) {
     case "Status":
       return getLocaleLabels(
@@ -2083,6 +2084,7 @@ export const getTextToLocalMapping = label => {
         "ES_DUE_DATE_INSTALLMENT_LABEL",
         localisationLabels
       );
+    default: return getLocaleLabels(label, label, localisationLabels)   
   }
 };
 
