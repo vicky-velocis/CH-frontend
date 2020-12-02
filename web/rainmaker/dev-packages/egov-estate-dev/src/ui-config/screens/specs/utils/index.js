@@ -601,8 +601,9 @@ export const downloadAcknowledgementForm = (Applications, applicationType,feeEst
         break;
       case 'BB-NOC':
           queryStr = [{
-            key :"key",
-            value:"bb-noc-application-fresh"
+            key: "key",
+            value: (state == "ES_PENDING_PAYMENT" || state == "ES_PENDING_DA_PREPARE_LETTER" ||
+            state == "ES_PENDING_SDE_APPROVAL" || state == "ES_APPROVED")  ? `bb-noc-application-paid` : `bb-noc-application-fresh`
           }]
           break;
       case 'BB-IssuanceOfNotice':
@@ -758,7 +759,7 @@ export const downloadPaymentReceipt = (receiptQueryString, payload, data , gener
           }
         }]
       }]
-      
+
       switch(type){
         case 'rent-payment':
            if(process.env.REACT_APP_NAME != "Citizen"){
@@ -1143,7 +1144,7 @@ let queryStr = []
       case 'BB-NOC-Proposal-letter':
           queryStr = [{
             key: "key",
-            value: ` noc-proposal-letter`
+            value: `noc-proposal-letter`
           }
         ]
          
