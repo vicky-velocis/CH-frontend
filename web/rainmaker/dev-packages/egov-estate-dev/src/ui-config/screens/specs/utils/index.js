@@ -858,9 +858,14 @@ export const downloadPaymentReceipt = (receiptQueryString, payload, data, genera
               }
               payload[0].propertyDetails.offlinePaymentDetails.push(transactionNumber)
              }
-             if(process.env.REACT_APP_NAME === "Employee"){
-              Payments[0].transactionDate = moment(new Date(payload[0].propertyDetails.offlinePaymentDetails.dateOfPayment)).format("DD MM YY")
-             }
+              if(process.env.REACT_APP_NAME === "Employee"){
+                Payments = [
+                  {
+                    ...Payments[0],transactionDate : payload[0].propertyDetails.offlinePaymentDetails[0].dateOfPayment
+                  }
+                ]
+                }
+            
             httpRequest("post", DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, queryStr, {
               Payments,
               Properties : payload,
@@ -1463,22 +1468,6 @@ export const prepareBiddersDocumentTypeObjMaster = (documents) => {
           required: item.required,
           jsonPath: `bidders[0].documents[${ind}]`,
           statement: "BIDDERS_LIST_DESC"
-        });
-        return documentsArr;
-      }, [])
-      : [];
-  return documentsArr;
-};
-
-export const prepareAccStmtDocumentTypeObjMaster = (documents) => {
-  let documentsArr =
-    documents.length > 0
-      ? documents.reduce((documentsArr, item, ind) => {
-        documentsArr.push({
-          name: item.code,
-          required: item.required,
-          jsonPath: `legacyAccStmt[0].documents[${ind}]`,
-          statement: "ACC_STMT_DESC"
         });
         return documentsArr;
       }, [])
