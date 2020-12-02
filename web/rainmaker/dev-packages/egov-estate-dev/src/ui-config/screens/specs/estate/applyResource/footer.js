@@ -811,10 +811,18 @@ const callBackForNext = async (state, dispatch) => {
         case COURT_CASE_DETAILS_STEP:
         case RENT_INFO_DETAILS_STEP:
         case PAYMENT_DETAILS_STEP:
-          errorMessage = {
-            labelName: "Please fill all mandatory fields, then do next !",
-            labelKey: "ES_ERR_FILL_MANDATORY_FIELDS"
-          };
+          if (!isLegacyDocUploaded) {
+            errorMessage = {
+              labelName: "Please fill all mandatory fields and upload the required document !",
+              labelKey: "ES_ERR_FILL_MANDATORY_FIELDS_UPLOAD_DOCS"
+            };
+          }
+          else {
+            errorMessage = {
+              labelName: "Please fill all mandatory fields, then do next !",
+              labelKey: "ES_ERR_FILL_MANDATORY_FIELDS"
+            };
+          }
           break;
         case DOCUMENT_UPLOAD_STEP:
         case PURCHASER_DOCUMENTS_STEP:
