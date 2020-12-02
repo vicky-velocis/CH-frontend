@@ -1315,6 +1315,38 @@ export const downloadPrintContainer = (
     leftIcon: "assignment"
   }
 
+  let paymentLetterDownloadObject = {
+    label: { labelName: "Payment Letter", labelKey: "ES_PAYMENT_LETTER" },
+    link: () => {
+      const { Applications,temp } = state.screenConfiguration.preparedFinalObject;
+      const documents = temp[0].reviewDocData;
+      let { applicationType} = Applications[0];
+      const {branchType} = Applications[0];
+      if(branchType === "BuildingBranch"){
+        applicationType =  "BB-" + applicationType
+      }
+      set(Applications[0],"additionalDetails.documents",documents)
+      downloadLetter(Applications,applicationType + '-Payment-letter');
+    },
+    leftIcon: "assignment"
+  }
+
+  let paymentLetterPrintObject = {
+    label: { labelName: "Payment Letter", labelKey: "ES_PAYMENT_LETTER" },
+    link: () => {
+      const { Applications,temp } = state.screenConfiguration.preparedFinalObject;
+      const documents = temp[0].reviewDocData;
+      let { applicationType} = Applications[0];
+      const {branchType} = Applications[0];
+      if(branchType === "BuildingBranch"){
+        applicationType =  "BB-" + applicationType 
+      }
+      set(Applications[0],"additionalDetails.documents",documents)
+      downloadLetter(Applications,applicationType + '-Payment-letter','print');
+    },
+    leftIcon: "assignment"
+  }
+
   let NOCproposalLetterDownloadObject = {
     label: { labelName: "Letter", labelKey: "ES_NOC_PROPOSAL_LETTER" },
     link: () => {
@@ -1620,7 +1652,8 @@ export const downloadPrintContainer = (
         case 'NOC' && 'ES_PENDING_AC_APPROVAL':
         case 'NOC' && 'ES_PENDING_SDE_PROPOSAL_APPROVAL':
         case 'NOC' && 'ES_PENDING_DA_FEE':
-        case 'NOC' && 'ES_PENDING_PAYMENT':  
+        case 'NOC' && 'ES_PENDING_PAYMENT': 
+        case 'NOC' && 'ES_PENDING_DA_PREPARE_LETTER': 
         
             downloadMenu = [
               applicationDownloadObject
@@ -1629,19 +1662,21 @@ export const downloadPrintContainer = (
               applicationPrintObject
            ] 
           break;
-        case 'NOC' && 'ES_PENDING_DA_PREPARE_LETTER':
-        case 'NOC' && 'ES_PENDING_SDE_APPROVAL':
+
+        case 'NOC' && 'ES_PENDING_SDE_APPROVAL': 
         case 'NOC' && 'ES_APPROVED' : 
             downloadMenu = [
               applicationDownloadObject,
               LetterDownloadObject,
-              NOCproposalLetterDownloadObject
+              NOCproposalLetterDownloadObject,
+              paymentLetterDownloadObject
               
             ]
             printMenu = [
               applicationPrintObject,
               LetterPrintObject,
-              NOCproposalLetterPrintObject
+              NOCproposalLetterPrintObject,
+              paymentLetterPrintObject
             ] 
           break;
         case 'IssuanceOfNotice' && 'PENDING_SDE_VERIFICATION':

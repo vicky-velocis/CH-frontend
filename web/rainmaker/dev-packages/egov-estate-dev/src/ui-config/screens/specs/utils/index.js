@@ -1147,6 +1147,15 @@ let queryStr = []
             value: `noc-proposal-letter`
           }
         ]
+      break;
+      
+      case 'BB-NOC-Payment-letter':
+      queryStr = [{
+        key: "key",
+        value: `payment-letter`
+      }
+      ]
+      break;
          
       
   }
