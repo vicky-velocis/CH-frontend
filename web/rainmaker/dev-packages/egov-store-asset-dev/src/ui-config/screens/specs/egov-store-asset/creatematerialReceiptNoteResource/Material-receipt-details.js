@@ -161,16 +161,29 @@ import {
                 dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].uom.name`,purchaseOrderDetails[0].uom.name));
                 //set AvailableQty from  po purchaseOrderDetails 0 index receivedQuantity,orderQuantity,unitPrice(unitRate)
                 //
-                dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].AvailableQty`,purchaseOrderDetails[0].receivedQuantity));
-                dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].orderQuantity`,purchaseOrderDetails[0].orderQuantity));
+                  dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].AvailableQty`,purchaseOrderDetails[0].receivedQuantity));
+                  dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].orderQuantity`,purchaseOrderDetails[0].orderQuantity));
                  dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].unitRate`,purchaseOrderDetails[0].unitPrice));
+                
                  
                  //materialReceipt[0].supplier.code
-                 dispatch(prepareFinalObject(`materialReceipt[0].supplier.code`, purchaseOrder[0].supplier.code));
+                 
                  if(purchaseOrder[0].rateType ==='Gem')
-                 dispatch(prepareFinalObject(`materialReceipt[0].supplier.name`, purchaseOrder[0].supplier.code));
+                 {
+                  dispatch(prepareFinalObject(`materialReceipt[0].supplier.name`, purchaseOrder[0].supplier.code));
+                  dispatch(prepareFinalObject(`materialReceipt[0].supplier.code`, purchaseOrder[0].supplier.code));
+                  dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].supplier.code`,purchaseOrder[0].supplier.code));
+                  dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].supplier.name`,purchaseOrder[0].supplier.code));
+                 }
+                 
                  else
-                 dispatch(prepareFinalObject(`materialReceipt[0].supplier.name`, purchaseOrder[0].supplier.name));
+                 {
+                  dispatch(prepareFinalObject(`materialReceipt[0].supplier.code`, purchaseOrder[0].supplier.code));
+                  dispatch(prepareFinalObject(`materialReceipt[0].supplier.name`, purchaseOrder[0].supplier.name));
+                  dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].supplier.code`,purchaseOrder[0].supplier.code));
+                  dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].supplier.name`,purchaseOrder[0].supplier.name));
+                 }
+                 
                  //dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].receivedQty`,purchaseOrderDetails[0].receivedQuantity));
                 // dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].acceptedQty`,purchaseOrderDetails[0].orderQuantity));
                 // dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].totalAcceptedvalue`,purchaseOrderDetails[0].orderQuantity * purchaseOrderDetails[0].unitPrice));
@@ -266,7 +279,7 @@ import {
                 required: true,
                 visible:true,
                 errorMessage:"STORE_VALIDATION_SUPPLIER_NAME_SELECT",
-                jsonPath: "materialReceipt[0].supplier.name",
+                jsonPath: "materialReceipt[0].receiptDetails[0].supplier.name",
                // sourceJsonPath: "supplier.suppliers",
                   props: {
                     // optionValue: "code",

@@ -825,6 +825,64 @@ export const ValidateCardMultiItem = (state,dispatch,cardJsonPath,pagename,jason
 
   return DuplicatItem;
 };
+export const ValidateCardMultiItemSupplier = (state,dispatch,cardJsonPath,pagename,jasonpath,value, value1) => {
+  let  DuplicatItem =[];
+  let CardItem = get(
+    state.screenConfiguration.screenConfig[`${pagename}`],
+    cardJsonPath,
+    []
+  );
+ let matcode =[];
+  for (let index = 0; index < CardItem.length; index++) {
+    if(CardItem[index].isDeleted === undefined ||
+    CardItem[index].isDeleted !== false)
+    {
+    let code = get(state.screenConfiguration.preparedFinalObject,`${jasonpath}[${index}].${value}`,'')  
+    //code = GetMdmsNameBycode(state, dispatch,"createScreenMdmsData.store-asset.Material",code)  
+        
+    matcode.push(code)
+    }
+  } 
+  var uniq = matcode
+  .map((name) => {
+    return {
+      count: 1,
+      name: name
+    }
+  })
+  .reduce((a, b) => {
+    a[b.name] = (a[b.name] || 0) + b.count
+    return a
+  }, {})  
+  var duplicates = Object.keys(uniq).filter((a) => uniq[a] > 1)
+  if(duplicates.length>0)
+  {
+  duplicates= duplicates.map(itm => {
+      return `${itm}`;
+    })
+    .join() || "-"
+   // IsDuplicatItem = true;  
+   // replace char
+   if(duplicates.indexOf('_') !== -1)
+   duplicates = duplicates.replace("_", ",");
+    DuplicatItem.push(
+      {
+        duplicates: duplicates,
+        IsDuplicatItem:true
+      }      
+    )  
+  } 
+  else{
+    DuplicatItem.push(
+      {
+        duplicates: duplicates,
+        IsDuplicatItem:false
+      });
+
+  }
+
+  return DuplicatItem;
+};
 export const ValidateCardUserQty = (state,dispatch,cardJsonPath,pagename,jasonpath,value,InputQtyValue,CompareQtyValue,balanceQuantity,doubleqtyCheck) => {
   let  DuplicatItem =[];
   let CardItem = get(
