@@ -241,14 +241,13 @@ const searchCard = getCommonCard({
 })
 
 const getData = async (action, state, dispatch) => {
-  let branchType = getQueryArg(window.location.href, "branchType");
-  homeURL = branchType == "BuildingBranch" ? "/estate-citizen/property-search?branchType=BUILDING_BRANCH&type=BuildingBranch_CitizenService_NOC" :"/estate-citizen/estate-branch-apply";
+  const branchType = getQueryArg(window.location.href, "branchType");
+  homeURL = branchType == "BuildingBranch" ? "/estate-citizen/property-search?branchType=BUILDING_BRANCH&type=BuildingBranch_CitizenService_NOC" : `/estate-citizen/property-search?branchType=${branchType}`;
 
   const queryObject = [
     {key: "branchType", value: branchType}
   ]
   const response = await getSearchApplicationsResults(queryObject);
-  console.log(response)
   if (!!response && !!response.Applications && !!response.Applications.length) {
     dispatch(prepareFinalObject("actualResults", response.Applications));
     dispatch(prepareFinalObject("searchResults", response.Applications));
