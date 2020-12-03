@@ -277,7 +277,6 @@ const screenConfig = {
     clearSearch(state, dispatch);
     getData(action, state, dispatch)
     getApplicationStatusList({action, state, dispatch, screenKey: "my-applications", componentJsonPath : "components.div.children.searchCard.children.cardContent.children.statusApplicationNumberContainer.children.status"})
-    debugger
     getApplicationTypes({action, state, dispatch, screenKey: "my-applications", componentJsonPath : "components.div.children.searchCard.children.cardContent.children.statusApplicationNumberContainer.children.applicationType", name: applicationType})
     return action
   },

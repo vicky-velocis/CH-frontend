@@ -49,7 +49,6 @@ try {
 }
 
 export const getApplicationTypes = async ({action, state, dispatch, screenKey, componentJsonPath, name = "applicationTypes"}) => {
-  debugger
   try {
     const queryObject = {
       MdmsCriteria: {
