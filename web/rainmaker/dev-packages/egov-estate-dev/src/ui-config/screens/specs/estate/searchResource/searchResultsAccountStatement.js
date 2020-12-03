@@ -9,6 +9,7 @@ import {
 } from "../../utils/index";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 
+
 export const DATE = getTextToLocalMapping("ES_COMMON_TABLE_COL_DATE")
 export const AMOUNT = getTextToLocalMapping("ES_COMMON_TABLE_COL_AMOUNT") + " (₹)"
 export const PAYMENTTYPE = getTextToLocalMapping("ES_COMMON_TABLE_COL_PAYMENTTYPE") + " (₹)"
