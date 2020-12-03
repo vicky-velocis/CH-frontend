@@ -23,9 +23,8 @@ import {
   courtCaseDetails
 } from './courtCaseDetails';
 import {
-  groundRentDetailsPM,
-  serviceTaxDetails,
-  paymentMadeBy
+  paymentDetails,
+  documentDetails
 } from './paymentDetails';
 import {
   reviewDetails
@@ -88,6 +87,21 @@ export const ownerDocumentDetails_0 = getCommonCard({
       uploadedDocumentsJsonPath: "PropertiesTemp[0].propertyDetails.owners[0].ownerDetails.uploadedDocsInRedux",
       tenantIdJsonPath: "Properties[0].tenantId",
       removedJsonPath: "PropertiesTemp[0].propertyDetails.owners[0].ownerDetails.removedDocs",
+      callBack: applyEstates,
+      activeIndex: 3
+    }
+  }
+});
+export const ownerDocumentDetails_1 = getCommonCard({
+  ...documentCardConfig,
+  documentList: {
+    ...documentList,
+    props: {
+      ...documentList.props,
+      documentsJsonPath: "PropertiesTemp[0].propertyDetails.owners[1].ownerDetails.ownerDocuments",
+      uploadedDocumentsJsonPath: "PropertiesTemp[0].propertyDetails.owners[1].ownerDetails.uploadedDocsInRedux",
+      tenantIdJsonPath: "Properties[0].tenantId",
+      removedJsonPath: "PropertiesTemp[0].propertyDetails.owners[1].ownerDetails.removedDocs",
       callBack: applyEstates,
       activeIndex: 3
     }
@@ -311,6 +325,7 @@ export const formwizardFourthStep = {
   },
   children: {
     ownerDocumentDetails_0
+    // ownerDocumentDetails_1
   },
   visible: false
 };
@@ -374,10 +389,11 @@ export const formwizardNinthStep = {
     id: "apply_form9"
   },
   children: {
-    paymentDocumentsDetails,
-    breakAfterSearch: getBreak(),
-    paymentDetailsTable
-    // groundRentDetailsPM,
+    // paymentDocumentsDetails,
+    // breakAfterSearch: getBreak(),
+    // paymentDetailsTable
+    documentDetails,
+    paymentDetails,
     // serviceTaxDetails,
     // paymentMadeBy
   },
@@ -388,7 +404,7 @@ export const formwizardTenthStep = {
   uiFramework: "custom-atoms",
   componentPath: "Form",
   props: {
-    id: "apply_form8"
+    id: "apply_form10"
   },
   children: {
     reviewDetails
@@ -527,4 +543,3 @@ export const formwizardSeventhStepAllotment = {
   },
   visible: false
 };
-
