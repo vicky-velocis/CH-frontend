@@ -241,7 +241,7 @@ const searchCard = getCommonCard({
 })
 
 const getData = async (action, state, dispatch) => {
-  const branchType = getQueryArg(window.location.href, "branchType");
+  let branchType = getQueryArg(window.location.href, "branchType");
   homeURL = branchType == "BuildingBranch" ? "/estate-citizen/property-search?branchType=BUILDING_BRANCH&type=BuildingBranch_CitizenService_NOC" :"/estate-citizen/estate-branch-apply";
 
   const queryObject = [
@@ -259,12 +259,25 @@ const screenConfig = {
   uiFramework: "material-ui",
   name: "my-applications",
   beforeInitScreen: (action, state, dispatch) => {
+    let branchType = getQueryArg(window.location.href, "branchType");
+    let applicationType;
+    switch(branchType) {
+      case "BuildingBranch":
+        applicationType = "applicationTypesBB";
+        break;
+      case "ManiMajra":
+        applicationType = "applicationTypesMM";
+        break;
+      default:
+        applicationType = "applicationTypes";
+        break
+    } 
     dispatch(prepareFinalObject("actualResults", []));
     dispatch(prepareFinalObject("searchResults", []));
     clearSearch(state, dispatch);
     getData(action, state, dispatch)
     getApplicationStatusList({action, state, dispatch, screenKey: "my-applications", componentJsonPath : "components.div.children.searchCard.children.cardContent.children.statusApplicationNumberContainer.children.status"})
-    getApplicationTypes({action, state, dispatch, screenKey: "my-applications", componentJsonPath : "components.div.children.searchCard.children.cardContent.children.statusApplicationNumberContainer.children.applicationType"})
+    getApplicationTypes({action, state, dispatch, screenKey: "my-applications", componentJsonPath : "components.div.children.searchCard.children.cardContent.children.statusApplicationNumberContainer.children.applicationType", name: applicationType})
     return action
   },
   components: {
