@@ -21,13 +21,13 @@ const findItem = roles.find(item => item.code === "ES_EB_SECTION_OFFICER");
 
 export const LAST_MODIFIED_ON = getLocaleLabels("LAST MODIFIED ON", "ES_LAST_MODIFIED_ON_LABEL")
 export const APPLICATION_TYPE = getLocaleLabels("Application Type", "ES_APPLICATION_TYPE_LABEL")
-export const DATE = getLocaleLabels("ES_COMMON_TABLE_COL_DATE")
-export const AMOUNT = getLocaleLabels("ES_COMMON_TABLE_COL_AMOUNT") + " (₹)"
-export const TYPE = getLocaleLabels("ES_COMMON_TABLE_COL_TYPE")
-export const PENALTY_STATUS = getLocaleLabels("ES_COMMON_TABLE_COL_PENALTY_STATUS")
+export const DATE = getLocaleLabels("ES_COMMON_TABLE_COL_DATE","ES_COMMON_TABLE_COL_DATE")
+export const AMOUNT = getLocaleLabels("ES_COMMON_TABLE_COL_AMOUNT" ,"ES_COMMON_TABLE_COL_AMOUNT") + " (₹)"
+export const TYPE = getLocaleLabels("ES_COMMON_TABLE_COL_TYPE","ES_COMMON_TABLE_COL_TYPE")
+export const PENALTY_STATUS = getLocaleLabels("ES_COMMON_TABLE_COL_PENALTY_STATUS","ES_COMMON_TABLE_COL_PENALTY_STATUS")
 export const STATUS = getLocaleLabels("ES_COMMON_TABLE_COL_STATUS")
-export const OFFLINE_PAYMENT_DATE = getLocaleLabels("ES_COMMON_OFFLINE_PAYMENT_DATE")
-export const TRANSACTION_ID = getLocaleLabels("ES_COMMON_TRANSACTION_ID")
+export const OFFLINE_PAYMENT_DATE = getLocaleLabels("ES_COMMON_OFFLINE_PAYMENT_DATE","ES_COMMON_OFFLINE_PAYMENT_DATE")
+export const TRANSACTION_ID = getLocaleLabels("ES_COMMON_TRANSACTION_ID","ES_COMMON_TRANSACTION_ID")
 
 
 export const searchResults = {
@@ -131,14 +131,14 @@ const onRowClick = rowData => {
   let branchType = getQueryArg(window.location.href, "branchType");
 
   if (branchType == "BUILDING_BRANCH") {
-    if (rowData[2].toUpperCase() === ESTATE_DRAFTED_STATE) {
+    if ("ES_" + rowData[2].toUpperCase() === ESTATE_DRAFTED_STATE) {
       return window.location.href = `apply-building-branch?fileNumber=${rowData[0]}&tenantId=${tenantId}`;
     }
     return window.location.href = `search-preview-building-branch?fileNumber=${rowData[0]}&tenantId=${tenantId}`;
   }
 
   if (branchType == "MANI_MAJRA") {
-    if (rowData[2].toUpperCase() === ESTATE_DRAFTED_STATE) {
+    if ("ES_" + rowData[2].toUpperCase() === ESTATE_DRAFTED_STATE) {
       return window.location.href = `apply-manimajra?fileNumber=${rowData[0]}&tenantId=${tenantId}`;
     }
     return window.location.href = `search-preview-manimajra?fileNumber=${rowData[0]}&tenantId=${tenantId}`;
@@ -148,7 +148,7 @@ const onRowClick = rowData => {
     return window.location.href = `refund?fileNumber=${rowData[0]}&tenantId=${tenantId}`
   }
 
-  if (rowData[2].toUpperCase() === ESTATE_DRAFTED_STATE) {
+  if ("ES_" + rowData[2].toUpperCase() === ESTATE_DRAFTED_STATE) {
     if (rowData[4] == "PROPERTY_MASTER") {
       return window.location.href = `apply?fileNumber=${rowData[0]}&tenantId=${tenantId}`;
     }
@@ -190,8 +190,8 @@ export const penaltyDetailsTable = {
       DATE,
       TYPE,
       AMOUNT,
-      PENALTY_STATUS,
-      OFFLINE_PAYMENT_DATE
+      PENALTY_STATUS
+     
     ],
     options: {...searchResults.props.options,
       pagination: false,
@@ -213,8 +213,8 @@ export const extensionFeeDetailsTable = {
     columns: [
       DATE,
       AMOUNT,
-      STATUS,
-      OFFLINE_PAYMENT_DATE
+      STATUS
+      
     ],
     options: {...searchResults.props.options,
       pagination: false,
