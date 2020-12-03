@@ -1999,6 +1999,12 @@ export const getTextToLocalMapping = label => {
           "ES_COMMON_TABLE_RECEIPT_NO",
           localisationLabels
         );
+        case "Consolidated Demand":
+        return getLocaleLabels(
+          "Consolidated Demand",
+          "ES_COMMON_TABLE_CONSOLIDATED_DEMAND",
+          localisationLabels
+        );
     case "Last Modified On":
       return getLocaleLabels(
         "Last Modified On",
