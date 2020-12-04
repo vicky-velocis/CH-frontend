@@ -509,12 +509,11 @@ export const addHocDemandUpdate = async (state, dispatch) => {
     set(adhocDetails , "collectedGSTPenalty",0 )
     set(queryObject[0], "propertyDetails.estateDemands[0]", adhocDetails);
     
-    console.log(queryObject)
     let response;
     if(queryObject) {  
       response = await httpRequest(
         "post",
-        "/est-services/application/_update",
+        "/est-services/property/_update",
         "",
         [],
         { Properties : queryObject }
