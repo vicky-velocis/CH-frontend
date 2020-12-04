@@ -10,6 +10,8 @@ import {
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import get from "lodash/get";
 import set from "lodash/set";
+import moment from 'moment';
+
 import {
   getFileUrl,
   getFileUrlFromAPI,
@@ -474,6 +476,53 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
     dispatch(toggleSnackbar(true, {
       labelName: error.message
     }, "error"));
+    console.log(error);
+    return false;
+  }
+}
+
+export const addHocDemandUpdate = async (state, dispatch) => {
+  debugger
+  try {
+    let queryObject = JSON.parse(
+      JSON.stringify(
+        get(state.screenConfiguration.preparedFinalObject, "Properties", [])
+      )
+    );
+
+    let adhocDetails = JSON.parse(
+      JSON.stringify(
+        get(state.screenConfiguration.preparedFinalObject, "adhocDetails", {})
+      )
+    );
+
+    set(adhocDetails , "isAdjustment","true")
+    set(adhocDetails, "adjustmentDate", convertDateToEpoch(adhocDetails.adjustmentDate))
+    set(adhocDetails, "generationDate", convertDateToEpoch(moment(new Date()).format('YYYY-MM-DD')));
+    set(queryObject[0], "propertyDetails.estateDemands[0]", adhocDetails);
+    
+    console.log(queryObject)
+    let response;
+    // if(queryObject) {  
+    //   response = await httpRequest(
+    //     "post",
+    //     "/est-services/application/_update",
+    //     "",
+    //     [],
+    //     { Properties : queryObject }
+    //   );
+    // } 
+    // console.log(response)
+    // if(response){
+    //     dispatch(
+    //       setRoute(
+    //       `acknowledgement?purpose=adHocDemand&fileNumber=${fileNumber}&status=success&tenantId=${tenantId}`
+    //       )
+    //     )
+    //   }
+      return true;
+  } catch (error) {
+    dispatch(toggleSnackbar(true, { labelName: error.message }, "error"));
     console.log(error);
     return false;
   }
