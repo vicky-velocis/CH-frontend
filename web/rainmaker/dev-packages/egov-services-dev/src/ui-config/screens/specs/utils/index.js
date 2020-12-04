@@ -2307,3 +2307,22 @@ export const getFileUrlFromAPIForPdf = async (fileStoreId,tenantId) => {
     console.log(e);
   }
 };
+
+export const getAllbillsOfBooking = async (applicationNumber, tenantId) => {
+    let queryObject = [
+        { key: "tenantId", value: tenantId },
+        { key: "consumerCode", value: applicationNumber },
+
+    ];
+    try {
+        const response = await httpRequest(
+            "post",
+            "/billing-service/bill/v2/_search",
+            "",
+            queryObject
+        );
+        return response;
+    } catch (error) {
+        console.log(error, "errornew");
+    }
+};
