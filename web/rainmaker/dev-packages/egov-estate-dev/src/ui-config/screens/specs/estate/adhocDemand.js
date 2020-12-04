@@ -156,7 +156,6 @@ const commentsField = {
       xs: 12,
       sm: 6
   },
-  required: true,
   jsonPath: "adhocDetails.comments"
 }
     
@@ -208,9 +207,8 @@ const commentsField = {
     };
     dispatch(toggleSnackbar(true, errorMessage, "warning"));
     }
-    debugger
     if(!!isValid){
-        
+
         console.log("adhhoc function")
       addHocDemandUpdate(state,dispatch)
     }
