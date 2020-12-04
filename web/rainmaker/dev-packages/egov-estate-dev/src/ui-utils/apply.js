@@ -482,7 +482,6 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
 }
 
 export const addHocDemandUpdate = async (state, dispatch) => {
-  debugger
   try {
     let queryObject = JSON.parse(
       JSON.stringify(
@@ -499,27 +498,35 @@ export const addHocDemandUpdate = async (state, dispatch) => {
     set(adhocDetails , "isAdjustment","true")
     set(adhocDetails, "adjustmentDate", convertDateToEpoch(adhocDetails.adjustmentDate))
     set(adhocDetails, "generationDate", convertDateToEpoch(moment(new Date()).format('YYYY-MM-DD')));
+    set(adhocDetails , "remainingGST" ,adhocDetails.gst )
+    set(adhocDetails , "remainingRent" ,adhocDetails.rent )
+    set(adhocDetails , "remainingRentPenalty" ,adhocDetails.penaltyInterest )
+    set(adhocDetails , "remainingGSTPenalty" ,adhocDetails.gstInterest )
+    set(adhocDetails , "interestSince",adhocDetails.generationDate )
+    set(adhocDetails , "collectedRent",0 )
+    set(adhocDetails , "collectedGST",0)
+    set(adhocDetails , "collectedRentPenalty",0 )
+    set(adhocDetails , "collectedGSTPenalty",0 )
     set(queryObject[0], "propertyDetails.estateDemands[0]", adhocDetails);
     
     console.log(queryObject)
     let response;
-    // if(queryObject) {  
-    //   response = await httpRequest(
-    //     "post",
-    //     "/est-services/application/_update",
-    //     "",
-    //     [],
-    //     { Properties : queryObject }
-    //   );
-    // } 
-    // console.log(response)
-    // if(response){
-    //     dispatch(
-    //       setRoute(
-    //       `acknowledgement?purpose=adHocDemand&fileNumber=${fileNumber}&status=success&tenantId=${tenantId}`
-    //       )
-    //     )
-    //   }
+    if(queryObject) {  
+      response = await httpRequest(
+        "post",
+        "/est-services/application/_update",
+        "",
+        [],
+        { Properties : queryObject }
+      );
+    } 
+    if(response){
+        dispatch(
+          setRoute(
+          `acknowledgement?purpose=adHocDemand&fileNumber=${fileNumber}&status=success&tenantId=${tenantId}`
+          )
+        )
+      }
       return true;
   } catch (error) {
     dispatch(toggleSnackbar(true, { labelName: error.message }, "error"));
