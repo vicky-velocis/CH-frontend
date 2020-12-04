@@ -513,7 +513,7 @@ export const addHocDemandUpdate = async (state, dispatch) => {
     if(queryObject) {  
       response = await httpRequest(
         "post",
-        "/est-services/property/_update",
+        "/est-services/property-master/_update",
         "",
         [],
         { Properties : queryObject }
@@ -522,7 +522,7 @@ export const addHocDemandUpdate = async (state, dispatch) => {
     if(response){
         dispatch(
           setRoute(
-          `acknowledgement?purpose=adHocDemand&fileNumber=${fileNumber}&status=success&tenantId=${tenantId}`
+          `acknowledgement?purpose=adHocDemand&fileNumber=${response.Properties[0].fileNumber}&status=success&tenantId=${response.Properties[0].tenantId}`
           )
         )
       }
