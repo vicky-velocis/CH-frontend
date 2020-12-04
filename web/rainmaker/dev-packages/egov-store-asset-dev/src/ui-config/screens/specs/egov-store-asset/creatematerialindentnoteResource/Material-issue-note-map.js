@@ -239,12 +239,12 @@ import {
             poOrderedQuantity: {
               ...getTextField({
                 label: {
-                  labelName: "Total Indent Qty Required",
-                  labelKey: "STORE_MATERIAL_INDENT_PO_ISSUED_QTY_READONLY"
+                  labelName: "PO Ordered Quantity(Issued)",
+                  labelKey: "STORE_MATERIAL_PO_ISSUED"
                 },
                 placeholder: {
-                  labelName: "Total Indent Qty Required",
-                  labelKey: "STORE_MATERIAL_INDENT_PO_ISSUED_QTY_READONLY"
+                  labelName: "PO Ordered Quantity(Issued)",
+                  labelKey: "STORE_MATERIAL_PO_ISSUED"
                 },
                 props:{
                   disabled:true

@@ -311,12 +311,16 @@ export const MTONHeader = getCommonCard({
         let emp = get(state, "screenConfiguration.preparedFinalObject.createScreenMdmsData.employee",[]) 
         let designation=action.value ;
         emp = emp.filter(x=>x.code ===action.value)
-        let issuedToDesignation =GetMdmsNameBycode(state, dispatch,"createScreenMdmsData.common-masters.Designation",emp[0].designation) 
+        let issuedToDesignation =''
+        if(emp && emp[0])
+        {
+         issuedToDesignation =GetMdmsNameBycode(state, dispatch,"createScreenMdmsData.common-masters.Designation",emp[0].designation) 
         const {designationsById} = state.common;
         if(designationsById){
           const desgnName = Object.values(designationsById).filter(item =>  item.code === emp[0].designation )
           dispatch(prepareFinalObject("materialIssues[0].issuedToDesignation", issuedToDesignation));
           }
+        }
         
      
 
@@ -325,12 +329,12 @@ export const MTONHeader = getCommonCard({
     issuedToDesignation: {
       ...getTextField({
         label: {
-          labelName: "Designation",
-          labelKey: "STORE_PURCHASE_ORDER_DSGNTN"
+          labelName: "Issued to Employee Designation",
+          labelKey: "STORE_PURCHASE_ORDER_DSGNTN_EMP"
         },
         placeholder: {
           labelName: "Enter Designation",
-          labelKey: "STORE_PURCHASE_ORDER_DSGNTN_PLCEHLDER"
+          labelKey: "STORE_PURCHASE_ORDER_DSGNTN_PLCEHLDER_EMP"
         },
         props: {
           disabled: true

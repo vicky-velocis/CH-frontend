@@ -909,11 +909,29 @@ export const ValidateCardUserQty = (state,dispatch,cardJsonPath,pagename,jasonpa
      {
       if(pagename ==='createMaterialIndentNote')
       {
+        
 
         let IssueQty = Number(get(state.screenConfiguration.preparedFinalObject,`${jasonpath}[${index}].indentDetail.issuedQuantity`,0))
         let poOrderedQuantity = Number(get(state.screenConfiguration.preparedFinalObject,`${jasonpath}[${index}].indentDetail.poOrderedQuantity`,0))
+        let applicationNumber =  getQueryArg(window.location.href, "applicationNumber");
+        if(applicationNumber)
+        {
+          //if(InputQtyValue_<poOrderedQuantity)
+          // if(InputQtyValue_<poOrderedQuantity)
+          // poOrderedQuantity = poOrderedQuantity-InputQtyValue_
+          if(InputQtyValue_<IssueQty)
+          {
+            IssueQty = IssueQty-InputQtyValue_
+          }
+
+        }
         
         CompareQtyValue_ = CompareQtyValue_ - (IssueQty+poOrderedQuantity);
+        if(applicationNumber)
+        {
+          if(InputQtyValue_<IssueQty)
+          CompareQtyValue_ =CompareQtyValue_+IssueQty
+        }
         if(InputQtyValue_>CompareQtyValue_ || InputQtyValue_ === 0)  
         {
           if(InputQtyValue_ === 0)
@@ -969,11 +987,34 @@ export const ValidateCardUserQty = (state,dispatch,cardJsonPath,pagename,jasonpa
      {
       if(pagename ==='createMaterialIndentNote')
       {
-
+        let applicationNumber =  getQueryArg(window.location.href, "applicationNumber");
         let IssueQty = Number(get(state.screenConfiguration.preparedFinalObject,`${jasonpath}[${index}].indentDetail.issuedQuantity`,0))
         let poOrderedQuantity = Number(get(state.screenConfiguration.preparedFinalObject,`${jasonpath}[${index}].indentDetail.poOrderedQuantity`,0))
-        
+        if(applicationNumber)
+        {
+          // if(IssueQty>InputQtyValue_)
+          // {
+          //   IssueQty = IssueQty-InputQtyValue_
+          // }
+          if(InputQtyValue_<IssueQty)
+          {
+            IssueQty = IssueQty-InputQtyValue_
+          }
+          // else if(IssueQty<InputQtyValue_)
+          // {
+          //   IssueQty = InputQtyValue_-IssueQty 
+          // }
+          // else
+          // IssueQty = IssueQty-InputQtyValue_
+        }
         balanceQuantity_ = balanceQuantity_ - (IssueQty+poOrderedQuantity);
+        if(applicationNumber)
+        {
+         // balanceQuantity_ =balanceQuantity_+IssueQty
+          if(InputQtyValue_<IssueQty)
+          balanceQuantity_ =balanceQuantity_+IssueQty
+        }
+       
         if(InputQtyValue_>balanceQuantity_ || InputQtyValue_ === 0)  
         {
           if(InputQtyValue_ === 0)
@@ -1031,8 +1072,23 @@ export const ValidateCardUserQty = (state,dispatch,cardJsonPath,pagename,jasonpa
       {
         let IssueQty = Number(get(state.screenConfiguration.preparedFinalObject,`${jasonpath}[${index}].issuedQuantity`,0))
         let poOrderedQuantity = Number(get(state.screenConfiguration.preparedFinalObject,`${jasonpath}[${index}].poOrderedQuantity`,0))
+        let applicationNumber =  getQueryArg(window.location.href, "poNumber");
+        if(applicationNumber)
+        {
+          if(InputQtyValue_<poOrderedQuantity)
+          poOrderedQuantity = poOrderedQuantity-InputQtyValue_
+          // else if(InputQtyValue_=== poOrderedQuantity)
+          // poOrderedQuantity = poOrderedQuantity-InputQtyValue_//-poOrderedQuantity)+poOrderedQuantity
+          // else
+          // poOrderedQuantity = poOrderedQuantity-InputQtyValue_
+        }
         
         CompareQtyValue_ = CompareQtyValue_ - (IssueQty+poOrderedQuantity);
+        if(applicationNumber)
+        {
+          if(InputQtyValue_<=poOrderedQuantity)
+          CompareQtyValue_ =CompareQtyValue_+ poOrderedQuantity
+        }
         if(InputQtyValue_>CompareQtyValue_ || InputQtyValue_ === 0)  
 
         {
@@ -1062,7 +1118,20 @@ export const ValidateCardUserQty = (state,dispatch,cardJsonPath,pagename,jasonpa
       {
         let IssueQty = Number(get(state.screenConfiguration.preparedFinalObject,`${jasonpath}[${index}].indentDetail.issuedQuantity`,0))
         let poOrderedQuantity = Number(get(state.screenConfiguration.preparedFinalObject,`${jasonpath}[${index}].indentDetail.poOrderedQuantity`,0))
-        
+        let applicationNumber =  getQueryArg(window.location.href, "applicationNumber");
+        if(applicationNumber)
+        {
+          if(IssueQty>InputQtyValue_)
+          {
+            IssueQty = IssueQty-InputQtyValue_
+          }
+          else if(IssueQty<InputQtyValue_)
+          {
+            IssueQty = InputQtyValue_-IssueQty 
+          }
+          else
+          IssueQty = IssueQty-InputQtyValue_
+        }
         CompareQtyValue_ = CompareQtyValue_ - (IssueQty+poOrderedQuantity);
         if(InputQtyValue_>CompareQtyValue_ || InputQtyValue_ === 0)  
 
