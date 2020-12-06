@@ -193,6 +193,17 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
       set(queryObject[0], "propertyDetails.estateDemands[0].isPrevious", true);
     }
 
+    if (queryObject[0].propertyDetails.accountStatementDocument) {
+      let legacyAccStmtDoc = queryObject[0].propertyDetails.accountStatementDocument;
+      legacyAccStmtDoc[0].isActive = true;
+
+      set(
+        queryObject[0],
+        "propertyDetails.accountStatementDocument",
+        legacyAccStmtDoc
+      )
+    }
+
     prevOwners = get(
       queryObject[0],
       "propertyDetails.purchaser",
@@ -377,6 +388,10 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
       isGroundRent = isGroundRent != null ? isGroundRent.toString() : isGroundRent;
       isIntrestApplicable = isIntrestApplicable != null ? isIntrestApplicable.toString() : isIntrestApplicable;
       noOfMonths = noOfMonths != null ? noOfMonths.toString() : noOfMonths;
+    }
+
+    if (Properties[0].propertyDetails.accountStatementDocument) {
+      setDocsForEditFlow(state, dispatch, `Properties[0].propertyDetails.accountStatementDocument`, `PropertiesTemp[0].propertyDetails.accountStatementUploadedDocInRedux`);
     }
 
     owners = get(
