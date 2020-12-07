@@ -24,7 +24,7 @@ import {
 } from "../../../../ui-utils";
 import get from "lodash/get";
 import {
-  WF_ALLOTMENT_OF_SITE
+  ESTATE_SERVICES_MDMS_MODULE
 } from "../../../../ui-constants";
 import {
   getSearchApplicationsResults
@@ -43,9 +43,46 @@ import {
   getTenantId
 } from "egov-ui-kit/utils/localStorageUtils";
 import store from "../../../../ui-redux/store";
+import { getMdmsData } from "./apply";
+
+export const setSampleSiteMapDoc = async (action, state, dispatch) => {
+  const documentTypePayload = [{
+    moduleName: ESTATE_SERVICES_MDMS_MODULE,
+    masterDetails: [{
+      name: "sampleSiteMap"
+    }]
+  }]
+  const documentRes = await getMdmsData(dispatch, documentTypePayload);
+  const {
+    EstateServices
+  } = documentRes && documentRes.MdmsRes ? documentRes.MdmsRes : {}
+  const {
+    sampleSiteMapDoc = []
+  } = EstateServices || {}
+  const findMasterItem = sampleSiteMapDoc.find(item => item.code === "MasterEst")
+  const masterDocuments = !!findMasterItem ? findMasterItem.documentList : [];
+  if (masterDocuments.length) {
+    var documentTypes = [{
+      name: masterDocuments[0].code,
+      required: masterDocuments[0].required,
+      jsonPath: `Applications[0].applicationDetails.sampleSiteMap[0]`,
+      statement: "SAMPLE_SITE_MAP_DESC"
+    }]
+  
+
+    dispatch(
+      handleField(
+        action.screenKey,
+        `components.div.children.detailsContainer.children.documentDetails.children.cardContent.children.documentList`,
+        "props.inputProps",
+        masterDocuments
+      )
+    );
+    dispatch(prepareFinalObject(`ApplicationsTemp[0].applicationDetails.sampleSiteMap`, documentTypes));
+  }
+}
 
 const beforeInitFn = async (action, state, dispatch) => {
-  debugger
   dispatch(prepareFinalObject("workflow.ProcessInstances", []))
   const applicationNumber = getQueryArg(window.location.href, "applicationNumber");
   const branchType = getQueryArg(window.location.href, "branchType");
@@ -69,7 +106,6 @@ const beforeInitFn = async (action, state, dispatch) => {
       state: applicationState,
       billingBusinessService: businessService
     } = Applications[0];
-    debugger
     applicationDocuments = applicationDocuments || [];
     const statusQueryObject = [{
         key: "tenantId",
@@ -87,13 +123,14 @@ const beforeInitFn = async (action, state, dispatch) => {
       ...Applications[0],
       applicationDocuments
     }]
-    dispatch(prepareFinalObject("Applications", Applications))
-    dispatch(prepareFinalObject("temp[0].removedDocs", removedDocs))
+    dispatch(prepareFinalObject("Applications", Applications));
+    dispatch(prepareFinalObject("temp[0].removedDocs", removedDocs));
+
+    setSampleSiteMapDoc(action, state, dispatch);
   } catch (error) {
     return false;
   }
 }
-
 
 export const headerDiv = {
   uiFramework: "custom-atoms",
@@ -421,7 +458,8 @@ const excessAreaField = {
 }
 
 const isCommercialActivityRadioButton = {
-  uiFramework: "custom-containers",
+  uiFramework: "custom-containers-local",
+  moduleName: "egov-estate",
   componentPath: "RadioGroupContainer",
   gridDefination: {
     xs: 12,
@@ -445,9 +483,9 @@ const isCommercialActivityRadioButton = {
       }
     ],
     jsonPath: "Applications[0].applicationDetails.siteReport.isCommercialActivity",
-    required: true,
+    // required: true,
   },
-  required: true,
+  // required: true,
   type: "array",
   afterFieldChange: (action, state, dispatch) => {
     // dispatch(
@@ -482,7 +520,8 @@ const commercialActivityAreaField = {
 }
 
 const dairyOrKeepingCattleRadioButton = {
-  uiFramework: "custom-containers",
+  uiFramework: "custom-containers-local",
+  moduleName: "egov-estate",
   componentPath: "RadioGroupContainer",
   gridDefination: {
     xs: 12,
@@ -506,9 +545,9 @@ const dairyOrKeepingCattleRadioButton = {
       }
     ],
     jsonPath: "Applications[0].applicationDetails.siteReport.runningDairy",
-    required: true,
+    // required: true,
   },
-  required: true,
+  // required: true,
   type: "array"
 };
 
@@ -633,6 +672,21 @@ export const siteReportDetails = getCommonCard({
     ownership: getTextField(ownershipField),
     possession: getTextField(possessionField),
     modeOfOwnershipField: getTextField(modeOfOwnershipField),
+  })
+})
+
+const buildingDetailsHeader = getCommonTitle({
+  labelName: "Building Details",
+  labelKey: "ES_BUILDING_DETAILS_HEADER"
+}, {
+  style: {
+    marginBottom: 18,
+    marginTop: 18
+  }
+})
+export const buldingDetails = getCommonCard({
+  header: buildingDetailsHeader,
+  detailsContainer: getCommonContainer({
     height: getTextField(heightField),
     cantilever: getTextField(cantileverField),
     noOfFloors: getTextField(noOfFloorsField),
@@ -644,6 +698,22 @@ export const siteReportDetails = getCommonCard({
     isCommercialActivity: isCommercialActivityRadioButton,
     commercialActivityArea: getTextField(commercialActivityAreaField),
     runningDairy: dairyOrKeepingCattleRadioButton,
+  })
+})
+
+
+const chargesHeader = getCommonTitle({
+  labelName: "Charges",
+  labelKey: "ES_CHARGES_HEADER"
+}, {
+  style: {
+    marginBottom: 18,
+    marginTop: 18
+  }
+})
+export const charges = getCommonCard({
+  header: chargesHeader,
+  detailsContainer: getCommonContainer({
     developmentCharges: getTextField(developmentChargesField),
     compositionFees: getTextField(compositionFeesField),
     compositionFeeUnauthorized: getTextField(compositionFeesUnauthorizedField),
@@ -653,15 +723,52 @@ export const siteReportDetails = getCommonCard({
   })
 })
 
+const documentList = {
+  uiFramework: "custom-containers-local",
+  moduleName: "egov-estate",
+  componentPath: "DocumentListContainer",
+  props: {
+    buttonLabel: {
+      labelName: "UPLOAD FILE",
+      labelKey: "ES_BUTTON_UPLOAD_FILE"
+    },
+    inputProps: [],
+    documentTypePrefix: "ES_",
+    documentsJsonPath: "ApplicationsTemp[0].applicationDetails.sampleSiteMap",
+    uploadedDocumentsJsonPath: "ApplicationsTemp[0].applicationDetails.sampleSiteMapUploadedDocInRedux",
+    tenantIdJsonPath: "Applications[0].tenantId",
+    removedJsonPath: "ApplicationsTemp[0].applicationDetails.sampleSiteMapRemovedDoc",
+    // excelUrl: "/est-services/auctions/_parse?"
+  }
+};
+
+export const documentDetails = getCommonCard({
+  header: getCommonTitle(
+    {
+      labelName: "Upload Sample Site Map",
+      labelKey: "ES_UPLOAD_SAMPLE_SITE_MAP_HEADER"
+    },
+    {
+      style: {
+        marginBottom: "18px"
+      }
+    }
+  ),
+  documentList
+})
+
 const detailsContainer = {
   uiFramework: "custom-atoms",
   componentPath: "Form",
   props: {
-    id: "apply_form1"
+    id: "site_report_form"
   },
   children: {
     propertyDetails,
-    siteReportDetails
+    siteReportDetails,
+    buldingDetails,
+    charges,
+    documentDetails
   },
   visible: true
 }
