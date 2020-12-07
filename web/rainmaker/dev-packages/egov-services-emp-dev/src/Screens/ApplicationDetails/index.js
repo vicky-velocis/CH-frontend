@@ -438,15 +438,12 @@ class ApplicationDetails extends Component {
 				});
 				if(mode==='print'){
 
-					var response = await axios.get(documentsPreview[0].link, {
+					var response = await axios.get(fileRes[fileStoreId], {
 						//responseType: "blob",
 						responseType: "arraybuffer",
-						mode: 'no-cors',
-						
 						headers: {
 							"Content-Type": "application/json",
 							Accept: "application/pdf",
-							'Access-Control-Allow-Origin': '*',
 						},
 					});
 					console.log("responseData---", response);
