@@ -94,7 +94,7 @@ export const getMTONHeaderView = (isReview = true) => {
       ),
       indentingStore: getLabelWithValue(
         { labelName: "Indenting Store", labelKey: "STORE_MATERIAL_INDENT_NOTE_INDENTING_STORE" },
-        { jsonPath: "materialIssues[0].indent.indentStore.name" }
+        { jsonPath: "materialIssues[0].fromStore.code" }
       ),
       indentDeptName: getLabelWithValue(
         { labelName: "Indenting Dept. Name", labelKey: "STORE_MTON_INDENT_DEPT_NAME" },

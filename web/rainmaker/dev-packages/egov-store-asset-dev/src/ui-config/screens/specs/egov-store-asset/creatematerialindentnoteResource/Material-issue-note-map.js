@@ -453,6 +453,11 @@ import {
                   labelKey: "STORE_MATERIAL_INDENT_NOTE_REMARK_PLACEHOLDER"
                 },
                 required: true,
+                props: {
+                  className: "applicant-details-error",
+                  multiline: "multiline",
+                  rowsMax: 2,
+                },
                 errorMessage: "STORE_VALIDATION_REMARK",
                 pattern: getSTOREPattern("Comment"),
                 jsonPath: "materialIssues[0].materialIssueDetails[0].description"
