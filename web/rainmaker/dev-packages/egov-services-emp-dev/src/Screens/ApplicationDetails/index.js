@@ -1,3 +1,4 @@
+
 import React, { Component } from "react";
 import { Details } from "modules/common";
 import { ComplaintTimeLine } from "modules/common";
@@ -16,7 +17,7 @@ import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configurat
 import PaymentDetails from "../AllApplications/components/PaymentDetails"
 import ApproveBooking from "../ApplicationResolved";
 import RejectBooking from "../RejectComplaint";
-import axios from "axios";
+
 import jp from "jsonpath";
 // import {
 // 	getFileUrlFromAPI,
@@ -395,9 +396,8 @@ class ApplicationDetails extends Component {
 		
 
 	}
-
-
-	downloadApplicationButton = async (mode) => {
+	
+	downloadApplicationButton = async (e) => {
 		await this.downloadApplicationFunction();
 		const { DownloadApplicationDetails,userInfo } = this.props;
 		var documentsPreview = [];
@@ -436,39 +436,11 @@ class ApplicationDetails extends Component {
 						`Document - ${index + 1}`;
 					return doc;
 				});
-				if(mode==='print'){
-
-					var response = await axios.get(documentsPreview[0].link, {
-						//responseType: "blob",
-						responseType: "arraybuffer",
-						mode: 'no-cors',
-						
-						headers: {
-							"Content-Type": "application/json",
-							Accept: "application/pdf",
-							'Access-Control-Allow-Origin': '*',
-						},
-					});
-					console.log("responseData---", response);
-					const file = new Blob([response.data], { type: "application/pdf" });
-					const fileURL = URL.createObjectURL(file);
-					var myWindow = window.open(fileURL);
-					if (myWindow != undefined) {
-						myWindow.addEventListener("load", (event) => {
-							myWindow.focus();
-							myWindow.print();
-						});
-					}
-
-				}
-				else{
-
-					setTimeout(() => {
+			
+				setTimeout(() => {
 					
-						window.open(documentsPreview[0].link);
-					}, 100);
-				}
-				
+					window.open(documentsPreview[0].link);
+				}, 100);
 				prepareFinalObject('documentsPreview', documentsPreview)
 			}
 
@@ -816,14 +788,14 @@ downloadPermissionLetterFunction = async (e) => {
 															labelName: "Application",
 															labelKey: "BK_MYBK_PRINT_APPLICATION"
 														},
-														link: () => this.downloadApplicationButton('print'),
+														link: () => this.downloadApplicationButton('state', "dispatch", 'REJECT'),
 														leftIcon: "assignment"
 													}]:[{
 														label: {
 															labelName: "Application",
 															labelKey: "BK_MYBK_PRINT_APPLICATION"
 														},
-														link: () => this.downloadApplicationButton('print'),
+														link: () => this.downloadApplicationButton('state', "dispatch", 'REJECT'),
 														leftIcon: "assignment"
 													}]
 												}} />
@@ -1072,7 +1044,7 @@ const mapDispatchToProps = dispatch => {
 		fetchDataAfterPayment: criteria => dispatch(fetchDataAfterPayment(criteria)),
 
 		downloadPaymentReceipt: criteria => dispatch(downloadPaymentReceipt(criteria)),
-		downloadPermissionLetter: criteria => dispatch(downloadPermissionLetter(criteria)),
+downloadPermissionLetter: criteria => dispatch(downloadPermissionLetter(criteria)),
 		downloadApplication: criteria => dispatch(downloadApplication(criteria)),
 		fetchHistory: criteria => dispatch(fetchHistory(criteria)),
 		resetFiles: formKey => dispatch(resetFiles(formKey)),
