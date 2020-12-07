@@ -30,7 +30,6 @@ import {
   httpRequest
 } from '../../../../ui-utils/api';
 import get from "lodash/get";
-import { element } from "prop-types";
 import { WF_EB_REFUND_OF_EMD } from "../../../../ui-constants"
 
 const searchResults = async (action, state, dispatch, fileNumber) => {
