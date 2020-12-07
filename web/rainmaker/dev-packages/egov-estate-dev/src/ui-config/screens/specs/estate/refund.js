@@ -31,7 +31,7 @@ import {
 } from '../../../../ui-utils/api';
 import get from "lodash/get";
 import { element } from "prop-types";
-import { WF_ALLOTMENT_OF_SITE } from "../../../../ui-constants"
+import { WF_EB_REFUND_OF_EMD } from "../../../../ui-constants"
 
 const searchResults = async (action, state, dispatch, fileNumber) => {
   let queryObject = [
@@ -277,7 +277,7 @@ const refund = {
           componentPath: "WorkFlowContainer",
           props: {
             dataPath: "Properties",
-            moduleName: WF_ALLOTMENT_OF_SITE,
+            moduleName: WF_EB_REFUND_OF_EMD,
             updateUrl: "/est-services/property-master/_update",
             style: {
               wordBreak: "break-word"
