@@ -22,7 +22,7 @@ import {
   getUserInfo
 } from "egov-ui-kit/utils/localStorageUtils";
 import orderBy from "lodash/orderBy";
-import { WF_ALLOTMENT_OF_SITE, WF_BB_PROPERTY_MASTER } from "../../ui-constants";
+import { WF_ALLOTMENT_OF_SITE, WF_BB_PROPERTY_MASTER, WF_MM_PROPERTY_MASTER } from "../../ui-constants";
 
 class WorkFlowContainer extends React.Component {
   state = {
@@ -51,6 +51,11 @@ class WorkFlowContainer extends React.Component {
       ]
       break;
       case WF_BB_PROPERTY_MASTER : 
+        queryObject = [...queryObject,
+          { key: "businessIds", value: fileNumber }
+      ]
+      break;
+      case WF_MM_PROPERTY_MASTER : 
         queryObject = [...queryObject,
           { key: "businessIds", value: fileNumber }
       ]
@@ -116,9 +121,9 @@ class WorkFlowContainer extends React.Component {
       case "VERIFY":
         return "purpose=verify&status=success";
       case "REJECT":
-        return "purpose=application&status=rejected";
+        return "purpose=reject&status=success";
       case "CANCEL":
-        return "purpose=application&status=cancelled";
+        return "purpose=cancel&status=success";
       case "APPROVE":
         return "purpose=approve&status=success";
       case "SENTBACK":
@@ -194,6 +199,7 @@ class WorkFlowContainer extends React.Component {
         switch(this.props.moduleName) {
           case WF_ALLOTMENT_OF_SITE: 
           case WF_BB_PROPERTY_MASTER: 
+          case WF_MM_PROPERTY_MASTER:
             path = `&fileNumber=${data[0].fileNumber}&tenantId=${tenant}&type=${this.props.moduleName}`
             break;
           default: {

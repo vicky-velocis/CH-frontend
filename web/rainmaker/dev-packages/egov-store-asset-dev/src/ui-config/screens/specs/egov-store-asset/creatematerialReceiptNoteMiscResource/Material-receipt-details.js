@@ -125,7 +125,7 @@ import {
                 dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[0].isScrapItem`,false));
                 dispatch(prepareFinalObject(`materialReceipt[0].receivedBy`, materials[0].issuedToEmployee,));
                 dispatch(prepareFinalObject(`materialReceipt[0].inspectedBy`, materials[0].issuedToEmployee,));
-                dispatch(prepareFinalObject(`materialReceipt[0].designation`, materials[0].issuedToDesignation,));
+               // dispatch(prepareFinalObject(`materialReceipt[0].designation`, materials[0].issuedToDesignation,));
 
               }
               dispatch(prepareFinalObject(`materialReceipt[0].receiptDetails[${cardIndex}].purchaseOrderDetail.id`,null));
