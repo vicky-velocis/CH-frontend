@@ -21,7 +21,7 @@ const headerDiv = (isEditable = true, label, step) => {
     children: {
       header: {
           gridDefination: {
-              xs: 12,
+              xs: 8,
               sm: 10
           },
           ...getCommonSubHeader({
@@ -32,10 +32,14 @@ const headerDiv = (isEditable = true, label, step) => {
       editSection: {
         componentPath: "Button",
         props: {
-            color: "primary"
+            color: "primary",
+            style: {
+              padding: "0px 16px",
+              minHeight: "initial"
+            }
         },
         gridDefination: {
-            xs: 12,
+            xs: 4,
             sm: 2,
             align: "right"
         },
@@ -74,7 +78,10 @@ export const viewFour = (section, application) => {
         componentPath: "DownloadFileContainer",
         props: {
           sourceJsonPath: section.sourceJsonPath,
-          className: "review-documents"
+          className: "review-documents",
+          style: {
+            wordBreak: "break-word"
+          }
         }
       }
     }
