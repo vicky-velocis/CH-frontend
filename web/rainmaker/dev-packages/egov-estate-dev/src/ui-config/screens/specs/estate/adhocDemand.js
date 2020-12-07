@@ -156,7 +156,7 @@ const commentsField = {
       xs: 12,
       sm: 6
   },
-  jsonPath: "adhocDetails.comments"
+  jsonPath: "adhocDetails.comment"
 }
     
   
