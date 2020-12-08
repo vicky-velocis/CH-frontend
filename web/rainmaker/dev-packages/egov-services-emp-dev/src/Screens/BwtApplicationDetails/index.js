@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from "axios";
 import { Details } from "modules/common";
 import { ComplaintTimeLine } from "modules/common";
 import { Comments } from "modules/common";
@@ -222,7 +223,7 @@ class BwtApplicationDetails extends Component {
 
 
 //Payment Receipt
-downloadReceiptButton = async (e) => {
+downloadReceiptButton = async (mode) => {
 	
 	await this.downloadReceiptFunction();
 
@@ -268,9 +269,40 @@ downloadReceiptButton = async (e) => {
 			return doc;
 		});
 		
-		setTimeout(() => {
-			window.open(documentsPreview[0].link);
-		}, 100);
+		if(mode==='print'){
+
+			var response = await axios.get(documentsPreview[0].link, {
+				//responseType: "blob",
+				responseType: "arraybuffer",
+				
+				
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/pdf",
+				},
+			});
+			console.log("responseData---", response);
+			const file = new Blob([response.data], { type: "application/pdf" });
+			const fileURL = URL.createObjectURL(file);
+			var myWindow = window.open(fileURL);
+			if (myWindow != undefined) {
+				myWindow.addEventListener("load", (event) => {
+					myWindow.focus();
+					myWindow.print();
+				});
+			}
+
+		}
+
+
+		else{
+
+			setTimeout(() => {
+			
+				window.open(documentsPreview[0].link);
+			}, 100);
+		}
+		
 		prepareFinalObject('documentsPreview', documentsPreview)
 	}
 }
@@ -329,7 +361,8 @@ downloadReceiptFunction = async (e) => {
 //Payment Receipt
 
 //ApplicationDownload
-downloadApplicationMCCButton = async (e) => {
+downloadApplicationMCCButton = async (mode) => {
+
 	await this.downloadApplicationFunction();
 	
 	 const {DownloadBWTApplicationDetails,userInfo}=this.props;
@@ -370,11 +403,42 @@ downloadApplicationMCCButton = async (e) => {
 					 return doc;
 				 });
 				 
-				 setTimeout(() => {
-					 window.open(documentsPreview[0].link);
-				 }, 100);
-				 // prepareFinalObject('documentsPreview', documentsPreview)
-			 } 
+				 if(mode==='print'){
+
+					var response = await axios.get(documentsPreview[0].link, {
+						//responseType: "blob",
+						responseType: "arraybuffer",
+						
+						
+						headers: {
+							"Content-Type": "application/json",
+							Accept: "application/pdf",
+						},
+					});
+					console.log("responseData---", response);
+					const file = new Blob([response.data], { type: "application/pdf" });
+					const fileURL = URL.createObjectURL(file);
+					var myWindow = window.open(fileURL);
+					if (myWindow != undefined) {
+						myWindow.addEventListener("load", (event) => {
+							myWindow.focus();
+							myWindow.print();
+						});
+					}
+
+				}
+
+
+				else{
+
+					setTimeout(() => {
+					
+						window.open(documentsPreview[0].link);
+					}, 100);
+				}
+				
+				prepareFinalObject('documentsPreview', documentsPreview)
+			}
    }
 
    downloadApplicationFunction = async (e) => {
@@ -717,7 +781,7 @@ downloadApplicationMCCButton = async (e) => {
 														},
 														leftIcon: "receipt",
 
-														link: () => this.downloadReceiptButton('Receipt'),
+														link: () => this.downloadReceiptButton('print'),
 				
 													},
 													{
@@ -725,7 +789,7 @@ downloadApplicationMCCButton = async (e) => {
 															labelName: "Application",
 															labelKey: "BK_MYBK_PRINT_APPLICATION"
 														},
-														link: () => this.downloadApplicationMCCButton('state', "dispatch", 'REJECT'),
+														link: () => this.downloadApplicationMCCButton('print'),
 														leftIcon: "assignment"
 													}]:
 													[{
@@ -733,7 +797,7 @@ downloadApplicationMCCButton = async (e) => {
 															labelName: "Application",
 															labelKey: "BK_MYBK_PRINT_APPLICATION"
 														},
-														link: () => this.downloadApplicationMCCButton('state', "dispatch", 'REJECT'),
+														link: () => this.downloadApplicationMCCButton('print'),
 														leftIcon: "assignment"
 													}]
 												}} />
