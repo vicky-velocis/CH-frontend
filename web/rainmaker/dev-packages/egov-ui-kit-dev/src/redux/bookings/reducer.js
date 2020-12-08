@@ -277,9 +277,7 @@ const complaintsReducer = (state = intialState, action) => {
 
       case actionTypes.APPLICATION_SECTOR_FETCH_SUCCESS:
         let applicationSector = transformById(action.payload.MdmsRes["Booking"].Sector, "code");
-        console.log("one--",applicationSector)
         let applicationPmode = transformById(action.payload.MdmsRes["Booking"].Payment_Mode, "code");
-        console.log("two--",applicationPmode)
         let sImageUrl = action.payload.MdmsRes["Booking"].Booking_Config
         console.log('payload in sImageUrl', sImageUrl)
         //  let a = action.payload.MdmsRes["Booking"];

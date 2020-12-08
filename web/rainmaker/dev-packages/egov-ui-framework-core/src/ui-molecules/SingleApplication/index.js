@@ -185,7 +185,7 @@ class SingleApplication extends React.Component {
         default:
           setRoute(`/rented-properties/mortgage-search-preview?applicationNumber=${item.applicationNumber}&tenantId=${item.tenantId}`)
     }
-   } 
+   }
     else if (moduleName === "MyBooking") {
       if (item.businessService === "OSBM") {
           setapplicationType(item.businessService);
@@ -314,6 +314,7 @@ class SingleApplication extends React.Component {
 
   render() {
     const { searchResults, classes, contents, moduleName, setRoute } = this.props;
+    
     return (
       <div className="application-card">
         {searchResults && searchResults.length > 0 ? (
@@ -337,7 +338,16 @@ class SingleApplication extends React.Component {
                           </Grid>
                           <Grid item xs={6}>
                             <Label
-                              labelKey={this.generateLabelKey(content, item)}
+                              labelKey={(() => {
+
+                              if(item.businessService == "PACC" && item.bkApplicationStatus == "APPLIED" && content.jsonPath == "bkApplicationStatus"){
+                                return "BK_PACC_APPLIED";
+                              }else{
+                                return this.generateLabelKey(content, item);
+                              }
+
+
+                              })()}
                               fontSize={14}
                               checkValueForNA={checkValueForNA}
                               style={{

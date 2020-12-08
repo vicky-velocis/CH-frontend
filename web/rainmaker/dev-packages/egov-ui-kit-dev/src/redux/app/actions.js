@@ -25,7 +25,10 @@ export const setBottomNavigationIndex = (bottomNavigationIndex) => {
 };
 
 const setLocalizationLabels = (locale, localizationLabels) => {
+  console.log("locale--",locale)
+  console.log("localizationLabels--",localizationLabels)
   window.localStorage.setItem(`localization_${locale}`, JSON.stringify(localizationLabels));
+  console.log("setLocalizationLabels--", window.localStorage.setItem(`localization_${locale}`, JSON.stringify(localizationLabels)))
   setLocale(locale);
   return { type: actionTypes.ADD_LOCALIZATION, locale, localizationLabels };
 };
@@ -73,6 +76,7 @@ const payload2 =[]
       if (payload2 && payload2.messages) {
         resultArray = [...resultArray, ...payload2.messages];
       }
+      console.log("payloas2--",payload2)
       dispatch(setLocalizationLabels(locale, resultArray));
     } catch (error) {
       console.log(error);

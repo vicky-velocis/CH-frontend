@@ -16,7 +16,7 @@ import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configurat
 import PaymentDetails from "../AllApplications/components/PaymentDetails"
 import ApproveBooking from "../ApplicationResolved";
 import RejectBooking from "../RejectComplaint";
-
+import axios from "axios";
 import jp from "jsonpath";
 // import {
 // 	getFileUrlFromAPI,
@@ -143,7 +143,7 @@ class ApplicationDetails extends Component {
 			{ key: "businessIds", value: match.params.applicationId }, { key: "history", value: true }, { key: "tenantId", value: userInfo.tenantId }])
 		
 		fetchPayment(
-			[{ key: "consumerCode", value: match.params.applicationId }, { key: "businessService", value: "OSBM" }, { key: "tenantId", value: userInfo.tenantId  }
+			[{ key: "consumerCode", value: match.params.applicationId }, { key: "businessService", value: "BOOKING_BRANCH_SERVICES.MANUAL_OPEN_SPACE" }, { key: "tenantId", value: userInfo.tenantId  }
 			])
 		fetchDataAfterPayment(
 			[{ key: "consumerCodes", value: match.params.applicationId }, { key: "tenantId", value: userInfo.tenantId }
@@ -396,7 +396,8 @@ class ApplicationDetails extends Component {
 
 	}
 	
-	downloadApplicationButton = async (e) => {
+	downloadApplicationButton = async (mode) => {
+		
 		await this.downloadApplicationFunction();
 		const { DownloadApplicationDetails,userInfo } = this.props;
 		var documentsPreview = [];
@@ -435,18 +436,48 @@ class ApplicationDetails extends Component {
 						`Document - ${index + 1}`;
 					return doc;
 				});
-			
-				setTimeout(() => {
+				if(mode==='print'){
+
+					var response = await axios.get(documentsPreview[0].link, {
+						//responseType: "blob",
+						responseType: "arraybuffer",
+						
+						
+						headers: {
+							"Content-Type": "application/json",
+							Accept: "application/pdf",
+						},
+					});
+					console.log("responseData---", response);
+					const file = new Blob([response.data], { type: "application/pdf" });
+					const fileURL = URL.createObjectURL(file);
+					var myWindow = window.open(fileURL);
+					if (myWindow != undefined) {
+						myWindow.addEventListener("load", (event) => {
+							myWindow.focus();
+							myWindow.print();
+						});
+					}
+
+				}
+
+
+				else{
+
+					setTimeout(() => {
 					
-					window.open(documentsPreview[0].link);
-				}, 100);
+						window.open(documentsPreview[0].link);
+					}, 100);
+				}
+				
 				prepareFinalObject('documentsPreview', documentsPreview)
 			}
 
 	}
+	
 
 
-downloadPermissionLetterButton = async (e) => {
+downloadPermissionLetterButton = async (mode) => {
 	await this.downloadPermissionLetterFunction();
 	let documentsPreviewData;
 	const { DownloadPermissionLetterDetails,userInfo } = this.props;
@@ -484,9 +515,38 @@ downloadPermissionLetterButton = async (e) => {
 			return doc;
 		});
 		
-		setTimeout(() => {
-			window.open(documentsPreview[0].link);
-		}, 100);
+		if(mode==='print'){
+
+			var response = await axios.get(documentsPreview[0].link, {
+				//responseType: "blob",
+				responseType: "arraybuffer",
+				
+				
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/pdf",
+				},
+			});
+			console.log("responseData---", response);
+			const file = new Blob([response.data], { type: "application/pdf" });
+			const fileURL = URL.createObjectURL(file);
+			var myWindow = window.open(fileURL);
+			if (myWindow != undefined) {
+				myWindow.addEventListener("load", (event) => {
+					myWindow.focus();
+					myWindow.print();
+				});
+			}
+
+		}
+		else{
+
+			setTimeout(() => {
+			
+				window.open(documentsPreview[0].link);
+			}, 100);
+		}
+		
 		prepareFinalObject('documentsPreview', documentsPreview)
 	}
 
@@ -555,7 +615,7 @@ downloadPermissionLetterFunction = async (e) => {
 	downloadPermissionLetter({BookingInfo:receiptData})
 }
 
-	downloadPaymentReceiptButton = async (e) => {
+	downloadPaymentReceiptButton = async (mode) => {
 		this.downloadPaymentReceiptFunction();
 		let documentsPreviewData;
 		const { DownloadPaymentReceiptDetails,userInfo } = this.props;
@@ -593,9 +653,38 @@ downloadPermissionLetterFunction = async (e) => {
 				return doc;
 			});
 			
-			setTimeout(() => {
-				window.open(documentsPreview[0].link);
-			}, 100);
+			if(mode==='print'){
+
+				var response = await axios.get(documentsPreview[0].link, {
+					//responseType: "blob",
+					responseType: "arraybuffer",
+					
+					
+					headers: {
+						"Content-Type": "application/json",
+						Accept: "application/pdf",
+					},
+				});
+				console.log("responseData---", response);
+				const file = new Blob([response.data], { type: "application/pdf" });
+				const fileURL = URL.createObjectURL(file);
+				var myWindow = window.open(fileURL);
+				if (myWindow != undefined) {
+					myWindow.addEventListener("load", (event) => {
+						myWindow.focus();
+						myWindow.print();
+					});
+				}
+
+			}
+			else{
+
+				setTimeout(() => {
+				
+					window.open(documentsPreview[0].link);
+				}, 100);
+			}
+			
 			prepareFinalObject('documentsPreview', documentsPreview)
 		}
 	}
@@ -772,7 +861,7 @@ downloadPermissionLetterFunction = async (e) => {
 															labelKey: "BK_MYBK_PRINT_RECEIPT"
 														},
 
-														link: () => this.downloadPaymentReceiptButton('Receipt'),
+														link: () => this.downloadPaymentReceiptButton('print'),
 														leftIcon: "receipt"
 													},
 													{
@@ -780,21 +869,21 @@ downloadPermissionLetterFunction = async (e) => {
 															labelName: "PermissionLetter",
 															labelKey: "BK_MYBK_DOWNLOAD_PERMISSION_LETTER"
 														},
-														 link: () => this.downloadPermissionLetterButton('state', "dispatch", 'REJECT'),
+														 link: () => this.downloadPermissionLetterButton('print'),
 														 leftIcon: "book"
 													},{
 														label: {
 															labelName: "Application",
 															labelKey: "BK_MYBK_PRINT_APPLICATION"
 														},
-														link: () => this.downloadApplicationButton('state', "dispatch", 'REJECT'),
+														link: () => this.downloadApplicationButton('print'),
 														leftIcon: "assignment"
 													}]:[{
 														label: {
 															labelName: "Application",
 															labelKey: "BK_MYBK_PRINT_APPLICATION"
 														},
-														link: () => this.downloadApplicationButton('state', "dispatch", 'REJECT'),
+														link: () => this.downloadApplicationButton('print'),
 														leftIcon: "assignment"
 													}]
 												}} />
@@ -831,6 +920,18 @@ downloadPermissionLetterFunction = async (e) => {
 									border: "2px solid white",
 									boxShadow: "0 0 2px 2px #e7dcdc", paddingLeft: "30px", paddingTop: "10px"
 								}}><b>Documents</b><br></br>
+
+									{documentMap && Object.values(documentMap) ? Object.values(documentMap) : "Not found"}
+									<button className="ViewDetailButton" data-doc={documentMap} onClick={(e) => { this.callApiForDocumentData(e) }}>VIEW</button>
+								</div>
+
+								<div style={{
+									height: "100px",
+									width: "100",
+									backgroundColor: "white",
+									border: "2px solid white",
+									boxShadow: "0 0 2px 2px #e7dcdc", paddingLeft: "30px", paddingTop: "10px"
+								}}><b>Other Documents</b><br></br>
 
 									{documentMap && Object.values(documentMap) ? Object.values(documentMap) : "Not found"}
 									<button className="ViewDetailButton" data-doc={documentMap} onClick={(e) => { this.callApiForDocumentData(e) }}>VIEW</button>
@@ -933,6 +1034,18 @@ const mapStateToProps = (state, ownProps) => {
 	let bookingDocs;
 
 	let documentMap = applicationData && applicationData.documentMap ? applicationData.documentMap : '';
+	console.log("documentMap-in-osbm--",documentMap)
+	let abc = Object.entries(documentMap)
+	console.log("abc--",abc)
+
+	let xyz = abc[0]
+	console.log(xyz)
+
+	let ab = abc[1]
+	console.log("ab--",ab)
+	let docArray = Object.keys(documentMap).map(function(key){ return documentMap[key] })
+	console.log("docArray--",docArray)
+
 	const { HistoryData } = bookings;	
 	let historyObject = HistoryData ? HistoryData : ''
 	const { paymentData } = bookings;
@@ -1017,7 +1130,8 @@ const mapStateToProps = (state, ownProps) => {
 			serviceRequestId,
 			isAssignedToEmployee,
 			complaintTypeLocalised,
-			userInfo
+			userInfo,
+			xyz,ab
 		};
 	} else {
 		return {
@@ -1031,7 +1145,9 @@ const mapStateToProps = (state, ownProps) => {
 			role,
 			serviceRequestId,
 			isAssignedToEmployee,
-			userInfo
+			userInfo,
+			xyz,
+			ab
 		};
 	}
 };
@@ -1060,3 +1176,7 @@ export default connect(
 	mapStateToProps,
 	mapDispatchToProps
 )(ApplicationDetails);
+
+
+
+

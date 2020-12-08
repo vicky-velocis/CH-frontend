@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from "axios";
 import { Details } from "modules/common";
 import { ComplaintTimeLine } from "modules/common";
 import { Comments } from "modules/common";
@@ -127,7 +128,7 @@ class BwtApplicationDetails extends Component {
 			{ key: "businessIds", value: match.params.applicationId }, { key: "history", value: true }, { key: "tenantId", value: userInfo.tenantId }])
 
 		fetchPayment(
-			[{ key: "consumerCode", value: match.params.applicationId }, { key: "businessService", value: "BWT" }, { key: "tenantId", value: userInfo.tenantId }
+			[{ key: "consumerCode", value: match.params.applicationId }, { key: "businessService", value: "BOOKING_BRANCH_SERVICES.WATER_TANKAR_CHARGES" }, { key: "tenantId", value: userInfo.tenantId }
 			])
 
 		fetchDataAfterPayment(
@@ -222,7 +223,7 @@ class BwtApplicationDetails extends Component {
 
 
 //Payment Receipt
-downloadReceiptButton = async (e) => {
+downloadReceiptButton = async (mode) => {
 	
 	await this.downloadReceiptFunction();
 
@@ -268,9 +269,40 @@ downloadReceiptButton = async (e) => {
 			return doc;
 		});
 		
-		setTimeout(() => {
-			window.open(documentsPreview[0].link);
-		}, 100);
+		if(mode==='print'){
+
+			var response = await axios.get(documentsPreview[0].link, {
+				//responseType: "blob",
+				responseType: "arraybuffer",
+				
+				
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/pdf",
+				},
+			});
+			console.log("responseData---", response);
+			const file = new Blob([response.data], { type: "application/pdf" });
+			const fileURL = URL.createObjectURL(file);
+			var myWindow = window.open(fileURL);
+			if (myWindow != undefined) {
+				myWindow.addEventListener("load", (event) => {
+					myWindow.focus();
+					myWindow.print();
+				});
+			}
+
+		}
+
+
+		else{
+
+			setTimeout(() => {
+			
+				window.open(documentsPreview[0].link);
+			}, 100);
+		}
+		
 		prepareFinalObject('documentsPreview', documentsPreview)
 	}
 }
@@ -332,7 +364,8 @@ downloadReceiptFunction = async (e) => {
 //Payment Receipt
 
 //ApplicationDownload
-downloadApplicationMCCButton = async (e) => {
+downloadApplicationMCCButton = async (mode) => {
+
 	await this.downloadApplicationFunction();
 	
 	 const {DownloadBWTApplicationDetails,userInfo}=this.props;
@@ -373,11 +406,42 @@ downloadApplicationMCCButton = async (e) => {
 					 return doc;
 				 });
 				 
-				 setTimeout(() => {
-					 window.open(documentsPreview[0].link);
-				 }, 100);
-				 // prepareFinalObject('documentsPreview', documentsPreview)
-			 } 
+				 if(mode==='print'){
+
+					var response = await axios.get(documentsPreview[0].link, {
+						//responseType: "blob",
+						responseType: "arraybuffer",
+						
+						
+						headers: {
+							"Content-Type": "application/json",
+							Accept: "application/pdf",
+						},
+					});
+					console.log("responseData---", response);
+					const file = new Blob([response.data], { type: "application/pdf" });
+					const fileURL = URL.createObjectURL(file);
+					var myWindow = window.open(fileURL);
+					if (myWindow != undefined) {
+						myWindow.addEventListener("load", (event) => {
+							myWindow.focus();
+							myWindow.print();
+						});
+					}
+
+				}
+
+
+				else{
+
+					setTimeout(() => {
+					
+						window.open(documentsPreview[0].link);
+					}, 100);
+				}
+				
+				prepareFinalObject('documentsPreview', documentsPreview)
+			}
    }
 
    downloadApplicationFunction = async (e) => {
@@ -413,8 +477,8 @@ downloadApplicationMCCButton = async (e) => {
           "completeAddress": complaint.address,
           "applicationDate": complaint.dateCreated,
           "propertyType": complaint.residentialCommercial,
-          "date": bkDate,
-          "time": bkTime,
+          "date": "20/10/2020",
+          "time": "20/10/2020",
           "applicationStatus": complaint.status,
           "applicationType": complaint.bkStatus
         },
@@ -722,7 +786,7 @@ console.log("requestBodyOfApplication--",BookingInfo)
 														},
 														leftIcon: "receipt",
 
-														link: () => this.downloadReceiptButton('Receipt'),
+														link: () => this.downloadReceiptButton('print'),
 				
 													},
 													{
@@ -730,7 +794,7 @@ console.log("requestBodyOfApplication--",BookingInfo)
 															labelName: "Application",
 															labelKey: "BK_MYBK_PRINT_APPLICATION"
 														},
-														link: () => this.downloadApplicationMCCButton('state', "dispatch", 'REJECT'),
+														link: () => this.downloadApplicationMCCButton('print'),
 														leftIcon: "assignment"
 													}]:
 													[{
@@ -738,7 +802,7 @@ console.log("requestBodyOfApplication--",BookingInfo)
 															labelName: "Application",
 															labelKey: "BK_MYBK_PRINT_APPLICATION"
 														},
-														link: () => this.downloadApplicationMCCButton('state', "dispatch", 'REJECT'),
+														link: () => this.downloadApplicationMCCButton('print'),
 														leftIcon: "assignment"
 													}]
 												}} />
@@ -909,6 +973,8 @@ const mapStateToProps = (state, ownProps) => {
 
 	const serviceRequestId = ownProps.match.params.applicationId;
 	let selectedComplaint = applicationData ? applicationData.bookingsModelList[0] : ''
+	console.log("selectedComplaint--",selectedComplaint)
+	
 	let businessService = applicationData ? applicationData.businessService : '';
 	let bookingDocs;
 
@@ -969,7 +1035,9 @@ let paymentDetailsForReceipt = fetchPaymentAfterPayment;
 			businessService: businessService,
 			driverName: selectedComplaint ? selectedComplaint.bkDriverName : "NA",
 			driverMobileNumber: selectedComplaint ? selectedComplaint.bkContactNo : 'NA',
-			approverName: selectedComplaint ? selectedComplaint.bkApproverName : 'NA'
+			approverName: selectedComplaint ? selectedComplaint.bkApproverName : 'NA',
+			time: selectedComplaint.bkTime,
+			date: selectedComplaint.bkDate
 		}
 
 

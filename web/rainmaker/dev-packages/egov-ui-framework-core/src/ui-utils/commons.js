@@ -213,8 +213,9 @@ export const replaceStrInPath = (inputString, search, replacement) => {
 };
 
 export const getFileUrlFromAPI = async (fileStoreId,tenantId) => {
+  
   const queryObject = [
-  	//{ key: "tenantId", value: tenantId||commonConfig.tenantId },
+  	//{ key: "tenantId", value: tenantId },
     { key: "tenantId", value: tenantId || commonConfig.tenantId.length > 2 ? commonConfig.tenantId.split('.')[0] : commonConfig.tenantId },
     { key: "fileStoreIds", value: fileStoreId }
   ];
@@ -394,7 +395,7 @@ export const acceptedFiles = acceptedExt => {
     }
     else if (curr.includes("audio")) {
       result.push("audio");
-    }	
+    }
     else if (curr.includes("video")) {
       result.push("video");
     } else {
@@ -456,17 +457,17 @@ export const handleFileUpload = (event, handleDocument, props) => {
             }
         }
       }
-	  
+
     if (!fileValid) {
         if (localStorageGet("modulecode") === "PR" || localStorageGet("modulecode") === "SCP") {
         var msg=`File type not supported`
         store.dispatch(toggleSnackbar(true, { labelName:msg}, "warning"));
         uploadDocument = false;
-    
-      } 
+
+      }
         else {
           if (file.type.match(/^image\//) || file.type.match(/^pdf\//)) {
-       
+
         var msg=`Only image or pdf files can be uploaded`
         store.dispatch(toggleSnackbar(true, { labelName:msg}, "warning"));
         uploadDocument = false;
@@ -476,11 +477,11 @@ export const handleFileUpload = (event, handleDocument, props) => {
        var msg=`File type not supported`
        store.dispatch(toggleSnackbar(true, { labelName:msg}, "warning"));
         uploadDocument = false;
-      } 
-  
-      }  
+      }
+
+      }
     }
-     
+
     if (!isSizeValid) {
        var msg=`Maximum file size can be ${Math.round(maxFileSize / 1000)} MB`
        store.dispatch(toggleSnackbar(true, { labelName:msg}, "warning"));
