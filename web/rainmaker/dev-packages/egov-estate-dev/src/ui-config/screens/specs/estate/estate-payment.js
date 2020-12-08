@@ -117,6 +117,23 @@ import { penaltySummary } from "./generatePenaltyStatement";
     disabled: true
   }
 
+  const commentsField = {
+    label: {
+        labelName: "Comments",
+        labelKey: "ES_COMMENTS_LABEL"
+    },
+    placeholder: {
+        labelName: "Enter Comments",
+        labelKey: "ES_COMMENTS_PLACEHOLDER"
+    },
+    visible: process.env.REACT_APP_NAME === "Citizen" ? false : true,
+    gridDefination: {
+        xs: 12,
+        sm: 6
+    },
+    jsonPath: "payment.comments"
+  }
+
   const paymentType = {
     label: {
         labelName: "Payment Type",
@@ -367,6 +384,7 @@ import { penaltySummary } from "./generatePenaltyStatement";
         dateOfPayment: getDateField(paymentDate),
         bankName: getTextField(bankName),
         transactionId: getTextField(transactionId),
+        comments : getTextField(commentsField)
       })
   })
 
