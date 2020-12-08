@@ -1,4 +1,3 @@
-
 import React, { Component } from "react";
 import { Details } from "modules/common";
 import { ComplaintTimeLine } from "modules/common";
@@ -17,7 +16,7 @@ import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configurat
 import PaymentDetails from "../AllApplications/components/PaymentDetails"
 import ApproveBooking from "../ApplicationResolved";
 import RejectBooking from "../RejectComplaint";
-
+import axios from "axios";
 import jp from "jsonpath";
 // import {
 // 	getFileUrlFromAPI,
@@ -397,7 +396,8 @@ class ApplicationDetails extends Component {
 
 	}
 	
-	downloadApplicationButton = async (e) => {
+	downloadApplicationButton = async (mode) => {
+		
 		await this.downloadApplicationFunction();
 		const { DownloadApplicationDetails,userInfo } = this.props;
 		var documentsPreview = [];
@@ -436,18 +436,48 @@ class ApplicationDetails extends Component {
 						`Document - ${index + 1}`;
 					return doc;
 				});
-			
-				setTimeout(() => {
+				if(mode==='print'){
+
+					var response = await axios.get(documentsPreview[0].link, {
+						//responseType: "blob",
+						responseType: "arraybuffer",
+						
+						
+						headers: {
+							"Content-Type": "application/json",
+							Accept: "application/pdf",
+						},
+					});
+					console.log("responseData---", response);
+					const file = new Blob([response.data], { type: "application/pdf" });
+					const fileURL = URL.createObjectURL(file);
+					var myWindow = window.open(fileURL);
+					if (myWindow != undefined) {
+						myWindow.addEventListener("load", (event) => {
+							myWindow.focus();
+							myWindow.print();
+						});
+					}
+
+				}
+
+
+				else{
+
+					setTimeout(() => {
 					
-					window.open(documentsPreview[0].link);
-				}, 100);
+						window.open(documentsPreview[0].link);
+					}, 100);
+				}
+				
 				prepareFinalObject('documentsPreview', documentsPreview)
 			}
 
 	}
+	
 
 
-downloadPermissionLetterButton = async (e) => {
+downloadPermissionLetterButton = async (mode) => {
 	await this.downloadPermissionLetterFunction();
 	let documentsPreviewData;
 	const { DownloadPermissionLetterDetails,userInfo } = this.props;
@@ -485,9 +515,38 @@ downloadPermissionLetterButton = async (e) => {
 			return doc;
 		});
 		
-		setTimeout(() => {
-			window.open(documentsPreview[0].link);
-		}, 100);
+		if(mode==='print'){
+
+			var response = await axios.get(documentsPreview[0].link, {
+				//responseType: "blob",
+				responseType: "arraybuffer",
+				
+				
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/pdf",
+				},
+			});
+			console.log("responseData---", response);
+			const file = new Blob([response.data], { type: "application/pdf" });
+			const fileURL = URL.createObjectURL(file);
+			var myWindow = window.open(fileURL);
+			if (myWindow != undefined) {
+				myWindow.addEventListener("load", (event) => {
+					myWindow.focus();
+					myWindow.print();
+				});
+			}
+
+		}
+		else{
+
+			setTimeout(() => {
+			
+				window.open(documentsPreview[0].link);
+			}, 100);
+		}
+		
 		prepareFinalObject('documentsPreview', documentsPreview)
 	}
 
@@ -556,7 +615,7 @@ downloadPermissionLetterFunction = async (e) => {
 	downloadPermissionLetter({BookingInfo:receiptData})
 }
 
-	downloadPaymentReceiptButton = async (e) => {
+	downloadPaymentReceiptButton = async (mode) => {
 		this.downloadPaymentReceiptFunction();
 		let documentsPreviewData;
 		const { DownloadPaymentReceiptDetails,userInfo } = this.props;
@@ -594,9 +653,38 @@ downloadPermissionLetterFunction = async (e) => {
 				return doc;
 			});
 			
-			setTimeout(() => {
-				window.open(documentsPreview[0].link);
-			}, 100);
+			if(mode==='print'){
+
+				var response = await axios.get(documentsPreview[0].link, {
+					//responseType: "blob",
+					responseType: "arraybuffer",
+					
+					
+					headers: {
+						"Content-Type": "application/json",
+						Accept: "application/pdf",
+					},
+				});
+				console.log("responseData---", response);
+				const file = new Blob([response.data], { type: "application/pdf" });
+				const fileURL = URL.createObjectURL(file);
+				var myWindow = window.open(fileURL);
+				if (myWindow != undefined) {
+					myWindow.addEventListener("load", (event) => {
+						myWindow.focus();
+						myWindow.print();
+					});
+				}
+
+			}
+			else{
+
+				setTimeout(() => {
+				
+					window.open(documentsPreview[0].link);
+				}, 100);
+			}
+			
 			prepareFinalObject('documentsPreview', documentsPreview)
 		}
 	}
@@ -773,7 +861,7 @@ downloadPermissionLetterFunction = async (e) => {
 															labelKey: "BK_MYBK_PRINT_RECEIPT"
 														},
 
-														link: () => this.downloadPaymentReceiptButton('Receipt'),
+														link: () => this.downloadPaymentReceiptButton('print'),
 														leftIcon: "receipt"
 													},
 													{
@@ -781,21 +869,21 @@ downloadPermissionLetterFunction = async (e) => {
 															labelName: "PermissionLetter",
 															labelKey: "BK_MYBK_DOWNLOAD_PERMISSION_LETTER"
 														},
-														 link: () => this.downloadPermissionLetterButton('state', "dispatch", 'REJECT'),
+														 link: () => this.downloadPermissionLetterButton('print'),
 														 leftIcon: "book"
 													},{
 														label: {
 															labelName: "Application",
 															labelKey: "BK_MYBK_PRINT_APPLICATION"
 														},
-														link: () => this.downloadApplicationButton('state', "dispatch", 'REJECT'),
+														link: () => this.downloadApplicationButton('print'),
 														leftIcon: "assignment"
 													}]:[{
 														label: {
 															labelName: "Application",
 															labelKey: "BK_MYBK_PRINT_APPLICATION"
 														},
-														link: () => this.downloadApplicationButton('state', "dispatch", 'REJECT'),
+														link: () => this.downloadApplicationButton('print'),
 														leftIcon: "assignment"
 													}]
 												}} />
@@ -1061,3 +1149,7 @@ export default connect(
 	mapStateToProps,
 	mapDispatchToProps
 )(ApplicationDetails);
+
+
+
+
