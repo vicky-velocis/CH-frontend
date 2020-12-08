@@ -918,7 +918,7 @@ let bankName = refundDetailsResp.data[0].gateway;
                     payloadReceiptDetails.Payments[0].transactionNumber,
                 bookingPeriod:
                     payloadReceiptDetails.Payments[0].paymentDetails[0].bill
-                        .businessService === "OSBM" ||
+                        .businessService === "BOOKING_BRANCH_SERVICES.MANUAL_OPEN_SPACE" ||
                         payloadReceiptDetails.Payments[0].paymentDetails[0].bill
                             .businessService === "GFCP" ||
                         payloadReceiptDetails.Payments[0].paymentDetails[0].bill
@@ -933,7 +933,7 @@ let bankName = refundDetailsResp.data[0].gateway;
                         ? "Commercial Ground"
                         : payloadReceiptDetails.Payments[0]
                             .paymentDetails[0].bill.businessService ===
-                            "OSBM"
+                            "BOOKING_BRANCH_SERVICES.MANUAL_OPEN_SPACE"
                             ? "Open Space for Building Material"
                             : payloadReceiptDetails.Payments[0]
                                 .paymentDetails[0].bill.businessService ===
@@ -954,7 +954,7 @@ let bankName = refundDetailsResp.data[0].gateway;
                 ),
                 paymentItemExtraColumnLabel:
                     payloadReceiptDetails.Payments[0].paymentDetails[0].bill
-                        .businessService === "OSBM" ||
+                        .businessService === "BOOKING_BRANCH_SERVICES.MANUAL_OPEN_SPACE" ||
                         payloadReceiptDetails.Payments[0].paymentDetails[0].bill
                             .businessService === "GFCP" ||
                         payloadReceiptDetails.Payments[0].paymentDetails[0].bill
