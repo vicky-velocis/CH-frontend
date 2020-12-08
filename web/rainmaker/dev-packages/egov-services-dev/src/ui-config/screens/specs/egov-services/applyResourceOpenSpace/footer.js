@@ -162,7 +162,7 @@ const callBackForNext = async (state, dispatch) => {
                 []
             );
 
-            
+
             const documentsPreview =
                 uploadedDocData &&
                 uploadedDocData.map((item) => {
@@ -178,7 +178,7 @@ const callBackForNext = async (state, dispatch) => {
             uploadedDocData1 &&
             uploadedDocData1.map((item) => {
                     return {
-                        title: "BUILDING_PLAN_APPROVAL",
+                        title: "BK_BUILDING_PLAN_APPROVAL",
                         link: item.fileUrl && item.fileUrl.split(",")[0],
                         linkText: "View",
                         name: item.fileName,
