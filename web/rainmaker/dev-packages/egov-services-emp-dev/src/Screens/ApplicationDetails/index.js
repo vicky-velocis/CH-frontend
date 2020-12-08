@@ -690,11 +690,11 @@ downloadPermissionLetterFunction = async (e) => {
 	}
 
 	callApiForDocumentData = async (e) => {
-		const { documentMap,userInfo } = this.props;
+		const { xyz,userInfo } = this.props;
 		var documentsPreview = [];
-		if (documentMap && Object.keys(documentMap).length > 0) {
-			let keys = Object.keys(documentMap);
-			let values = Object.values(documentMap);
+		if (xyz && xyz.length > 0) {
+			let keys = xyz[0]
+			let values = xyz[1];
 			let id = keys[0],
 				fileName = values[0];
 
@@ -738,6 +738,57 @@ downloadPermissionLetterFunction = async (e) => {
 
 
 	}
+
+	DownloadOtherDocumentData = async (e) => {
+		const { ab,userInfo } = this.props;
+		var documentsPreview = [];
+		if (ab && ab.length > 0) {
+			let keys = ab[0];
+			let values = ab[1];
+			let id = keys[0],
+				fileName = values[0];
+
+			documentsPreview.push({
+				title: "DOC_DOC_PICTURE",
+				fileStoreId: id,
+				linkText: "View",
+			});
+			let changetenantId = userInfo.tenantId ? userInfo.tenantId.split(".")[0] : "ch";
+			let fileStoreIds = jp.query(documentsPreview, "$.*.fileStoreId");
+			let fileUrls =
+				fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds,changetenantId) : {};
+		
+
+			documentsPreview = documentsPreview.map(function (doc, index) {
+				doc["link"] =
+					(fileUrls &&
+						fileUrls[doc.fileStoreId] &&
+						fileUrls[doc.fileStoreId].split(",")[0]) ||
+					"";
+				
+				doc["name"] =
+					(fileUrls[doc.fileStoreId] &&
+						decodeURIComponent(
+							fileUrls[doc.fileStoreId]
+								.split(",")[0]
+								.split("?")[0]
+								.split("/")
+								.pop()
+								.slice(13)
+						)) ||
+					`Document - ${index + 1}`;
+				return doc;
+			});
+			setTimeout(() => {
+				window.open(documentsPreview[0].link);
+			}, 100);
+			prepareFinalObject('documentsPreview', documentsPreview)
+		}
+
+
+
+	}
+
 	render() {
 		const dropbordernone = {
 			float: "right",
@@ -747,7 +798,7 @@ downloadPermissionLetterFunction = async (e) => {
 		let { shareCallback } = this;
 		let { comments, openMap } = this.state;
 		let { complaint, timeLine } = this.props.transformedComplaint;
-		let { documentMap } = this.props;
+		let { documentMap,xyz,ab } = this.props;
 		let { historyApiData, paymentDetails, match, userInfo } = this.props;
 	
 
@@ -921,7 +972,8 @@ downloadPermissionLetterFunction = async (e) => {
 									boxShadow: "0 0 2px 2px #e7dcdc", paddingLeft: "30px", paddingTop: "10px"
 								}}><b>Documents</b><br></br>
 
-									{documentMap && Object.values(documentMap) ? Object.values(documentMap) : "Not found"}
+									{/* {documentMap && Object.values(documentMap) ? Object.values(documentMap) : "Not found"} */}
+									{xyz && xyz ? xyz[1] : "Not Found"}
 									<button className="ViewDetailButton" data-doc={documentMap} onClick={(e) => { this.callApiForDocumentData(e) }}>VIEW</button>
 								</div>
 
@@ -933,8 +985,9 @@ downloadPermissionLetterFunction = async (e) => {
 									boxShadow: "0 0 2px 2px #e7dcdc", paddingLeft: "30px", paddingTop: "10px"
 								}}><b>Other Documents</b><br></br>
 
-									{documentMap && Object.values(documentMap) ? Object.values(documentMap) : "Not found"}
-									<button className="ViewDetailButton" data-doc={documentMap} onClick={(e) => { this.callApiForDocumentData(e) }}>VIEW</button>
+									{/* {documentMap && Object.values(documentMap) ? Object.values(documentMap) : "Not found"} */}
+									{ab && ab ? ab[1] : "Not Found"}
+									<button className="ViewDetailButton" data-doc={documentMap} onClick={(e) => { this.DownloadOtherDocumentData(e) }}>VIEW</button>
 								</div>
 
 								<Comments
