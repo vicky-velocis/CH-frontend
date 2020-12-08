@@ -9,12 +9,13 @@ import {
   } from "egov-ui-framework/ui-config/screens/specs/utils";
   import get from "lodash/get";
   import filter from "lodash/filter";
-  import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+  import { prepareFinalObject , toggleSpinner } from "egov-ui-framework/ui-redux/screen-configuration/actions";
   import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
   import{getOpeningBalanceSearchResults} from '../../../../../ui-utils/storecommonsapi'
   import{getmaterialissuesSearchResults,GetMdmsNameBycode,GetTotalQtyValue} from '../../../../../ui-utils/storecommonsapi'
   import { getSTOREPattern} from "../../../../../ui-utils/commons";
   import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
+  import store from "redux/store";
   let IsEdit = false;
   let applicationNumber = getQueryArg(window.location.href, "applicationNumber");
   if(applicationNumber)
@@ -106,6 +107,7 @@ import {
                 },
               }),
               beforeFieldChange: (action, state, dispatch) => {
+                store.dispatch(toggleSpinner());
                 let Material = get(
                   state.screenConfiguration.preparedFinalObject,
                   `indentsmaterial`,
@@ -196,6 +198,7 @@ import {
               dispatch(prepareFinalObject(`materialIssues[0].totalQty`, Qty[0].TotalQty));
               }                
               }
+              store.dispatch(toggleSpinner());
 
               }
 
