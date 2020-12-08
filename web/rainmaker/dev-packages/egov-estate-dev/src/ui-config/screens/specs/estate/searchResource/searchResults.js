@@ -53,7 +53,7 @@ export const searchResults = {
       hover: true,
       rowsPerPageOptions: [10, 15, 20],
       onRowClick: (row, index) => {
-        onRowClick(row);
+        // onRowClick(row);
       }
     },
     customSortColumn: {
