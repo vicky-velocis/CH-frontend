@@ -34,10 +34,10 @@ const MTONDetailsCard = {
               },
               required: true,
               errorMessage:"STORE_VALIDATION_MATERIAL_NAME_SELECT",
-              jsonPath: "materialIssues[0].materialIssueDetails[0].material.code",
+              jsonPath: "materialIssues[0].materialIssueDetails[0].receiptId",
               sourceJsonPath: "indentsOutmaterial",
               props: {
-                optionValue: "materialCode",
+                optionValue: "receiptId",
                 optionLabel: "materialName",
                 // optionValue: "id",
                 // optionLabel: "id",
@@ -54,9 +54,10 @@ const MTONDetailsCard = {
                 `indentDetails`,
                 []
               ); 
-              indentDetails = indentDetails.filter(x=>x.material.code === action.value)
+              
               let indentsOutmaterial = get(state, "screenConfiguration.preparedFinalObject.indentsOutmaterial",[])
-              indentsOutmaterial = indentsOutmaterial.filter(x=>x.materialCode === action.value)
+              indentsOutmaterial = indentsOutmaterial.filter(x=>x.receiptId === action.value)
+              indentDetails = indentDetails.filter(x=>x.material.code === indentsOutmaterial[0].materialCode)
               if(indentDetails && indentDetails[0])
               {
                 dispatch(prepareFinalObject(`materialIssues[0].materialIssueDetails[${cardIndex}].indentQuantity`, indentDetails[0].indentQuantity));
@@ -79,6 +80,7 @@ const MTONDetailsCard = {
                 let matcode = GetMdmsNameBycode(state, dispatch,`createScreenMdmsData.store-asset.Material`,indentsOutmaterial[0].materialCode)
                 dispatch(prepareFinalObject(`materialIssues[0].materialIssueDetails[${cardIndex}].indentDetail.material.name`, matcode));
                 dispatch(prepareFinalObject(`materialIssues[0].materialIssueDetails[${cardIndex}].material.name`, matcode));
+                dispatch(prepareFinalObject(`materialIssues[0].materialIssueDetails[${cardIndex}].material.code`, indentsOutmaterial[0].materialCode));
               }
 
             }
@@ -262,6 +264,11 @@ const MTONDetailsCard = {
               placeholder: {
                 labelName: "Enter Remark",
                 labelKey: "STORE_MATERIAL_INDENT_NOTE_REMARK_PLACEHOLDER"
+              },
+              props: {
+                className: "applicant-details-error",
+                multiline: "multiline",
+                rowsMax: 2,
               },
               pattern: getSTOREPattern("Comment"),
               jsonPath: "materialIssues[0].materialIssueDetails[0].description"

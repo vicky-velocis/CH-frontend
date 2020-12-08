@@ -72,8 +72,8 @@ export const MTONHeader = getCommonCard({
           dispatch(prepareFinalObject("materialIssues[0].indent.indentPurpose", indents[0].indentPurpose));
           dispatch(prepareFinalObject("materialIssues[0].indent.indentCreatedBy", indents[0].indentCreatedBy));
           dispatch(prepareFinalObject("materialIssues[0].indent.designation", indents[0].designation));
-          dispatch(prepareFinalObject("materialIssues[0].issuedToEmployee", indents[0].issueStore.storeInCharge.code));
-          dispatch(prepareFinalObject("materialIssues[0].issuedToEmployeename", indents[0].issueStore.storeInCharge.code));
+         dispatch(prepareFinalObject("materialIssues[0].issuedToEmployee", indents[0].issueStore.storeInCharge.code));
+         //dispatch(prepareFinalObject("materialIssues[0].issuedToEmployeename", indents[0].issueStore.storeInCharge.code));
           dispatch(
             handleField(
               "create-material-transfer-outward",
@@ -304,6 +304,7 @@ export const MTONHeader = getCommonCard({
           className: "applicant-details-error",
           optionLabel: "name",
           optionValue: "code",
+          disabled:true
         },
       }),
       beforeFieldChange: (action, state, dispatch) => {

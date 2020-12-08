@@ -44,10 +44,10 @@ class Table extends React.Component {
           }
         },
         MuiTypography: {
-          root: {
-            fontSize: "24px",
-            color: "#000"
-          },
+          // root: {
+          //   fontSize: "24px",
+          //   color: "#000"
+          // },
           caption: {
             fontSize: "14px"
           }
