@@ -21,7 +21,7 @@ import CGPaymentDetails from "../AllApplications/components/CGPaymentDetails"
 import CGBookingDetails from "../AllApplications/components/CGBookingDetails"
 import DocumentPreview from "../AllApplications/components/DocumentPreview"
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import DownloadFileContainer from "../../modules/DownloadFileContainer"
+import DownloadFileContainer from "../../modules/DownloadFileContainer";
 import jp from "jsonpath";
 // import {
 // 	getQueryArg,
