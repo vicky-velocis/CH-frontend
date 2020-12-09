@@ -593,6 +593,14 @@ const complaintsReducer = (state = intialState, action) => {
             dataforRefund: action.payload,
           };
 
+        case actionTypes.DOWNLOAD_WATERTANER_RECEIPT_COMPLETE:
+          return {
+            ...state,
+            loading: false,
+            fetchSuccess: true,
+            waterTankerPaymentReceipt: action.payload,
+          }
+
         case actionTypes.FACILATION_FETCH_SUCCESS:
           let applicationFetchfaciliation = transformById(action.payload.MdmsRes["BillingService"].TaxHeadMaster, "code");
           console.log("applicationFetchfaciliation--",applicationFetchfaciliation)

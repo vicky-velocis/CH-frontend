@@ -27,8 +27,10 @@ class Inbox extends Component {
  
   componentWillReceiveProps(nextProps) {
     const { menu } = nextProps;
-    const workflowList = menu && menu.filter((item) => item.name === "rainmaker-common-workflow");
-    if (workflowList && workflowList.length > 0) {
+    console.log("menuInWorklist--",menu)
+    const workflowList = menu && menu.filter((item) => 
+    item.name === "booking-services");
+     if (workflowList && workflowList.length > 0) {
       this.setState({
         hasWorkflow: true,
       });

@@ -196,7 +196,7 @@ export const chequeDetails = getCommonContainer({
     jsonPath: "ReceiptTemp[0].instrument.branchName"
   })
 });
-
+//till here
 export const cheque = getCommonContainer({
   payeeDetails,
   chequeDetails

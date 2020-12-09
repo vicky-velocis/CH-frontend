@@ -21,7 +21,7 @@ import BookingDetails from "../AllApplications/components/BookingDetails"
 import DocumentPreview from "../AllApplications/components/DocumentPreview"
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import DialogContainer from "../../modules/DialogContainer"
-import PaymentDetails from "../AllApplications/components/PaymentDetails"
+import BWTPaymentDetails from "../AllApplications/components/BWTPaymentDetails"
 import Footer from "../../modules/footer"
 import ActionButtonDropdown from '../../modules/ActionButtonDropdown'
 import BwtApplicationDriverDetailsfrom from "../AllApplications/components/BwtApplicationDriverDetails"
@@ -45,7 +45,7 @@ import {
 import {
 	fetchApplications, fetchPayment, fetchHistory, fetchDataAfterPayment,
 	sendMessage,
-	sendMessageMedia,downloadReceiptforCG,downloadBWTApplication
+	sendMessageMedia,downloadReceiptforCG,downloadBWTApplication,downloadWaterTankerReceipt
 } from "egov-ui-kit/redux/bookings/actions";
 import { connect } from "react-redux";
 
@@ -110,7 +110,7 @@ class BwtApplicationDetails extends Component {
 			userInfo,
 			documentMap,
 			prepareFinalObject,
-			downloadReceiptforCG,downloadBWTApplication
+			downloadReceiptforCG,downloadBWTApplication,downloadWaterTankerReceipt
 		} = this.props;
 
 		prepareFormData("complaints", transformedComplaint);
@@ -128,7 +128,7 @@ class BwtApplicationDetails extends Component {
 			{ key: "businessIds", value: match.params.applicationId }, { key: "history", value: true }, { key: "tenantId", value: userInfo.tenantId }])
 
 		fetchPayment(
-			[{ key: "consumerCode", value: match.params.applicationId }, { key: "businessService", value: "BWT" }, { key: "tenantId", value: userInfo.tenantId }
+			[{ key: "consumerCode", value: match.params.applicationId }, { key: "businessService", value: "BOOKING_BRANCH_SERVICES.WATER_TANKAR_CHARGES" }, { key: "tenantId", value: userInfo.tenantId }
 			])
 
 		fetchDataAfterPayment(
@@ -229,13 +229,13 @@ downloadReceiptButton = async (mode) => {
 
 	
 	let documentsPreviewData;
-	const { DownloadReceiptDetailsforCG,userInfo } = this.props;
+	const {waterTankerPaymentReceipt,userInfo } = this.props;
 	
 	var documentsPreview = [];
-	if (DownloadReceiptDetailsforCG && DownloadReceiptDetailsforCG.filestoreIds.length > 0) {
+	if (waterTankerPaymentReceipt && waterTankerPaymentReceipt.filestoreIds.length > 0) {
 
 		
-		 documentsPreviewData=DownloadReceiptDetailsforCG.filestoreIds[0];
+		 documentsPreviewData=waterTankerPaymentReceipt.filestoreIds[0];
 		
 		
 		documentsPreview.push({
@@ -308,9 +308,10 @@ downloadReceiptButton = async (mode) => {
 }
 
 downloadReceiptFunction = async (e) => {
-	const { transformedComplaint, paymentDetailsForReceipt, downloadPaymentReceiptforCG,downloadReceiptforCG, userInfo, paymentDetails } = this.props;
+	const { transformedComplaint, paymentDetailsForReceipt, downloadPaymentReceiptforCG,downloadReceiptforCG,downloadWaterTankerReceipt, userInfo, paymentDetails,bkDate,
+		bkTime } = this.props;
 	const { complaint } = transformedComplaint;
-	
+	console.log("complaintPayemnet--",complaint)
 
 	let BookingInfo = [{
 		"applicantDetail": {
@@ -327,19 +328,17 @@ downloadReceiptFunction = async (e) => {
 		"paymentInfo": {
 			"paymentDate": paymentDetailsForReceipt && convertEpochToDate(paymentDetailsForReceipt.Payments[0].transactionDate, "dayend"),
 			"transactionId": paymentDetailsForReceipt && paymentDetailsForReceipt.Payments[0].transactionNumber,
-			"Date & Time": `${complaint.bkDate} , ${complaint.bkTime} `,
+			"bookingPeriod": `${bkDate} , ${bkTime} `,
 			"bookingItem": "Online Payment Against Booking of Water Tanker",
-			"amount": paymentDetailsForReceipt.Payments[0].paymentDetails[0].bill.billDetails[0].billAccountDetails.filter(
-				(el) => !el.taxHeadCode.includes("TAX")
-			)[0].amount,
-			"tax": paymentDetailsForReceipt.Payments[0].paymentDetails[0].bill.billDetails[0].billAccountDetails.filter(
-				(el) => el.taxHeadCode.includes("TAX")
-			)[0].amount,
+			"amount": paymentDetailsForReceipt.Payments[0].paymentDetails[0].bill.billDetails[0].billAccountDetails[0].amount,
+			// "tax": paymentDetailsForReceipt.Payments[0].paymentDetails[0].bill.billDetails[0].billAccountDetails.filter(
+			// 	(el) => el.taxHeadCode.includes("TAX")
+			// )[0].amount,
 			"grandTotal": paymentDetailsForReceipt.Payments[0].totalAmountPaid,
 			"amountInWords": this.NumInWords(
 				paymentDetailsForReceipt.Payments[0].totalAmountPaid
 			),
-			paymentItemExtraColumnLabel: "Booking Period",
+			"paymentItemExtraColumnLabel": "Date & Time",
 			paymentMode:
 				paymentDetailsForReceipt.Payments[0].paymentMode,
 			receiptNo:
@@ -356,7 +355,9 @@ downloadReceiptFunction = async (e) => {
 		},
 	}
 	]
-	downloadReceiptforCG({BookingInfo: BookingInfo})
+	// downloadReceiptforCG({BookingInfo: BookingInfo})
+	console.log("requestBodyOfPayment--",BookingInfo)
+	downloadWaterTankerReceipt({BookingInfo: BookingInfo})
 }
 //Payment Receipt
 
@@ -443,8 +444,10 @@ downloadApplicationMCCButton = async (mode) => {
 
    downloadApplicationFunction = async (e) => {
     
-	const { transformedComplaint,paymentDetails,downloadApplicationforCG,paymentDetailsForReceipt,userInfo } = this.props;
+	const { transformedComplaint,paymentDetails,downloadApplicationforCG,paymentDetailsForReceipt,userInfo,bkDate,
+		bkTime } = this.props;
 	const {complaint} = transformedComplaint;
+	console.log("complaint--In-Water-Tanker--",complaint)
 	const { createWaterTankerApplicationData,downloadBWTApplication } = this.props;
     let applicationDetails = createWaterTankerApplicationData ? createWaterTankerApplicationData.data : '';
 	let paymentData = paymentDetails;
@@ -472,23 +475,17 @@ downloadApplicationMCCButton = async (mode) => {
           "completeAddress": complaint.address,
           "applicationDate": complaint.dateCreated,
           "propertyType": complaint.residentialCommercial,
-          "date": complaint.bkDate,
-          "time": complaint.bkTime,
+          "date": "20/10/2020",
+          "time": "20/10/2020",
           "applicationStatus": complaint.status,
           "applicationType": complaint.bkStatus
         },
         feeDetail: {
-			baseCharge:
-				paymentData === undefined
-					? null
-					: paymentData.billDetails[0].billAccountDetails.filter(
-						(el) => !el.taxHeadCode.includes("TAX")
-					)[0].amount,
 			taxes:
 				paymentData === undefined
 					? null
 					: paymentData.billDetails[0].billAccountDetails.filter(
-						(el) => el.taxHeadCode.includes("TAX")
+						(el) => el.taxHeadCode.includes("WATER_TANKAR_CHARGES_BOOKING_BRANCH")
 					)[0].amount,
 			totalAmount:
 				paymentData === undefined
@@ -500,7 +497,7 @@ downloadApplicationMCCButton = async (mode) => {
         }
       }
     ]
-
+console.log("requestBodyOfApplication--",BookingInfo)
     downloadBWTApplication({ BookingInfo: BookingInfo })
     
   };
@@ -823,7 +820,7 @@ downloadApplicationMCCButton = async (mode) => {
 								/>
 								
 								{(complaint.bkStatus).includes("Paid") &&
-									<PaymentDetails
+									<BWTPaymentDetails
 										paymentDetails={paymentDetails && paymentDetails}
 									/>
 
@@ -955,7 +952,7 @@ let gro = "";
 const mapStateToProps = (state, ownProps) => {
 	const { bookings, common, auth, form } = state;
 	const { applicationData } = bookings;
-	const { DownloadReceiptDetailsforCG,DownloadBWTApplicationDetails } = bookings;
+	const { waterTankerPaymentReceipt,DownloadBWTApplicationDetails } = bookings;
 	
 	const { id } = auth.userInfo;
 	const { citizenById } = common || {};
@@ -968,10 +965,16 @@ const mapStateToProps = (state, ownProps) => {
 
 	const serviceRequestId = ownProps.match.params.applicationId;
 	let selectedComplaint = applicationData ? applicationData.bookingsModelList[0] : ''
+	console.log("selectedComplaint--",selectedComplaint)
+
 	let businessService = applicationData ? applicationData.businessService : '';
 	let bookingDocs;
 
-
+	let bkTime = selectedComplaint ? selectedComplaint.bkTime : "NoTimeFound"
+	console.log("bkTime--",bkTime)
+	
+	let bkDate =  selectedComplaint ? selectedComplaint.bkDate : "NoTimeFound"
+	console.log("bkDate--",bkDate)
 
 	let documentMap = applicationData && applicationData.documentMap ? applicationData.documentMap : '';
 	const { HistoryData } = bookings;
@@ -983,7 +986,7 @@ const mapStateToProps = (state, ownProps) => {
 let paymentDetailsForReceipt = fetchPaymentAfterPayment;
 	let paymentDetails;
 	paymentDetails = fetchPaymentAfterPayment && fetchPaymentAfterPayment.Payments[0] && fetchPaymentAfterPayment.Payments[0].paymentDetails[0].bill;
-	
+	console.log("paymentDetails--wt",paymentDetails)
 	let historyApiData = {}
 	if (historyObject) {
 		historyApiData = historyObject;
@@ -1024,7 +1027,9 @@ let paymentDetailsForReceipt = fetchPaymentAfterPayment;
 			businessService: businessService,
 			driverName: selectedComplaint ? selectedComplaint.bkDriverName : "NA",
 			driverMobileNumber: selectedComplaint ? selectedComplaint.bkContactNo : 'NA',
-			approverName: selectedComplaint ? selectedComplaint.bkApproverName : 'NA'
+			approverName: selectedComplaint ? selectedComplaint.bkApproverName : 'NA',
+			time: selectedComplaint.bkTime,
+			date: selectedComplaint.bkDate
 		}
 
 
@@ -1045,7 +1050,7 @@ let paymentDetailsForReceipt = fetchPaymentAfterPayment;
 		return {
 			paymentDetails,
 			historyApiData,
-			DownloadReceiptDetailsforCG,
+			waterTankerPaymentReceipt,
 			documentMap,
 			DownloadBWTApplicationDetails,
 			form,
@@ -1054,14 +1059,16 @@ let paymentDetailsForReceipt = fetchPaymentAfterPayment;
 			serviceRequestId,
 			isAssignedToEmployee,
 			complaintTypeLocalised,
-			paymentDetailsForReceipt
+			paymentDetailsForReceipt,
+			bkDate,
+			bkTime
 			
 		};
 	} else {
 		return {
 			paymentDetails,
 			historyApiData,
-			DownloadReceiptDetailsforCG,
+			waterTankerPaymentReceipt,
 			DownloadBWTApplicationDetails,
 			documentMap,
 			paymentDetailsForReceipt,
@@ -1070,7 +1077,8 @@ let paymentDetailsForReceipt = fetchPaymentAfterPayment;
 			role,
 			serviceRequestId,
 			isAssignedToEmployee,
-			
+			bkDate,
+			bkTime
 		};
 	}
 };
@@ -1080,7 +1088,8 @@ const mapDispatchToProps = dispatch => {
 		fetchApplications: criteria => dispatch(fetchApplications(criteria)),
 		fetchPayment: criteria => dispatch(fetchPayment(criteria)),
 		fetchDataAfterPayment: criteria => dispatch(fetchDataAfterPayment(criteria)),
-		downloadReceiptforCG: criteria => dispatch(downloadReceiptforCG(criteria)),
+		downloadReceiptforCG: criteria => dispatch(downloadReceiptforCG(criteria)), //downloadWaterTankerReceipt
+		downloadWaterTankerReceipt: criteria => dispatch(downloadWaterTankerReceipt(criteria)),
 		downloadBWTApplication: criteria => dispatch(downloadBWTApplication(criteria)),
 		fetchHistory: criteria => dispatch(fetchHistory(criteria)),
 		resetFiles: formKey => dispatch(resetFiles(formKey)),

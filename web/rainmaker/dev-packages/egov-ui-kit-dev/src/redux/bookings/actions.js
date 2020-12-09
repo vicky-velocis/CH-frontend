@@ -1,11 +1,12 @@
 import * as actionTypes from "./actionTypes";
 // import {CREATEBWTAPPLICATION,APPLICATION,MCCAPPLICATION, COMPLAINT, CATEGORY,PAYMENT,HISTORY,AFTERPAYMENTAPI,DWONLOADPAYMENTRECEIPT,DOWNLOADBWTAPPLICATION,DOWNLOADAPPLICATION,DWONLOADPERMISSIONLETTER,OSBMPerDayRateAmount,PerDayRateAmount,DWONLOADNEWRECEIPTFORCG,PermissionLetterDWNOSMCC,ApplicationDWNOSMCC, DWONLOADPAYMENTRECEIPTFORCG,DWONLOADAPPLICATIONFORCG,CREATEPACCAPPLICATION } from "../../utils/endPoints";
-import {CREATEBWTAPPLICATION,PGService,DWONLOADPLFORPCC,DWONLOADRECEIPTFORPCC,APPLICATION,MCCAPPLICATION, COMPLAINT, CATEGORY,PAYMENT,HISTORY,AFTERPAYMENTAPI,DWONLOADPAYMENTRECEIPT,DOWNLOADBWTAPPLICATION,DOWNLOADAPPLICATION,DWONLOADPERMISSIONLETTER,OSBMPerDayRateAmount,PerDayRateAmount,DWONLOADNEWRECEIPTFORCG,PermissionLetterDWNOSMCC,ApplicationDWNOSMCC, DWONLOADPAYMENTRECEIPTFORCG,DWONLOADAPPLICATIONFORCG,DWONLOADAPPFORPCC,CREATEPACCAPPLICATION,UPDATEPACCAPPLICATION,ESAMPARK,ESAMPARKPL } from "egov-ui-kit/utils/endPoints";
+import {CREATEBWTAPPLICATION,PGService,DWONLOADPLFORPCC,DWONLOADRECEIPTFORPCC,APPLICATION,MCCAPPLICATION, COMPLAINT, CATEGORY,PAYMENT,HISTORY,AFTERPAYMENTAPI,DWONLOADPAYMENTRECEIPT,DOWNLOADBWTAPPLICATION,DOWNLOADAPPLICATION,DWONLOADPERMISSIONLETTER,OSBMPerDayRateAmount,PerDayRateAmount,DWONLOADNEWRECEIPTFORCG,PermissionLetterDWNOSMCC,ApplicationDWNOSMCC, DWONLOADPAYMENTRECEIPTFORCG,DWONLOADAPPLICATIONFORCG,DWONLOADAPPFORPCC,CREATEPACCAPPLICATION,UPDATEPACCAPPLICATION,ESAMPARK,ESAMPARKPL,WATERTANKERPAYRECEIPT} from "egov-ui-kit/utils/endPoints";
 import { httpRequest } from "egov-ui-kit/utils/api";
 import commonConfig from "config/common.js";
 
 
 const applicationSectorFetchSucess = (payload) => {
+	console.log("payload--",payload)
 	return {
 		type: actionTypes.APPLICATION_SECTOR_FETCH_SUCCESS,
 		payload,
@@ -560,6 +561,7 @@ export const fetchApplicaionSector = () => {
 			],
 		},
 	};
+	console.log("requestBodyForImage--",requestBody)
 	return async (dispatch) => {
 		try {
 			const payload = await httpRequest(CATEGORY.GET.URL, CATEGORY.GET.ACTION, [], requestBody);
@@ -744,6 +746,32 @@ export const OSBMfetchperDayRate = (requestBody, hasUsers = true, overWrite) => 
 		  }
 		};
 	  };  
+	  //WATERTANKERPAYRECEIPT
+	  export const downloadWaterTankerReceipt = (requestBody, hasUsers = true, overWrite) => {
+		return async (dispatch, getState) => {
+		  try {
+			let tenantId = "";
+			const payload = await httpRequest(WATERTANKERPAYRECEIPT.POST.URL, WATERTANKERPAYRECEIPT.POST.ACTION, [], requestBody);
+			dispatch(downloadWaterTankerReceiptComplete(payload, overWrite));
+		  } catch (error) {
+			dispatch(downloadWaterTankerReceiptCompleteError(error.message));
+		  }
+		};
+	  };  
+	  const downloadWaterTankerReceiptComplete = (payload, overWrite) => {
+		return {
+			type: actionTypes.DOWNLOAD_WATERTANER_RECEIPT_COMPLETE,
+			payload,
+			overWrite: overWrite,
+		};
+	};
+	
+	const downloadWaterTankerReceiptCompleteError = (error) => {
+		return {
+			type: actionTypes.DOWNLOAD_WATERTANER_RECEIPT_ERROR,
+			error,
+		};
+	};
 	  export const downloadMccPL = (requestBody, hasUsers = true, overWrite) => {
 		return async (dispatch, getState) => {
 		  try {

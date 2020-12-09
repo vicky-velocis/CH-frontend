@@ -352,4 +352,9 @@ export const ESAMPARKPL = {
   },
 };
 
-
+export const WATERTANKERPAYRECEIPT = {
+  POST: {
+    URL: "pdf-service/v1/_create?key=bk-wt-payment-receipt",
+    ACTION: "_search",
+  },
+}

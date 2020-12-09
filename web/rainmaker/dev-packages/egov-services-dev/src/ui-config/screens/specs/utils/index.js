@@ -1239,7 +1239,6 @@ export const downloadCertificate = async (
         )
 
 
-
         if (res && res.filestoreIds && res.filestoreIds.length > 0) {
 
             receiptVal = res.filestoreIds.map(async (fileStoreId) => {
@@ -1287,7 +1286,6 @@ export const downloadApplication = async (
         { key: "applicationNumber", value: applicationNumber },
     ]);
     let recData = get(response, "bookingsModelList", []);
-
     let documentName = '';
     let document2 = '';
     if (applicationData.businessService != "NLUJM") {
