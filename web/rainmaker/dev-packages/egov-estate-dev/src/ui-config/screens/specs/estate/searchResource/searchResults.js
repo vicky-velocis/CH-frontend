@@ -221,6 +221,7 @@ export const securityDetailsTable = {
       viewColumns:false,
       responsive: "stacked",
       selectableRows: false,
+      onRowClick: (row, index) => {      }
     }
   }
 }
@@ -246,6 +247,8 @@ export const penaltyDetailsTable = {
       viewColumns:false,
       responsive: "stacked",
       selectableRows: false,
+      onRowClick: (row, index) => {
+      }
     }
   }
 }
@@ -269,6 +272,8 @@ export const extensionFeeDetailsTable = {
       viewColumns:false,
       responsive: "stacked",
       selectableRows: false,
+      onRowClick: (row, index) => {
+      }
     }
   }
 }
