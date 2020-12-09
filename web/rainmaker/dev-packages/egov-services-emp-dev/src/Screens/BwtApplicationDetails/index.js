@@ -95,7 +95,8 @@ class BwtApplicationDetails extends Component {
 			togglepopup: false,
 			actionOnApplication: '',
 			actionTittle: '',
-			tentantData:''
+			tentantData:'',
+			BankName: ''
 		};
 	};
 	componentDidMount = async () => {
@@ -135,6 +136,26 @@ class BwtApplicationDetails extends Component {
 			[{ key: "consumerCodes", value: match.params.applicationId }, { key: "tenantId", value: userInfo.tenantId }
 			])
 
+        let  RequestGateWay = [
+			{ key: "consumerCode", value: match.params.applicationId },
+			{ key: "tenantId", value: userInfo.tenantId }
+			];
+		  let payloadGateWay = await httpRequest(
+			"pg-service/transaction/v1/_search",
+			"_search",
+			RequestGateWay
+			);
+		 console.log("payloadGateWay--",payloadGateWay)
+		 
+		 let gateWay = payloadGateWay.Transaction[0].gateway;
+		 console.log("gateWay--",gateWay ? gateWay : "NotFound")
+
+		 prepareFinalObject('GateWayName', gateWay)
+
+		 this.setState({
+			BankName: gateWay
+		 })
+		
 		  let mdmsData =  await this.getMdmsTenantsData();
 		  this.setState({
 		tentantData :mdmsData  
@@ -309,7 +330,9 @@ downloadReceiptButton = async (mode) => {
 
 downloadReceiptFunction = async (e) => {
 	const { transformedComplaint, paymentDetailsForReceipt, downloadPaymentReceiptforCG,downloadReceiptforCG,downloadWaterTankerReceipt, userInfo, paymentDetails,bkDate,
-		bkTime } = this.props;
+		pdfBankName,bkTime } = this.props;
+		console.log("propsofPdfPayment--",this.props)
+		console.log("stateBankName--",this.state.BankName ? this.state.BankName : "NotFound")
 	const { complaint } = transformedComplaint;
 	console.log("complaintPayemnet--",complaint)
 
@@ -341,6 +364,7 @@ downloadReceiptFunction = async (e) => {
 			"paymentItemExtraColumnLabel": "Date & Time",
 			paymentMode:
 				paymentDetailsForReceipt.Payments[0].paymentMode,
+			bankName: pdfBankName ? pdfBankName : this.state.BankName,
 			receiptNo:
 				paymentDetailsForReceipt.Payments[0].paymentDetails[0]
 					.receiptNumber,
@@ -481,7 +505,7 @@ downloadApplicationMCCButton = async (mode) => {
           "applicationType": complaint.bkStatus
         },
         feeDetail: {
-			taxes:
+			baseCharge:
 				paymentData === undefined
 					? null
 					: paymentData.billDetails[0].billAccountDetails.filter(
@@ -962,6 +986,9 @@ const mapStateToProps = (state, ownProps) => {
 	// const { categoriesById } = bookings;
 	const { userInfo } = state.auth;
 
+	let pdfBankName = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.GateWayName:"wrongNumber";  
+  console.log("pdfBankName--",pdfBankName)
+  
 
 	const serviceRequestId = ownProps.match.params.applicationId;
 	let selectedComplaint = applicationData ? applicationData.bookingsModelList[0] : ''
@@ -1049,6 +1076,7 @@ let paymentDetailsForReceipt = fetchPaymentAfterPayment;
 		);
 		return {
 			paymentDetails,
+			pdfBankName,
 			historyApiData,
 			waterTankerPaymentReceipt,
 			documentMap,
@@ -1067,6 +1095,7 @@ let paymentDetailsForReceipt = fetchPaymentAfterPayment;
 	} else {
 		return {
 			paymentDetails,
+			pdfBankName,
 			historyApiData,
 			waterTankerPaymentReceipt,
 			DownloadBWTApplicationDetails,
