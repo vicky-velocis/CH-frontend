@@ -32,18 +32,18 @@ class PayDetails extends Component {
                   <Label className="col-xs-12  col-sm-12 col-md-12 status-color" label="BK_MYBK_REGISTRATION_RENT" />
                 </div>
                 <div className="col-sm-4 col-xs-12">
-                  <h5 style={{ textAlign: "right" }}>{paymentDetails && paymentDetails.billDetails[0] && paymentDetails.billDetails[0].billAccountDetails[1].amount}</h5>
+                  <h5 style={{ textAlign: "right" }}>{paymentDetails && paymentDetails.billDetails[0] && paymentDetails.billDetails[0].billAccountDetails[0].amount}</h5>
                 </div>
               </div>
 
-              <div className="complaint-detail-detail-section-status row" style={{marginLeft:'-10px'}}>
+              {/* <div className="complaint-detail-detail-section-status row" style={{marginLeft:'-10px'}}>
                 <div className="col-sm-4 col-xs-12">
                   <Label className="col-xs-12  col-sm-12 col-md-12 status-color" label="BK_MYBK_TAX_RENT" />
                 </div>
                 <div className="col-sm-4 col-xs-12">
                   <h5 style={{ textAlign: "right" }}>{paymentDetails && paymentDetails.billDetails[0] && paymentDetails.billDetails[0].billAccountDetails[0].amount}</h5>
                 </div>
-              </div>
+              </div> */}
               <div className="complaint-detail-detail-section-status row" style={{marginLeft:'-10px'}}>
                 <hr class="MuiDividerLine" style={{ marginbottom: "16px" }}></hr>
                 <div className="col-sm-4 col-xs-12">
