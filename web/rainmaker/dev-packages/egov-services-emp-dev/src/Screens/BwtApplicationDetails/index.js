@@ -21,7 +21,7 @@ import BookingDetails from "../AllApplications/components/BookingDetails"
 import DocumentPreview from "../AllApplications/components/DocumentPreview"
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import DialogContainer from "../../modules/DialogContainer"
-import PaymentDetails from "../AllApplications/components/PaymentDetails"
+import BWTPaymentDetails from "../AllApplications/components/BWTPaymentDetails"
 import Footer from "../../modules/footer"
 import ActionButtonDropdown from '../../modules/ActionButtonDropdown'
 import BwtApplicationDriverDetailsfrom from "../AllApplications/components/BwtApplicationDriverDetails"
@@ -330,12 +330,10 @@ downloadReceiptFunction = async (e) => {
 			"transactionId": paymentDetailsForReceipt && paymentDetailsForReceipt.Payments[0].transactionNumber,
 			"bookingPeriod": `${bkDate} , ${bkTime} `,
 			"bookingItem": "Online Payment Against Booking of Water Tanker",
-			"amount": paymentDetailsForReceipt.Payments[0].paymentDetails[0].bill.billDetails[0].billAccountDetails.filter(
-				(el) => !el.taxHeadCode.includes("TAX")
-			)[0].amount,
-			"tax": paymentDetailsForReceipt.Payments[0].paymentDetails[0].bill.billDetails[0].billAccountDetails.filter(
-				(el) => el.taxHeadCode.includes("TAX")
-			)[0].amount,
+			"amount": paymentDetailsForReceipt.Payments[0].paymentDetails[0].bill.billDetails[0].billAccountDetails[0].amount,
+			// "tax": paymentDetailsForReceipt.Payments[0].paymentDetails[0].bill.billDetails[0].billAccountDetails.filter(
+			// 	(el) => el.taxHeadCode.includes("TAX")
+			// )[0].amount,
 			"grandTotal": paymentDetailsForReceipt.Payments[0].totalAmountPaid,
 			"amountInWords": this.NumInWords(
 				paymentDetailsForReceipt.Payments[0].totalAmountPaid
@@ -483,17 +481,11 @@ downloadApplicationMCCButton = async (mode) => {
           "applicationType": complaint.bkStatus
         },
         feeDetail: {
-			baseCharge:
-				paymentData === undefined
-					? null
-					: paymentData.billDetails[0].billAccountDetails.filter(
-						(el) => !el.taxHeadCode.includes("TAX")
-					)[0].amount,
 			taxes:
 				paymentData === undefined
 					? null
 					: paymentData.billDetails[0].billAccountDetails.filter(
-						(el) => el.taxHeadCode.includes("TAX")
+						(el) => el.taxHeadCode.includes("WATER_TANKAR_CHARGES_BOOKING_BRANCH")
 					)[0].amount,
 			totalAmount:
 				paymentData === undefined
@@ -828,7 +820,7 @@ console.log("requestBodyOfApplication--",BookingInfo)
 								/>
 								
 								{(complaint.bkStatus).includes("Paid") &&
-									<PaymentDetails
+									<BWTPaymentDetails
 										paymentDetails={paymentDetails && paymentDetails}
 									/>
 
@@ -974,7 +966,7 @@ const mapStateToProps = (state, ownProps) => {
 	const serviceRequestId = ownProps.match.params.applicationId;
 	let selectedComplaint = applicationData ? applicationData.bookingsModelList[0] : ''
 	console.log("selectedComplaint--",selectedComplaint)
-	
+
 	let businessService = applicationData ? applicationData.businessService : '';
 	let bookingDocs;
 
@@ -994,7 +986,7 @@ const mapStateToProps = (state, ownProps) => {
 let paymentDetailsForReceipt = fetchPaymentAfterPayment;
 	let paymentDetails;
 	paymentDetails = fetchPaymentAfterPayment && fetchPaymentAfterPayment.Payments[0] && fetchPaymentAfterPayment.Payments[0].paymentDetails[0].bill;
-	
+	console.log("paymentDetails--wt",paymentDetails)
 	let historyApiData = {}
 	if (historyObject) {
 		historyApiData = historyObject;

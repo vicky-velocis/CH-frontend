@@ -17,7 +17,7 @@ import PaymentDetails from "../AllApplications/components/PaymentDetails"
 import ApproveBooking from "../ApplicationResolved";
 import RejectBooking from "../RejectComplaint";
 import axios from "axios";
-import jp from "jsonpath";
+import jp, { value } from "jsonpath";
 // import {
 // 	getFileUrlFromAPI,
 // } from "egov-ui-framework/ui-utils/commons";
@@ -299,10 +299,10 @@ class ApplicationDetails extends Component {
 				),
 				"bookingItem": "Online Payment Against Booking of Open Space for Building Material",
 				"amount": paymentDetailsForReceipt.Payments[0].paymentDetails[0].bill.billDetails[0].billAccountDetails.filter(
-					(el) => !el.taxHeadCode.includes("TAX")
+					(el) => !el.taxHeadCode.includes("PARKING_LOTS_MANUAL_OPEN_SPACE_BOOKING_BRANCH")
 				)[0].amount,
 				"tax": paymentDetailsForReceipt.Payments[0].paymentDetails[0].bill.billDetails[0].billAccountDetails.filter(
-					(el) => el.taxHeadCode.includes("TAX")
+					(el) => el.taxHeadCode.includes("CGST_UTGST_MANUAL_OPEN_SPACE_BOOKING_BRANCH")
 				)[0].amount,
 				"grandTotal": paymentDetailsForReceipt.Payments[0].totalAmountPaid,
 				"amountInWords": this.NumInWords(
@@ -370,11 +370,11 @@ class ApplicationDetails extends Component {
                     baseCharge:
                         paymentDetails === undefined
                             ? null
-                            : paymentDetails.billDetails[0].billAccountDetails.filter(el => !el.taxHeadCode.includes("TAX"))[0].amount,
+                            : paymentDetails.billDetails[0].billAccountDetails.filter(el => !el.taxHeadCode.includes("PARKING_LOTS_MANUAL_OPEN_SPACE_BOOKING_BRANCH"))[0].amount,
                     taxes:
                         paymentDetails === undefined
                             ? null
-                            : paymentDetails.billDetails[0].billAccountDetails.filter(el => el.taxHeadCode.includes("TAX"))[0].amount,
+                            : paymentDetails.billDetails[0].billAccountDetails.filter(el => el.taxHeadCode.includes("CGST_UTGST_MANUAL_OPEN_SPACE_BOOKING_BRANCH"))[0].amount,
                     totalAmount:
                         paymentDetails === undefined
                             ? null
@@ -691,13 +691,19 @@ downloadPermissionLetterFunction = async (e) => {
 
 	callApiForDocumentData = async (e) => {
 		const { xyz,userInfo } = this.props;
+		console.log("xyzInPDF--",xyz)
 		var documentsPreview = [];
 		if (xyz && xyz.length > 0) {
+			console.log("xyzGreater--",xyz)
+			console.log("key[0-",xyz[0])
 			let keys = xyz[0]
+			console.log("key---",keys)
 			let values = xyz[1];
-			let id = keys[0],
-				fileName = values[0];
-
+			console.log("valuesInDoc--",values)
+			let id = keys
+			console.log("id--",id)
+			let	fileName = values[0];
+            console.log("fileName--",fileName)
 			documentsPreview.push({
 				title: "DOC_DOC_PICTURE",
 				fileStoreId: id,
@@ -744,10 +750,13 @@ downloadPermissionLetterFunction = async (e) => {
 		var documentsPreview = [];
 		if (ab && ab.length > 0) {
 			let keys = ab[0];
+			console.log("keys2--",keys)
 			let values = ab[1];
-			let id = keys[0],
-				fileName = values[0];
-
+			console.log("values2--",values)
+			let id = keys
+			console.log("id2--",id)
+			let	fileName = values[0];
+            console.log("fileName--",fileName)
 			documentsPreview.push({
 				title: "DOC_DOC_PICTURE",
 				fileStoreId: id,
