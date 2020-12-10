@@ -613,6 +613,54 @@ export const downloadAcknowledgementForm = (Applications, applicationType,feeEst
             value:"bb-IssuanceOfNotice-application"
           }] 
           break; 
+      case 'MM-NDC':
+          queryStr = [{
+            key:"key",
+            value:"mm-ndc-application"
+          }] 
+          break;
+      case 'MM-NOC':
+          queryStr = [{
+            key:"key",
+            value:"mm-noc-application"
+          }] 
+          break;
+      case 'MM-AllotmentOfNewHouse':
+          queryStr = [{
+            key:"key",
+            value:"mm-house-allotment-application"
+          }] 
+          break; 
+      case 'MM-FamilySettlement':
+          queryStr = [{
+            key:"key",
+            value:"mm-family-settlement-application"
+          }] 
+          break; 
+      case 'MM-UnRegisteredWill':
+          queryStr = [{
+            key:"key",
+            value:"mm-unregisteredWill-application"
+          }] 
+          break; 
+      case 'MM-IntestateDeath':
+          queryStr = [{
+            key:"key",
+              value:"mm-inestate-death-application"
+          }] 
+          break; 
+      case 'MM-RegisteredWill':
+          queryStr = [{
+            key:"key",
+            value:"mm-registeredWill-application"
+          }] 
+          break; 
+      case 'MM-SaleGift':
+          queryStr = [{
+            key:"key",
+            value:"mm-sale-gift-application"
+          }] 
+          break;                       
   }
   queryStr[1] = {
     key: "tenantId",
