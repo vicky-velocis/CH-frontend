@@ -147,9 +147,10 @@ export const getFeesEstimateCard = props => {
 };
 
 export const getButtonVisibility = (status, button) => {
-  if (status === "ES_PENDING_PAYMENT" && button === "PENDINGPAYMENT") return true;
+  if ((status === "ES_PENDING_PAYMENT" || status === "ES_MM_PENDING_PAYMENT") && button === "PENDINGPAYMENT") return true;
   if (status === "ES_PENDING_JE_VERIFICATION" && button === "NOCVERIFICATION") return true;
-  if ((status === "ES_PENDING_CITIZEN_TEMPLATE_SUBMISSION" || status === "ES_PENDING_CITIZEN_NOTICE_DOCUMENTS") && button === "UPLOAD_DOCUMENT") return true
+  if (status === "ES_MM_PENDING_BI_VERIFICATION" && button === "SITEREPORT") return true;
+  if ((status === "ES_PENDING_CITIZEN_TEMPLATE_SUBMISSION" || status === "ES_PENDING_CITIZEN_NOTICE_DOCUMENTS" || status === "ES_MM_PENIDNG_CITIZEN_NOTICE") && button === "UPLOAD_DOCUMENT") return true
   return false;
 };
 
@@ -283,6 +284,8 @@ export const getMdmsData = async queryObject => {
 };
 
 export const downloadSummary = (Properties, PropertiesTemp ,mode = "download") => {
+
+  const isGroundRent = Properties[0].propertyDetails.paymentConfig.isGroundRent
   let queryStr = [{
     key: "key",
     value: `property-summary`
@@ -315,12 +318,14 @@ const modifiedOwner = PropertiesTempOwners.map((owner) => {
 })
 
   let Property = Properties[0];
-  if(Property.propertyDetails.purchaser.length > 0){
+  if(Property.propertyDetails.owners.length > 0){
     let propertyOwners = Property.propertyDetails.owners;
     const owners = propertyOwners.map((owner , index) => {
        owner.ownerDetails.ownerDocuments = modifiedOwner[index].ownerDetails.ownerDocuments
+       owner.ownerDetails.guardianRelation = getLocaleLabels(owner.ownerDetails.guardianRelation, owner.ownerDetails.guardianRelation)
        return owner
     })
+
   }
 
 let previousOwners = PropertiesTemp[0].propertyDetails.purchaser;
@@ -348,9 +353,98 @@ if(Property.propertyDetails.purchaser.length > 0){
   let purchasers = Property.propertyDetails.purchaser;
   const purchaser = purchasers.map((purchaser , index) => {
      purchaser.ownerDetails.ownerDocuments = modifedPurchaser[index].ownerDetails.ownerDocuments
+     purchaser.ownerDetails.guardianRelation = getLocaleLabels(purchaser.ownerDetails.guardianRelation, purchaser.ownerDetails.guardianRelation)
+     purchaser.ownerDetails.dob = moment(new Date(purchaser.ownerDetails.dob)).format("DD-MMM-YYYY")
      return purchaser
   })
 }
+
+if(isGroundRent){
+  Property.propertyDetails["groundRentDetails"] = {
+    "groundRentGenerationType" : Property.propertyDetails.paymentConfig.groundRentGenerationType,
+    "groundRentGenerateDemand" : Property.propertyDetails.paymentConfig.groundRentGenerateDemand,
+    "groundRentBillStartDate"  : Property.propertyDetails.paymentConfig.groundRentBillStartDate
+  }
+}else{
+  Property.propertyDetails["licenceDetails"] = {
+    "groundRentGenerationType" : Property.propertyDetails.paymentConfig.groundRentGenerationType,
+    "groundRentGenerateDemand" : Property.propertyDetails.paymentConfig.groundRentGenerateDemand,
+    "groundRentBillStartDate"  : Property.propertyDetails.paymentConfig.groundRentBillStartDate
+  }
+}
+
+  const DOWNLOADRECEIPT = {
+    GET: {
+      URL: "/pdf-service/v1/_create",
+      ACTION: "_get",
+    },
+  };
+  try {
+    httpRequest("post", DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, queryStr, {
+      Properties: [Property]
+      }, {
+        'Accept': 'application/json'
+      }, {
+        responseType: 'arraybuffer'
+      })
+      .then(res => {
+        res.filestoreIds[0]
+        if (res && res.filestoreIds && res.filestoreIds.length > 0) {
+          res.filestoreIds.map(fileStoreId => {
+            downloadReceiptFromFilestoreID(fileStoreId, mode)
+          })
+        } else {
+          console.log("Error In Acknowledgement form Download");
+        }
+      });
+  } catch (exception) {
+    alert('Some Error Occured while downloading Acknowledgement form!');
+  }
+}
+
+export const downloadBuildingBranchPMPdf = (Properties, PropertiesTemp ,mode = "download") => {
+  let queryStr = [{
+    key: "key",
+    value: `bb-property-summary`
+  },
+  {
+    key: "tenantId",
+    value: `${getTenantId().split('.')[0]}`
+  }
+]
+
+let PropertiesTempOwners = PropertiesTemp[0].propertyDetails.owners;
+const modifiedOwner = PropertiesTempOwners.map((owner) => {
+  let ownerDocuments = owner.ownerDetails.reviewDocData
+  const plength = ownerDocuments.length % 4
+  ownerDocuments = !!plength ? [...ownerDocuments, ...new Array(4 - plength).fill({
+    title: "",
+    name: ""
+  })] : ownerDocuments
+  const myODocuments = ownerDocuments.map((item) => ({
+    ...item,
+    title: getLocaleLabels(item.title, item.title)
+  })).reduce((splits, i) => {
+    const length = splits.length
+    const rest = splits.slice(0, length - 1);
+    const lastArray = splits[length - 1] || [];
+    return lastArray.length < 4 ? [...rest, [...lastArray, i]] : [...splits, [i]]
+  }, []);
+  owner.ownerDetails.ownerDocuments = myODocuments;
+  return owner;
+})
+
+  let Property = Properties[0];
+  if(Property.propertyDetails.owners.length > 0){
+    let propertyOwners = Property.propertyDetails.owners;
+     propertyOwners.map((owner , index) => {
+       owner.ownerDetails.ownerDocuments = modifiedOwner[index].ownerDetails.ownerDocuments
+       owner.ownerDetails.guardianRelation = getLocaleLabels(owner.ownerDetails.guardianRelation, owner.ownerDetails.guardianRelation)
+       owner.ownerDetails.possesionDate = moment(new Date(owner.ownerDetails.possesionDate)).format('DD-MMM-YYYY')
+       return owner
+    })
+
+  }
 
   const DOWNLOADRECEIPT = {
     GET: {
@@ -508,8 +602,9 @@ export const downloadAcknowledgementForm = (Applications, applicationType,feeEst
         break;
       case 'BB-NOC':
           queryStr = [{
-            key :"key",
-            value:"bb-noc-application-fresh"
+            key: "key",
+            value: (state == "ES_PENDING_PAYMENT" || state == "ES_PENDING_DA_PREPARE_LETTER" ||
+            state == "ES_PENDING_SDE_APPROVAL" || state == "ES_APPROVED")  ? `bb-noc-application-paid` : `bb-noc-application-fresh`
           }]
           break;
       case 'BB-IssuanceOfNotice':
@@ -629,7 +724,7 @@ export const downloadCertificateForm = (Licenses, data, mode = 'download') => {
   }
 }
 
-export const downloadPaymentReceipt = (receiptQueryString, Applications, data, generatedBy,type, mode = "download") => {
+export const downloadPaymentReceipt = (receiptQueryString, payload, data , generatedBy,type, state,mode = "download") => {
   const FETCHRECEIPT = {
     GET: {
       URL: "/collection-services/payments/_search",
@@ -644,14 +739,7 @@ export const downloadPaymentReceipt = (receiptQueryString, Applications, data, g
   };
   try {
     httpRequest("post", FETCHRECEIPT.GET.URL, FETCHRECEIPT.GET.ACTION, receiptQueryString).then((payloadReceiptDetails) => {
-      const queryStr = [{
-          key: "key",
-          value: "application-payment-receipt"
-        },
-        {
-          key: "tenantId",
-          value: receiptQueryString[1].value.split('.')[0]
-        }
+      let queryStr = [
       ]
       
       if (payloadReceiptDetails && payloadReceiptDetails.Payments && payloadReceiptDetails.Payments.length == 0) {
@@ -662,29 +750,6 @@ export const downloadPaymentReceipt = (receiptQueryString, Applications, data, g
         Payments
       } = payloadReceiptDetails;
       let time = Payments[0].paymentDetails[0].auditDetails.lastModifiedTime
-      let {
-        billAccountDetails
-      } = Payments[0].paymentDetails[0].bill.billDetails[0];
-      billAccountDetails = billAccountDetails.map(({
-        taxHeadCode,
-        ...rest
-      }) => ({
-        ...rest,
-        taxHeadCode: taxHeadCode.includes("_APPLICATION_FEE") ? "RP_DUE" : taxHeadCode.includes("_PENALTY") ? "RP_PENALTY" : taxHeadCode.includes("_TAX") ? "RP_TAX" : taxHeadCode.includes("_ROUNDOFF") ? "RP_ROUNDOFF" : taxHeadCode.includes("_PUBLICATION_FEE") ? "RP_CHARGES" : taxHeadCode
-      }))
-      Payments = [{
-        ...Payments[0],
-        paymentDetails: [{
-          ...Payments[0].paymentDetails[0],
-          bill: {
-            ...Payments[0].paymentDetails[0].bill,
-            billDetails: [{
-              ...Payments[0].paymentDetails[0].bill.billDetails[0],
-              billAccountDetails
-            }]
-          }
-        }]
-      }]
       if(time){
         time = moment(new Date(time)).format("h:mm:ss a")
       }
@@ -695,25 +760,168 @@ export const downloadPaymentReceipt = (receiptQueryString, Applications, data, g
           }
         }]
       }]
-      httpRequest("post", DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, queryStr, {
-          Payments,
-          Applications,
-          generatedBy
-        }, {
-          'Accept': 'application/json'
-        }, {
-          responseType: 'arraybuffer'
-        })
-        .then(res => {
-          res.filestoreIds[0]
-          if (res && res.filestoreIds && res.filestoreIds.length > 0) {
-            res.filestoreIds.map(fileStoreId => {
-              downloadReceiptFromFilestoreID(fileStoreId, mode)
+
+      switch(type){
+        case 'rent-payment':
+           if(process.env.REACT_APP_NAME != "Citizen"){
+            const {payment} = state.screenConfiguration.preparedFinalObject
+            const {paymentType} = payment
+             switch(paymentType){
+              case 'PAYMENTTYPE.EXTENSIONFEE':
+                 const {ExtensionStatementSummary} = state.screenConfiguration.preparedFinalObject
+                 queryStr = [{
+                   key: "key",
+                   value: "extension-fee-payment-receipt"
+                 },
+                 {
+                   key: "tenantId",
+                   value: receiptQueryString[1].value.split('.')[0]
+                 }
+               ]
+                payload[0]["ExtensionFeeStatementSummary"] = ExtensionStatementSummary
+                
+                break;
+              case 'PAYMENTTYPE.PENALTY':
+                 const {PenaltyStatementSummary} = state.screenConfiguration.preparedFinalObject
+                 queryStr = [{
+                   key: "key",
+                   value: "penalty-payment-receipt"
+                 },
+                 {
+                   key: "tenantId",
+                   value: receiptQueryString[1].value.split('.')[0]
+                 }
+               ]
+               payload[0]["PenaltyStatementSummary"] = PenaltyStatementSummary
+                break; 
+              case 'PAYMENTTYPE.SECURITYFEE':
+                  const {SecurityStatementSummary} = state.screenConfiguration.preparedFinalObject
+                  queryStr = [{
+                    key: "key",
+                    value: "security-payment-receipt"
+                  },
+                  {
+                    key: "tenantId",
+                    value: receiptQueryString[1].value.split('.')[0]
+                  }
+                ]
+                payload[0]["SecurityDepositStatementSummary"] = SecurityStatementSummary
+                break;   
+              default:
+                 queryStr = [{
+                   key: "key",
+                   value: "rent-payment-receipt"
+                 },
+                 {
+                   key: "tenantId",
+                   value: receiptQueryString[1].value.split('.')[0]
+                 }
+               ]
+            }
+           }else{
+              queryStr = [{
+                key: "key",
+                value: "rent-payment-receipt"
+                },
+                {
+                key: "tenantId",
+                value: receiptQueryString[1].value.split('.')[0]
+                }
+              ]
+           }
+           
+            if(process.env.REACT_APP_NAME === "Citizen"){
+              payload[0].propertyDetails["offlinePaymentDetails"] = []
+            
+              let transactionNumber = {
+                "transactionNumber" : Payments[0].transactionNumber
+              }
+              payload[0].propertyDetails.offlinePaymentDetails.push(transactionNumber)
+             }
+              if(process.env.REACT_APP_NAME === "Employee"){
+                Payments = [
+                  {
+                    ...Payments[0],transactionDate : payload[0].propertyDetails.offlinePaymentDetails[0].dateOfPayment
+                  }
+                ]
+                }
+            
+            httpRequest("post", DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, queryStr, {
+              Payments,
+              Properties : payload,
+              generatedBy
+            }, {
+              'Accept': 'application/json'
+            }, {
+              responseType: 'arraybuffer'
             })
-          } else {
-            console.log("Error In Receipt Download");
-          }
-        });
+            .then(res => {
+              res.filestoreIds[0]
+              if (res && res.filestoreIds && res.filestoreIds.length > 0) {
+                res.filestoreIds.map(fileStoreId => {
+                  downloadReceiptFromFilestoreID(fileStoreId, mode)
+                })
+              } else {
+                console.log("Error In Receipt Download");
+              }
+            });
+          break
+        case 'application-payment':
+            let {
+              billAccountDetails
+            } = Payments[0].paymentDetails[0].bill.billDetails[0];
+            billAccountDetails = billAccountDetails.map(({
+              taxHeadCode,
+              ...rest
+            }) => ({
+              ...rest,
+              taxHeadCode: taxHeadCode.includes("_APPLICATION_FEE") ? "ES_FEE" : taxHeadCode.includes("_APPLICATION_TAX") ? "ES_TAX" : taxHeadCode
+            }))
+            Payments = [{
+              ...Payments[0],
+              paymentDetails: [{
+                ...Payments[0].paymentDetails[0],
+                bill: {
+                  ...Payments[0].paymentDetails[0].bill,
+                  billDetails: [{
+                    ...Payments[0].paymentDetails[0].bill.billDetails[0],
+                    billAccountDetails
+                  }]
+                }
+              }]
+            }]
+           queryStr = [{
+              key: "key",
+              value: "application-payment-receipt"
+            },
+            {
+              key: "tenantId",
+              value: receiptQueryString[1].value.split('.')[0]
+            }
+          ]
+            httpRequest("post", DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, queryStr, {
+              Payments,
+              Applications :payload,
+              feeEstimate:data,
+              generatedBy
+            }, {
+              'Accept': 'application/json'
+            }, {
+              responseType: 'arraybuffer'
+            })
+            .then(res => {
+              res.filestoreIds[0]
+              if (res && res.filestoreIds && res.filestoreIds.length > 0) {
+                res.filestoreIds.map(fileStoreId => {
+                  downloadReceiptFromFilestoreID(fileStoreId, mode)
+                })
+              } else {
+                console.log("Error In Receipt Download");
+              }
+            });
+          break;  
+      }
+      
     })
   } catch (exception) {
     alert('Some Error Occured while downloading Receipt!');
@@ -937,9 +1145,18 @@ let queryStr = []
       case 'BB-NOC-Proposal-letter':
           queryStr = [{
             key: "key",
-            value: ` noc-proposal-letter`
+            value: `noc-proposal-letter`
           }
         ]
+      break;
+      
+      case 'BB-NOC-Payment-letter':
+      queryStr = [{
+        key: "key",
+        value: `payment-letter`
+      }
+      ]
+      break;
          
       
   }
@@ -1206,14 +1423,14 @@ export const downloadNotice = (Applications, applicationType,noticeType, mode = 
 
 
 
-export const prepareDocumentTypeObj = documents => {
+export const prepareDocumentTypeObj = (documents, ownerIndex) => {
   let documentsArr =
     documents.length > 0 ?
     documents.reduce((documentsArr, item, ind) => {
       documentsArr.push({
         name: item.code,
         required: item.required,
-        jsonPath: `Properties[0].propertyDetails.owners[0].ownerDetails.ownerDocuments[${ind}]`,
+        jsonPath: `Properties[0].propertyDetails.owners[${ownerIndex}].ownerDetails.ownerDocuments[${ind}]`,
         statement: item.description
       });
       return documentsArr;
@@ -1794,6 +2011,12 @@ export const getTextToLocalMapping = label => {
           "ES_COMMON_TABLE_RECEIPT_NO",
           localisationLabels
         );
+        case "Consolidated Demand":
+        return getLocaleLabels(
+          "Consolidated Demand",
+          "ES_COMMON_TABLE_CONSOLIDATED_DEMAND",
+          localisationLabels
+        );
     case "Last Modified On":
       return getLocaleLabels(
         "Last Modified On",
@@ -1842,6 +2065,43 @@ export const getTextToLocalMapping = label => {
         "ES_REFUND_STATUS",
         localisationLabels
       );
+    case "Rent amount":
+      return getLocaleLabels(
+        "Rent amount",
+        "ES_RENT_AMOUNT_LABEL",
+        localisationLabels
+      );
+    case "Start month":
+      return getLocaleLabels(
+        "Start month",
+        "ES_START_MONTH_LABEL",
+        localisationLabels
+      );
+    case "End month":
+      return getLocaleLabels(
+        "End month",
+        "ES_END_MONTH_LABEL",
+        localisationLabels
+      );
+    case "Till":
+      return getLocaleLabels(
+        "Till",
+        "ES_TILL_LABEL_IN_YEARS",
+        localisationLabels
+      );
+    case "Installment":
+      return getLocaleLabels(
+        "Installment",
+        "ES_INSTALLMENT_LABEL",
+        localisationLabels
+      );
+    case "Due date of installment":
+      return getLocaleLabels(
+        "Due Date for Installment",
+        "ES_DUE_DATE_INSTALLMENT_LABEL",
+        localisationLabels
+      );
+    default: return getLocaleLabels(label, label, localisationLabels)   
   }
 };
 

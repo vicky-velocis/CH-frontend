@@ -18,7 +18,8 @@ import commonConfig from "config/common.js";
 import get from "lodash/get";
 import {
   getFileUrlFromAPI,
-  getFileUrl
+  getFileUrl,
+  getQueryArg
 } from "egov-ui-framework/ui-utils/commons";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 import {ES_MONTH, ES_RENT_DUE, ES_RENT_RECEIVED, ES_RECEIPT_NO, ES_DATE,ES_RENT_DUE_DATE,
@@ -28,10 +29,16 @@ import moment from "moment";
 
 export const getApplicationStatusList = async ({action, state, dispatch, screenKey, componentJsonPath}) => {
 try {
+  const branchType = getQueryArg(window.location.href, "branchType");
+  const queryObject = [
+    {key: "tenantId", value: getTenantId()},
+    {key: "businessName", value: branchType}
+  ]
   const response = await httpRequest(
     "post",
     "/est-services/application/states",
-    ""
+    "",
+    queryObject
   );
   const {States} = response
   const data = States.map(item => ({label: item, code: item}))
@@ -43,6 +50,12 @@ try {
 
 export const getApplicationTypes = async ({action, state, dispatch, screenKey, componentJsonPath}) => {
   try {
+    const branchType = getQueryArg(window.location.href, "branchType");
+    let filter = "ESTATE_BRANCH";
+
+    if (branchType == "ManiMajra") {
+      filter = "MANI_MAJRA"
+    }
     const queryObject = {
       MdmsCriteria: {
         tenantId: commonConfig.tenantId,
@@ -57,8 +70,8 @@ export const getApplicationTypes = async ({action, state, dispatch, screenKey, c
       }
     }
     const response = await getMdmsData(queryObject);
-    const applicationTypes = response.MdmsRes.EstateServices.applicationTypes
-    const data = applicationTypes.map(item => ({
+    const applicationTypes = response.MdmsRes.EstateServices.applicationTypes;
+    const data = applicationTypes.filter(item => item.branchType == filter).map(item => ({
       code: item.type.split("_").pop(),
       label: item.code
     }))
@@ -353,6 +366,9 @@ export const populateBiddersTable = (biddersList, screenKey, componentJsonPath) 
 
                 if (biddersList.length == refundedBidders.length) {
                   biddersList = biddersList.map(item => ({...item, action: "SUBMIT"}));
+                }
+                else {
+                  biddersList = biddersList.map(item => ({...item, action: "", state: ""}));
                 }
 
                 let properties = [{...Properties[0], propertyDetails: {...Properties[0].propertyDetails, bidders: biddersList}}]

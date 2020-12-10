@@ -115,7 +115,8 @@ var isfileNumberValid = validateFields(
                 response.EstateAccountStatement
               )
             );
-            let data = response.EstateAccountStatement.map(item => ({
+            let sortedData = response.EstateAccountStatement.sort((a, b) => (a.date > b.date) ? 1 : -1)
+            let data = sortedData.map(item => ({
               [getTextToLocalMapping("Date")]: moment(new Date(item.date)).format("DD-MMM-YYYY") || "-",
               [getTextToLocalMapping("Amount")]: formatAmount(item.amount.toFixed(2)) || "-",
               [getTextToLocalMapping("Type(Payment)")]:  changeTypePayment(item.type) || "-",
@@ -127,6 +128,7 @@ var isfileNumberValid = validateFields(
               [getTextToLocalMapping("Total Due")]: formatAmount(item.dueAmount.toFixed(2)) || "-",
               [getTextToLocalMapping("Account Balance")]: formatAmount(item.remainingBalance.toFixed(2)) || "-",
               [getTextToLocalMapping("Receipt No.")]: item.receiptNo || "-",
+              [getTextToLocalMapping("Consolidated Demand")]: item.isPrevious ? "CF" : "-"
               
             }));
             let lastElement = data.pop();

@@ -22,7 +22,8 @@ class Table extends React.Component {
         MUIDataTableBody:{
           emptyTitle: {
           marginLeft:window.innerWidth <900 ?"-100% !important":"0px",
-          marginTop: window.innerWidth <900 ?"8% !important":"0px"
+          marginTop: window.innerWidth <900 ?"8% !important":"0px",
+          wordBreak: window.innerWidth <900 ?"break-word":"break-word"
         }},
         MuiPaper: {
           root: {
@@ -44,10 +45,10 @@ class Table extends React.Component {
           }
         },
         MuiTypography: {
-          root: {
-            fontSize: "24px",
-            color: "#000"
-          },
+          // root: {
+          //   fontSize: "24px",
+          //   color: "#000"
+          // },
           caption: {
             fontSize: "14px"
           }

@@ -5,7 +5,9 @@ import {
 } from "../../utils";
 import { getTextToLocalMapping } from "./searchFunctions";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
+import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 
+const tenantId = getTenantId();
 export const searchResults = {
   uiFramework: "custom-molecules",
   moduleName: "egov-estate",
@@ -54,12 +56,26 @@ const onRowClick = rowData => {
     window.location.href = `estate-penalty?fileNumber=${rowData[1]}`
   }
   else if (type == "refund") {
-    window.location.href = `refund?fileNumber=${rowData[1]}`
+    window.location.href = `refund?fileNumber=${rowData[1]}&tenantId=${tenantId}`
   }
   else if(type == "account-statement"){
     window.location.href = `estate-search-account-statement?fileNumber=${rowData[1]}`
   }
+  else if(type =="security-fee"){
+    window.location.href = `estate-security-fee?fileNumber=${rowData[1]}`
+  }
+  else if(type == "extension-fee"){
+    window.location.href = `addExtensionFee?fileNumber=${rowData[1]}`
+  }
+  else if(type == "adhoc-demand"){
+    window.location.href = `adhocDemand?fileNumber=${rowData[1]}`
+  }
   else {
-    window.location.href = process.env.REACT_APP_NAME === "Citizen" ? `estate-branch-apply?propertyId=${rowData[4]}&fileNumber=${rowData[1]}` : `_apply?propertyId=${rowData[4]}&applicationType=${type}&fileNumber=${rowData[1]}`
+    if (process.env.REACT_APP_NAME === "Citizen") {
+      window.location.href = `application-types?propertyId=${rowData[4]}&fileNumber=${rowData[1]}&branchType=${branchType}`;
+    }
+    else {
+      window.location.href = `_apply?propertyId=${rowData[4]}&applicationType=${type}&fileNumber=${rowData[1]}`;
+    }
   }
 };
