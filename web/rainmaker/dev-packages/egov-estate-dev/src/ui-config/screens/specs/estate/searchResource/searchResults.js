@@ -74,6 +74,50 @@ export const searchResults = {
   }
 };
 
+export const searchResultsStatement = {
+  uiFramework: "custom-molecules",
+  componentPath: "Table",
+  visible: true,
+  props: {
+    columns: [
+      getTextToLocalMapping("File Number"),
+      getTextToLocalMapping("Sector Number"),
+      getTextToLocalMapping("Status"),
+      LAST_MODIFIED_ON,
+      {name: "propertyMasterOrAllotmentOfSite", options: {
+        display: false,
+        viewColumns: false
+      }}
+    ],
+    options: {
+      filter: false,
+      download: false,
+      responsive: "stacked",
+      selectableRows: false,
+      hover: true,
+      rowsPerPageOptions: [10, 15, 20],
+      onRowClick: (row, index) => {
+        // onRowClick(row);
+      }
+    },
+    customSortColumn: {
+      column: "Application Date",
+      sortingFn: (data, i, sortDateOrder) => {
+        const epochDates = data.reduce((acc, curr) => {
+          acc.push([...curr, getEpochForDate(curr[4], "dayend")]);
+          return acc;
+        }, []);
+        const order = sortDateOrder === "asc" ? true : false;
+        const finalData = sortByEpoch(epochDates, !order).map(item => {
+          item.pop();
+          return item;
+        });
+        return { data: finalData, currentOrder: !order ? "asc" : "desc" };
+      }
+    }
+  }
+};
+
 export const searchApplicationResults = {
   uiFramework: "custom-molecules",
   componentPath: "Table",
@@ -159,16 +203,16 @@ const onRowClick = rowData => {
 };
 
 export const securityDetailsTable = {
-  ...searchResults,
+  ...searchResultsStatement,
   visible: true,
-  props: {...searchResults.props, 
+  props: {...searchResultsStatement.props, 
     columns: [
       OFFLINE_PAYMENT_DATE,
       AMOUNT,
       TRANSACTION_ID
       
     ],
-    options: {...searchResults.props.options,
+    options: {...searchResultsStatement.props.options,
       pagination: false,
       filter: false,
       download: true,
@@ -184,9 +228,9 @@ export const securityDetailsTable = {
 
 
 export const penaltyDetailsTable = {
-  ...searchResults,
+  ...searchResultsStatement,
   visible: true,
-  props: {...searchResults.props, 
+  props: {...searchResultsStatement.props, 
     columns: [
       DATE,
       TYPE,
@@ -194,7 +238,7 @@ export const penaltyDetailsTable = {
       PENALTY_STATUS
      
     ],
-    options: {...searchResults.props.options,
+    options: {...searchResultsStatement.props.options,
       pagination: false,
       filter: false,
       download: true,
@@ -210,16 +254,16 @@ export const penaltyDetailsTable = {
 }
 
 export const extensionFeeDetailsTable = {
-  ...searchResults,
+  ...searchResultsStatement,
   visible: true,
-  props: {...searchResults.props, 
+  props: {...searchResultsStatement.props, 
     columns: [
       DATE,
       AMOUNT,
       STATUS
       
     ],
-    options: {...searchResults.props.options,
+    options: {...searchResultsStatement.props.options,
       pagination: false,
       filter: false,
       download: true,
