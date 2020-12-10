@@ -1750,7 +1750,7 @@ export const downloadPrintContainer = (
   else if(branchType === 'ManiMajra'){
      switch(applicationType && applicationState){
       case `${applicationType}` && 'ES_MM_PENDING_DS_VERIFICATION':
-        case `${applicationType}` && 'ES_PENDING_CLARIFICATION': 
+        case `${applicationType}` && 'ES_MM_PENDING_CLARIFICATION': 
         case `${applicationType}` && 'ES_MM_PENDING_DA_VERIFICATION':
         case `${applicationType}` && 'ES_MM_PENDING_BI_VERIFICATION': 
         case `${applicationType}` && 'ES_MM_PENDING_BI_DA_VERIFICATION':
@@ -1784,6 +1784,15 @@ export const downloadPrintContainer = (
                 applicationPrintObject
            ]
        break;
+
+       case `${applicationType}` && 'ES_MM_APPROVED':
+          downloadMenu = [
+            applicationDownloadObject
+          ]
+          printMenu = [
+              applicationPrintObject
+         ]
+         break;
        
        default:
           downloadMenu = [

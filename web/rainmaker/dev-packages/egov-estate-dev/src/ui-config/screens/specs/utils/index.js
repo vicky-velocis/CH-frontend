@@ -616,49 +616,57 @@ export const downloadAcknowledgementForm = (Applications, applicationType,feeEst
       case 'MM-NDC':
           queryStr = [{
             key:"key",
-            value:"mm-ndc-application"
+            value:(state == "ES_MM_PENDING_PAYMENT" || state == "ES_MM_PENDING_DA_PREPARE_LETTER" || state == "ES_MM_PENDING_SRA_REVIEW_LETTER" |
+            state == "ES_MM_PENDING_SO_APPROVAL" || state == "ES_MM_APPROVED") ? "mm-ndc-application-paid" : "mm-ndc-application"
           }] 
           break;
       case 'MM-NOC':
           queryStr = [{
             key:"key",
-            value:"mm-noc-application"
+            value:(state == "ES_MM_PENDING_PAYMENT" || state == "ES_MM_PENDING_DA_PREPARE_LETTER" || state == "ES_MM_PENDING_SRA_REVIEW_LETTER" |
+            state == "ES_MM_PENDING_SO_APPROVAL" || state == "ES_MM_APPROVED") ? "mm-noc-application-paid" : "mm-noc-application"
           }] 
           break;
       case 'MM-AllotmentOfNewHouse':
           queryStr = [{
             key:"key",
-            value:"mm-house-allotment-application"
+            value:(state == "ES_MM_PENDING_PAYMENT" || state == "ES_MM_PENDING_DA_PREPARE_LETTER" || state == "ES_MM_PENDING_SRA_REVIEW_LETTER" |
+            state == "ES_MM_PENDING_SO_APPROVAL" || state == "ES_MM_APPROVED") ? "mm-house-allotment-application-paid" : "mm-house-allotment-application"
           }] 
           break; 
       case 'MM-FamilySettlement':
           queryStr = [{
             key:"key",
-            value:"mm-family-settlement-application"
+            value:(state == "ES_MM_PENDING_PAYMENT" || state == "ES_MM_PENDING_DA_PREPARE_LETTER" || state == "ES_MM_PENDING_SRA_REVIEW_LETTER" |
+            state == "ES_MM_PENDING_SO_APPROVAL" || state == "ES_MM_APPROVED") ? "mm-family-settlement-application-paid" : "mm-family-settlement-application"
           }] 
           break; 
       case 'MM-UnRegisteredWill':
           queryStr = [{
             key:"key",
-            value:"mm-unregisteredWill-application"
+            value:(state == "ES_MM_PENDING_PAYMENT" || state == "ES_MM_PENDING_DA_PREPARE_LETTER" || state == "ES_MM_PENDING_SRA_REVIEW_LETTER" |
+            state == "ES_MM_PENDING_SO_APPROVAL" || state == "ES_MM_APPROVED") ? "mm-unregisteredWill-application-paid" : "mm-unregisteredWill-application"
           }] 
           break; 
       case 'MM-IntestateDeath':
           queryStr = [{
             key:"key",
-              value:"mm-inestate-death-application"
+            value:(state == "ES_MM_PENDING_PAYMENT" || state == "ES_MM_PENDING_DA_PREPARE_LETTER" || state == "ES_MM_PENDING_SRA_REVIEW_LETTER" |
+            state == "ES_MM_PENDING_SO_APPROVAL" || state == "ES_MM_APPROVED") ? "mm-inestate-death-application-paid" : "mm-inestate-death-application"
           }] 
           break; 
       case 'MM-RegisteredWill':
           queryStr = [{
             key:"key",
-            value:"mm-registeredWill-application"
+            value:(state == "ES_MM_PENDING_PAYMENT" || state == "ES_MM_PENDING_DA_PREPARE_LETTER" || state == "ES_MM_PENDING_SRA_REVIEW_LETTER" |
+            state == "ES_MM_PENDING_SO_APPROVAL" || state == "ES_MM_APPROVED") ? "mm-registeredWill-application-paid" : "mm-registeredWill-application"
           }] 
           break; 
       case 'MM-SaleGift':
           queryStr = [{
             key:"key",
-            value:"mm-sale-gift-application"
+            value:(state == "ES_MM_PENDING_PAYMENT" || state == "ES_MM_PENDING_DA_PREPARE_LETTER" || state == "ES_MM_PENDING_SRA_REVIEW_LETTER" |
+            state == "ES_MM_PENDING_SO_APPROVAL" || state == "ES_MM_APPROVED") ? "mm-sale-gift-application-paid" : "mm-sale-gift-application"
           }] 
           break;                       
   }
