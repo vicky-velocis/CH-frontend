@@ -127,14 +127,13 @@ const updateAllFields = async (action, state, dispatch) => {
   payload.Properties = properties;
 
   properties[0].propertyDetails.owners.forEach((element,index) => { 
-    let ownerName = properties[0].propertyDetails.owners[index].ownerDetails.ownerName
     setDocuments(
     payload,
     `Properties[0].propertyDetails.owners[${index}].ownerDetails.ownerDocuments`,
     `PropertiesTemp[${index}].reviewDocData`,
     dispatch,'ES'
     );
-    let documentListContainer = getReviewDocuments(false,'document-details',`PropertiesTemp[${index}].reviewDocData`, 3,ownerName);
+    let documentListContainer = getReviewDocuments(false,'document-details',`PropertiesTemp[${index}].reviewDocData`);
     containers[index] = getCommonCard({
       documentListContainer
     }); 
@@ -146,7 +145,7 @@ const updateAllFields = async (action, state, dispatch) => {
     "children",
     containers
     )
-  ); 
+  );
 }
 
 const commonDocumentDetails = {
