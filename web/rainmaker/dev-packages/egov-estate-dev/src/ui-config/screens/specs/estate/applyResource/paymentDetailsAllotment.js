@@ -155,7 +155,8 @@ export const installmentDetails = getCommonCard({
       },
       children: {
         multipleInstallmentInfo: {
-          uiFramework: "custom-containers",
+          uiFramework: "custom-containers-local",
+          moduleName: "egov-estate",
           componentPath: "MultiItem",
           props: {
             scheama: commonInstallmentInformation(),
