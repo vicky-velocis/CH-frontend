@@ -457,6 +457,7 @@ const commonRentInformation = () => {
       {
         jsonPath: "Properties[0].propertyDetails.paymentConfig.paymentConfigItems[0].tillDate",
         callBack: (value) =>  {
+          debugger
           if (value) {
             const years = (Number(value) / 12 | 0)
             const months = Number(value) % 12
