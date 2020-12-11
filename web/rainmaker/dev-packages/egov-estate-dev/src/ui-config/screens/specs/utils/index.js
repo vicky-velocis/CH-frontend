@@ -283,18 +283,33 @@ export const getMdmsData = async queryObject => {
   }
 };
 
-export const downloadSummary = (Properties, PropertiesTemp ,mode = "download") => {
-
-  const isGroundRent = Properties[0].propertyDetails.paymentConfig.isGroundRent
-  let queryStr = [{
-    key: "key",
-    value: `property-summary`
-  },
-  {
-    key: "tenantId",
-    value: `${getTenantId().split('.')[0]}`
+export const downloadSummary = (Properties, PropertiesTemp, branch, mode = "download") => {
+  let queryStr = []
+  switch(branch){
+    case "MANI_MAJRA":
+        queryStr = [{
+          key: "key",
+          value: `mm-property-master`
+        },
+        {
+          key: "tenantId",
+          value: `${getTenantId().split('.')[0]}`
+        }
+      ]
+      break;
+    default:
+     queryStr = [{
+          key: "key",
+          value: `property-summary`
+        },
+        {
+          key: "tenantId",
+          value: `${getTenantId().split('.')[0]}`
+        }
+      ]
   }
-]
+  const isGroundRent = Properties[0].propertyDetails.paymentConfig.isGroundRent
+  
 
 let PropertiesTempOwners = PropertiesTemp[0].propertyDetails.owners;
 const modifiedOwner = PropertiesTempOwners.map((owner) => {
