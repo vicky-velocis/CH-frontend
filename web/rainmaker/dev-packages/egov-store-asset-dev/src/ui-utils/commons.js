@@ -10,7 +10,7 @@ import { convertDateToEpoch, getCheckBoxJsonpath, getCurrentFinancialYear, getHy
 import { httpRequest } from "./api";
 
 import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
-
+import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 
 const role_name = JSON.parse(getUserInfo()).roles[0].code
 
@@ -69,6 +69,9 @@ export const getSearchResults = async (queryObject,dispatch,screenName) => {
     case "disposals":  url = "store-asset-services/disposals/_search";
     break;
     case "creatorList":  url = "store-asset-services/indents/_creatorList";
+    break;
+    case "employees":  url = "egov-hrms/employees/_search";
+    queryObject =[{ key: "roles", value: "EMPLOYEE" },{ key: "tenantId", value:  getTenantId() }];
     break;
   }
   try {

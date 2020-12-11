@@ -14,6 +14,7 @@ import {
   updatematerialissues,
   getWFPayload
 } from "../../../../../ui-utils/storecommonsapi";
+import { httpRequest } from "../../../../../ui-utils";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import {
   convertDateToEpoch,
@@ -341,6 +342,50 @@ let totalvalue = 0
 let TotalQty = 0;
 if(response && response[0])
 {
+
+  //set issue to employee name from store incharge
+if(response[0].fromStore.storeInCharge.code)
+{
+  const queryParams = [{ key: "roles", value: "EMPLOYEE" },{ key: "tenantId", value:  getTenantId() }];
+  const payload = await httpRequest(
+    "post",
+    "/egov-hrms/employees/_search",
+    "_search",
+    queryParams,
+  );
+  if(payload){
+    if (payload.Employees) {
+      let empDetails =
+      payload.Employees.map((item, index) => {
+          const deptCode = item.assignments[0] && item.assignments[0].department;
+          const designation =   item.assignments[0] && item.assignments[0].designation;
+          const empCode = item.code;
+          const empName = `${item.user.name}`;
+        return {
+                code : empCode,
+                name : empName,
+                dept : deptCode,
+                designation:designation,
+        };
+      });
+    
+      if(empDetails){
+        dispatch(prepareFinalObject("createScreenMdmsData.employee",empDetails)); 
+        empDetails = empDetails.filter(x=>x.code ===response[0].fromStore.storeInCharge.code)
+        if(empDetails&& empDetails[0])
+        {
+        set(response[0], `issuedToEmployee`, empDetails[0].name);
+        let issuedToDesignation =GetMdmsNameBycode(state, dispatch,"viewScreenMdmsData.common-masters.Designation",empDetails[0].designation)          
+        set(response[0], `issuedToDesignation`, issuedToDesignation); 
+        } 
+      }
+      
+    }
+  }
+
+ // let emp = get(state, "screenConfiguration.preparedFinalObject.createScreenMdmsData.employee",[])   
+ 
+}
   for (let index = 0; index < response[0].materialIssueDetails.length; index++) {
     const element = response[0].materialIssueDetails[index];
    let Uomname = GetMdmsNameBycode(state, dispatch,"viewScreenMdmsData.common-masters.UOM",element.uom.code)  

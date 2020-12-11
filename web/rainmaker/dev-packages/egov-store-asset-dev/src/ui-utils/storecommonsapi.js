@@ -919,17 +919,17 @@ export const ValidateCardUserQty = (state,dispatch,cardJsonPath,pagename,jasonpa
           //if(InputQtyValue_<poOrderedQuantity)
           // if(InputQtyValue_<poOrderedQuantity)
           // poOrderedQuantity = poOrderedQuantity-InputQtyValue_
-          if(InputQtyValue_<IssueQty)
+          if(InputQtyValue_<=IssueQty)
           {
             IssueQty = IssueQty-InputQtyValue_
           }
 
         }
-        
+        if(!applicationNumber)
         CompareQtyValue_ = CompareQtyValue_ - (IssueQty+poOrderedQuantity);
         if(applicationNumber)
         {
-          if(InputQtyValue_<IssueQty)
+          if(InputQtyValue_<=IssueQty)
           CompareQtyValue_ =CompareQtyValue_+IssueQty
         }
         if(InputQtyValue_>CompareQtyValue_ || InputQtyValue_ === 0)  
@@ -957,6 +957,13 @@ export const ValidateCardUserQty = (state,dispatch,cardJsonPath,pagename,jasonpa
         
       }
       else{
+        if(pagename ==='create-material-transfer-outward')
+        {
+          
+          let quantityIssued = Number(get(state.screenConfiguration.preparedFinalObject,`${jasonpath}[${index}].quantityIssuedE`,0))
+          console.log(quantityIssued);
+          CompareQtyValue_ = CompareQtyValue_- quantityIssued
+        }
         if(InputQtyValue_>CompareQtyValue_ || InputQtyValue_ === 0)       
         {
           if(InputQtyValue_ === 0)
@@ -1007,12 +1014,12 @@ export const ValidateCardUserQty = (state,dispatch,cardJsonPath,pagename,jasonpa
           // else
           // IssueQty = IssueQty-InputQtyValue_
         }
-        balanceQuantity_ = balanceQuantity_ - (IssueQty+poOrderedQuantity);
+        balanceQuantity_ = balanceQuantity_// - (IssueQty+poOrderedQuantity);
         if(applicationNumber)
         {
          // balanceQuantity_ =balanceQuantity_+IssueQty
-          if(InputQtyValue_<IssueQty)
-          balanceQuantity_ =balanceQuantity_+IssueQty
+          // if(InputQtyValue_<IssueQty)
+          // balanceQuantity_ =balanceQuantity_+IssueQty
         }
        
         if(InputQtyValue_>balanceQuantity_ || InputQtyValue_ === 0)  
@@ -1075,19 +1082,23 @@ export const ValidateCardUserQty = (state,dispatch,cardJsonPath,pagename,jasonpa
         let applicationNumber =  getQueryArg(window.location.href, "poNumber");
         if(applicationNumber)
         {
-          if(InputQtyValue_<poOrderedQuantity)
+          if(InputQtyValue_<=poOrderedQuantity)
           poOrderedQuantity = poOrderedQuantity-InputQtyValue_
           // else if(InputQtyValue_=== poOrderedQuantity)
           // poOrderedQuantity = poOrderedQuantity-InputQtyValue_//-poOrderedQuantity)+poOrderedQuantity
           // else
           // poOrderedQuantity = poOrderedQuantity-InputQtyValue_
         }
-        
+        if(!applicationNumber)
+        {
         CompareQtyValue_ = CompareQtyValue_ - (IssueQty+poOrderedQuantity);
+        }
         if(applicationNumber)
         {
           if(InputQtyValue_<=poOrderedQuantity)
           CompareQtyValue_ =CompareQtyValue_+ poOrderedQuantity
+          else
+          CompareQtyValue_ =(CompareQtyValue_-IssueQty)
         }
         if(InputQtyValue_>CompareQtyValue_ || InputQtyValue_ === 0)  
 

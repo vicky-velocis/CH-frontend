@@ -9,7 +9,8 @@ import {
     getStoresSearchResults, 
     getMaterialIndentSearchResults,
     getMaterialBalanceRateResults,
-    getmaterialissuesSearchResults
+    getmaterialissuesSearchResults,
+    GetMdmsNameBycode
   } from "../../../../ui-utils/storecommonsapi";
   
   import { IndentMaterialIssueDetails } from "./creatematerialindentnoteResource/Material-indent-note"; 
@@ -465,6 +466,7 @@ export const header = getCommonContainer({
         if(response){
           
           if(response.materialIssues && response.materialIssues[0].indent.id){
+            const storeInChargecode = response.materialIssues[0].fromStore.storeInCharge.code
             let indents =get(response.materialIssues[0],`indent`,[])                
               // dispatch(prepareFinalObject("materialIssues[0].toStore.code",indents[0].indentStore.code));
               // dispatch(prepareFinalObject("materialIssues[0].toStore.name",indents[0].indentStore.name));
@@ -485,8 +487,65 @@ export const header = getCommonContainer({
               let totalIndentQty = 0;
               let totalvalue = 0
               let TotalQty = 0;
+              let issuedToEmployee='';
+              let issuedToDesignation='';
               if(response && response.materialIssues[0])
                 {
+                    //set issue to employee name from store incharge
+                   
+                   
+                        getSearchResults(queryObject, dispatch,"employees")
+                        .then(response=>{
+                          if(response){
+                            if (response.Employees) {
+                              let empDetails =
+                              response.Employees.map((item, index) => {
+                                  const deptCode = item.assignments[0] && item.assignments[0].department;
+                                  const designation =   item.assignments[0] && item.assignments[0].designation;
+                                  const empCode = item.code;
+                                  const empName = `${item.user.name}`;
+                                return {
+                                        code : empCode,
+                                        name : empName,
+                                        dept : deptCode,
+                                        designation:designation,
+                                };
+                              });
+                            
+                              if(empDetails){
+                                dispatch(prepareFinalObject("createScreenMdmsData.employee",empDetails)); 
+                                empDetails = empDetails.filter(x=>x.code ===storeInChargecode)
+                                if(empDetails&& empDetails[0])
+                                {
+                               // set(response.materialIssues[0], `issuedToEmployee`, empDetails[0].name);
+                                issuedToEmployee = empDetails[0].name;
+                                dispatch(prepareFinalObject("materialIssues[0].issuedToEmployee",issuedToEmployee));
+                                const {designationsById} = state.common
+                                if(designationsById)
+                                {
+                                  const desgnName = Object.values(designationsById).filter(item =>  item.code === empDetails[0].designation )
+                                  issuedToDesignation =desgnName[0].name;
+                                  dispatch(prepareFinalObject("materialIssues[0].issuedToDesignation",issuedToDesignation));
+                                }
+                               
+                                } 
+                              }                              
+                            }
+                          }
+                        });                         
+                      // let emp = get(state, "screenConfiguration.preparedFinalObject.createScreenMdmsData.employee",[])   
+                      issuedToEmployee = get(
+                        state.screenConfiguration.preparedFinalObject,
+                        "issuedToEmployee",
+                        []
+                      );
+                       issuedToDesignation = get(
+                        state.screenConfiguration.preparedFinalObject,
+                        "issuedToDesignation",
+                        []
+                      );
+                      set(response.materialIssues[0], `issuedToEmployee`, issuedToEmployee);
+                      set(response.materialIssues[0], `issuedToDesignation`, issuedToDesignation); 
                   for (let index = 0; index < response.materialIssues[0].materialIssueDetails.length; index++) {
                     const element = response.materialIssues[0].materialIssueDetails[index];
                     set(response.materialIssues[0], `materialIssueDetails[${index}].receiptId`, element.materialIssuedFromReceipts[index].materialReceiptId);
