@@ -1245,7 +1245,11 @@ export const getReviewInterest = (isEditable = true, step = 5, screenKey = "allo
           labelKey: "ES_INTEREST_FIXED_LABEL"
         }, 
         {
-          jsonPath: `Properties[0].propertyDetails.paymentConfig.isIntrestApplicable`
+          jsonPath: `Properties[0].propertyDetails.paymentConfig.isIntrestApplicable`,
+          callBack: (value) => {
+            console.log("value", value);
+            return value == true ? "Yes" : "No"
+          }
         }
       ),
       percentageOfInterest: getLabelWithValue(
