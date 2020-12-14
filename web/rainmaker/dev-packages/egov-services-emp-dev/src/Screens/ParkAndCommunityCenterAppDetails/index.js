@@ -36,7 +36,7 @@ import {
 import {
 	fetchApplications,fetchPayment, fetchHistory, fetchDataAfterPayment, downloadReceiptForPCC, downloadAppForPCC,
 	sendMessage, downloadPLForPCC,
-	sendMessageMedia,AmountRefCondition
+	sendMessageMedia
 } from "egov-ui-kit/redux/bookings/actions";
 import { connect } from "react-redux";
 import DialogContainer from '../../modules/DialogContainer';
@@ -59,7 +59,8 @@ class ApplicationDetails extends Component {
 			togglepopup: false,
 			actionOnApplication: '',
 			actionTittle: '',
-			actionOpen: false
+			actionOpen: false,
+			Amount: "1"
 		};
 	};
 
@@ -91,6 +92,8 @@ class ApplicationDetails extends Component {
 			prepareFinalObject
 		} = this.props;
 
+const {Amount} = this.state
+
 		prepareFormData("complaints", transformedComplaint);
 		const { complaint } = transformedComplaint;
 		fetchApplications(
@@ -114,9 +117,6 @@ class ApplicationDetails extends Component {
 		// fetchResponseForRefdunf(
 		// 		[{ key: "consumerCodes", value: match.params.applicationId }, { key: "tenantId", value: userInfo.tenantId }
 		// 		])
-		
-		await AmountRefCondition();
-
 
 		let { details } = this.state;
 	}
@@ -132,7 +132,7 @@ class ApplicationDetails extends Component {
 	actionButtonOnClick = async (e, complaintNo, label) => {
 
 		let AmountCondition = false;
-		const { prepareFinalObject,AmountRefCondition } = this.props;
+		const { prepareFinalObject } = this.props;
 		let {
 			match,
 			userInfo,
@@ -153,8 +153,6 @@ class ApplicationDetails extends Component {
 				);
 console.log("AmountCondition--",AmountCondition)
 			}
-			
-		await AmountRefCondition();
 
 			if(selectedComplaint.bkApplicationStatus == "PENDING_FOR_DISBURSEMENT"){
 				let RequestData = [
@@ -1312,9 +1310,7 @@ const mapDispatchToProps = dispatch => {
 			dispatch(prepareFinalObject(jsonPath, value)),
 			downloadEsamparkApp: criteria => dispatch(downloadEsamparkApp(criteria)),  
 			downloadEsamparkPL: criteria => dispatch(downloadEsamparkPL(criteria)),
-			AmountRefCondition: () => dispatch(AmountRefCondition()),
-			//AmountRefCondition
-
+		
 
 	};
 };
