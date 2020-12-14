@@ -387,7 +387,7 @@ const CompleteAmountCondition = () => {
 };
 
 export const AmountRefCondition = () => {
-	console.log()
+	console.log("come AmountRefCondition")
 	return async (dispatch) => {
 		dispatch(CompleteAmountCondition())
 	}
