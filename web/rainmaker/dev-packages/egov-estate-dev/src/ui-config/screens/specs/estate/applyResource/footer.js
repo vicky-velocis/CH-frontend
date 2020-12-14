@@ -800,7 +800,7 @@ const callBackForNext = async (state, dispatch) => {
     }
     else if (hasFieldToaster) {
       let errorMessage = {
-        labelName: "Please fill all mandatory fields and upload the required document !",
+        labelName: "Please fill all mandatory fields and upload the documents !",
         labelKey: "ES_ERR_FILL_MANDATORY_FIELDS_UPLOAD_DOCS"
       };
       switch (activeStep) {
