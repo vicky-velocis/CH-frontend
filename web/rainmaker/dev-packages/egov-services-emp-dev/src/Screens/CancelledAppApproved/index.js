@@ -470,7 +470,7 @@ console.log("Difference_In_Days--",Difference_In_Days)
     const { valueSelected, commentValue ,assignee,assignToMe} = this.state;
     const { trasformData, businessServiceData,applicationNumber,Cancelstatus } = this.props;
     let CheckCancelStatus;
-    if(CancelStatus == "CANCEL"){
+    if(Cancelstatus == "CANCEL"){
       CheckCancelStatus = Cancelstatus
     }
     else{

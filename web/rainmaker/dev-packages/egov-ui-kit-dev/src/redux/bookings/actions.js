@@ -382,6 +382,16 @@ export const getComplaintDisplayOrder = (order) => {
 	};
 };
 
+const CompleteAmountCondition = () => {
+	return { type: actionTypes.REF_AMOUNT_CONDITION};
+};
+
+export const AmountRefCondition = () => {
+	console.log()
+	return async (dispatch) => {
+		dispatch(CompleteAmountCondition())
+	}
+}
 
 export const fetchApplications = (requestBody, hasUsers = true, overWrite) => {
 	console.log('requestBody in own module',requestBody)

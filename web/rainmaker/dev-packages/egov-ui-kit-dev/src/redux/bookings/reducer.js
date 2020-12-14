@@ -23,6 +23,8 @@ import isEmpty from "lodash/isEmpty";
 const intialState = {
   loading: false,
   error: false,
+  CheckConRefAmt: false,
+  name: "Ram",
   errorMessage: "",
   byId: {},
   categoriesById: {},
@@ -333,7 +335,14 @@ const complaintsReducer = (state = intialState, action) => {
         loading: false,
         order: action.order,
       };
-
+    case actionTypes.REF_AMOUNT_CONDITION:
+      console.log("actionAmount--",action)
+        return {
+          ...state,
+          loading: false,
+          CheckConRefAmt: true,
+          name: "Shayam"
+        };
     case actionTypes.COMPLAINTS_SEND_MESSAGE:
       return {
         ...state,
