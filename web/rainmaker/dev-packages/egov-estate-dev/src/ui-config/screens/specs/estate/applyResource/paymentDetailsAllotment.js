@@ -308,26 +308,14 @@ const groundRentGenerationTypeField = {
     jsonpath.pop();
     jsonpath = jsonpath.join(".")
 
-    if (action.value == "Monthly") {
-      dispatch(
-        handleField(
-          action.screenKey,
-          `${jsonpath}.dateToGenerateDemandRent`,
-          "visible",
-          true
-        )
+    dispatch(
+      handleField(
+        action.screenKey,
+        `${jsonpath}.dateToGenerateDemandRent`,
+        "visible",
+        !!(action.value == "Monthly")
       )
-    }
-    else {
-      dispatch(
-        handleField(
-          action.screenKey,
-          `${jsonpath}.dateToGenerateDemandRent`,
-          "visible",
-          false
-        )
-      )
-    }
+    )
   }
 }
 
@@ -596,26 +584,18 @@ const licenseFeeGenerationTypeField = {
     ]
   },
   beforeFieldChange: (action, state, dispatch) => {
-    if (action.value == "Monthly") {
-      dispatch(
-        handleField(
-          "allotment",
-          "components.div.children.formwizardSixthStepAllotment.children.licenseFeeDetails.children.cardContent.children.detailsContainer.children.dateToGenerateDemandLf",
-          "visible",
-          true
-        )
+    let jsonpath = action.componentJsonpath.split(".");
+    jsonpath.pop();
+    jsonpath = jsonpath.join(".")
+
+    dispatch(
+      handleField(
+        action.screenKey,
+        `${jsonpath}.dateToGenerateDemandLf`,
+        "visible",
+        !!(action.value == "Monthly")
       )
-    }
-    else {
-      dispatch(
-        handleField(
-          "allotment",
-          "components.div.children.formwizardSixthStepAllotment.children.licenseFeeDetails.children.cardContent.children.detailsContainer.children.dateToGenerateDemandLf",
-          "visible",
-          false
-        )
-      )
-    }
+    )
   }
 }
 
@@ -855,8 +835,8 @@ export const licenseFeeDetails = getCommonCard({
   header: licenseFeeHeader,
   detailsContainer: getCommonContainer({
       demandGenerationType: getSelectField(licenseFeeGenerationTypeField),
-      dateToGenerateDemandLf: getSelectField(dateToGenerateDemandLicenseFeeField),
       billingStartDateLf: getDateField(billingStartDateLicenseFeeField),
+      dateToGenerateDemandLf: getSelectField(dateToGenerateDemandLicenseFeeField),
       advanceRent: getTextField(advancedRentField),
       dateOfPaymentOfAdvanceRent: getDateField(dateOfPaymentOfAdvanceRentField)
   }),
