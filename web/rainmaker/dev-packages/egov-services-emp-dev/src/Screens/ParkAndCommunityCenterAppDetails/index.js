@@ -36,7 +36,7 @@ import {
 import {
 	fetchApplications,fetchPayment, fetchHistory, fetchDataAfterPayment, downloadReceiptForPCC, downloadAppForPCC,
 	sendMessage, downloadPLForPCC,
-	sendMessageMedia
+	sendMessageMedia,AmountRefCondition
 } from "egov-ui-kit/redux/bookings/actions";
 import { connect } from "react-redux";
 import DialogContainer from '../../modules/DialogContainer';
@@ -115,7 +115,7 @@ class ApplicationDetails extends Component {
 		// 		[{ key: "consumerCodes", value: match.params.applicationId }, { key: "tenantId", value: userInfo.tenantId }
 		// 		])
 		
-
+		await AmountRefCondition();
 
 
 		let { details } = this.state;
@@ -132,7 +132,7 @@ class ApplicationDetails extends Component {
 	actionButtonOnClick = async (e, complaintNo, label) => {
 
 		let AmountCondition = false;
-		const { prepareFinalObject } = this.props;
+		const { prepareFinalObject,AmountRefCondition } = this.props;
 		let {
 			match,
 			userInfo,
@@ -154,7 +154,7 @@ class ApplicationDetails extends Component {
 console.log("AmountCondition--",AmountCondition)
 			}
 			
-
+		await AmountRefCondition();
 
 			if(selectedComplaint.bkApplicationStatus == "PENDING_FOR_DISBURSEMENT"){
 				let RequestData = [
@@ -967,7 +967,7 @@ GOTOPAY = (selectedNumber) => {
 											},
 											menu: [{
 												label: {
-													labelName: "Approve",
+													labelName: "CanecelApprove",
 													labelKey: "BK_MYBK_APPROVE_ACTION_BUTTON"
 												},
 
@@ -975,18 +975,18 @@ GOTOPAY = (selectedNumber) => {
 											},
 											{
 												label: {
-													labelName: "PAY",
+													labelName: "ApplyRefund",
 													labelKey: "BK_MYBK_PAY_ACTION_BUTTON"
 												},
 												link: () => this.GOTOPAY(selectedNumber)
+											},
+											{
+												label: {
+													labelName: "Reject",
+													labelKey: "BK_MYBK_REJECT_ACTION_BUTTON"
+												},
+												link: () => this.actionButtonOnClick('state', "dispatch", 'REJECT')
 											}
-											// {
-											// 	label: {
-											// 		labelName: "Reject",
-											// 		labelKey: "BK_MYBK_REJECT_ACTION_BUTTON"
-											// 	},
-											// 	link: () => this.actionButtonOnClick('state', "dispatch", 'REJECT')
-											// }
 										]
 										}} />}></Footer>
 
@@ -1312,6 +1312,10 @@ const mapDispatchToProps = dispatch => {
 			dispatch(prepareFinalObject(jsonPath, value)),
 			downloadEsamparkApp: criteria => dispatch(downloadEsamparkApp(criteria)),  
 			downloadEsamparkPL: criteria => dispatch(downloadEsamparkPL(criteria)),
+			AmountRefCondition: () => dispatch(AmountRefCondition()),
+			//AmountRefCondition
+
+
 	};
 };
 
