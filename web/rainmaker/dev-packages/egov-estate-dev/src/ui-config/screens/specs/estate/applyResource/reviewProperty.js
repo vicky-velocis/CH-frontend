@@ -1247,7 +1247,7 @@ export const getReviewInterest = (isEditable = true, step = 5, screenKey = "allo
         {
           jsonPath: `Properties[0].propertyDetails.paymentConfig.isIntrestApplicable`,
           callBack: (value) => {
-            return value == true ? "Yes" : "No"
+            return value == "true" ? "Yes" : "No"
           }
         }
       ),
