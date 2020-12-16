@@ -2317,6 +2317,8 @@ export const _getPattern = (type) => {
       return /^[+-]?\d{2,5}(\.\d{1,2})?$/i;
     case "address":
       return /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,150}$/i
+    case "ownerShare":
+      return /^[+-]?\d{2,5}(\.\d{1,2})?$/i;  
   }
 }
 
