@@ -210,7 +210,9 @@ console.log(matcodes)
                 //dispatch(prepareFinalObject("materialIssues[0].fromStore.department.name",fromstore[0].department));
                 dispatch(prepareFinalObject("materialIssues[0].fromStore.deliveryAddress",fromstore[0].deliveryAddress));
                 dispatch(prepareFinalObject("materialIssues[0].fromStore.storeInCharge.code",fromstore[0].storeInCharge.code));
-                dispatch(prepareFinalObject("materialIssues[0].fromStore.tenantId",getTenantId()));         
+                dispatch(prepareFinalObject("materialIssues[0].fromStore.tenantId",getTenantId())); 
+                const applicationNumber = getQueryArg(window.location.href, "applicationNumber");
+                if(!applicationNumber)        
                 getMaterialData(action,state,dispatch)               
             }
           // }

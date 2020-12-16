@@ -53,7 +53,8 @@ import {
           props: {
             optionValue: "code",
             optionLabel: "name",
-            disabled: disabled,
+            //disabled: disabled,
+            disabled : getQueryArg(window.location.href, "tenantId") === null?false:true,
           },
         }),
         beforeFieldChange: (action, state, dispatch) => {

@@ -15,10 +15,10 @@ import {
   import { getSTOREPattern} from "../../../../../ui-utils/commons";
   import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
   import { handleScreenConfigurationFieldChange as handleField , prepareFinalObject} from "egov-ui-framework/ui-redux/screen-configuration/actions";
-  // let tenantId = getQueryArg(window.location.href, "tenantId");
+   let tenantId = getQueryArg(window.location.href, "tenantId");
    let disabled = false
-  // if(tenantId)
-  // disabled = true
+  if(tenantId)
+  disabled = true
   const arrayCrawler = (arr, n) => {
     if (n == 1) {
       return arr.map(item => {
@@ -326,6 +326,7 @@ import {
         return muliItemContent;
       },
       items: [],
+      hasAddItem:!disabled,
       addItemLabel: {
         labelName: "ADD",
         labelKey: "STORE_MATERIAL_COMMON_CARD_ADD"

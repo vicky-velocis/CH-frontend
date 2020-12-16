@@ -724,8 +724,15 @@ export const ValidateCard = (state,dispatch,cardJsonPath,pagename,jasonpath,valu
     if(CardItem[index].isDeleted === undefined ||
     CardItem[index].isDeleted !== false)
     {
-    let code = get(state.screenConfiguration.preparedFinalObject,`${jasonpath}[${index}].${value}`,'')  
-    code = GetMdmsNameBycode(state, dispatch,"createScreenMdmsData.store-asset.Material",code)       
+    let code = get(state.screenConfiguration.preparedFinalObject,`${jasonpath}[${index}].${value}`,'') 
+    
+    code = GetMdmsNameBycode(state, dispatch,"createScreenMdmsData.store-asset.Material",code) 
+    if(pagename ==='createMaterialIndentNote')  
+    {
+      let matcode = get(state.screenConfiguration.preparedFinalObject,`${jasonpath}[${index}].${'material.code'}`,'')
+      matcode = GetMdmsNameBycode(state, dispatch,"createScreenMdmsData.store-asset.Material",matcode) 
+      code =`${code}_${matcode}`;
+    }     
     matcode.push(code)
     }
   } 
@@ -919,18 +926,19 @@ export const ValidateCardUserQty = (state,dispatch,cardJsonPath,pagename,jasonpa
           //if(InputQtyValue_<poOrderedQuantity)
           // if(InputQtyValue_<poOrderedQuantity)
           // poOrderedQuantity = poOrderedQuantity-InputQtyValue_
-          if(InputQtyValue_<=IssueQty)
-          {
-            IssueQty = IssueQty-InputQtyValue_
-          }
+          // if(InputQtyValue_<=IssueQty)
+          // {
+          //   IssueQty = IssueQty-InputQtyValue_
+          // }
 
         }
         if(!applicationNumber)
         CompareQtyValue_ = CompareQtyValue_ - (IssueQty+poOrderedQuantity);
         if(applicationNumber)
         {
-          if(InputQtyValue_<=IssueQty)
-          CompareQtyValue_ =CompareQtyValue_+IssueQty
+          // if(InputQtyValue_<=IssueQty)
+          // CompareQtyValue_ =CompareQtyValue_+IssueQty
+          CompareQtyValue_ = CompareQtyValue_ - (poOrderedQuantity);
         }
         if(InputQtyValue_>CompareQtyValue_ || InputQtyValue_ === 0)  
         {
@@ -1082,8 +1090,8 @@ export const ValidateCardUserQty = (state,dispatch,cardJsonPath,pagename,jasonpa
         let applicationNumber =  getQueryArg(window.location.href, "poNumber");
         if(applicationNumber)
         {
-          if(InputQtyValue_<=poOrderedQuantity)
-          poOrderedQuantity = poOrderedQuantity-InputQtyValue_
+          // if(InputQtyValue_<=poOrderedQuantity)
+          // poOrderedQuantity = poOrderedQuantity-InputQtyValue_
           // else if(InputQtyValue_=== poOrderedQuantity)
           // poOrderedQuantity = poOrderedQuantity-InputQtyValue_//-poOrderedQuantity)+poOrderedQuantity
           // else
@@ -1095,10 +1103,11 @@ export const ValidateCardUserQty = (state,dispatch,cardJsonPath,pagename,jasonpa
         }
         if(applicationNumber)
         {
-          if(InputQtyValue_<=poOrderedQuantity)
-          CompareQtyValue_ =CompareQtyValue_+ poOrderedQuantity
-          else
-          CompareQtyValue_ =(CompareQtyValue_-IssueQty)
+          // if(InputQtyValue_<=poOrderedQuantity)
+          // CompareQtyValue_ =CompareQtyValue_+ poOrderedQuantity
+          // else
+          // CompareQtyValue_ =(CompareQtyValue_-IssueQty)
+          CompareQtyValue_ = CompareQtyValue_ - (IssueQty);
         }
         if(InputQtyValue_>CompareQtyValue_ || InputQtyValue_ === 0)  
 

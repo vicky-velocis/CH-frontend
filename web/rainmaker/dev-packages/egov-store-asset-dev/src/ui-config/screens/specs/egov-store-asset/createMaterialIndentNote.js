@@ -494,58 +494,58 @@ export const header = getCommonContainer({
                     //set issue to employee name from store incharge
                    
                    
-                        getSearchResults(queryObject, dispatch,"employees")
-                        .then(response=>{
-                          if(response){
-                            if (response.Employees) {
-                              let empDetails =
-                              response.Employees.map((item, index) => {
-                                  const deptCode = item.assignments[0] && item.assignments[0].department;
-                                  const designation =   item.assignments[0] && item.assignments[0].designation;
-                                  const empCode = item.code;
-                                  const empName = `${item.user.name}`;
-                                return {
-                                        code : empCode,
-                                        name : empName,
-                                        dept : deptCode,
-                                        designation:designation,
-                                };
-                              });
+                      //   getSearchResults(queryObject, dispatch,"employees")
+                      //   .then(response=>{
+                      //     if(response){
+                      //       if (response.Employees) {
+                      //         let empDetails =
+                      //         response.Employees.map((item, index) => {
+                      //             const deptCode = item.assignments[0] && item.assignments[0].department;
+                      //             const designation =   item.assignments[0] && item.assignments[0].designation;
+                      //             const empCode = item.code;
+                      //             const empName = `${item.user.name}`;
+                      //           return {
+                      //                   code : empCode,
+                      //                   name : empName,
+                      //                   dept : deptCode,
+                      //                   designation:designation,
+                      //           };
+                      //         });
                             
-                              if(empDetails){
-                                dispatch(prepareFinalObject("createScreenMdmsData.employee",empDetails)); 
-                                empDetails = empDetails.filter(x=>x.code ===storeInChargecode)
-                                if(empDetails&& empDetails[0])
-                                {
-                               // set(response.materialIssues[0], `issuedToEmployee`, empDetails[0].name);
-                                issuedToEmployee = empDetails[0].name;
-                                dispatch(prepareFinalObject("materialIssues[0].issuedToEmployee",issuedToEmployee));
-                                const {designationsById} = state.common
-                                if(designationsById)
-                                {
-                                  const desgnName = Object.values(designationsById).filter(item =>  item.code === empDetails[0].designation )
-                                  issuedToDesignation =desgnName[0].name;
-                                  dispatch(prepareFinalObject("materialIssues[0].issuedToDesignation",issuedToDesignation));
-                                }
+                      //         if(empDetails){
+                      //           dispatch(prepareFinalObject("createScreenMdmsData.employee",empDetails)); 
+                      //           empDetails = empDetails.filter(x=>x.code ===storeInChargecode)
+                      //           if(empDetails&& empDetails[0])
+                      //           {
+                      //          // set(response.materialIssues[0], `issuedToEmployee`, empDetails[0].name);
+                      //           issuedToEmployee = empDetails[0].name;
+                      //           dispatch(prepareFinalObject("materialIssues[0].issuedToEmployee",issuedToEmployee));
+                      //           const {designationsById} = state.common
+                      //           if(designationsById)
+                      //           {
+                      //             const desgnName = Object.values(designationsById).filter(item =>  item.code === empDetails[0].designation )
+                      //             issuedToDesignation =desgnName[0].name;
+                      //             dispatch(prepareFinalObject("materialIssues[0].issuedToDesignation",issuedToDesignation));
+                      //           }
                                
-                                } 
-                              }                              
-                            }
-                          }
-                        });                         
-                      // let emp = get(state, "screenConfiguration.preparedFinalObject.createScreenMdmsData.employee",[])   
-                      issuedToEmployee = get(
-                        state.screenConfiguration.preparedFinalObject,
-                        "issuedToEmployee",
-                        []
-                      );
-                       issuedToDesignation = get(
-                        state.screenConfiguration.preparedFinalObject,
-                        "issuedToDesignation",
-                        []
-                      );
-                      set(response.materialIssues[0], `issuedToEmployee`, issuedToEmployee);
-                      set(response.materialIssues[0], `issuedToDesignation`, issuedToDesignation); 
+                      //           } 
+                      //         }                              
+                      //       }
+                      //     }
+                      //   });                         
+                     
+                      // issuedToEmployee = get(
+                      //   state.screenConfiguration.preparedFinalObject,
+                      //   "issuedToEmployee",
+                      //   []
+                      // );
+                      //  issuedToDesignation = get(
+                      //   state.screenConfiguration.preparedFinalObject,
+                      //   "issuedToDesignation",
+                      //   []
+                      // );
+                      // set(response.materialIssues[0], `issuedToEmployee`, issuedToEmployee);
+                      // set(response.materialIssues[0], `issuedToDesignation`, issuedToDesignation); 
                   for (let index = 0; index < response.materialIssues[0].materialIssueDetails.length; index++) {
                     const element = response.materialIssues[0].materialIssueDetails[index];
                     set(response.materialIssues[0], `materialIssueDetails[${index}].receiptId`, element.materialIssuedFromReceipts[index].materialReceiptId);
@@ -591,7 +591,40 @@ export const header = getCommonContainer({
               .then(response =>{
                 if(response)
                 {
-                  dispatch(prepareFinalObject("indentsmaterial", [...response.MaterialBalanceRate]));
+                  if(response.MaterialBalanceRate.length>0)
+                  {
+
+                    dispatch(prepareFinalObject("indentsmaterial", [...response.MaterialBalanceRate]));
+                  } 
+                  else
+                  {
+                    let indentsmaterial =[];
+                    const {materialIssues} = state.screenConfiguration.preparedFinalObject
+                    const{materialIssueDetails} =materialIssues[0]
+                    for (let index = 0; index < materialIssueDetails.length; index++) {
+                      const element = materialIssueDetails[index];
+                      const{materialIssuedFromReceipts} = element
+                      let materialIssuedFromReceipts_ = materialIssuedFromReceipts.filter(x=>x.status === true)
+                      if(materialIssuedFromReceipts_&&materialIssuedFromReceipts_[0])
+                      {
+                        indentsmaterial.push(
+                          {
+                            receiptId :materialIssuedFromReceipts_[0].materialReceiptId,
+                            receiptDetailId:materialIssuedFromReceipts_[0].materialReceiptDetail.id,
+                            mrnNumber:materialIssuedFromReceipts_[0].materialReceiptDetail.mrnNumber,
+                            materialCode:element.material.code,
+                            materialName:`${element.material.name}(Qty:${element.quantityIssued}, Rate: ${materialIssuedFromReceipts_[0].materialReceiptDetail.unitRate})`,
+                            balance:element.quantityIssued,
+                            uomCode:element.uom.code,
+                            unitRate:materialIssuedFromReceipts_[0].materialReceiptDetail.unitRate,
+                          }
+                        )
+                      }                      
+                    }
+                    dispatch(prepareFinalObject("indentsmaterial", indentsmaterial));
+
+                  }                
+                  
                 }
                 
               });
