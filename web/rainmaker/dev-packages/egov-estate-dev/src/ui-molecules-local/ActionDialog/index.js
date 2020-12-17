@@ -36,7 +36,7 @@ const fieldConfig = {
   comments: {
     label: {
       labelName: "Comments",
-      labelKey: "WF_ES_COMMON_COMMENTS"
+      labelKey: "ES_COMMON_COMMENTS"
     },
     placeholder: {
       labelName: "Enter Comments",
