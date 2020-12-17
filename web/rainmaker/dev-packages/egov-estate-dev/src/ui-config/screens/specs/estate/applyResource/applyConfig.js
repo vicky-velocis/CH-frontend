@@ -77,8 +77,38 @@ const documentCardConfig = {
   }),
 }
 
+const documentCardConfigOwner = {
+  header: getCommonTitle({
+    labelName: "Required Documents",
+    labelKey: "ES_UPLOAD_DOCS_HEADER"
+  }, {
+    style: {
+      marginBottom: 18
+    }
+  }),
+  paragraph: getCommonParagraph({
+    labelName: "Only one file can be uploaded for one document. If multiple files need to be uploaded then please combine all files in a pdf and then upload",
+    labelKey: "ES_UPLOAD_DOCS_SUBHEADER"
+  }),
+}
+
+const documentCardConfigPurchaser = {
+  header: getCommonTitle({
+    labelName: "Required Documents",
+    labelKey: "ES_UPLOAD_DOCS_HEADER"
+  }, {
+    style: {
+      marginBottom: 18
+    }
+  }),
+  paragraph: getCommonParagraph({
+    labelName: "Only one file can be uploaded for one document. If multiple files need to be uploaded then please combine all files in a pdf and then upload",
+    labelKey: "ES_UPLOAD_DOCS_SUBHEADER"
+  }),
+}
+
 export const ownerDocumentDetails_0 = getCommonCard({
-  ...documentCardConfig,
+  ...documentCardConfigOwner,
   documentList: {
     ...documentList,
     props: {
@@ -93,7 +123,7 @@ export const ownerDocumentDetails_0 = getCommonCard({
   }
 });
 export const ownerDocumentDetails_1 = getCommonCard({
-  ...documentCardConfig,
+  ...documentCardConfigOwner,
   documentList: {
     ...documentList,
     props: {
@@ -211,7 +241,7 @@ export const companyDocuments_0 = getCommonCard({
 });
 
 export const previousOwnerDocuments_0 = getCommonCard({
-  ...documentCardConfig,
+  ...documentCardConfigPurchaser,
   documentList: {
     ...documentList,
     props: {
