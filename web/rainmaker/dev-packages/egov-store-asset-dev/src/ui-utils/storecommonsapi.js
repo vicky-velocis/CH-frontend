@@ -731,7 +731,8 @@ export const ValidateCard = (state,dispatch,cardJsonPath,pagename,jasonpath,valu
     {
       let matcode = get(state.screenConfiguration.preparedFinalObject,`${jasonpath}[${index}].${'material.code'}`,'')
       matcode = GetMdmsNameBycode(state, dispatch,"createScreenMdmsData.store-asset.Material",matcode) 
-      code =`${code}_${matcode}`;
+    // code =`${code}_${matcode}`;
+    code = matcode;
     }     
     matcode.push(code)
     }

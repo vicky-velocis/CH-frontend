@@ -240,22 +240,25 @@ export const createUpdateIndent = async (state, dispatch, action) => {
 
       //get and set indentDetail id from indent --> indentDetail objet
 
-      let indentDetails = get(
-        state.screenConfiguration.preparedFinalObject,
-        "materialIssues[0].indent.indentDetails",
-        []
-      );
+     
       let materialIssueDetails = get(
         state.screenConfiguration.preparedFinalObject,
         "materialIssues[0].materialIssueDetails",
         []
       );
       for (let index = 0; index < materialIssueDetails.length; index++) {
+        let indentDetails = get(
+          state.screenConfiguration.preparedFinalObject,
+          "materialIssues[0].indent.indentDetails",
+          []
+        );
         const element = materialIssueDetails[index];
+        indentDetails = indentDetails.filter(x=>x.material.code ===element.material.code)
+       // const element = materialIssueDetails[index];
         dispatch(
           prepareFinalObject(
             `materialIssues[0].materialIssueDetails[${index}].indentDetail.id`,
-            indentDetails[index].id,
+            indentDetails[0].id,
           )
         );
         

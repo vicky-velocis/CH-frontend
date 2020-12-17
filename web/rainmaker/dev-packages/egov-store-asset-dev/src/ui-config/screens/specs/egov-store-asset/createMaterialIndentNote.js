@@ -548,7 +548,13 @@ export const header = getCommonContainer({
                       // set(response.materialIssues[0], `issuedToDesignation`, issuedToDesignation); 
                   for (let index = 0; index < response.materialIssues[0].materialIssueDetails.length; index++) {
                     const element = response.materialIssues[0].materialIssueDetails[index];
-                    set(response.materialIssues[0], `materialIssueDetails[${index}].receiptId`, element.materialIssuedFromReceipts[index].materialReceiptId);
+                    const{materialIssuedFromReceipts} = element
+                    let materialIssuedFromReceipts_ = materialIssuedFromReceipts.filter(x=>x.status === true)
+                    if(materialIssuedFromReceipts_&&materialIssuedFromReceipts_[0])
+                    {
+                    set(response.materialIssues[0], `materialIssueDetails[${index}].receiptId`, materialIssuedFromReceipts_[0].materialReceiptId);
+                    set(response.materialIssues[0], `materialIssueDetails[${index}].receiptDetailId`, materialIssuedFromReceipts_[0].materialReceiptDetail.id);
+                    }
                     set(response.materialIssues[0], `materialIssueDetails[${index}].indentDetail.userQuantity`, Number(element.quantityIssued));
                     if(Number(response.materialIssues[0].indent.indentDetails[index].indentQuantity))
                     set(response.materialIssues[0], `materialIssueDetails[${index}].indentDetail.indentQuantity`, Number(response.materialIssues[0].indent.indentDetails[index].indentQuantity) );

@@ -223,54 +223,54 @@ export const callBackForNext = async (state, dispatch) => {
                 ); 
                 let totalIndentQty =0;
                 let issueqty = 0;
-                // for (let index = 0; index < indentsmaterial_.length; index++) {
-                //   const element = indentsmaterial_[index];
-                //   let materialIssueDetails_ = get(
-                //     state.screenConfiguration.preparedFinalObject,
-                //     'materialIssues[0].materialIssueDetails',
-                //     []
-                //   ); 
-                //     materialIssueDetails_ = materialIssueDetails_.filter(x=>x.material.code === element.material.code)
+                for (let index = 0; index < indentsmaterial_.length; index++) {
+                  const element = indentsmaterial_[index];
+                  let materialIssueDetails_ = get(
+                    state.screenConfiguration.preparedFinalObject,
+                    'materialIssues[0].materialIssueDetails',
+                    []
+                  ); 
+                    materialIssueDetails_ = materialIssueDetails_.filter(x=>x.material.code === element.material.code)
                     
-                //     if(materialIssueDetails_.length>0)
-                //     {
-                //       for (let index = 0; index < materialIssueDetails_.length; index++) {
-                //         const element = materialIssueDetails_[index];
-                //         issueqty = issueqty + element.quantityIssued                        
-                //       }
-                //       let indentQuantity = Number(element.indentQuantity)///materialIssueDetails_.length
+                    if(materialIssueDetails_.length>0)
+                    {
+                      for (let index = 0; index < materialIssueDetails_.length; index++) {
+                        const element = materialIssueDetails_[index];
+                        issueqty = issueqty + element.quantityIssued                        
+                      }
+                      let indentQuantity = Number(element.indentQuantity)///materialIssueDetails_.length
                       
-                //     totalIndentQty =totalIndentQty+indentQuantity
-                //     }
-                //     if(totalIndentQty<issueqty)
-                //     {
+                    totalIndentQty =totalIndentQty+indentQuantity
+                    }
+                    if(totalIndentQty<issueqty)
+                    {
                      
-                //       const LocalizationCodeValueTotalQty = getLocalizationCodeValue("STORE_TOTAL_QUANTITY_ISSUED_VALIDATION")
-                //       let matname = GetMdmsNameBycode(state, dispatch,"createScreenMdmsData.store-asset.Material",element.material.code) 
-                //       const errorMessage = {                
-                //         labelName: "Total issued quantity can not be greater than Indent quantity",
-                //         labelKey:   LocalizationCodeValueTotalQty+' for '+matname
-                //       };
-                //        // const errorMessage = {
-                
-                //       //   labelName: "Total issued quantity can not be greater than Indent quantity",
-                //       //   labelKey:   "STORE_TOTAL_QUANTITY_ISSUED_VALIDATION"
-                //       // };
-                //       dispatch(toggleSnackbar(true, errorMessage, "warning"));
-                //       return;
-
-                //     }
-                //     else
-                //     {
-                //       moveToReview(state,dispatch)
-                //     }
-                // }
-                const errorMessage = {
-                
+                      const LocalizationCodeValueTotalQty = getLocalizationCodeValue("STORE_TOTAL_QUANTITY_ISSUED_VALIDATION")
+                      let matname = GetMdmsNameBycode(state, dispatch,"createScreenMdmsData.store-asset.Material",element.material.code) 
+                      const errorMessage = {                
                         labelName: "Total issued quantity can not be greater than Indent quantity",
-                        labelKey:   "STORE_TOTAL_QUANTITY_ISSUED_VALIDATION"
+                        labelKey:   LocalizationCodeValueTotalQty+' for '+matname
                       };
+                       // const errorMessage = {
+                
+                      //   labelName: "Total issued quantity can not be greater than Indent quantity",
+                      //   labelKey:   "STORE_TOTAL_QUANTITY_ISSUED_VALIDATION"
+                      // };
                       dispatch(toggleSnackbar(true, errorMessage, "warning"));
+                      return;
+
+                    }
+                    else
+                    {
+                      moveToReview(state,dispatch)
+                    }
+                }
+                // const errorMessage = {
+                
+                //         labelName: "Total issued quantity can not be greater than Indent quantity",
+                //         labelKey:   "STORE_TOTAL_QUANTITY_ISSUED_VALIDATION"
+                //       };
+                //       dispatch(toggleSnackbar(true, errorMessage, "warning"));
                 
               }
               else
