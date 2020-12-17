@@ -956,10 +956,10 @@ export const changeStep = (
   }
   ];
   dispatchMultipleFieldChangeAction(screenName, actionDefination, dispatch);
-  renderSteps(activeStep, state, dispatch, screenName);
+  renderSteps(activeStep, dispatch, screenName);
 };
 
-export const renderSteps = (activeStep, state, dispatch, screenName) => {
+export const renderSteps = (activeStep, dispatch, screenName) => {
   switch (activeStep) {
     case PROPERTY_DETAILS_STEP:
       dispatchMultipleFieldChangeAction(
