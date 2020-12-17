@@ -242,17 +242,25 @@ const searchCard = getCommonCard({
 
 const getData = async (action, state, dispatch) => {
   const branchType = getQueryArg(window.location.href, "branchType");
-  homeURL = branchType == "BuildingBranch" ? "/estate-citizen/property-search?branchType=BUILDING_BRANCH&type=BuildingBranch_CitizenService_NOC" :"/estate-citizen/estate-branch-apply";
+  homeURL = branchType == "BuildingBranch" ? "/estate-citizen/property-search?branchType=BUILDING_BRANCH&type=BuildingBranch_CitizenService_NOC" : `/estate-citizen/property-search?branchType=${branchType}`;
 
   const queryObject = [
     {key: "branchType", value: branchType}
   ]
   const response = await getSearchApplicationsResults(queryObject);
-  console.log(response)
   if (!!response && !!response.Applications && !!response.Applications.length) {
     dispatch(prepareFinalObject("actualResults", response.Applications));
     dispatch(prepareFinalObject("searchResults", response.Applications));
   }
+
+  dispatch(
+    handleField(
+      action.screenKey,
+      "components.div.children.searchCard.children.cardContent.children.statusApplicationNumberContainer.children.applicationType",
+      "visible", 
+      branchType != "BuildingBranch"
+    )
+  )
 }
 
 const screenConfig = {

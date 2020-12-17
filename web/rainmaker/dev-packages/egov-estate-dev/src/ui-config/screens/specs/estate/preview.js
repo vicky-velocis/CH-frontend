@@ -113,16 +113,17 @@ const getData = async (action, state, dispatch) => {
           }) : {}
           reviewDetails = {estimate, ...reviewDetails}
        }
-        if(applicationState === "ES_PENDING_PAYMENT" || applicationState === "ES_PENDING_CITIZEN_TEMPLATE_SUBMISSION" || applicationState === "ES_PENDING_CITIZEN_NOTICE_DOCUMENTS" || applicationState === "ES_PENDING_JE_VERIFICATION") {
-          footer = (process.env.REACT_APP_NAME === "Citizen" || applicationState === "ES_PENDING_JE_VERIFICATION") ? footerReview(
+        if(process.env.REACT_APP_NAME === "Citizen" ? applicationState === "ES_PENDING_PAYMENT" || applicationState === "ES_MM_PENDING_PAYMENT" || applicationState === "ES_PENDING_CITIZEN_TEMPLATE_SUBMISSION" || applicationState === "ES_PENDING_CITIZEN_NOTICE_DOCUMENTS" || applicationState === "ES_PENDING_JE_VERIFICATION" || applicationState === "ES_MM_PENDING_BI_VERIFICATION" || applicationState === "ES_MM_PENIDNG_CITIZEN_NOTICE" : applicationState === "ES_PENDING_JE_VERIFICATION" || applicationState === "ES_MM_PENDING_BI_VERIFICATION") {
+          footer = footerReview(
             action,
             state,
             dispatch,
             applicationState,
             applicationNumber,
             tenantId,
-            businessService
-          ) : footer
+            businessService,
+            branchType
+          )
         }
 
         if(!!wfDocumentList.length) {
