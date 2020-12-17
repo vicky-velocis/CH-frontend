@@ -117,21 +117,7 @@ export const ownerDocumentDetails_0 = getCommonCard({
       uploadedDocumentsJsonPath: "PropertiesTemp[0].propertyDetails.owners[0].ownerDetails.uploadedDocsInRedux",
       tenantIdJsonPath: "Properties[0].tenantId",
       removedJsonPath: "PropertiesTemp[0].propertyDetails.owners[0].ownerDetails.removedDocs",
-      callBack: applyEstates,
-      activeIndex: 3
-    }
-  }
-});
-export const ownerDocumentDetails_1 = getCommonCard({
-  ...documentCardConfigOwner,
-  documentList: {
-    ...documentList,
-    props: {
-      ...documentList.props,
-      documentsJsonPath: "PropertiesTemp[0].propertyDetails.owners[1].ownerDetails.ownerDocuments",
-      uploadedDocumentsJsonPath: "PropertiesTemp[0].propertyDetails.owners[1].ownerDetails.uploadedDocsInRedux",
-      tenantIdJsonPath: "Properties[0].tenantId",
-      removedJsonPath: "PropertiesTemp[0].propertyDetails.owners[1].ownerDetails.removedDocs",
+      documentKey:"owners_0",
       callBack: applyEstates,
       activeIndex: 3
     }
@@ -251,6 +237,7 @@ export const previousOwnerDocuments_0 = getCommonCard({
       tenantIdJsonPath: "Properties[0].tenantId",
       removedJsonPath: "PropertiesTemp[0].propertyDetails.purchaser[0].ownerDetails.removedDocs",
       callBack: applyEstates,
+      documentKey: "owners_0",
       activeIndex: 5
     }
   }
@@ -355,7 +342,6 @@ export const formwizardFourthStep = {
   },
   children: {
     ownerDocumentDetails_0
-    // ownerDocumentDetails_1
   },
   visible: false
 };
