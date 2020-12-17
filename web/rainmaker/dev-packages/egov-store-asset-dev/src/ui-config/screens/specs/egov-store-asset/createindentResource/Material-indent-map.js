@@ -327,6 +327,7 @@ import {
       },
       items: [],
       hasAddItem:!disabled,
+      isReviewPage:disabled,
       addItemLabel: {
         labelName: "ADD",
         labelKey: "STORE_MATERIAL_COMMON_CARD_ADD"
