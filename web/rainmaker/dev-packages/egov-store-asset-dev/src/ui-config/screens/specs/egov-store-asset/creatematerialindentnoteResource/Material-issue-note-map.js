@@ -520,7 +520,7 @@ import {
       },
       
       headerName: "Material Indent Note",
-      isReviewPage:!IsEdit,
+      isReviewPage:IsEdit,
       headerJsonPath:
         "children.cardContent.children.header.children.head.children.Accessories.props.label",
       sourceJsonPath: "materialIssues[0].materialIssueDetails",
