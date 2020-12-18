@@ -7,12 +7,23 @@ class WorkFlowChart extends React.Component {
   constructor(props) {
     super(props);
     this.state ={
-        DATA : []      
+        DATA : [],
+        update : true     
     }
   }
 
   componentDidUpdate(){
     debugger
+
+    const FilterData = this.props.data
+
+    if(FilterData !== "" & this.state.update){
+      this.setState({
+        DATA : FilterData,
+        update : false
+      })
+    }
+
     
   }
 
@@ -58,9 +69,11 @@ class WorkFlowChart extends React.Component {
       }
       ]
     }
+
+    const FilterData = this.props.data
     
     this.setState({
-        DATA : data
+        DATA : FilterData
     })
   }
 
@@ -72,14 +85,12 @@ class WorkFlowChart extends React.Component {
 
         <table>
         <tr>
-          <td> Module Name  </td>
           <td> Workflow </td>
           <td> Description </td>
         </tr>
         {
-             (this.state.DATA.modulewiseWF || []).map((wf, index) => (
+             (this.state.DATA || []).map((wf, index) => (
                 <tr>
-                <td> { wf.moduleName }  </td>
                 <td> <a href={"preview?wfName="+wf.wfCode}> { wf.wfName } </a> </td>
                 <td> { wf.wfDesc } </td>
                 </tr>

@@ -579,6 +579,7 @@ try {
 
     response = await httpRequest("post", "hc-services/serviceRequest/_create", "", [], {services: arraypayload });
     
+    
     if (response.services[0].serviceRequestId !== 'null' || response.services[0].serviceRequestId !== '') {
       dispatch(prepareFinalObject("SERVICES", response));
     
@@ -603,6 +604,43 @@ try {
   
   return { status: "failure", message: error };
 }
+};
+
+
+// Demo API call
+
+export const demoAPICall = async (state, dispatch, status) => {
+  let response = '';
+	let method = "CREATE";
+
+	try {
+	  let payload = "PAYLOAD_DEMO"
+	  console.log("payload",payload)
+	  let response = '';
+	  // setapplicationMode(status);
+	  let arraypayload=[]
+	  arraypayload.push(payload);
+	  if (method === "CREATE") {
+		dispatch(toggleSpinner());
+		response = await httpRequest("post", "DEMO/hc-services/serviceRequest/_create", "", [], {services: arraypayload });
+		
+		if (response.services[0].serviceRequestId !== 'null' || response.services[0].serviceRequestId !== '') {
+		  dispatch(prepareFinalObject("SERVICES", response));
+		  setapplicationNumber(response.services[0].service_request_id);
+		  setApplicationNumberBox(state, dispatch);
+		  dispatch(toggleSpinner());
+		  return { status: "success", message: response };
+		} else {
+		  dispatch(toggleSpinner());
+		  return { status: "fail", message: response };
+		}
+	  } 
+
+	} catch (error) {
+	  dispatch(toggleSpinner());
+	  dispatch(toggleSnackbar(true, { labelName: error.message }, "error"));
+	  return { status: "failure", message: error };
+	}
 };
 
 export const previewWF = async (state, dispatch, status) => {
@@ -644,7 +682,7 @@ export const previewWF = async (state, dispatch, status) => {
       data
       )
       );
-        
+       
     dispatch(toggleSpinner());
     return { status: "success", message: response };
   
@@ -685,30 +723,75 @@ export const getData = async (state, dispatch, status) =>  {
 		dispatch(toggleSpinner());
 		response = await httpRequest("post", "egov-workflow-v2/egov-wf/businessservice/_search?businessServices="+ serviceName.value +"&tenantId=ch", "", [], {services: arraypayload });
     
-    dispatch(prepareFinalObject("WF_PREVIEW", response));
+    // dispatch(prepareFinalObject("WF_PREVIEW", response));
     debugger
 
-    var data = get(
-      state,
-      "screenConfiguration.preparedFinalObject.WF_PREVIEW",
-      {});
+    const allData = {
+      "modulewiseWF" : [
+        {
+        "moduleName" : "OPMS",
+        "wfName" : "PETNOC",
+        "wfCode" : "PETNOC",
+        "wfDesc" : "PETNOC Descripton"
+        },
+        {
+        "moduleName" : "OPMS",
+        "wfName" : "SELLMEATNOC",
+        "wfCode" : "SELLMEATNOC",
+        "wfDesc" : "SELLMEATNOC Descripton"
+        },
+        {
+        "moduleName" : "OPMS",
+        "wfName" : "ADVERTISEMENTNOC",
+        "wfCode" : "ADVERTISEMENTNOC",
+        "wfDesc" : "ADVERTISEMENTNOC Descripton"
+        },
+        {
+        "moduleName" : "OPMS",
+        "wfName" : "ROADCUTNOC",
+        "wfCode" : "ROADCUTNOC",
+        "wfDesc" : "ROADCUTNOC Descripton"
+        },
+        {
+        "moduleName" : "RentedProperties",
+        "wfName" : "OwnershipTransferRP",
+        "wfCode" : "OwnershipTransferRP",
+        "wfDesc" : "OwnershipTransfer Descripton"
+        },
+        {
+        "moduleName" : "RentedProperties",
+        "wfName" : "OwnershipTransferRP",
+        "wfCode" : "OwnershipTransferRP",
+        "wfDesc" : "OwnershipTransferRP Descripton"
+        }
+        ]
+    }
 
-    // dispatch(
-    //     handleField("review_petnoc",
-    //     "components.div.children.body.children.cardContent.children.reportCardGraph",
-    //     "props.data.demo",
-    //     data
-    //     )
-    //     );
-
-    dispatch(
-      handleField("preview",
-      "components.div.children.body.children.cardContent.children.reportCardGraph",
-      "props.data.demo",
-      data
-      )
-      );
+    debugger
+    const filterData = allData.modulewiseWF.filter(function (el) {
+      return el.moduleName == serviceName.value ;
+    });
+    if(filterData.length > 0){
+      dispatch(
+        handleField("module_preview",
+        "components.div.children.body.children.cardContent.children.moduleWiseWorkflow",
+        "props.data",
+        filterData
+        )
+        );
         
+      dispatch(prepareFinalObject("WF_CHARTDATA", filterData));
+    }else{
+      const data =  get(state.screenConfiguration.preparedFinalObject, "WF_CHARTDATA", []);
+
+      dispatch(
+        handleField("module_preview",
+        "components.div.children.body.children.cardContent.children.moduleWiseWorkflow",
+        "props.data",
+        data
+        )
+        );
+    }   
     dispatch(toggleSpinner());
     return { status: "success", message: response };
   
@@ -731,3 +814,4 @@ export const getData = async (state, dispatch, status) =>  {
 	  return { status: "failure", message: error };
 	}
 };
+
