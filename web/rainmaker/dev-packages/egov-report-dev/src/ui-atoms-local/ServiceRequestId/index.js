@@ -2,8 +2,8 @@ import React from "react";
 import { getapplicationNumber } from "egov-ui-kit/utils/localStorageUtils";
 
 const styles = {
-  backgroundColor: "rgba(0, 0, 0, 0.6000000238418579)",
-  color: "rgba(255, 255, 255, 0.8700000047683716)",
+  // backgroundColor: "rgba(0, 0, 0, 0.6000000238418579)",
+  color: "rgba(0, 0, 0, 0.8700000047683716)",
   marginLeft: "8px",
   paddingLeft: "5px",
   paddingRight: "5px",
@@ -16,7 +16,8 @@ const styles = {
 
 
 function ServiceRequestIdContainer(props) {
-	return <div style={styles}>Service Request Id. : {getapplicationNumber()}</div>;
+  debugger
+	return <div style={styles}>Module Name : {getapplicationNumber()}</div>;
 }
 
 export default ServiceRequestIdContainer;

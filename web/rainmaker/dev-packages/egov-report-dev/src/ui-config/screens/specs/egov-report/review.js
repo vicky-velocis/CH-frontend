@@ -13,6 +13,7 @@ import { getCommonApplyFooter } from "../utils";
 import { getLabel } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { toggleSpinner } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import "./index.css"
 
 let role_name = JSON.parse(getUserInfo()).roles[0].code
 
@@ -52,10 +53,10 @@ export const footer = getCommonApplyFooter({
   
         
       },
-      onClickDefination: {
-        action: "page_change",
-        path: `${getRedirectionURL()}`
-      },
+      // onClickDefination: {
+      //   action: "page_change",
+      //   path: `${getRedirectionURL()}`
+      // },
       visible: true
     }  
   });
@@ -80,11 +81,7 @@ const screenConfig = {
       {
           "name" : "Rented Properties",
           "code" : "RentedProperties"
-      },
-      {
-        "name" : "undefined",
-        "code" : "_blank"
-    }
+      }
       ]
     dispatch(prepareFinalObject("dropDownData", data));
     // let response = previewWF(state, dispatch, status);
