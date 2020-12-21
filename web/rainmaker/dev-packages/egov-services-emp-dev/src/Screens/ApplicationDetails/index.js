@@ -405,6 +405,7 @@ class ApplicationDetails extends Component {
 	downloadApplicationButton = async (mode) => {
 		
 		await this.downloadApplicationFunction();
+		setTimeout(async()=>{
 		const { DownloadApplicationDetails,userInfo } = this.props;
 		var documentsPreview = [];
 		let documentsPreviewData;
@@ -478,83 +479,88 @@ class ApplicationDetails extends Component {
 				
 				prepareFinalObject('documentsPreview', documentsPreview)
 			}
-
+		},1500)
 	}
 	
 
-
+	
 downloadPermissionLetterButton = async (mode) => {
 	await this.downloadPermissionLetterFunction();
-	let documentsPreviewData;
-	const { DownloadPermissionLetterDetails,userInfo } = this.props;
-	var documentsPreview = [];
-	if (DownloadPermissionLetterDetails && DownloadPermissionLetterDetails.filestoreIds.length > 0) {
-		 documentsPreviewData=DownloadPermissionLetterDetails.filestoreIds[0];
-		documentsPreview.push({
-			title: "DOC_DOC_PICTURE",
-			fileStoreId: documentsPreviewData,
-			linkText: "View",
-		});
-		let fileStoreIds = jp.query(documentsPreview, "$.*.fileStoreId");
-		let fileUrls =
-			fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds,userInfo.tenantId) : {};
+	setTimeout(async()=>{
 	
-
-		documentsPreview = documentsPreview.map(function (doc, index) {
-			doc["link"] =
-				(fileUrls &&
-					fileUrls[doc.fileStoreId] &&
-					fileUrls[doc.fileStoreId].split(",")[0]) ||
-				"";
-			
-			doc["name"] =
-				(fileUrls[doc.fileStoreId] &&
-					decodeURIComponent(
-						fileUrls[doc.fileStoreId]
-							.split(",")[0]
-							.split("?")[0]
-							.split("/")
-							.pop()
-							.slice(13)
-					)) ||
-				`Document - ${index + 1}`;
-			return doc;
-		});
-		
-		if(mode==='print'){
-
-			var response = await axios.get(documentsPreview[0].link, {
-				//responseType: "blob",
-				responseType: "arraybuffer",
-				
-				
-				headers: {
-					"Content-Type": "application/json",
-					Accept: "application/pdf",
-				},
+		let documentsPreviewData;
+		const { DownloadPermissionLetterDetails,userInfo } = this.props;
+		var documentsPreview = [];
+		if (DownloadPermissionLetterDetails && DownloadPermissionLetterDetails.filestoreIds.length > 0) {
+			 documentsPreviewData=DownloadPermissionLetterDetails.filestoreIds[0];
+			documentsPreview.push({
+				title: "DOC_DOC_PICTURE",
+				fileStoreId: documentsPreviewData,
+				linkText: "View",
 			});
-			console.log("responseData---", response);
-			const file = new Blob([response.data], { type: "application/pdf" });
-			const fileURL = URL.createObjectURL(file);
-			var myWindow = window.open(fileURL);
-			if (myWindow != undefined) {
-				myWindow.addEventListener("load", (event) => {
-					myWindow.focus();
-					myWindow.print();
-				});
-			}
-
-		}
-		else{
-
-			setTimeout(() => {
-			
-				window.open(documentsPreview[0].link);
-			}, 100);
-		}
+			let fileStoreIds = jp.query(documentsPreview, "$.*.fileStoreId");
+			let fileUrls =
+				fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds,userInfo.tenantId) : {};
 		
-		prepareFinalObject('documentsPreview', documentsPreview)
+	
+			documentsPreview = documentsPreview.map(function (doc, index) {
+				doc["link"] =
+					(fileUrls &&
+						fileUrls[doc.fileStoreId] &&
+						fileUrls[doc.fileStoreId].split(",")[0]) ||
+					"";
+				
+				doc["name"] =
+					(fileUrls[doc.fileStoreId] &&
+						decodeURIComponent(
+							fileUrls[doc.fileStoreId]
+								.split(",")[0]
+								.split("?")[0]
+								.split("/")
+								.pop()
+								.slice(13)
+						)) ||
+					`Document - ${index + 1}`;
+				return doc;
+			});
+			
+			if(mode==='print'){
+	
+				var response = await axios.get(documentsPreview[0].link, {
+					//responseType: "blob",
+					responseType: "arraybuffer",
+					
+					
+					headers: {
+						"Content-Type": "application/json",
+						Accept: "application/pdf",
+					},
+				});
+				console.log("responseData---", response);
+				const file = new Blob([response.data], { type: "application/pdf" });
+				const fileURL = URL.createObjectURL(file);
+				var myWindow = window.open(fileURL);
+				if (myWindow != undefined) {
+					myWindow.addEventListener("load", (event) => {
+						myWindow.focus();
+						myWindow.print();
+					});
+				}
+	
+			}
+			else{
+	
+				setTimeout(() => {
+				
+					window.open(documentsPreview[0].link);
+				}, 100);
+			}
+			
+			prepareFinalObject('documentsPreview', documentsPreview)
+			
 	}
+	},1500)
+	
 
 }
 
@@ -621,8 +627,84 @@ downloadPermissionLetterFunction = async (e) => {
 	downloadPermissionLetter({BookingInfo:receiptData})
 }
 
+	// downloadPaymentReceiptButton = async (mode) => {
+	// 	this.downloadPaymentReceiptFunction();
+	// 	let documentsPreviewData;
+	// 	const { DownloadPaymentReceiptDetails,userInfo } = this.props;
+	// 	var documentsPreview = [];
+	// 	if (DownloadPaymentReceiptDetails && DownloadPaymentReceiptDetails.filestoreIds.length > 0) {	
+	// 	documentsPreviewData = DownloadPaymentReceiptDetails.filestoreIds[0];
+	// 		documentsPreview.push({
+	// 			title: "DOC_DOC_PICTURE",
+	// 			fileStoreId: documentsPreviewData,
+	// 			linkText: "View",
+	// 		});
+	// 		let fileStoreIds = jp.query(documentsPreview, "$.*.fileStoreId");
+	// 		let fileUrls =
+	// 			fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds,userInfo.tenantId) : {};
+		
+
+	// 		documentsPreview = documentsPreview.map(function (doc, index) {
+	// 			doc["link"] =
+	// 				(fileUrls &&
+	// 					fileUrls[doc.fileStoreId] &&
+	// 					fileUrls[doc.fileStoreId].split(",")[0]) ||
+	// 				"";
+				
+	// 			doc["name"] =
+	// 				(fileUrls[doc.fileStoreId] &&
+	// 					decodeURIComponent(
+	// 						fileUrls[doc.fileStoreId]
+	// 							.split(",")[0]
+	// 							.split("?")[0]
+	// 							.split("/")
+	// 							.pop()
+	// 							.slice(13)
+	// 					)) ||
+	// 				`Document - ${index + 1}`;
+	// 			return doc;
+	// 		});
+			
+	// 		if(mode==='print'){
+
+	// 			var response = await axios.get(documentsPreview[0].link, {
+	// 				//responseType: "blob",
+	// 				responseType: "arraybuffer",
+					
+					
+	// 				headers: {
+	// 					"Content-Type": "application/json",
+	// 					Accept: "application/pdf",
+	// 				},
+	// 			});
+	// 			console.log("responseData---", response);
+	// 			const file = new Blob([response.data], { type: "application/pdf" });
+	// 			const fileURL = URL.createObjectURL(file);
+	// 			var myWindow = window.open(fileURL);
+	// 			if (myWindow != undefined) {
+	// 				myWindow.addEventListener("load", (event) => {
+	// 					myWindow.focus();
+	// 					myWindow.print();
+	// 				});
+	// 			}
+
+	// 		}
+	// 		else{
+
+	// 			setTimeout(() => {
+				
+	// 				window.open(documentsPreview[0].link);
+	// 			}, 100);
+	// 		}
+			
+	// 		prepareFinalObject('documentsPreview', documentsPreview)
+	// 	}
+	// }
+
+	
 	downloadPaymentReceiptButton = async (mode) => {
 		this.downloadPaymentReceiptFunction();
+		setTimeout(async()=>{
 		let documentsPreviewData;
 		const { DownloadPaymentReceiptDetails,userInfo } = this.props;
 		var documentsPreview = [];
@@ -693,7 +775,9 @@ downloadPermissionLetterFunction = async (e) => {
 			
 			prepareFinalObject('documentsPreview', documentsPreview)
 		}
+	},1500)
 	}
+
 
 	callApiForDocumentData = async (e) => {
 		const { xyz,userInfo } = this.props;

@@ -605,7 +605,7 @@ const routes = [
   //   }
   // },
   {
-    path: "egov-services/resolve-success",
+    path: "egov-services/DataSubmitted",
     component: ResolveSuccess,
     needsAuthentication: true,
     options: {
@@ -646,7 +646,7 @@ const routes = [
     }
   },
   {
-    path: "egov-services/assign-to-success",
+    path: "egov-services/DriverAssigned",
     component: AssignToDriverSuccess,
     needsAuthentication: true,
     options: {
