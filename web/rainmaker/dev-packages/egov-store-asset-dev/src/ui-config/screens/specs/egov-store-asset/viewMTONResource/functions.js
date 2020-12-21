@@ -238,6 +238,7 @@ for (let index = 0; index < response[0].materialIssueDetails.length; index++) {
     set(response[0], `materialIssueDetails[${index}].uom.name`, Uomname);
     set(response[0], `materialIssueDetails[${index}].material.name`, matname);
     set(response[0], `materialIssueDetails[${index}].receiptId`, element.materialIssuedFromReceipts[0].materialReceiptId); 
+    set(response[0], `materialIssueDetails[${index}].quantityIssuedE`,(element.indentDetail.userQuantity +element.indentDetail.indentIssuedQuantity)); 
     totalvalue = totalvalue+( Number(element.value) )
        
     TotalQty = TotalQty + Number(element.quantityIssued)   
@@ -246,7 +247,7 @@ for (let index = 0; index < response[0].materialIssueDetails.length; index++) {
 //set issue to employee name from store incharge
 if(response[0].indent.issueStore.storeInCharge.code)
 {
-  set(response[0], `issuedToEmployeename`, response[0].indent.issueStore.storeInCharge.code);
+  
   let emp = get(state, "screenConfiguration.preparedFinalObject.createScreenMdmsData.employee",[]) 
   
   emp = emp.filter(x=>x.code ===response[0].indent.issueStore.storeInCharge.code)
@@ -254,6 +255,7 @@ if(response[0].indent.issueStore.storeInCharge.code)
   {
   //dispatch(prepareFinalObject("materialIssues[0].issuedToEmployeename", emp[0].name));
   set(response[0], `issuedToEmployeename`,emp[0].name);
+  set(response[0], `issuedToEmployee`, emp[0].code);
   let issuedToDesignation =GetMdmsNameBycode(state, dispatch,"viewScreenMdmsData.common-masters.Designation",emp[0].designation)          
   set(response[0], `issuedToDesignation`, issuedToDesignation); 
   const {designationsById} = state.common;

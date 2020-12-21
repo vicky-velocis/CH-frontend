@@ -63,6 +63,19 @@ const MTONDetailsCard = {
                 dispatch(prepareFinalObject(`materialIssues[0].materialIssueDetails[${cardIndex}].indentQuantity`, indentDetails[0].indentQuantity));
                 dispatch(prepareFinalObject(`materialIssues[0].materialIssueDetails[${cardIndex}].indentDetail.indentQuantity`, indentDetails[0].indentQuantity));
                 dispatch(prepareFinalObject(`materialIssues[0].materialIssueDetails[${cardIndex}].indentDetail.indentIssuedQuantity`, indentDetails[0].indentQuantity-indentDetails[0].indentIssuedQuantity));
+                let id = getQueryArg(window.location.href, "id");
+                if(id)
+                {
+                  
+                  let quantityIssued =  get(state, `screenConfiguration.preparedFinalObject.materialIssues[0].materialIssueDetails[${cardIndex}].quantityIssued`,0)
+                  dispatch(prepareFinalObject(`materialIssues[0].materialIssueDetails[${cardIndex}].quantityIssuedE`, (indentDetails[0].indentQuantity-indentDetails[0].indentIssuedQuantity)+quantityIssued));
+                  // let indentIssuedQuantity = get(state, `screenConfiguration.preparedFinalObject.materialIssues[0].materialIssueDetails[${cardIndex}].indentDetail.indentIssuedQuantity`,0)
+                  // dispatch(prepareFinalObject(`materialIssues[0].materialIssueDetails[${cardIndex}].quantityIssuedE`, indentIssuedQuantity +quantityIssued));               
+
+                }
+               // dispatch(prepareFinalObject(`materialIssues[0].materialIssueDetails[${cardIndex}].indentQuantity`, indentDetails[0].indentQuantity-(indentDetails[0].indentIssuedQuantity+indentDetails[0].poOrderedQuantity)));
+                // dispatch(prepareFinalObject(`materialIssues[0].materialIssueDetails[${cardIndex}].indentDetail.indentQuantity`, indentDetails[0].indentQuantity));
+                // dispatch(prepareFinalObject(`materialIssues[0].materialIssueDetails[${cardIndex}].indentDetail.indentIssuedQuantity`, indentDetails[0].indentIssuedQuantity));
                 dispatch(prepareFinalObject(`materialIssues[0].materialIssueDetails[${cardIndex}].mrnNumber`, indentsOutmaterial[0].mrnNumber));
                 dispatch(prepareFinalObject(`materialIssues[0].materialIssueDetails[${cardIndex}].tenantId`, getTenantId()));
                 
@@ -138,6 +151,30 @@ const MTONDetailsCard = {
                 disabled:true,
               }
             })
+          },
+          quantityIssued: {
+            ...getTextField({
+              label: {
+                labelName: "Qty Issued",
+                labelKey: "STORE_MATERIAL_INDENT_NOTE_QTY_ISSUED_EDIT"
+              },
+              placeholder: {
+                labelName: "Enter Qty Issued",
+                labelKey: "STORE_MATERIAL_INDENT_NOTE_QTY_ISSUED_PLACEHOLDER"
+              },
+              required: true,
+              errorMessage:"STORE_VALIDATION_QUANTITY_ISSUED",
+               //pattern: getPattern("Amount") || null,
+               pattern: getSTOREPattern("Quantity"),
+              jsonPath: "materialIssues[0].materialIssueDetails[0].quantityIssuedE",
+              props:{
+                inputProps: {
+                  min: 1
+                },
+                disabled:true
+              }
+            }),
+           
           },
           issedQuantity: {
             ...getTextField({

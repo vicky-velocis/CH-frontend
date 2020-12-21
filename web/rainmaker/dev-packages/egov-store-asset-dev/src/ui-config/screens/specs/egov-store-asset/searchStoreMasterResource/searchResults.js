@@ -47,7 +47,7 @@ export const searchResults = {
     columns: [
       getTextToLocalMapping("Store Name"),
       getTextToLocalMapping("Department"),
-      getTextToLocalMapping("Central Store"),
+      //getTextToLocalMapping("Central Store"),
       getTextToLocalMapping("Active"),
     ],
     title: getTextToLocalMapping("Search Results for Store Master"),
