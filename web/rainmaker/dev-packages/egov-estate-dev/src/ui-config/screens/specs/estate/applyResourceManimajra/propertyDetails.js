@@ -105,10 +105,14 @@ export const propertyTypeField = {
       xs: 12,
       sm: 6
   },
+  props:{
+    value : "PROPERTY_TYPE.JANTA_READY_MARKET"
+  },
   beforeFieldChange: (action, state, dispatch) => {
+
     const monthlyData = [
-       {code:"JAN",name:"01"},{code:"FEB",name:"02"},{code:"MAR",name:"03"},{code:"APR",name:"04"},{code:"MAY",name:"05"},{code:"JUN",name:"06"},{code:"JUL",name:"07"},
-      {code:"AUG",name:"08"},{code:"SEP",name:"09"},{code:"OCT",name:"10"},{code:"NOV",name:"11"},{code:"DEC",name:"12"}
+       {label:"JAN",code:"01"},{label:"FEB",code:"02"},{label:"MAR",code:"03"},{label:"APR",code:"04"},{label:"MAY",code:"05"},{label:"JUN",code:"06"},{label:"JUL",code:"07"},
+      {label:"AUG",code:"08"},{label:"SEP",code:"09"},{label:"OCT",code:"10"},{label:"NOV",code:"11"},{label:"DEC",code:"12"}
     ]
     
     var yearlyData = []
@@ -117,6 +121,22 @@ export const propertyTypeField = {
     for(var i = min; i <= max; i++){
       yearlyData.push({"code": i})
     }
+    dispatch(
+      handleField(
+        action.screenKey,
+        "components.div.children.formwizardEighthStep.children.reviewDetails.children.cardContent.children",
+        "monthlyDetails.visible",
+         false
+      )
+    )
+    dispatch(
+      handleField(
+        action.screenKey,
+        "components.div.children.formwizardEighthStep.children.reviewDetails.children.cardContent.children",
+        "annualDetails.visible",
+         false
+      )
+    )
     dispatch(
       handleField(
         action.screenKey,
@@ -169,12 +189,38 @@ export const propertyTypeField = {
               true
             )
           )
+
+          dispatch(
+            handleField(
+              action.screenKey,
+              "components.div.children.formwizardEighthStep.children.reviewDetails.children.cardContent.children",
+              "monthlyDetails.visible",
+               true
+            )
+          )
+          dispatch(
+            handleField(
+              action.screenKey,
+              "components.div.children.formwizardEighthStep.children.reviewDetails.children.cardContent.children",
+              "annualDetails.visible",
+               true
+            )
+          )
          break;
       case 'PROPERTY_TYPE.PUNJAB_AGRO_JUICE':
           dispatch(
             handleField(
               action.screenKey,
               "components.div.children.formwizardFirstStep.children",
+              "monthlyDetails.visible",
+               true
+            )
+          )
+
+          dispatch(
+            handleField(
+              action.screenKey,
+              "components.div.children.formwizardEighthStep.children.reviewDetails.children.cardContent.children",
               "monthlyDetails.visible",
                true
             )
@@ -231,6 +277,8 @@ export const monthTextField = {
       labelName: "Select Month",
       labelKey: "ES_SELECT_MONTH_PLACEHOLDER"
   },
+  optionValue: "code",
+  optionLabel: "label",
   required: true,
   jsonPath: "Properties[0].propertyDetails.mmDemandStartMonth",
   gridDefination: {
