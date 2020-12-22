@@ -234,6 +234,30 @@ export const propertyTypeField = {
   }
 }
 
+export const demandTypeField = {
+  label: {
+      labelName: "Demand Type",
+      labelKey: "ES_DEMAND_TYPE_LABEL"
+  },
+  placeholder: {
+      labelName: "Select Demand Type",
+      labelKey: "ES_DEMAND_TYPE_PLACEHOLDER"
+  },
+  required: true,
+  jsonPath: "Properties[0].propertyDetails.demandType",
+  optionValue: "code",
+  optionLabel: "label",
+  data:[
+    {label:"Monthly",code:"MONTHLY"},{label:"Annually",code:"ANNUALLY"}
+ ],
+  gridDefination: {
+      xs: 12,
+      sm: 6
+  }
+  
+}
+
+
 export const propertyDetails = getCommonCard({
   header: propertyDetailsHeader,
   detailsContainer: getCommonContainer({
@@ -243,6 +267,7 @@ export const propertyDetails = getCommonCard({
       street: getTextField(streetField),
       areaOfProperty: getTextField(areaofPropertyField),
       propertyType: getSelectField(propertyTypeField),
+      demandType:getSelectField(demandTypeField),
       category: getSelectField(categoryField),
       subCategory: getSelectField(subCategoryField),
       siteNumber: getTextField(siteNumberField),
