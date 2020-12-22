@@ -12,41 +12,14 @@ import {demandResults} from './searchResource/searchResults'
 import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 import {penaltyStatmentResult,extensionStatmentResult,securityStatmentResult} from './searchResource/functions'
 import { penaltySummary } from "./generatePenaltyStatement";
-
+import moment from 'moment'
   const header = getCommonHeader({
     labelName: "Rent Payment",
     labelKey: "ES_RENT_PAYMENT_HEADER"
   });
-
- export const getMdmsData = async (dispatch) => {
-    let mdmsBody = {
-      MdmsCriteria: {
-        tenantId: commonConfig.tenantId,
-        moduleDetails: [{
-          moduleName: ESTATE_SERVICES_MDMS_MODULE,
-          masterDetails: [{
-           name: "paymentType"
-          }]
-        }]
-      }
-    };
-    try {
-      let payload = await httpRequest(
-        "post",
-        "/egov-mdms-service/v1/_search",
-        "_search",
-        [],
-        mdmsBody
-      );
-      dispatch(prepareFinalObject("searchScreenMdmsData", payload.MdmsRes));
-    } catch (e) {
-      console.log(e);
-    }
-  }
   
   const beforeInitFn = async(action, state, dispatch)=>{
     dispatch(prepareFinalObject("Properties", []))
-    getMdmsData(dispatch);
     let propertyId = getQueryArg(window.location.href, "propertyId")
     const fileNumber = getQueryArg(window.location.href, "fileNumber")
     const queryObject = [
@@ -55,23 +28,24 @@ import { penaltySummary } from "./generatePenaltyStatement";
     ]
     const response = await getSearchResults(queryObject)
     if(!!response.Properties && !!response.Properties.length) {
+      var yearlyData = []
+    const min = 1992
+    const max = moment(new Date()).format('YYYY')
+    for(var i = min; i <= max; i++){
+      yearlyData.push({"code": i})
+    }
+    dispatch(
+      handleField(
+        "manimajra-payment",
+        "components.div.children.detailsContainer.children.paymentDetails.children.cardContent.children.detailsContainer.children.annual",
+        "props.data",
+        yearlyData
+      )
+    )
        dispatch(prepareFinalObject("Properties", response.Properties))
     }
     // dispatch(prepareFinalObject("payment.paymentType","PAYMENTTYPE.RENT"))
   }
-
-  const propertyDetailsHeader = getCommonTitle(
-    {
-        labelName: "Property Details",
-        labelKey: "ES_PROPERTY_DETAILS_HEADER"
-    },
-    {
-        style: {
-                marginBottom: 18,
-                marginTop: 18
-        }
-    }
-  )
 
   const paymentDetailsHeader = getCommonTitle(
     {
@@ -100,23 +74,45 @@ import { penaltySummary } from "./generatePenaltyStatement";
   )
   
 
-  const fileNumberField = {
-    label: {
-        labelName: "File Number",
-        labelKey: "ES_FILE_NUMBER_LABEL"
-      },
-      placeholder: {
-        labelName: "Enter File Number",
-        labelKey: "ES_FILE_NUMBER_PLACEHOLDER"
-      },
-    gridDefination: {
-        xs: 12,
-        sm: 6
-    },
-    required: true,
-    jsonPath: "searchScreenFileNo.fileNumber",
-    disabled: true
+export const annualField = {
+  label: {
+      labelName: "Annual License fee Pending from",
+      labelKey: "ES_ANNUAL_LICENSE_FEE_PENDING_LABEL"
+  },
+  placeholder: {
+      labelName: "Select Year",
+      labelKey: "ES_SELECT_YEAR_PLACEHOLDER"
+  },
+  required: true,
+  jsonPath: "Properties[0].propertyDetails.mmDemandStartYear",
+  gridDefination: {
+      xs: 12,
+      sm: 6
   }
+ 
+}
+
+export const monthField = {
+  label: {
+      labelName: "Monthly Charges pending from",
+      labelKey: "ES_MONTHLY_CHARGES_PENDING_LABEL"
+  },
+  placeholder: {
+      labelName: "Select Month",
+      labelKey: "ES_SELECT_MONTH_PLACEHOLDER"
+  },
+  optionValue: "code",
+  optionLabel: "label",
+  data:[ {label:"JAN",code:"01"},{label:"FEB",code:"02"},{label:"MAR",code:"03"},{label:"APR",code:"04"},{label:"MAY",code:"05"},{label:"JUN",code:"06"},{label:"JUL",code:"07"},
+  {label:"AUG",code:"08"},{label:"SEP",code:"09"},{label:"OCT",code:"10"},{label:"NOV",code:"11"},{label:"DEC",code:"12"}],
+  required: true,
+  // jsonPath: "Properties[0].propertyDetails.mmDemandStartMonth",
+  gridDefination: {
+      xs: 12,
+      sm: 6
+  }
+ 
+}
 
   const commentsField = {
     label: {
@@ -141,13 +137,11 @@ import { penaltySummary } from "./generatePenaltyStatement";
         labelKey: "ES_DEMAND_TYPE_LABEL"
       },
     required: false,
-    // jsonPath: "payment.demandType",
     beforeFieldChange: async (action, state, dispatch) => {
 
     },
-    optionValue: "code",
-    optionLabel: "name",
-    data:[{name:"Monthly",code:"month"},{name:"Annual",code:"annual"}],
+    // jsonPath:"Properties[0].demandType",
+    data:[{name:"Monthly",code:"Monthly"},{name:"Annually",code:"Annually"}],
     gridDefination: {
         xs: 12,
         sm: 6
@@ -159,31 +153,6 @@ import { penaltySummary } from "./generatePenaltyStatement";
   },
     required: true,
     visible: true
-  }
-
-  const paymentDate = {
-    label: {
-      labelName: "Date of Payment",
-      labelKey: "ES_DATE_OF_PAYMENT"
-    },
-    placeholder: {
-        labelName: "Enter Date of paymet",
-        labelKey: "ES_DATE_OF_PAYMENT_PLACEHOLDER"
-    },
-    required: true,
-    pattern: getPattern("Date"),
-    jsonPath: "payment.dateOfPayment",
-    visible: process.env.REACT_APP_NAME !== "Citizen",
-    props: {
-      inputProps: {
-        max: getTodaysDateInYMD()
-    }
-    },
-    afterFieldChange: (action, state, dispatch) => {
-      dispatch(prepareFinalObject(
-        "payment.dateOfPayment", convertDateToEpoch(action.value)
-      ))
-    }
   }
 
   const paymentAmount = {
@@ -202,6 +171,9 @@ import { penaltySummary } from "./generatePenaltyStatement";
       labelName: "Enter amount",
       labelKey: "ES_ENTER_AMOUNT_PLACEHOLDER"
   },
+    props:{
+      disabled:true
+    },
     required: true,
     jsonPath: "payment.paymentAmount"
   }
@@ -243,23 +215,14 @@ import { penaltySummary } from "./generatePenaltyStatement";
     jsonPath: "payment.transactionNumber",
     visible: process.env.REACT_APP_NAME !== "Citizen"
   }
-
-//   export const applicationOfflinePaymentDetails = getCommonCard({
-//     header: paymentDetailsHeader,
-//     detailsContainer: getCommonContainer({
-//         dateOfPayment: getDateField(paymentDate),
-//         bankName: getTextField(bankName),
-//         transactionId: getTextField(transactionId)
-//     })
-//   })
   
   export const paymentDetails = getCommonCard({
       header: paymentDetailsHeader,
       detailsContainer: getCommonContainer({
-        // paymentType: getSelectField(paymentType),
         Amount: getTextField(paymentAmount),
-        dateOfPayment: getDateField(paymentDate),
         bankName: getTextField(bankName),
+        month:getSelectField(monthField),
+        annual:getSelectField(annualField),
         transactionId: getTextField(transactionId),
         comments : getTextField(commentsField)
       })
@@ -441,7 +404,7 @@ const manimajraPayment = {
     uiFramework: "material-ui",
     name: "manimajra-payment",
     beforeInitScreen: (action, state, dispatch) => {
-      beforeInitFn(action, state, dispatch);
+    beforeInitFn(action, state, dispatch);
       return action
     },
     components: {
