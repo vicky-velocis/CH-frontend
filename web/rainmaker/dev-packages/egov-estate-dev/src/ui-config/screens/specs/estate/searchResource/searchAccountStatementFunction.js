@@ -105,11 +105,9 @@ var isfileNumberValid = validateFields(
                 [getTextToLocalMapping("Amount")]: formatAmount(item.amount.toFixed(2)) || "-",
                 [getTextToLocalMapping("Type(Payment)")]:  changeTypePayment(item.type) || "-",
                 [getTextToLocalMapping("Type(Rent)")]: changePTypeRent(item.type) || "-",
-                [getTextToLocalMapping("Principal Due")]: formatAmount(item.remainingPrincipal.toFixed(2)) || "-",
-                [getTextToLocalMapping("GST Due")]:  formatAmount(item.remainingGST.toFixed(2)) || "-",
+                [getTextToLocalMapping("GST")]:  formatAmount(item.gst.toFixed(2)) || "-",
                 [getTextToLocalMapping("Rent")]: formatAmount(item.rent.toFixed(2)) || "-",
                 [getTextToLocalMapping("Total Due")]: formatAmount(item.dueAmount.toFixed(2)) || "-",
-                [getTextToLocalMapping("Account Balance")]: formatAmount(item.remainingBalance.toFixed(2)) || "-",
                 [getTextToLocalMapping("Receipt No.")]: item.receiptNo || "-",
                 
               }));

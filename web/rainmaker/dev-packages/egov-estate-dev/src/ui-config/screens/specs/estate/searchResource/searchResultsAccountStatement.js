@@ -80,12 +80,8 @@ export const mmAccountStatementResult = {
         getTextToLocalMapping("Amount"),
         getTextToLocalMapping("Type(Payment)"),
         getTextToLocalMapping("Type(Rent)"),
-        getTextToLocalMapping("Principal Due"),
-        getTextToLocalMapping("GST Due"),
-        // getTextToLocalMapping("Interest Due"),
-        // getTextToLocalMapping("GST Penalty Due"),
+        getTextToLocalMapping("GST"),
         getTextToLocalMapping("Total Due"),
-        getTextToLocalMapping("Account Balance"),
         getTextToLocalMapping("Receipt No."),
       {
         name: "propertyId",
