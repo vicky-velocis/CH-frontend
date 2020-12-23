@@ -185,24 +185,44 @@ var isfileNumberValid = validateFields(
 export const downloadAccountStatementPdf = async(state, dispatch) => {
   const { EstateAccountStatement } = state.screenConfiguration.preparedFinalObject;
   const {Properties} = state.screenConfiguration.preparedFinalObject;
+  const {branchType} = Properties[0].propertyDetails
+  let data = []
   let properties = Properties
-  const data = EstateAccountStatement.map(item =>
-    ({
-      ...item,
-      date: moment(new Date(item.date)).format("DD-MMM-YYYY") || "-",
-      amount: formatAmount(item.amount.toFixed(2)) || "-",
-      typeP:  changeTypePayment(item.type) || "-",
-      typeR:  changePTypeRent(item.type) || "-",
-      remainingPrincipal: formatAmount(item.remainingPrincipal.toFixed(2)) || "-",
-      remainingGST:  formatAmount(item.remainingGST.toFixed(2)) || "-",
-      remainingRentPenalty: formatAmount(item.remainingRentPenalty.toFixed(2)) || "-",
-      remainingGSTPenalty: formatAmount(item.remainingGSTPenalty.toFixed(2)) || "-",
-      dueAmount: formatAmount(item.dueAmount.toFixed(2)) || "-",
-      remainingBalance: formatAmount(item.remainingBalance.toFixed(2)) || "-",
-      receiptNo: item.receiptNo || "-",
-      consolidatedAmount : item.isPrevious ? "CF" : "-"
-    })
-  )
+
+  if(branchType === "MANI_MAJRA"){
+    data = EstateAccountStatement.map(item => ({
+      [getTextToLocalMapping("Date")]: moment(new Date(item.date)).format("DD-MMM-YYYY") || "-",
+      [getTextToLocalMapping("Amount")]: formatAmount(item.amount.toFixed(2)) || "-",
+      [getTextToLocalMapping("Type(Payment)")]:  changeTypePayment(item.type) || "-",
+      [getTextToLocalMapping("Type(Rent)")]: changePTypeRent(item.type) || "-",
+      [getTextToLocalMapping("Principal Due")]: formatAmount(item.remainingPrincipal.toFixed(2)) || "-",
+      [getTextToLocalMapping("GST Due")]:  formatAmount(item.remainingGST.toFixed(2)) || "-",
+      [getTextToLocalMapping("Rent")]: formatAmount(item.rent.toFixed(2)) || "-",
+      [getTextToLocalMapping("Total Due")]: formatAmount(item.dueAmount.toFixed(2)) || "-",
+      [getTextToLocalMapping("Account Balance")]: formatAmount(item.remainingBalance.toFixed(2)) || "-",
+      [getTextToLocalMapping("Receipt No.")]: item.receiptNo || "-",
+      
+    }));
+  }else{
+    data = EstateAccountStatement.map(item =>
+      ({
+        ...item,
+        date: moment(new Date(item.date)).format("DD-MMM-YYYY") || "-",
+        amount: formatAmount(item.amount.toFixed(2)) || "-",
+        typeP:  changeTypePayment(item.type) || "-",
+        typeR:  changePTypeRent(item.type) || "-",
+        remainingPrincipal: formatAmount(item.remainingPrincipal.toFixed(2)) || "-",
+        remainingGST:  formatAmount(item.remainingGST.toFixed(2)) || "-",
+        remainingRentPenalty: formatAmount(item.remainingRentPenalty.toFixed(2)) || "-",
+        remainingGSTPenalty: formatAmount(item.remainingGSTPenalty.toFixed(2)) || "-",
+        dueAmount: formatAmount(item.dueAmount.toFixed(2)) || "-",
+        remainingBalance: formatAmount(item.remainingBalance.toFixed(2)) || "-",
+        receiptNo: item.receiptNo || "-",
+        consolidatedAmount : item.isPrevious ? "CF" : "-"
+      })
+    )
+  }
+ 
 
   let lastElement = data.pop();
   lastElement.date = "Balance as on "+ lastElement.date
@@ -212,15 +232,29 @@ export const downloadAccountStatementPdf = async(state, dispatch) => {
   data.push(lastElement)  
 
   const mode = "download"
-  let   queryStr = [{
-    key: "key",
-    value: "account-statement-generation"
-  },
-  {
-    key: "tenantId",
-    value: "ch"
+  let queryStr = []
+  if(branchType === "MANI_MAJRA"){
+    queryStr = [{
+      key: "key",
+      value: "mm-account-statement-generation"
+    },
+    {
+      key: "tenantId",
+      value: "ch"
+    }
+  ]
+  }else{
+    queryStr = [{
+      key: "key",
+      value: "account-statement-generation"
+    },
+    {
+      key: "tenantId",
+      value: "ch"
+    }
+  ]
   }
-]
+ 
 
   const DOWNLOADRECEIPT = {
     GET: {
