@@ -1,17 +1,12 @@
 import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject,toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getCommonHeader,getBreak, getCommonCard, getCommonContainer, getTextField, getSelectField,getPattern, getCommonGrayCard, getCommonTitle, getLabel, getDateField  } from "egov-ui-framework/ui-config/screens/specs/utils";
-import commonConfig from "config/common.js";
 import { httpRequest } from "../../../../ui-utils";
-import get from "lodash/get";
-import { ESTATE_SERVICES_MDMS_MODULE } from "../../../../ui-constants";
 import { getSearchResults } from "../../../../ui-utils/commons";
 import { propertyInfo } from "./preview-resource/preview-properties";
 import { getQueryArg, getTodaysDateInYMD } from "egov-ui-framework/ui-utils/commons";
-import { convertDateToEpoch, validateFields, getRentSummaryCard } from "../utils";
+import { convertDateToEpoch, validateFields, getRentSummaryCard, getTextToLocalMapping } from "../utils";
 import {demandResults} from './searchResource/searchResults'
-import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
-import {penaltyStatmentResult,extensionStatmentResult,securityStatmentResult} from './searchResource/functions'
-import { penaltySummary } from "./generatePenaltyStatement";
+
 import moment from 'moment'
   const header = getCommonHeader({
     labelName: "Rent Payment",
@@ -43,6 +38,45 @@ import moment from 'moment'
       )
     )
        dispatch(prepareFinalObject("Properties", response.Properties))
+       let Criteria = {
+        fromdate:  "",
+        todate:  ""
+       }
+         Criteria = {...Criteria, propertyid: propertyId}
+         const _accountstatement = await httpRequest(
+           "post",
+           '/est-services/property-master/_accountstatement',
+           "",
+           [],
+           {Criteria}
+         )
+         console.log(_accountstatement)
+        
+        if(_accountstatement){
+          dispatch(
+            prepareFinalObject(
+              "ManiMajraAccountStatement",
+              _accountstatement.ManiMajraAccountStatement
+            )
+          );
+          // let sortedData = _accountstatement.ManiMajraAccountStatement.sort((a, b) => (a.date > b.date) ? 1 : -1)
+          let data = _accountstatement.ManiMajraAccountStatement.map(item => ({
+            [getTextToLocalMapping("Date")]: moment(new Date(item.date)).format("DD-MMM-YYYY") || "-",
+            [getTextToLocalMapping("GST")]:  (item.gst.toFixed(2)) || "-",
+            [getTextToLocalMapping("Total Due")]: (item.dueAmount.toFixed(2)) || "-",
+            [getTextToLocalMapping("Rent")]: item.rent || "-"
+          }));
+          // dates.inRange (d,start,end)
+          dispatch(
+            handleField(
+              "manimajra-payment",
+              "components.div.children.detailsContainer.children.demandResults",
+              "props.data",
+              data
+            )
+          );
+        }
+        
     }
     // dispatch(prepareFinalObject("payment.paymentType","PAYMENTTYPE.RENT"))
   }
@@ -216,13 +250,85 @@ export const monthField = {
     visible: process.env.REACT_APP_NAME !== "Citizen"
   }
   
+  const paymentDate = {
+    label: {
+      labelName: "Date of Payment",
+      labelKey: "ES_DATE_OF_PAYMENT"
+    },
+    placeholder: {
+        labelName: "Enter Date of paymet",
+        labelKey: "ES_DATE_OF_PAYMENT_PLACEHOLDER"
+    },
+    required: true,
+    pattern: getPattern("Date"),
+    jsonPath: "payment.dateOfPayment",
+    visible: process.env.REACT_APP_NAME !== "Citizen",
+    props: {
+      disabled:true,
+      inputProps: {
+        max: getTodaysDateInYMD()
+    }
+    },
+    // afterFieldChange: (action, state, dispatch) => {
+    //   dispatch(prepareFinalObject(
+    //     "payment.dateOfPayment", convertDateToEpoch(action.value)
+    //   ))
+    // }
+  }
+
+  const toDate = {
+    label: {
+      labelName: "to date",
+      labelKey: "ES_TO_DATE_LABEL"
+    },
+    placeholder: {
+        labelName: "Select Date",
+        labelKey: "ES_SELECT_DATE_PLACEHOLDER"
+    },
+    required: true,
+    pattern: getPattern("Date"),
+    jsonPath: "payment.toDate",
+    props: {
+      inputProps: {
+        max: getTodaysDateInYMD()
+    }
+    },
+    // afterFieldChange: (action, state, dispatch) => {
+    //   dispatch(prepareFinalObject(
+    //     "payment.dateOfPayment", convertDateToEpoch(action.value)
+    //   ))
+    // }
+  }
+
+  //prefilled -First demand date
+  const fromDate = {
+    label: {
+      labelName: "From Date",
+      labelKey: "ES_FROM_DATE_LABEL"
+    },
+    placeholder: {
+        labelName: "From Date Placeholder",
+        labelKey: "ES_FROM_DATE_PLACEHOLDER"
+    },
+    pattern: getPattern("Date"),
+    jsonPath: "ManiMajraAccountStatement[0].date",
+    props: {
+      disabled:true,
+    //   inputProps: {
+    //     max: getTodaysDateInYMD()
+    // }
+    }
+   
+  }
+  
   export const paymentDetails = getCommonCard({
       header: paymentDetailsHeader,
       detailsContainer: getCommonContainer({
+        from: getDateField(fromDate),
+        to: getDateField(toDate),
         Amount: getTextField(paymentAmount),
         bankName: getTextField(bankName),
-        month:getSelectField(monthField),
-        annual:getSelectField(annualField),
+        dateOfPayment: getDateField(paymentDate),
         transactionId: getTextField(transactionId),
         comments : getTextField(commentsField)
       })
