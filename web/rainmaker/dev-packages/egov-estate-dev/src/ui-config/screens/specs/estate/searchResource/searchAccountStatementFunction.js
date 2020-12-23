@@ -65,7 +65,8 @@ var isfileNumberValid = validateFields(
             [],
             {Criteria}
           )
-          if(branchType === 'MANI_MAJRA' ? response.ManiMajraAccountStatement.length === 1 : response.EstateAccountStatement.length===1){
+          if(branchType === 'MANI_MAJRA' ? (response.ManiMajraAccountStatement.length === 1  || response.ManiMajraAccountStatement == null) : (response.EstateAccountStatement.length===1 
+            || response.EstateAccountStatement == null)){
             let errorMessage = {
               labelName:
                   "No records found",
