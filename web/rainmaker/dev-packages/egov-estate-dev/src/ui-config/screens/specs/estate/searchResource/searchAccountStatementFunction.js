@@ -191,16 +191,16 @@ export const downloadAccountStatementPdf = async(state, dispatch) => {
 
   if(branchType === "MANI_MAJRA"){
     data = EstateAccountStatement.map(item => ({
-      [getTextToLocalMapping("Date")]: moment(new Date(item.date)).format("DD-MMM-YYYY") || "-",
-      [getTextToLocalMapping("Amount")]: formatAmount(item.amount.toFixed(2)) || "-",
-      [getTextToLocalMapping("Type(Payment)")]:  changeTypePayment(item.type) || "-",
-      [getTextToLocalMapping("Type(Rent)")]: changePTypeRent(item.type) || "-",
-      [getTextToLocalMapping("Principal Due")]: formatAmount(item.remainingPrincipal.toFixed(2)) || "-",
-      [getTextToLocalMapping("GST Due")]:  formatAmount(item.remainingGST.toFixed(2)) || "-",
-      [getTextToLocalMapping("Rent")]: formatAmount(item.rent.toFixed(2)) || "-",
-      [getTextToLocalMapping("Total Due")]: formatAmount(item.dueAmount.toFixed(2)) || "-",
-      [getTextToLocalMapping("Account Balance")]: formatAmount(item.remainingBalance.toFixed(2)) || "-",
-      [getTextToLocalMapping("Receipt No.")]: item.receiptNo || "-",
+      date: moment(new Date(item.date)).format("DD-MMM-YYYY") || "-",
+      amount: formatAmount(item.amount.toFixed(2)) || "-",
+      typeP:  changeTypePayment(item.type) || "-",
+      typeR: changePTypeRent(item.type) || "-",
+      remainingPrincipal: formatAmount(item.remainingPrincipal.toFixed(2)) || "-",
+      remainingGST:  formatAmount(item.remainingGST.toFixed(2)) || "-",
+      rent: formatAmount(item.rent.toFixed(2)) || "-",
+      dueAmount: formatAmount(item.dueAmount.toFixed(2)) || "-",
+      remainingBalance: formatAmount(item.remainingBalance.toFixed(2)) || "-",
+      receiptNo: item.receiptNo || "-",
       
     }));
   }else{
