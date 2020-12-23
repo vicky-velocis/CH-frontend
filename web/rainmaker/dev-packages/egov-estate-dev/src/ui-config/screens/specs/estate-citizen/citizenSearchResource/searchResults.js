@@ -90,7 +90,7 @@ const onRowClick = rowData => {
     window.location.href = `adhocDemand?fileNumber=${rowData[1]}`
   }
   else {
-    if(rowData[5] > 0) {
+    if(rowData[5] > 0 && process.env.REACT_APP_NAME === "Citizen") {
       rowData[6](toggleSnackbar(true, {labelName: "ES_ERR_DUE_AMOUNT", labelKey: "ES_ERR_DUE_AMOUNT"}, "warning"))
     } else {
       if (process.env.REACT_APP_NAME === "Citizen") {
