@@ -27,7 +27,7 @@ export const getTextToLocalMapping = memoize((label) => _getTextToLocalMapping(l
 import {downloadCSVFromFilestoreID} from '../searchResource/functions'
 
 export const searchApiCallAccountStatement = async (state, dispatch, onInit, offset, limit = 100, hideTable = true) => {
-  
+  let data = []
   let {Properties} = state.screenConfiguration.preparedFinalObject
   let {branchType} = Properties[0].propertyDetails
   var isDateValid = true;
@@ -99,21 +99,39 @@ var isfileNumberValid = validateFields(
               )
             );
             let sortedData = branchType === 'MANI_MAJRA' ? response.ManiMajraAccountStatement : response.EstateAccountStatement.sort((a, b) => (a.date > b.date) ? 1 : -1)
-            let data = sortedData.map(item => ({
-              [getTextToLocalMapping("Date")]: moment(new Date(item.date)).format("DD-MMM-YYYY") || "-",
-              [getTextToLocalMapping("Amount")]: formatAmount(item.amount.toFixed(2)) || "-",
-              [getTextToLocalMapping("Type(Payment)")]:  changeTypePayment(item.type) || "-",
-              [getTextToLocalMapping("Type(Rent)")]: changePTypeRent(item.type) || "-",
-              [getTextToLocalMapping("Principal Due")]: formatAmount(item.remainingPrincipal.toFixed(2)) || "-",
-              [getTextToLocalMapping("GST Due")]:  formatAmount(item.remainingGST.toFixed(2)) || "-",
-              [getTextToLocalMapping("Interest Due")]: formatAmount(item.remainingRentPenalty.toFixed(2)) || "-",
-              [getTextToLocalMapping("GST Penalty Due")]: formatAmount(item.remainingGSTPenalty.toFixed(2)) || "-",
-              [getTextToLocalMapping("Total Due")]: formatAmount(item.dueAmount.toFixed(2)) || "-",
-              [getTextToLocalMapping("Account Balance")]: formatAmount(item.remainingBalance.toFixed(2)) || "-",
-              [getTextToLocalMapping("Receipt No.")]: item.receiptNo || "-",
-              [getTextToLocalMapping("Consolidated Demand")]: item.isPrevious ? "CF" : "-"
-              
-            }));
+            if(branchType === 'MANI_MAJRA'){
+              data = sortedData.map(item => ({
+                [getTextToLocalMapping("Date")]: moment(new Date(item.date)).format("DD-MMM-YYYY") || "-",
+                [getTextToLocalMapping("Amount")]: formatAmount(item.amount.toFixed(2)) || "-",
+                [getTextToLocalMapping("Type(Payment)")]:  changeTypePayment(item.type) || "-",
+                [getTextToLocalMapping("Type(Rent)")]: changePTypeRent(item.type) || "-",
+                [getTextToLocalMapping("Principal Due")]: formatAmount(item.remainingPrincipal.toFixed(2)) || "-",
+                [getTextToLocalMapping("GST Due")]:  formatAmount(item.remainingGST.toFixed(2)) || "-",
+                [getTextToLocalMapping("Rent")]: formatAmount(item.rent.toFixed(2)) || "-",
+                [getTextToLocalMapping("Total Due")]: formatAmount(item.dueAmount.toFixed(2)) || "-",
+                [getTextToLocalMapping("Account Balance")]: formatAmount(item.remainingBalance.toFixed(2)) || "-",
+                [getTextToLocalMapping("Receipt No.")]: item.receiptNo || "-",
+                
+              }));
+            }
+            else{
+              data = sortedData.map(item => ({
+                [getTextToLocalMapping("Date")]: moment(new Date(item.date)).format("DD-MMM-YYYY") || "-",
+                [getTextToLocalMapping("Amount")]: formatAmount(item.amount.toFixed(2)) || "-",
+                [getTextToLocalMapping("Type(Payment)")]:  changeTypePayment(item.type) || "-",
+                [getTextToLocalMapping("Type(Rent)")]: changePTypeRent(item.type) || "-",
+                [getTextToLocalMapping("Principal Due")]: formatAmount(item.remainingPrincipal.toFixed(2)) || "-",
+                [getTextToLocalMapping("GST Due")]:  formatAmount(item.remainingGST.toFixed(2)) || "-",
+                [getTextToLocalMapping("Interest Due")]: formatAmount(item.remainingRentPenalty.toFixed(2)) || "-",
+                [getTextToLocalMapping("GST Penalty Due")]: formatAmount(item.remainingGSTPenalty.toFixed(2)) || "-",
+                [getTextToLocalMapping("Total Due")]: formatAmount(item.dueAmount.toFixed(2)) || "-",
+                [getTextToLocalMapping("Account Balance")]: formatAmount(item.remainingBalance.toFixed(2)) || "-",
+                [getTextToLocalMapping("Receipt No.")]: item.receiptNo || "-",
+                [getTextToLocalMapping("Consolidated Demand")]: item.isPrevious ? "CF" : "-"
+                
+              }));
+            }
+
             let lastElement = data.pop();
             lastElement.Date = "Balance as on "+lastElement.Date
             lastElement["Type(Payment)"] = "-"
@@ -140,7 +158,7 @@ var isfileNumberValid = validateFields(
                 "estate-search-account-statement",
                 "components.div.children.searchResultsAccountStatement",
                 "props.data",
-                data
+                 data
               )
             );
           } catch (error) {
