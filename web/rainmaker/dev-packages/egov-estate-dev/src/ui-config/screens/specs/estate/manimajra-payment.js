@@ -41,11 +41,11 @@ import moment from 'moment'
         if(_accountstatement){
 
           // to get demands which are unpaid
-          // _accountstatement.ManiMajraAccountStatement = _accountstatement.ManiMajraAccountStatement.filter((demand) => {
-          //     if(demand.status === 'UNPAID' || demand.status === 'unpaid'){
-          //       return demand
-          //     }
-          // })
+          _accountstatement.ManiMajraAccountStatement = _accountstatement.ManiMajraAccountStatement.filter((demand) => {
+              if(demand.status == 'UNPAID' || demand.type == 'D'){
+                return demand
+              }
+          })
 
           dispatch(
             prepareFinalObject(
