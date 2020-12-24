@@ -405,7 +405,7 @@ export const getRedirectionURL = () => {
           )
         );
       }
-     // else{validationPause = false;}
+      else{validationPause = false;}
   
     }
   
