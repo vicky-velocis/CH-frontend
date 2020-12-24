@@ -269,11 +269,11 @@ export const monthField = {
         max: getTodaysDateInYMD()
     }
     },
-    // afterFieldChange: (action, state, dispatch) => {
-    //   dispatch(prepareFinalObject(
-    //     "payment.dateOfPayment", convertDateToEpoch(action.value)
-    //   ))
-    // }
+    afterFieldChange: (action, state, dispatch) => {
+      dispatch(prepareFinalObject(
+        "payment.dateOfPayment", convertDateToEpoch(action.value)
+      ))
+    }
   }
 
   const toDate = {
@@ -293,11 +293,41 @@ export const monthField = {
         max: getTodaysDateInYMD()
     }
     },
-    // afterFieldChange: (action, state, dispatch) => {
+    afterFieldChange: (action, state, dispatch) => {
+    let {toDate} = state.screenConfiguration.preparedFinalObject.payment
+    toDate = convertDateToEpoch(toDate)
+    const {ManiMajraAccountStatement} = state.screenConfiguration.preparedFinalObject
+    // let fromDate = moment(ManiMajraAccountStatement[0].date).format('DD-MMM-YYYY')
+    // toDate =  moment(toDate).format('DD-MMM-YYYY')
+    let fromDate = ManiMajraAccountStatement[0].date
+    fromDate = convertDateToEpoch(fromDate)
+   
+    let requiredObject = ManiMajraAccountStatement.filter(item => {
+      if(((item.date - toDate === 0 || item.date -toDate >= 0) ? true :false) && ((item.date - fromDate === 0 || item.date -fromDate >= 0) ? true :false)){
+        return item
+      }
+    }) 
+    requiredObject = requiredObject.map(item => ({
+      [getTextToLocalMapping("Date")]: moment(new Date(item.date)).format("DD-MMM-YYYY") || "-",
+      [getTextToLocalMapping("GST")]:  (item.gst.toFixed(2)) || "-",
+      [getTextToLocalMapping("Total Due")]: (item.dueAmount.toFixed(2)) || "-",
+      [getTextToLocalMapping("Rent")]: item.rent || "-"
+    }));
+
+    dispatch(
+      handleField(
+        "manimajra-payment",
+        "components.div.children.detailsContainer.children.demandResults",
+        "props.data",
+        requiredObject
+      )
+    );
+    console.log(requiredObject)
+
     //   dispatch(prepareFinalObject(
     //     "payment.dateOfPayment", convertDateToEpoch(action.value)
     //   ))
-    // }
+    }
   }
 
   //prefilled -First demand date
