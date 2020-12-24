@@ -78,7 +78,7 @@ const onRowClick = rowData => {
     window.location.href = `refund?fileNumber=${rowData[1]}&tenantId=${tenantId}`
   }
   else if(type == "account-statement"){
-    window.location.href = `estate-search-account-statement?fileNumber=${rowData[1]}`
+    window.location.href = `estate-search-account-statement?fileNumber=${rowData[1]}&branchType=${branchType}`
   }
   else if(type =="security-fee"){
     window.location.href = `estate-security-fee?fileNumber=${rowData[1]}`
