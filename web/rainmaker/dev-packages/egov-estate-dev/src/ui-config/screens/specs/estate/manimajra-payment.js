@@ -209,7 +209,7 @@ export const monthField = {
       disabled:true
     },
     required: true,
-    jsonPath: "payment.paymentAmount"
+    jsonPath: "payment.amount"
   }
 
   const bankName = {
@@ -246,7 +246,7 @@ export const monthField = {
       labelKey: "ES_ENTER_TRANSACTION_ID_PLACEHOLDER"
     },
     required: true,
-    jsonPath: "payment.transactionNumber",
+    jsonPath: "payment.transactionId",
     visible: process.env.REACT_APP_NAME !== "Citizen"
   }
   
@@ -287,46 +287,42 @@ export const monthField = {
     },
     required: true,
     pattern: getPattern("Date"),
-    jsonPath: "payment.toDate",
+    jsonPath: "offlinePaymentDetails.toDate",
     props: {
       inputProps: {
         max: getTodaysDateInYMD()
     }
     },
     afterFieldChange: (action, state, dispatch) => {
-    let {toDate} = state.screenConfiguration.preparedFinalObject.payment
+    let {toDate} = state.screenConfiguration.preparedFinalObject.offlinePaymentDetails
     toDate = convertDateToEpoch(toDate)
+    var fromDate = ""
     const {ManiMajraAccountStatement} = state.screenConfiguration.preparedFinalObject
-    // let fromDate = moment(ManiMajraAccountStatement[0].date).format('DD-MMM-YYYY')
-    // toDate =  moment(toDate).format('DD-MMM-YYYY')
-    let fromDate = ManiMajraAccountStatement[0].date
-    fromDate = convertDateToEpoch(fromDate)
-   
-    let requiredObject = ManiMajraAccountStatement.filter(item => {
-      if(((item.date - toDate === 0 || item.date -toDate >= 0) ? true :false) && ((item.date - fromDate === 0 || item.date -fromDate >= 0) ? true :false)){
+    if(ManiMajraAccountStatement && ManiMajraAccountStatement!=null){
+      fromDate = ManiMajraAccountStatement[0].date
+   }
+   fromDate = convertDateToEpoch(fromDate)
+
+   // to get demands between to and from date
+    let demands = ManiMajraAccountStatement.filter(item => {
+      if(((item.date - toDate === 0 || item.date -toDate <= 0) ? true :false) && ((item.date - fromDate === 0 || item.date -fromDate >= 0) ? true :false)){
         return item
       }
-    }) 
-    requiredObject = requiredObject.map(item => ({
-      [getTextToLocalMapping("Date")]: moment(new Date(item.date)).format("DD-MMM-YYYY") || "-",
-      [getTextToLocalMapping("GST")]:  (item.gst.toFixed(2)) || "-",
-      [getTextToLocalMapping("Total Due")]: (item.dueAmount.toFixed(2)) || "-",
-      [getTextToLocalMapping("Rent")]: item.rent || "-"
-    }));
-
+    })
+  
+    const gst = demands.reduce(function (acc, obj) { return acc + parseInt(obj.gst); }, 0);
+    const rent = demands.reduce(function (acc, obj) { return acc + parseInt(obj.rent); }, 0);
+    const amount = (gst + rent).toFixed(2)
+      
     dispatch(
       handleField(
         "manimajra-payment",
-        "components.div.children.detailsContainer.children.demandResults",
-        "props.data",
-        requiredObject
+        "components.div.children.detailsContainer.children.paymentDetails.children.cardContent.children.detailsContainer.children.Amount",
+        "props.value",
+        amount
       )
     );
-    console.log(requiredObject)
-
-    //   dispatch(prepareFinalObject(
-    //     "payment.dateOfPayment", convertDateToEpoch(action.value)
-    //   ))
+   
     }
   }
 
@@ -390,7 +386,56 @@ export const monthField = {
   }
 
   const goToPayment = async (state, dispatch, type) => {
-  
+    let isValid = true;
+    isValid = validateFields("components.div.children.detailsContainer.children.paymentDetails.children.cardContent.children.detailsContainer.children", state, dispatch, "manimajra-payment")
+    if(!isValid){
+      let errorMessage = {
+        labelName:
+            "Please Enter Mandatory Fields",
+        labelKey: "ES_ERR_MANDATORY_FIELDS"
+    };
+    dispatch(toggleSnackbar(true, errorMessage, "warning"));
+    }
+
+    if(!!isValid) {
+      let {amount} = state.screenConfiguration.preparedFinalObject.payment
+      const propertyId = getQueryArg(window.location.href, "propertyId")
+      const {payment} = state.screenConfiguration.preparedFinalObject
+      if(!!propertyId ) {
+        const payload = [
+          { id: propertyId, 
+            propertyDetails: {
+              offlinePaymentDetails: payment
+            }
+          }
+        ]
+        try {
+          const url =  "/est-services/property-master/_payrent"
+          const response = await httpRequest("post",
+          url,
+          "",
+          [],
+          { Properties : payload })
+          // if(!!response && ((!!response.Properties && !!response.Properties.length) || (!!response.OfflinePayments && !!response.OfflinePayments.length))) {
+          //   let {rentPaymentConsumerCode,fileNumber, tenantId, consumerCode} = !!response.Properties ? response.Properties[0] : response.OfflinePayments[0]
+          //   rentPaymentConsumerCode = rentPaymentConsumerCode || consumerCode;
+          //   let billingBuisnessService=!!response.Properties ? response.Properties[0].propertyDetails.billingBusinessService : response.OfflinePayments[0].billingBusinessService
+          //   type === "ONLINE" ? dispatch(
+          //     setRoute(
+          //      `/estate-citizen/pay?consumerCode=${rentPaymentConsumerCode}&tenantId=${tenantId}&businessService=${billingBuisnessService}`
+          //     )
+          //   ) : dispatch(
+          //     setRoute(
+          //     `acknowledgement?purpose=pay&applicationNumber=${rentPaymentConsumerCode}&status=success&tenantId=${tenantId}&type=${billingBuisnessService}&fileNumber=${fileNumber}`
+          //     )
+          //   )
+          // dispatch(prepareFinalObject("Properties", response.Properties))
+          // }
+        } catch (error) {
+          console.log("error", error)
+        }
+      }
+    }
   }
   
   export const getCommonApplyFooter = children => {
