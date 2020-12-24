@@ -23,20 +23,6 @@ import moment from 'moment'
     ]
     const response = await getSearchResults(queryObject)
     if(!!response.Properties && !!response.Properties.length) {
-      var yearlyData = []
-    const min = 1992
-    const max = moment(new Date()).format('YYYY')
-    for(var i = min; i <= max; i++){
-      yearlyData.push({"code": i})
-    }
-    dispatch(
-      handleField(
-        "manimajra-payment",
-        "components.div.children.detailsContainer.children.paymentDetails.children.cardContent.children.detailsContainer.children.annual",
-        "props.data",
-        yearlyData
-      )
-    )
        dispatch(prepareFinalObject("Properties", response.Properties))
        let Criteria = {
         fromdate:  "",
@@ -53,6 +39,14 @@ import moment from 'moment'
          console.log(_accountstatement)
         
         if(_accountstatement){
+
+          //to get demands which are unpaid
+          // _accountstatement.ManiMajraAccountStatement = _accountstatement.ManiMajraAccountStatement.filter((demand) => {
+          //     if(demand.status === 'UNPAID'){
+          //       return demand
+          //     }
+          // })
+
           dispatch(
             prepareFinalObject(
               "ManiMajraAccountStatement",
@@ -198,8 +192,6 @@ export const monthField = {
         xs: 12,
         sm: 6
     },
-    minLength: 3,
-    maxLength: 7,
     errorMessage: "ES_ERR_AMOUNT_FIELD",
     placeholder: {
       labelName: "Enter amount",
@@ -264,7 +256,6 @@ export const monthField = {
     jsonPath: "payment.dateOfPayment",
     visible: process.env.REACT_APP_NAME !== "Citizen",
     props: {
-      disabled:true,
       inputProps: {
         max: getTodaysDateInYMD()
     }
@@ -416,21 +407,21 @@ export const monthField = {
           "",
           [],
           { Properties : payload })
-          // if(!!response && ((!!response.Properties && !!response.Properties.length) || (!!response.OfflinePayments && !!response.OfflinePayments.length))) {
-          //   let {rentPaymentConsumerCode,fileNumber, tenantId, consumerCode} = !!response.Properties ? response.Properties[0] : response.OfflinePayments[0]
-          //   rentPaymentConsumerCode = rentPaymentConsumerCode || consumerCode;
-          //   let billingBuisnessService=!!response.Properties ? response.Properties[0].propertyDetails.billingBusinessService : response.OfflinePayments[0].billingBusinessService
-          //   type === "ONLINE" ? dispatch(
-          //     setRoute(
-          //      `/estate-citizen/pay?consumerCode=${rentPaymentConsumerCode}&tenantId=${tenantId}&businessService=${billingBuisnessService}`
-          //     )
-          //   ) : dispatch(
-          //     setRoute(
-          //     `acknowledgement?purpose=pay&applicationNumber=${rentPaymentConsumerCode}&status=success&tenantId=${tenantId}&type=${billingBuisnessService}&fileNumber=${fileNumber}`
-          //     )
-          //   )
-          // dispatch(prepareFinalObject("Properties", response.Properties))
-          // }
+          if(!!response && ((!!response.Properties && !!response.Properties.length) || (!!response.OfflinePayments && !!response.OfflinePayments.length))) {
+            let {rentPaymentConsumerCode,fileNumber, tenantId, consumerCode} = !!response.Properties ? response.Properties[0] : response.OfflinePayments[0]
+            rentPaymentConsumerCode = rentPaymentConsumerCode || consumerCode;
+            let billingBuisnessService=!!response.Properties ? response.Properties[0].propertyDetails.billingBusinessService : response.OfflinePayments[0].billingBusinessService
+            type === "ONLINE" ? dispatch(
+              setRoute(
+               `/estate-citizen/pay?consumerCode=${rentPaymentConsumerCode}&tenantId=${tenantId}&businessService=${billingBuisnessService}`
+              )
+            ) : dispatch(
+              setRoute(
+              `acknowledgement?purpose=pay&applicationNumber=${rentPaymentConsumerCode}&status=success&tenantId=${tenantId}&type=${billingBuisnessService}&fileNumber=${fileNumber}`
+              )
+            )
+          dispatch(prepareFinalObject("Properties", response.Properties))
+          }
         } catch (error) {
           console.log("error", error)
         }
