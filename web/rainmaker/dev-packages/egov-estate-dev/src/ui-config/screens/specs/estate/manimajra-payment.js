@@ -37,7 +37,6 @@ import moment from 'moment'
            [],
            {Criteria}
          )
-         console.log(_accountstatement)
         
         if(_accountstatement){
 
