@@ -6,6 +6,7 @@ import { propertyInfo } from "./preview-resource/preview-properties";
 import { getQueryArg, getTodaysDateInYMD } from "egov-ui-framework/ui-utils/commons";
 import { convertDateToEpoch, validateFields, getRentSummaryCard, getTextToLocalMapping } from "../utils";
 import {demandResults} from './searchResource/searchResults'
+import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 
 import moment from 'moment'
   const header = getCommonHeader({
@@ -40,9 +41,9 @@ import moment from 'moment'
         
         if(_accountstatement){
 
-          //to get demands which are unpaid
+          // to get demands which are unpaid
           // _accountstatement.ManiMajraAccountStatement = _accountstatement.ManiMajraAccountStatement.filter((demand) => {
-          //     if(demand.status === 'UNPAID'){
+          //     if(demand.status === 'UNPAID' || demand.status === 'unpaid'){
           //       return demand
           //     }
           // })
@@ -60,7 +61,7 @@ import moment from 'moment'
             [getTextToLocalMapping("Total Due")]: (item.dueAmount.toFixed(2)) || "-",
             [getTextToLocalMapping("Rent")]: item.rent || "-"
           }));
-          // dates.inRange (d,start,end)
+
           dispatch(
             handleField(
               "manimajra-payment",
@@ -396,7 +397,7 @@ export const monthField = {
         const payload = [
           { id: propertyId, 
             propertyDetails: {
-              offlinePaymentDetails: payment
+              offlinePaymentDetails: [payment]
             }
           }
         ]

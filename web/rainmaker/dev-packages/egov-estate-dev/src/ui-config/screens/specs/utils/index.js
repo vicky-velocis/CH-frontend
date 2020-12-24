@@ -836,7 +836,7 @@ export const downloadPaymentReceipt = (receiptQueryString, payload, data , gener
         case 'rent-payment':
            if(process.env.REACT_APP_NAME != "Citizen"){
             const {payment} = state.screenConfiguration.preparedFinalObject
-            const {paymentType} = payment
+            const {paymentType} = payment || ""
              switch(paymentType){
               case 'PAYMENTTYPE.EXTENSIONFEE':
                  const {ExtensionStatementSummary} = state.screenConfiguration.preparedFinalObject
