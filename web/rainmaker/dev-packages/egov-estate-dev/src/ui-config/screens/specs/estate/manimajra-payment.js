@@ -41,11 +41,11 @@ import moment from 'moment'
         if(_accountstatement){
 
           // to get demands which are unpaid
-          // _accountstatement.ManiMajraAccountStatement = _accountstatement.ManiMajraAccountStatement.filter((demand) => {
-          //     if(demand.status === 'UNPAID' || demand.status === 'unpaid'){
-          //       return demand
-          //     }
-          // })
+          _accountstatement.ManiMajraAccountStatement = _accountstatement.ManiMajraAccountStatement.filter((demand) => {
+              if(demand.status == 'UNPAID' || demand.type == 'D'){
+                return demand
+              }
+          })
 
           dispatch(
             prepareFinalObject(
@@ -168,11 +168,15 @@ export const monthField = {
     beforeFieldChange: async (action, state, dispatch) => {
 
     },
-    // jsonPath:"Properties[0].demandType",
+    jsonPath:"Properties[0].propertyDetails.demandType",
     data:[{name:"Monthly",code:"Monthly"},{name:"Annually",code:"Annually"}],
     gridDefination: {
         xs: 12,
         sm: 6
+    },
+    props:{
+      disabled:true,
+      value:"Monthly"
     },
     errorMessage: "ES_ERR_DEMAND_TYPE_FIELD",
     placeholder: {
