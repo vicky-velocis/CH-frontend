@@ -440,7 +440,7 @@ const endYearField = {
       ))
     }
     const startValue = get(state.screenConfiguration.preparedFinalObject, `Properties[0].propertyDetails.paymentConfig.paymentConfigItems[${index}].groundRentStartMonth`)
-    dispatch(prepareFinalObject(`Properties[0].propertyDetails.paymentConfig.paymentConfigItems[${index}].tillDate`, value-startValue))
+    dispatch(prepareFinalObject(`Properties[0].propertyDetails.paymentConfig.paymentConfigItems[${index}].tillDate`, (value-startValue)+1))
   }
 }
 
@@ -461,11 +461,11 @@ const commonRentInformation = () => {
             const years = (Number(value) / 12 | 0)
             const months = Number(value) % 12
             if(years > 0 && months > 0) {
-              return years + " Years " + months +" Months"
+              return years + " Year(s) " + months +" Month(s)"
             } else if(years < 1) {
-              return months + " Months"
+              return months + " Month(s)"
             } else if(months < 1) {
-              return years + " Years"
+              return years + " Year(s)"
             }
           }
           return "-"
@@ -729,7 +729,7 @@ const endYearLfField = {
       ))
     }
     const startValue = get(state.screenConfiguration.preparedFinalObject, `Properties[0].propertyDetails.paymentConfig.paymentConfigItems[${index}].groundRentStartMonth`)
-    dispatch(prepareFinalObject(`Properties[0].propertyDetails.paymentConfig.paymentConfigItems[${index}].tillDate`, value-startValue))
+    dispatch(prepareFinalObject(`Properties[0].propertyDetails.paymentConfig.paymentConfigItems[${index}].tillDate`, (value-startValue)+1))
   }
 }
 
@@ -750,11 +750,11 @@ const commonLicenseInformation = () => {
             const years = (Number(value) / 12 | 0)
             const months = Number(value) % 12
             if(years > 0 && months > 0) {
-              return years + " Years " + months +" Months"
+              return years + " Year(s) " + months +" Month(s)"
             } else if(years < 1) {
-              return months + " Months"
+              return months + " Month(s)"
             } else if(months < 1) {
-              return years + " Years"
+              return years + " Year(s)"
             }
           }
           return "-"
