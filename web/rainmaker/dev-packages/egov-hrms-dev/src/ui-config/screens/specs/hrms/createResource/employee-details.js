@@ -7,7 +7,7 @@ import {
   getCommonContainer,
   getPattern
 } from "egov-ui-framework/ui-config/screens/specs/utils";
-import { getTodaysDateInYMD } from "../../utils";
+import { getTodaysDateInYMD,convertDateToEpoch } from "../../utils";
 import { toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 
@@ -50,7 +50,7 @@ export const employeeDetails = getCommonCard({
           labelKey: "HR_NAME_PLACEHOLDER"
         },
         required: true,
-        pattern: getPattern("Name") || null,
+        pattern: getPattern("alpha-only-with-space") || null,
         jsonPath: "Employee[0].user.name"
       })
     },
@@ -85,7 +85,7 @@ export const employeeDetails = getCommonCard({
           labelKey: "HR_FATHER_HUSBAND_NAME_PLACEHOLDER"
         },
         required: true,
-        pattern: getPattern("Name") || null,
+        pattern: getPattern("alpha-only-with-space") || null,
         jsonPath: "Employee[0].user.fatherOrHusbandName"
       })
     },
@@ -111,7 +111,8 @@ export const employeeDetails = getCommonCard({
             },
             {
               value: "OTHERS",
-              label: "COMMON_GENDER_OTHERS"
+             // label: "COMMON_GENDER_OTHERS"
+              label: "OTHERS"
             }
           ],
           optionValue: "value",
@@ -137,7 +138,33 @@ export const employeeDetails = getCommonCard({
             max: new Date().toISOString().slice(0, 10),
           }
         }
-      })
+      }),
+      beforeFieldChange: (action, state, dispatch) => {
+        if(action.value)
+         {
+
+          let dateOfAppointment = convertDateToEpoch(action.value)//dateOfAppointment
+        dispatch(
+          handleField(`create`,        
+            "components.div.children.formwizardFirstStep.children.professionalDetails.children.cardContent.children.employeeDetailsContainer.children.dateOfAppointment",
+            "props.inputProps",
+            { min: new Date(dateOfAppointment).toISOString().slice(0, 10),
+              max: new Date().toISOString().slice(0, 10),
+            
+            }
+          )          
+        ); 
+
+        dispatch(
+          handleField(`create`,        
+            "components.div.children.formwizardFirstStep.children.professionalDetails.children.cardContent.children.employeeDetailsContainer.children.dateOfAppointment",
+            "props.value",
+            ''
+          )          
+        );
+      }
+
+      }
     },
     email: {
       ...getTextField({
@@ -215,12 +242,26 @@ export const professionalDetails = getCommonCard(
           required: true,
           pattern: getPattern("Date"),
           jsonPath: "Employee[0].dateOfAppointment",
-          props: {
-            inputProps: {
-              max: new Date().toISOString().slice(0, 10),
-            }
-          }
-        })
+          // props: {
+          //   inputProps: {
+          //     max: new Date().toISOString().slice(0, 10),
+          //   }
+          // }
+        }),
+        beforeFieldChange: (action, state, dispatch) => {
+          if(action.value)
+           {
+          //   let assignFromDate = convertDateToEpoch(action.value, "dayStart")
+          // dispatch(
+          //   handleField(`create`,        
+          //     "components.div.children.formwizardThirdStep.children.assignmentDetails.children.cardContent.children.assignmentDetailsCard.props.items[0].item0.children.cardContent.children.asmtDetailsCardContainer.children.assignFromDate",
+          //     "props.inputProps",
+          //     { min: new Date(assignFromDate).toISOString().slice(0, 10)}
+          //   )
+          // ); 
+        }
+
+        }
       },
       dateOfSuperannuation: {
         ...getDateField({

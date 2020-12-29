@@ -12,6 +12,9 @@ import {
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import get from "lodash/get";
 import set from "lodash/set";
+import {
+  convertDateToEpoch,  
+} from "../../utils";
 
 const assignmentDetailsCard = {
   uiFramework: "custom-containers",
@@ -33,11 +36,11 @@ const assignmentDetailsCard = {
               required: true,
               pattern: getPattern("Date"),
               jsonPath: "Employee[0].assignments[0].fromDate",
-              props: {
-                inputProps: {
-                  min: new Date().toISOString().slice(0, 10),
-                }
-              },
+              // props: {
+              //   inputProps: {
+              //     min: new Date().toISOString().slice(0, 10),
+              //   }
+              // },
               beforeFieldChange: (action, state, dispatch) => {
               
               }
@@ -56,11 +59,11 @@ const assignmentDetailsCard = {
               //required: true,
               pattern: getPattern("Date"),
               jsonPath: "Employee[0].assignments[0].toDate",
-              props: {
-                inputProps: {
-                  min: new Date().toISOString().slice(0, 10),
-                }
-              },
+              // props: {
+              //   inputProps: {
+              //     max: new Date().toISOString().slice(0, 10),
+              //   }
+              // },
             })
           },
           dummyDiv: {
@@ -272,6 +275,24 @@ const assignmentDetailsCard = {
           {
             set(muliItemContent[key], "props.disabled", false);
           }
+          else if(key === "assignFromDate")
+          {
+            let employeeObject = get(
+              state.screenConfiguration.preparedFinalObject,
+              "Employee",
+              []
+            );
+          let assignFromDate = convertDateToEpoch(get(employeeObject[0], "dateOfAppointment"), "dayStart")// convertDateToEpoch(action.value, "dayStart")
+         
+          set(muliItemContent[key], "props.inputProps.min", new Date(assignFromDate).toISOString().slice(0, 10));
+           dispatch(
+            handleField(`create`,        
+              "components.div.children.formwizardThirdStep.children.assignmentDetails.children.cardContent.children.assignmentDetailsCard.props.items[0].item0.children.cardContent.children.asmtDetailsCardContainer.children.assignFromDate",
+              "props.inputProps",
+              { min: new Date(assignFromDate).toISOString().slice(0, 10)}
+            )
+          ); 
+          }
           else {
             set(muliItemContent[key], "props.disabled", true);
           }
@@ -283,6 +304,28 @@ const assignmentDetailsCard = {
           } else {
             set(muliItemContent[key], "props.disabled", false);
           }
+
+          //
+          if (key === "assignFromDate") {
+          let employeeObject = get(
+            state.screenConfiguration.preparedFinalObject,
+            "Employee",
+            []
+          );
+        let assignFromDate = convertDateToEpoch(get(employeeObject[0], "dateOfAppointment"))// convertDateToEpoch(action.value, "dayStart")
+       
+        set(muliItemContent[key], "props.inputProps.min", new Date(assignFromDate).toISOString().slice(0, 10));
+        //  dispatch(
+        //   handleField(`create`,        
+        //     "components.div.children.formwizardThirdStep.children.assignmentDetails.children.cardContent.children.assignmentDetailsCard.props.items[0].item0.children.cardContent.children.asmtDetailsCardContainer.children.assignFromDate",
+        //     "props.inputProps",
+        //     { min: new Date(assignFromDate).toISOString().slice(0, 10)}
+        //   )
+        // ); 
+        }
+        else {
+          set(muliItemContent[key], "props.disabled", false);
+        }
         });
       }
       return muliItemContent;
