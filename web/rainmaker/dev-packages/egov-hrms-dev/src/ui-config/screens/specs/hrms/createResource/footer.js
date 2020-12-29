@@ -53,7 +53,7 @@ export const callBackForNext = async (state, dispatch) => {
 
       const errorMessage = {
         labelName: "Date of birth can not be greater then or equal to current date",
-        labelKey: "ERR_SELECT_VZLID_DATE_OF_BIRTH"
+        labelKey: "ERR_SELECT_VALID_DATE_OF_BIRTH"
       };
 
       
