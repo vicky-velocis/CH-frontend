@@ -108,7 +108,7 @@ const callBackForNext = async (state, dispatch) => {
 
     if (propertyOwnersItems && propertyOwnersItems.length > 0) {
       for (var i = 0; i < propertyOwnersItems.length; i++) {
-        if (typeof propertyOwnersItems[i].isDeleted !== "undefined") {
+        if (!!propertyOwnersItems[i].isDeleted) {
           continue;
         }
         isOwnerDetailsValid = validateFields(
@@ -266,6 +266,11 @@ const callBackForNext = async (state, dispatch) => {
       switch (activeStep) {
         case PROPERTY_DETAILS_STEP:
         case OWNER_DETAILS_STEP:
+          errorMessage = {
+            labelName: "Please fill all mandatory fields, then do next !",
+            labelKey: "ES_ERR_FILL_MANDATORY_FIELDS"
+          };
+          break;
         case OWNER_DOCUMENTS_STEP:
           errorMessage = {
             labelName: "Please upload all the required documents !",
@@ -276,6 +281,7 @@ const callBackForNext = async (state, dispatch) => {
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
     }
   }
+  window.scrollTo(0,0)
 }
 
 export const changeStep = (
@@ -406,6 +412,7 @@ export const getActionDefinationForStepper = path => {
 };
 
 export const callBackForPrevious = (state, dispatch) => {
+  window.scrollTo(0,0)
   changeStep(state, dispatch, "apply-building-branch", "previous");
 };
 

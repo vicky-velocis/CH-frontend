@@ -36,7 +36,7 @@ const fieldConfig = {
   comments: {
     label: {
       labelName: "Comments",
-      labelKey: "WF_COMMON_COMMENTS"
+      labelKey: "ES_COMMON_COMMENTS"
     },
     placeholder: {
       labelName: "Enter Comments",
@@ -135,7 +135,6 @@ class ActionDialog extends React.Component {
     dataPath = `${dataPath}[0]`;
 
     const applicationState = (get(state.screenConfiguration.preparedFinalObject, dataPath) || {}).state
-
     return (
       <Dialog
         fullScreen={fullscreen}

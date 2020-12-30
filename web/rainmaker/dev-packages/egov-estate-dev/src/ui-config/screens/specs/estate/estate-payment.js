@@ -309,6 +309,15 @@ import { penaltySummary } from "./generatePenaltyStatement";
     }
   }
 
+  const getPatternAmount = (type) => {
+    switch (type) {
+      case "Amount":
+        return (/^[1-9][0-9]{0,9}$/i
+        );
+    }
+  }
+
+
   const paymentAmount = {
     label: {
         labelName: "Amount",
@@ -318,7 +327,7 @@ import { penaltySummary } from "./generatePenaltyStatement";
         xs: 12,
         sm: 6
     },
-    minLength: 3,
+    minLength: 1,
     maxLength: 7,
     errorMessage: "ES_ERR_AMOUNT_FIELD",
     placeholder: {
@@ -326,6 +335,7 @@ import { penaltySummary } from "./generatePenaltyStatement";
       labelKey: "ES_ENTER_AMOUNT_PLACEHOLDER"
   },
     required: true,
+    pattern: getPatternAmount("Amount"),
     jsonPath: "payment.paymentAmount"
   }
 
@@ -459,7 +469,9 @@ import { penaltySummary } from "./generatePenaltyStatement";
   const goToPayment = async (state, dispatch, type) => {
     let isValid = true;
     let isValidAmount = false;
-    let amountValue = get(state.screenConfiguration.screenConfig["estate-payment"],"components.div.children.detailsContainer.children.offlinePaymentDetails.children.cardContent.children.detailsContainer.children.Amount.props.value")
+    let {paymentAmount} = state.screenConfiguration.preparedFinalObject.payment
+    let amountValue = paymentAmount
+    // let amountValue = get(state.screenConfiguration.screenConfig["estate-payment"],"components.div.children.detailsContainer.children.offlinePaymentDetails.children.cardContent.children.detailsContainer.children.Amount.props.value")
     isValid = validateFields("components.div.children.detailsContainer.children.offlinePaymentDetails.children.cardContent.children.detailsContainer.children", state, dispatch, "estate-payment")
     if (!(Number.isInteger(parseInt(amountValue)) && amountValue.length >= 3 && amountValue.length <= 7)) {
   
