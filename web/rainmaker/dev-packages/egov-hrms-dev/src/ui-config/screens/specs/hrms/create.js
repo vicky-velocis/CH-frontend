@@ -17,7 +17,7 @@ import set from "lodash/set";
 import get from "lodash/get";
 import map from "lodash/map";
 import { httpRequest } from "../../../../ui-utils";
-import { commonTransform, objectArrayToDropdown , getTodaysDateInYMD,convertDateToEpoch} from "../utils";
+import { commonTransform, objectArrayToDropdown , getTodaysDateInYMD,convertDateToEpoch,convertDateToEpochDays} from "../utils";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import { getEmployeeData } from "./viewResource/functions";
@@ -301,7 +301,7 @@ const screenConfig = {
     //   });
       let date = getTodaysDateInYMD();
       //let dobdefault = con
-      let dateOfBirth =  convertDateToEpoch(date, "dayStart")
+      let dateOfBirth =  convertDateToEpochDays(date, "",1)
 
       dispatch(
           handleField(`create`,        

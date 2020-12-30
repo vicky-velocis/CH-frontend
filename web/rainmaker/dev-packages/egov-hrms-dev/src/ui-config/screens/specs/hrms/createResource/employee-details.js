@@ -7,7 +7,7 @@ import {
   getCommonContainer,
   getPattern
 } from "egov-ui-framework/ui-config/screens/specs/utils";
-import { getTodaysDateInYMD,convertDateToEpoch } from "../../utils";
+import { getTodaysDateInYMD,convertDateToEpoch,convertDateToEpochDays } from "../../utils";
 import { toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 
@@ -155,11 +155,17 @@ export const employeeDetails = getCommonCard({
           )          
         ); 
 
+       // let date = getTodaysDateInYMD();
+        //let dobdefault = con
+        let dateOfAppointment_ =  convertDateToEpochDays(action.value, "",(365*18))
+  
+        
+
         dispatch(
           handleField(`create`,        
             "components.div.children.formwizardFirstStep.children.professionalDetails.children.cardContent.children.employeeDetailsContainer.children.dateOfAppointment",
             "props.value",
-            ''
+            dateOfAppointment_
           )          
         );
       }

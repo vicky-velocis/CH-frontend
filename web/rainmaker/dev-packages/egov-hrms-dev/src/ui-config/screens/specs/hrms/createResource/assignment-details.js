@@ -66,17 +66,18 @@ const assignmentDetailsCard = {
               // },
             })
           },
-          dummyDiv: {
-            uiFramework: "custom-atoms",
-            componentPath: "Div",
-            gridDefination: {
-              xs: 12,
-              sm: 6
-            },
-            props: {
-              disabled: true
-            }
-          },
+          // dummyDiv: {
+          //   uiFramework: "custom-atoms",
+          //   componentPath: "Div",
+          //   gridDefination: {
+          //     xs: 12,
+          //     sm: 6
+          //   },
+          //   isFieldValid:true,
+          //   props: {
+          //     disabled: true
+          //   }
+          // },
           currentAssignment: {
             uiFramework: "custom-molecules-local",
             moduleName: "egov-hrms",
@@ -134,6 +135,14 @@ const assignmentDetailsCard = {
                       assignToComponentPath,
                       "props.disabled",
                       false
+                    )
+                  );
+                  dispatch(
+                    handleField(
+                      "create",
+                      assignToComponentPath,
+                      "isFieldValid",
+                      true
                     )
                   );
                 }
@@ -325,6 +334,10 @@ const assignmentDetailsCard = {
         }
         else {
           set(muliItemContent[key], "props.disabled", false);
+        }
+        if(key === "dummyDiv")
+        {
+          set(muliItemContent[key], "isFieldValid", true);
         }
         });
       }
