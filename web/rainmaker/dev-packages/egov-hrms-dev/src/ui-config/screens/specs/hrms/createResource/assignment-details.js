@@ -294,13 +294,13 @@ const assignmentDetailsCard = {
           let assignFromDate = convertDateToEpoch(get(employeeObject[0], "dateOfAppointment"), "dayStart")// convertDateToEpoch(action.value, "dayStart")
          
           set(muliItemContent[key], "props.inputProps.min", new Date(assignFromDate).toISOString().slice(0, 10));
-           dispatch(
-            handleField(`create`,        
-              "components.div.children.formwizardThirdStep.children.assignmentDetails.children.cardContent.children.assignmentDetailsCard.props.items[0].item0.children.cardContent.children.asmtDetailsCardContainer.children.assignFromDate",
-              "props.inputProps",
-              { min: new Date(assignFromDate).toISOString().slice(0, 10)}
-            )
-          ); 
+          //  dispatch(
+          //   handleField(`create`,        
+          //     "components.div.children.formwizardThirdStep.children.assignmentDetails.children.cardContent.children.assignmentDetailsCard.props.items[0].item0.children.cardContent.children.asmtDetailsCardContainer.children.assignFromDate",
+          //     "props.inputProps",
+          //     { min: new Date(assignFromDate).toISOString().slice(0, 10)}
+          //   )
+          // ); 
           }
           else {
             set(muliItemContent[key], "props.disabled", true);
