@@ -2293,6 +2293,12 @@ export const getTextToLocalMapping = label => {
           "ES_RENT_LABEL",
           localisationLabels
         );
+    case "Demand Type":
+        return getLocaleLabels(
+          "Demand Type",
+          "ES_DEMAND_TYPE_LABEL",
+          localisationLabels
+        );   
     default: return getLocaleLabels(label, label, localisationLabels)   
   }
 };
