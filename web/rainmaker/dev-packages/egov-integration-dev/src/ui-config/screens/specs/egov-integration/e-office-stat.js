@@ -58,7 +58,107 @@ import {
       );
       if(response)
       {
-        dispatch(prepareFinalObject("searchScreenMdmsData",response.ResponseBody))
+        let  APIData = response;
+        let totalVIPReceiptsPending =0;
+        let totalFilesPendingCnt =0;
+        let totalFilesClosed =0;
+        let totalReceiptsPending =0;
+        let totalReceiptsClosed =0;
+  
+        if(APIData.ResponseBody)
+        {
+  
+          if(APIData.ResponseBody.VipReceipts)//totalVIPReceiptsPending
+          {
+            if(APIData.ResponseBody.VipReceipts.Row !== undefined)
+            {
+              let data = APIData.ResponseBody.VipReceipts.Row.Column
+              for (let index = 0; index < data.length; index++) {
+                const element = data[index];
+                if(element.name ==="Total")
+                {
+                  totalVIPReceiptsPending = element.content
+                }                
+              }             
+            }
+  
+          }
+           if(APIData.ResponseBody.ReceiptPending)//totalReceiptsPending
+          {
+            if(APIData.ResponseBody.ReceiptPending.Row !== undefined)
+            {
+              let ReceiptPending = APIData.ResponseBody.ReceiptPending.Row.Column
+              for (let index = 0; index < ReceiptPending.length; index++) {
+                const element = ReceiptPending[index];
+                if(element.name ==="Total")
+                {
+                  totalReceiptsPending = element.content
+                }                
+              }
+            }
+  
+          }
+           if(APIData.ResponseBody.FilePending)//totalFilesPendingCnt
+          {
+            if(APIData.ResponseBody.FilePending.Row !== undefined)
+            {
+              let FilePending = APIData.ResponseBody.FilePending.Row.Column
+              for (let index = 0; index < FilePending.length; index++) {
+                const element = FilePending[index];
+                if(element.name ==="Total")
+                {
+                  totalReceiptsPending = element.content
+                }                
+              }
+            }
+  
+          }
+           if(APIData.ResponseBody.FileClosed)//totalFilesClosed
+          {
+            if(APIData.ResponseBody.FileClosed.Row !== undefined)
+            {
+              let FileClosed = APIData.ResponseBody.FileClosed.Row.Column
+              for (let index = 0; index < FileClosed.length; index++) {
+                const element = FileClosed[index];
+                if(element.name ==="Total")
+                {
+                  totalReceiptsPending = element.content
+                }                
+              }
+            }
+  
+          }
+           if(APIData.ResponseBody.ReceiptClosed)//totalReceiptsClosed
+          {
+            if(APIData.ResponseBody.ReceiptClosed.Row !== undefined)
+            {
+              let ReceiptClosed = APIData.ResponseBody.ReceiptClosed.Row.Column
+              for (let index = 0; index < ReceiptClosed.length; index++) {
+                const element = ReceiptClosed[index];
+                if(element.name ==="Total")
+                {
+                  totalReceiptsClosed = element.content
+                }                
+              }
+            }
+  
+          }
+        }
+  
+         APIData ={
+          eofficestat:{
+            totalFilesClosed:totalFilesClosed,
+            totalFilesPendingCnt:totalFilesPendingCnt,
+            totalReceiptsClosed:totalReceiptsClosed,
+            totalReceiptsPending:totalReceiptsPending,
+            totalVIPReceiptsPending:totalVIPReceiptsPending,
+  
+          }
+        }
+        dispatch(prepareFinalObject("APIData",APIData));
+        // dispatch(prepareFinalObject("searchScreenMdmsData",response.ResponseBody))
+
+
       }
      //dispatch(prepareFinalObject("searchScreenMdmsData", get(response, "ResponseBody.result")));
       const {result} = state.screenConfiguration.preparedFinalObject.searchScreenMdmsData;
@@ -95,149 +195,8 @@ import {
         "propertyId"
       );
  
-      let  APIData =sampleeofficestat();
-      let totalVIPReceiptsPending =0;
-      let totalFilesPendingCnt =0;
-      let totalFilesClosed =0;
-      let totalReceiptsPending =0;
-      let totalReceiptsClosed =0;
-
-      if(APIData.ResponseBody)
-      {
-
-        if(APIData.ResponseBody.VipReceipts)//totalVIPReceiptsPending
-        {
-          if(APIData.ResponseBody.VipReceipts.Row !== undefined)
-          {
-            let data = APIData.ResponseBody.VipReceipts.Row.Column
-            for (let index = 0; index < data.length; index++) {
-              const element = data[index];
-              if(element.name ==="Total")
-              {
-                totalVIPReceiptsPending = element.content
-              }
-              
-            }
-            // data.forEach(element => {
-            //   if(element.name ==="Total")
-            //   {
-            //     totalVIPReceiptsPending = element.content
-            //   }
-              
-            // });
-
-          }
-
-        }
-         if(APIData.ResponseBody.ReceiptPending)//totalReceiptsPending
-        {
-          if(APIData.ResponseBody.ReceiptPending.Row !== undefined)
-          {
-            let ReceiptPending = APIData.ResponseBody.ReceiptPending.Row.Column
-            for (let index = 0; index < ReceiptPending.length; index++) {
-              const element = ReceiptPending[index];
-              if(element.name ==="Total")
-              {
-                totalReceiptsPending = element.content
-              }
-              
-            }
-            // data.forEach(element => {
-            //   if(element.name ==="Total")
-            //   {
-            //     totalReceiptsPending = element.content
-            //   }
-              
-            // });
-
-          }
-
-        }
-         if(APIData.ResponseBody.FilePending)//totalFilesPendingCnt
-        {
-          if(APIData.ResponseBody.FilePending.Row !== undefined)
-          {
-            let FilePending = APIData.ResponseBody.FilePending.Row.Column
-            for (let index = 0; index < FilePending.length; index++) {
-              const element = FilePending[index];
-              if(element.name ==="Total")
-              {
-                totalReceiptsPending = element.content
-              }
-              
-            }
-            // data.forEach(element => {
-            //   if(element.name ==="Total")
-            //   {
-            //     totalFilesPendingCnt = element.content
-            //   }
-              
-            // });
-
-          }
-
-        }
-         if(APIData.ResponseBody.FileClosed)//totalFilesClosed
-        {
-          if(APIData.ResponseBody.FileClosed.Row !== undefined)
-          {
-            let FileClosed = APIData.ResponseBody.FileClosed.Row.Column
-            for (let index = 0; index < FileClosed.length; index++) {
-              const element = FileClosed[index];
-              if(element.name ==="Total")
-              {
-                totalReceiptsPending = element.content
-              }
-              
-            }
-            // data.forEach(element => {
-            //   if(element.name ==="Total")
-            //   {
-            //     totalFilesClosed = element.content
-            //   }
-              
-            // });
-
-          }
-
-        }
-         if(APIData.ResponseBody.ReceiptClosed)//totalReceiptsClosed
-        {
-          if(APIData.ResponseBody.ReceiptClosed.Row !== undefined)
-          {
-            let ReceiptClosed = APIData.ResponseBody.ReceiptClosed.Row.Column
-            for (let index = 0; index < ReceiptClosed.length; index++) {
-              const element = ReceiptClosed[index];
-              if(element.name ==="Total")
-              {
-                totalReceiptsClosed = element.content
-              }
-              
-            }
-            // data.forEach(element => {
-            //   if(element.name ==="Total")
-            //   {
-            //     totalReceiptsClosed = element.content
-            //   }
-              
-            // });
-
-          }
-
-        }
-      }
-
-      APIData ={
-        eofficestat:{
-          totalFilesClosed:totalFilesClosed,
-          totalFilesPendingCnt:totalFilesPendingCnt,
-          totalReceiptsClosed:totalReceiptsClosed,
-          totalReceiptsPending:totalReceiptsPending,
-          totalVIPReceiptsPending:totalVIPReceiptsPending,
-
-        }
-      }
-      dispatch(prepareFinalObject("APIData",APIData));
+     // let  APIData =sampleeofficestat();
+     
   
       getData(action, state, dispatch).then(responseAction => {    
       
