@@ -910,6 +910,7 @@ export const downloadPaymentReceipt = (receiptQueryString, payload, data , gener
               payload[0].propertyDetails.offlinePaymentDetails.push(transactionNumber)
              }
               if(process.env.REACT_APP_NAME === "Employee"){
+                Payments[0].transactionNumber
                 Payments = [
                   {
                     ...Payments[0],transactionDate : payload[0].propertyDetails.offlinePaymentDetails[0].dateOfPayment
@@ -938,6 +939,14 @@ export const downloadPaymentReceipt = (receiptQueryString, payload, data , gener
             });
           break
         case 'application-payment':
+          if(process.env.REACT_APP_NAME === "Employee"){
+            let paymentDetails = state.screenConfiguration.preparedFinalObject.payment
+            Payments = [
+              {
+                ...Payments[0],transactionNumber : paymentDetails.transactionNumber
+              }
+            ]
+            }
             let {
               billAccountDetails
             } = Payments[0].paymentDetails[0].bill.billDetails[0];
