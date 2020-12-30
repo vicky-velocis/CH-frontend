@@ -910,6 +910,7 @@ export const downloadPaymentReceipt = (receiptQueryString, payload, data , gener
               payload[0].propertyDetails.offlinePaymentDetails.push(transactionNumber)
              }
               if(process.env.REACT_APP_NAME === "Employee"){
+                Payments[0].transactionNumber
                 Payments = [
                   {
                     ...Payments[0],transactionDate : payload[0].propertyDetails.offlinePaymentDetails[0].dateOfPayment
@@ -938,6 +939,14 @@ export const downloadPaymentReceipt = (receiptQueryString, payload, data , gener
             });
           break
         case 'application-payment':
+          if(process.env.REACT_APP_NAME === "Employee"){
+            let paymentDetails = state.screenConfiguration.preparedFinalObject.payment
+            Payments = [
+              {
+                ...Payments[0],transactionNumber : paymentDetails.transactionNumber
+              }
+            ]
+            }
             let {
               billAccountDetails
             } = Payments[0].paymentDetails[0].bill.billDetails[0];
@@ -2314,7 +2323,7 @@ export const _getPattern = (type) => {
     case "share":
       return /^[+-]?\d{1,5}(\.\d{1,2})?$/i;
     case "areaOfProperty":
-      return /^[+-]?\d{1,15}(\.\d{1,2})?$/i;
+      return /^[+-]?\d{2,15}(\.\d{1,2})?$/i;
     case "alphaNumeric":
       return /^[a-zA-Z0-9]{1,100}$/i;
     case "fileNumber":
