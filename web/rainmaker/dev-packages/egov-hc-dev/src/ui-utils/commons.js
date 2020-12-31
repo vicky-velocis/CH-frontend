@@ -50,7 +50,7 @@ export const getSearchResultsEmployeeRequestFilter = async (data) => {
     store.dispatch(toggleSpinner());
     const response = await httpRequest(
       "post",
-      "/hc-services/serviceRequest/_get",
+      "http://localhost:8079/hc-services/serviceRequest/_get",
       "",
       [],
       data
@@ -370,7 +370,6 @@ export const prepareDocumentsUploadData = (state, dispatch, type) => {
   dispatch(prepareFinalObject("documentsContract", documentsContract));
 };
 export const furnishServiceRequestDetailResponse = (state, response, dispatch) => {
-  debugger
   let refurnishresponse = {};
   var serviceRequestType = []
   var sectorData = []
@@ -427,7 +426,6 @@ export const furnishServiceRequestDetailResponse = (state, response, dispatch) =
   return refurnishresponse;
 };
 export const furnishServiceRequestDetailResponseForEdit = (response, state,dispatch)=> {
-  debugger
   let refurnishresponse = {};
   var serviceRequestType = []
   var sectorData = []

@@ -187,7 +187,8 @@ export const searchApiCallForEmployeeFilter = async (state, dispatch) =>{
         [getTextToLocalMapping("Service Request Date")]: item.createdtime || "-",
         [getTextToLocalMapping("Type Of Service Request")]: returnNameFromCodeMdmsorViceVersa(serviceRequestType,item.service_type, 1 ) || "-",
         [getTextToLocalMapping("Name Of Owner")]:item.owner_name || "-",
-        [getTextToLocalMapping("Service Request Status")]: item.service_request_status || "-",       
+        [getTextToLocalMapping("Service Request Status")]: item.service_request_status || "-",
+        [getTextToLocalMapping("Service Request Locality")]: item.locality || "-"
       }));
     
     // console.log("data",data)
