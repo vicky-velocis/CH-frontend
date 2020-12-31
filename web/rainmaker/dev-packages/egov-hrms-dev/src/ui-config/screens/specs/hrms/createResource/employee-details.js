@@ -10,7 +10,7 @@ import {
 import { getTodaysDateInYMD,convertDateToEpoch,convertDateToEpochDays } from "../../utils";
 import { toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-
+import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 export const employeeDetails = getCommonCard({
   header: getCommonTitle(
     {
@@ -159,8 +159,9 @@ export const employeeDetails = getCommonCard({
         //let dobdefault = con
         let dateOfAppointment_ =  convertDateToEpochDays(action.value, "",(365*18))
   
-        
-
+        let employeeCode = getQueryArg(window.location.href, "employeeCode");
+      if(!employeeCode)
+      {
         dispatch(
           handleField(`create`,        
             "components.div.children.formwizardFirstStep.children.professionalDetails.children.cardContent.children.employeeDetailsContainer.children.dateOfAppointment",
@@ -168,6 +169,8 @@ export const employeeDetails = getCommonCard({
             dateOfAppointment_
           )          
         );
+      }
+        
       }
 
       }

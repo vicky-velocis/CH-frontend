@@ -82,6 +82,10 @@ const assignmentDetailsCard = {
             uiFramework: "custom-molecules-local",
             moduleName: "egov-hrms",
             componentPath: "SwitchWithLabel",
+              gridDefination: {
+              xs: 12,
+              sm: 6
+            },
             props: {
               items: [
                 {

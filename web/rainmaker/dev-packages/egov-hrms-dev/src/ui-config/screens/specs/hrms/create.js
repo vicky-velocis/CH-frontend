@@ -303,13 +303,13 @@ const screenConfig = {
       //let dobdefault = con
       let dateOfBirth =  convertDateToEpochDays(date, "",1)
 
-      dispatch(
-          handleField(`create`,        
-            "components.div.children.formwizardFirstStep.children.employeeDetails.children.cardContent.children.employeeDetailsContainer.children.dateOfBirth",
-            "props.inputProps",
-            { max: new Date(dateOfBirth).toISOString().slice(0, 10)}
-          )
-        ); 
+      // dispatch(
+      //     handleField(`create`,        
+      //       "components.div.children.formwizardFirstStep.children.employeeDetails.children.cardContent.children.employeeDetailsContainer.children.dateOfBirth",
+      //       "props.inputProps",
+      //       { max: new Date(dateOfBirth).toISOString().slice(0, 10)}
+      //     )
+      //   ); 
 
     return action;
   },
