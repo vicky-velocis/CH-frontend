@@ -82,7 +82,7 @@ const setPaymentDocumentData = async (action, state, dispatch,owner = 0) => {
       labelKey: "ONLY_XLSX",
     },
       formatProps :{
-        accept : ".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel",
+        accept : ".xlsx,.xls,vnd.ms-excel,.ms-excel,application/vnd.ms-excel,application/ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       }, 
       maxFileSize: 6000,
       moduleName: "Estate",
@@ -387,7 +387,7 @@ export const setData = (properties, screenName, dispatch, state) => {
   let stepSummary;
   let reviewContainer;
   let stepPayment;
-  let isGroundRent = properties[0].propertyDetails.paymentConfig ? properties[0].propertyDetails.paymentConfig.isGroundRent ? properties[0].propertyDetails.paymentConfig.isGroundRent : false : false;
+  let isGroundRent = properties[0].propertyDetails.paymentConfig ? properties[0].propertyDetails.paymentConfig.isGroundRent ? properties[0].propertyDetails.paymentConfig.isGroundRent : false : null;
 
   switch(screenName) {
     case "apply":
@@ -476,39 +476,41 @@ export const setData = (properties, screenName, dispatch, state) => {
     )
   )  */
 
-  dispatch(
-    handleField(
-      screenName,
-      `components.div.children.${stepPayment}.children.groundRentDetails`,
-      "visible",
-      !!isGroundRent && !!(propertyType == "PROPERTY_TYPE.LEASEHOLD")
+  if (isGroundRent != null) {
+    dispatch(
+      handleField(
+        screenName,
+        `components.div.children.${stepPayment}.children.groundRentDetails`,
+        "visible",
+        !!isGroundRent && !!(propertyType == "PROPERTY_TYPE.LEASEHOLD")
+      )
     )
-  )
-  dispatch(
-    handleField(
-      screenName,
-      `components.div.children.${stepPayment}.children.licenseFeeDetails`,
-      "visible",
-      !isGroundRent && !!(propertyType == "PROPERTY_TYPE.LEASEHOLD")
+    dispatch(
+      handleField(
+        screenName,
+        `components.div.children.${stepPayment}.children.licenseFeeDetails`,
+        "visible",
+        !isGroundRent && !!(propertyType == "PROPERTY_TYPE.LEASEHOLD")
+      )
     )
-  )
 
-  dispatch(
-    handleField(
-      screenName,
-      `components.div.children.${stepSummary}.children.${reviewContainer}.children.cardContent.children.reviewGroundRent`,
-      "visible",
-      !!isGroundRent && !!(propertyType == "PROPERTY_TYPE.LEASEHOLD")
+    dispatch(
+      handleField(
+        screenName,
+        `components.div.children.${stepSummary}.children.${reviewContainer}.children.cardContent.children.reviewGroundRent`,
+        "visible",
+        !!isGroundRent && !!(propertyType == "PROPERTY_TYPE.LEASEHOLD")
+      )
     )
-  )
-  dispatch(
-    handleField(
-      screenName,
-      `components.div.children.${stepSummary}.children.${reviewContainer}.children.cardContent.children.reviewLicenseFee`,
-      "visible",
-      !isGroundRent && !!(propertyType == "PROPERTY_TYPE.LEASEHOLD")
+    dispatch(
+      handleField(
+        screenName,
+        `components.div.children.${stepSummary}.children.${reviewContainer}.children.cardContent.children.reviewLicenseFee`,
+        "visible",
+        !isGroundRent && !!(propertyType == "PROPERTY_TYPE.LEASEHOLD")
+      )
     )
-  )
+  }
   /*************************************************************************************************/
 
   /* based on selected category toggle display of sub-category field */

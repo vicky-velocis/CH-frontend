@@ -197,18 +197,16 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
 
     if (queryObject[0].propertyDetails.accountStatementDocument) {
       let legacyAccStmtDoc = queryObject[0].propertyDetails.accountStatementDocument;
-      if (legacyAccStmtDoc[0]) {
-        legacyAccStmtDoc = legacyAccStmtDoc.map(item => ({...item, isActive: true}))
+      legacyAccStmtDoc = legacyAccStmtDoc.filter(item => !!item).map(item => ({...item, isActive: true}))
 
-        let removedDocs = get(state.screenConfiguration.preparedFinalObject, `PropertiesTemp[0].propertyDetails.accountStatementRemovedDoc`) || [];
-        legacyAccStmtDoc = [...legacyAccStmtDoc, ...removedDocs]
+      let removedDocs = get(state.screenConfiguration.preparedFinalObject, `PropertiesTemp[0].propertyDetails.accountStatementRemovedDoc`) || [];
+      legacyAccStmtDoc = [...legacyAccStmtDoc, ...removedDocs]
 
-        set(
-          queryObject[0],
-          "propertyDetails.accountStatementDocument",
-          legacyAccStmtDoc
-        )
-      }
+      set(
+        queryObject[0],
+        "propertyDetails.accountStatementDocument",
+        legacyAccStmtDoc
+      )
     }
 
     prevOwners = get(
@@ -297,6 +295,14 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
             true
           )
         )
+        dispatch(
+          handleField(
+            screenName,
+            `components.div.children.formwizardFirstStepAllotment.children.propertyInfoDetails.children.cardContent.children.detailsContainer.children.fileNumber`,
+            `props.disabled`,
+            true
+          )
+        )
         /*****************************************************************************************/
       }
     } else {
@@ -311,8 +317,10 @@ export const applyEstates = async (state, dispatch, activeIndex, screenName = "a
       //   "propertyDetails.purchaser",
       //   []
       // )
-      if (screenName == "allotment" || screenName == "apply-manimajra") {
+      if (screenName == "allotment") {
         tabsArr.splice(-2, 2);
+      } else if(screenName == "apply-manimajra") {
+        tabsArr.splice(-3, 3);
       }
       else if (screenName == "apply-building-branch") {
         tabsArr = tabsArr.splice(0, tabsArr.length - 6);
@@ -514,7 +522,7 @@ export const addHocDemandUpdate = async (state, dispatch) => {
         get(state.screenConfiguration.preparedFinalObject, "adhocDetails", {})
       )
     );
-
+    
     set(adhocDetails , "isAdjustment","true")
     set(adhocDetails, "adjustmentDate", convertDateToEpoch(adhocDetails.adjustmentDate))
     set(adhocDetails, "generationDate", convertDateToEpoch(moment(new Date()).format('YYYY-MM-DD')));
@@ -527,8 +535,7 @@ export const addHocDemandUpdate = async (state, dispatch) => {
     set(adhocDetails , "collectedGST",0)
     set(adhocDetails , "collectedRentPenalty",0 )
     set(adhocDetails , "collectedGSTPenalty",0 )
-    set(queryObject[0], "propertyDetails.estateDemands[0]", adhocDetails);
-    
+    queryObject[0].propertyDetails.estateDemands.push(adhocDetails)
     let response;
     if(queryObject) {  
       response = await httpRequest(

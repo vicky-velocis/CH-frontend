@@ -588,6 +588,7 @@ const callBackForNext = async (state, dispatch) => {
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
     }
   }
+  window.scrollTo(0,0)
 }
 
 const setOwnersOrPartners = (state, dispatch, container) => {
@@ -828,6 +829,7 @@ export const getActionDefinationForStepper = path => {
 };
 
 export const callBackForPrevious = (state, dispatch) => {
+  window.scrollTo(0,0)
   changeStep(state, dispatch, screenKey, "previous");
 };
 

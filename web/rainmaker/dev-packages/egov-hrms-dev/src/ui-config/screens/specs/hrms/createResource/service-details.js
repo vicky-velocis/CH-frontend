@@ -164,7 +164,7 @@ const serviceDetailsCard = {
                 //   }, "error"));
                   
                 // }
-                if( (serviceTodDt>=annuationdate || serviceTodDt<appntDate)){
+                if( (serviceTodDt>annuationdate || serviceTodDt<appntDate)){
                   dispatch(toggleSnackbar(true, {
                     labelName: "Date Must lie between Appointment date and Annuation date",
                     labelKey: "SERVICE_DATE_TO_LIE_BETWEEN_ANNUATION_DATE_APPOINTMNET_DATE"

@@ -208,8 +208,9 @@ const shareField = {
     xs: 12,
     sm: 6
   },
+  errorMessage:"ES_ERR_SHARE_FIELD",
   required: true,
-  pattern: _getPattern("share"),
+  pattern: _getPattern("ownerShare"),
   jsonPath: "Properties[0].propertyDetails.owners[0].share"
 }
 
@@ -373,7 +374,8 @@ export const ownerDetails = getCommonCard({
       },
       children: {
         multipleApplicantInfo: {
-          uiFramework: "custom-containers",
+          uiFramework: "custom-containers-local",
+          moduleName: "egov-estate",
           componentPath: "MultiItem",
           props: {
             scheama: commonOwnerInformation(),

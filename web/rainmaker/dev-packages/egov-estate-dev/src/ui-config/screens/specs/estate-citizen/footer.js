@@ -228,6 +228,7 @@ export const previousButton = {
 
 
   const callBackForPrevious = async (state, dispatch) => {
+    window.scrollTo(0,0)
     changeStep(state, dispatch, "_apply", "previous");
   };
 
@@ -381,6 +382,7 @@ export const previousButton = {
         dispatch(toggleSnackbar(true, errorMessage, "warning"));
       }
     }
+    window.scrollTo(0,0)
   }
 
   export const footer = getCommonApplyFooter({

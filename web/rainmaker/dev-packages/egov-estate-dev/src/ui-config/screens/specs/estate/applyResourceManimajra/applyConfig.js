@@ -4,7 +4,7 @@ import {
   getCommonTitle,
   getCommonParagraph,getBreak
 } from "egov-ui-framework/ui-config/screens/specs/utils";
-import { propertyDetails } from "./propertyDetails";
+import { propertyDetails,monthlyDetails,annualDetails } from "./propertyDetails";
 import { additionalDetails } from "../applyResource/propertyDetails";
 import { ownerDetails } from "../applyResourceBuildingBranch/ownerDetails";
 import { 
@@ -35,10 +35,10 @@ export const manimajraStepsData = [{
   labelName: "Previous Owner Documents",
   labelKey: "ES_COMMON_PREVIOUS_OWNER_DOCUMENTS"
 },
-{
-  labelName: "Payment Details",
-  labelKey: "ES_COMMON_PAYMENT_DETAILS"
-},
+// {
+//   labelName: "Payment Details",
+//   labelKey: "ES_COMMON_PAYMENT_DETAILS"
+// },
 {
   labelName: "Court Case",
   labelKey: "ES_COMMON_COURT_CASE_DETAILS"
@@ -65,7 +65,9 @@ export const formwizardFirstStep = {
   },
   children: {
     propertyDetails,
-    additionalDetails
+    additionalDetails,
+    monthlyDetails,
+    annualDetails
   }
 };
 
@@ -133,7 +135,7 @@ export const formwizardSeventhStep = {
   uiFramework: "custom-atoms",
   componentPath: "Form",
   props: {
-    id: "apply_form7"
+    id: "apply_form6"
   },
   children: {
     courtCaseDetails
