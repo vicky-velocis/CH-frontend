@@ -92,7 +92,8 @@ export const applicationSuccessFooter = (
                 array.splice(0, 1);
                 let fileNumber = array.join("-");
                 let queryObject = [
-                  { key: "fileNumber", value: fileNumber }
+                  { key: "fileNumber", value: fileNumber },
+                  { key:"relations",value:"offline"}
                 ];
                 let response =  await getSearchResults(queryObject);
                 let properties = response.Properties
@@ -187,7 +188,7 @@ export const applicationSuccessFooter = (
                 let fileNumber = array.join("-");
                 // let fileNumber = consumerCodes.split('-')[1]
                 let queryObject = [
-                  { key: "fileNumber", value: fileNumber }
+                  { key: "fileNumber", value: fileNumber },{ key:"relations",value:"offline"}
                 ];
                 let response =  await getSearchResults(queryObject);
                 let properties = response.Properties
@@ -326,7 +327,7 @@ export const applicationSuccessFooter = (
                   const consumerCodes = getQueryArg(window.location.href, "applicationNumber");
                   if(consumerCodes.startsWith('SITE') || consumerCodes.startsWith('ES') ){
                     let queryObject = [
-                      { key: "fileNumber", value: fileNumber }
+                      { key: "fileNumber", value: fileNumber },{ key:"relations",value:"offline"}
                     ];
                     let response =  await getSearchResults(queryObject);
                     let properties = response.Properties
@@ -430,7 +431,10 @@ export const applicationSuccessFooter = (
                 const consumerCodes = getQueryArg(window.location.href, "applicationNumber");
                 if(consumerCodes.startsWith('SITE') || consumerCodes.startsWith('ES')){
                   let queryObject = [
-                    { key: "fileNumber", value: fileNumber }
+                    { key: "fileNumber", value: fileNumber },
+                    {
+                      key:"relations",value:"offline"
+                    }
                   ];
                   let response =  await getSearchResults(queryObject);
                   let properties = response.Properties
