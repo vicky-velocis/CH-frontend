@@ -50,7 +50,7 @@ export const getSearchResultsEmployeeRequestFilter = async (data) => {
     store.dispatch(toggleSpinner());
     const response = await httpRequest(
       "post",
-      "http://localhost:8079/hc-services/serviceRequest/_get",
+      "/hc-services/serviceRequest/_get",
       "",
       [],
       data
