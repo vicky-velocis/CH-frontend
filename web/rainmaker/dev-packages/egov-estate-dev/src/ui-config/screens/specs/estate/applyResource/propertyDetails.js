@@ -365,6 +365,12 @@ export const fileNumberField = {
             "props.disabled",
             false
           ))
+          dispatch(handleField(
+            "apply-manimajra",
+            "components.div.children.footer.children.nextButton",
+            "props.disabled",
+            false
+          ))
         if (action.value.length > 50) {
             displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_50", screenName);
         }

@@ -69,6 +69,14 @@ export const moveToSuccess = (data, dispatch, type) => {
 };
 
 const callBackForNext = async (state, dispatch) => {
+
+  dispatch(handleField(
+    "apply-manimajra",
+    "components.div.children.footer.children.nextButton",
+    "props.disabled",
+    true
+  ))
+  
   let activeStep = get(
     state.screenConfiguration.screenConfig["apply-manimajra"],
     "components.div.children.manimajraStepper.props.activeStep",
@@ -571,6 +579,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        "apply-manimajra",
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
       break;
     case OWNER_DETAILS_STEP:
       dispatchMultipleFieldChangeAction(
@@ -580,6 +594,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        "apply-manimajra",
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
       break;
     case OWNER_DOCUMENT_UPLOAD_STEP:
       dispatchMultipleFieldChangeAction(
@@ -589,6 +609,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        "apply-manimajra",
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
       break;
     case PURCHASER_DETAILS_STEP:
       dispatchMultipleFieldChangeAction(
@@ -598,6 +624,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        "apply-manimajra",
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
       break;
     case PURCHASER_DOCUMENTS_STEP:
       dispatchMultipleFieldChangeAction(
@@ -607,6 +639,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        "apply-manimajra",
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
       break;
     // case PAYMENT_DETAILS_STEP:
     // dispatchMultipleFieldChangeAction(
@@ -625,6 +663,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        "apply-manimajra",
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
       break;
     default:
       dispatchMultipleFieldChangeAction(
@@ -634,6 +678,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        "apply-manimajra",
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
   }
 };
 

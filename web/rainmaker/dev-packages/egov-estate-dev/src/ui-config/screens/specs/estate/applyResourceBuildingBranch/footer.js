@@ -66,6 +66,14 @@ export const moveToSuccess = (data, dispatch, type) => {
 };
 
 const callBackForNext = async (state, dispatch) => {
+
+  dispatch(handleField(
+    "apply-building-branch",
+    "components.div.children.footer.children.nextButton",
+    "props.disabled",
+    true
+  ))
+  
   let activeStep = get(
     state.screenConfiguration.screenConfig["apply-building-branch"],
     "components.div.children.stepper.props.activeStep",
@@ -270,13 +278,26 @@ const callBackForNext = async (state, dispatch) => {
             labelName: "Please fill all mandatory fields, then do next !",
             labelKey: "ES_ERR_FILL_MANDATORY_FIELDS"
           };
+          dispatch(handleField(
+            "apply-building-branch",
+            "components.div.children.footer.children.nextButton",
+            "props.disabled",
+            false
+          ))
           break;
         case OWNER_DOCUMENTS_STEP:
           errorMessage = {
             labelName: "Please upload all the required documents !",
             labelKey: "ES_ERR_UPLOAD_REQUIRED_DOCUMENTS"
           };
+          dispatch(handleField(
+            "apply-building-branch",
+            "components.div.children.footer.children.nextButton",
+            "props.disabled",
+            false
+          ))
           break;
+          
       }
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
     }
@@ -344,6 +365,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        screenName,
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
       break;
     case OWNER_DETAILS_STEP:
       dispatchMultipleFieldChangeAction(
@@ -353,6 +380,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        screenName,
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
       break;
     case OWNER_DOCUMENTS_STEP:
       dispatchMultipleFieldChangeAction(
@@ -362,6 +395,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        screenName,
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
       break;
     default:
       dispatchMultipleFieldChangeAction(
@@ -371,6 +410,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        screenName,
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
   }
 };
 
