@@ -2,7 +2,7 @@ import { getLabel, getStepperObject, dispatchMultipleFieldChangeAction } from "e
 import { getCommonApplyFooter, validateFields } from "../utils";
 import { get, some } from "lodash";
 import { applyforApplication } from "../../../../ui-utils/apply";
-import { prepareFinalObject, toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { prepareFinalObject, toggleSnackbar, handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { moveToSuccess } from "../estate/applyResource/footer";
 import { getFileUrl, getFileUrlFromAPI } from "egov-ui-framework/ui-utils/commons";
 
@@ -171,7 +171,15 @@ export const previousButton = {
                     "components.div.children.formwizardFirstStep"
                 ),
                 dispatch
+                
             );
+
+            dispatch(handleField(
+              screenName,
+              "components.div.children.footer.children.nextButton",
+              "props.disabled",
+              false
+            ))
             break;
         case DOCUMENT_UPLOAD_STEP:
             dispatchMultipleFieldChangeAction(
@@ -181,6 +189,12 @@ export const previousButton = {
                 ),
                 dispatch
             );
+            dispatch(handleField(
+              screenName,
+              "components.div.children.footer.children.nextButton",
+              "props.disabled",
+              false
+            ))
             break;
         default:
             dispatchMultipleFieldChangeAction(
@@ -190,6 +204,12 @@ export const previousButton = {
                 ),
                 dispatch
             );
+            dispatch(handleField(
+              "screenName",
+              "components.div.children.footer.children.nextButton",
+              "props.disabled",
+              false
+            ))
     }
   };
   
@@ -233,6 +253,13 @@ export const previousButton = {
   };
 
   const callBackForNext = async(state, dispatch) => {
+    
+    dispatch(handleField(
+      "_apply",
+      "components.div.children.footer.children.nextButton",
+      "props.disabled",
+      true
+    ))
     let activeStep = get(
         state.screenConfiguration.screenConfig["_apply"],
         "components.div.children.stepper.props.activeStep",
@@ -270,6 +297,13 @@ export const previousButton = {
         isFormValid = isFormValid && isValid
       })
     if(!!isFormValid) {
+
+      // dispatch(handleField(
+      //   screenName,
+      //   "components.div.children.footer.children.nextButton",
+      //   "props.disabled",
+      //   false
+      // ))
       const res =  await applyforApplication(state, dispatch, activeStep)
         if(!res) {
           return
@@ -298,6 +332,12 @@ export const previousButton = {
       }
     }
     if(isFormValid) {
+      // dispatch(handleField(
+      //   "_apply",
+      //   "components.div.children.footer.children.nextButton",
+      //   "props.disabled",
+      //   false
+      // ))
       const fileStoreIds = uploadedDocData && uploadedDocData.map(item => item.fileStoreId).join(",");
       const fileUrlPayload = fileStoreIds && (await getFileUrlFromAPI(fileStoreIds));
       const reviewDocData =
@@ -333,6 +373,12 @@ export const previousButton = {
       isFormValid = isDeclarationboxvalid ? await applyforApplication(state, dispatch, activeStep) : false;
 
         if (isFormValid) {
+          // dispatch(handleField(
+          //   "_apply",
+          //   "components.div.children.footer.children.nextButton",
+          //   "props.disabled",
+          //   false
+          // ))
           const data = get(
             state.screenConfiguration.preparedFinalObject,
             "Applications[0]"
@@ -354,6 +400,12 @@ export const previousButton = {
       isDeclarationboxvalid = get(state.screenConfiguration.preparedFinalObject,"temp[0].declaration");
     
       if(isFormValid) {
+        // dispatch(handleField(
+        //   "_apply",
+        //   "components.div.children.footer.children.nextButton",
+        //   "props.disabled",
+        //   false
+        // ))
           changeStep(state, dispatch, "_apply");
         }
       
@@ -370,12 +422,27 @@ export const previousButton = {
                         "Please fill all mandatory fields, then do next !",
                     labelKey: "ES_ERR_FILL_MANDATORY_FIELDS"
                   };
+
+                  dispatch(handleField(
+                    "_apply",
+                    "components.div.children.footer.children.nextButton",
+                    "props.disabled",
+                    false
+                  ))
+                  
               break
           case DOCUMENT_UPLOAD_STEP:
                   errorMessage = {
                       labelName: "Please upload all the required documents !",
                       labelKey: "ES_ERR_UPLOAD_REQUIRED_DOCUMENTS"
                   };
+
+                  dispatch(handleField(
+                    "_apply",
+                    "components.div.children.footer.children.nextButton",
+                    "props.disabled",
+                    false
+                  ))
               break;
           case SUMMARY_STEP:
         }
