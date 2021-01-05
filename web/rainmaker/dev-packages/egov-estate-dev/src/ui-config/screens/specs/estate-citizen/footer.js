@@ -457,6 +457,7 @@ export const previousButton = {
                   ))
               break;
           case SUMMARY_STEP:
+              break;
         }
 
         dispatch(handleField(
