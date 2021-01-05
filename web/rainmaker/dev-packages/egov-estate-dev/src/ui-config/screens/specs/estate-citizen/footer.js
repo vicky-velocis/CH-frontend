@@ -306,6 +306,12 @@ export const previousButton = {
       // ))
       const res =  await applyforApplication(state, dispatch, activeStep)
         if(!res) {
+          dispatch(handleField(
+            "_apply",
+            "components.div.children.footer.children.nextButton",
+            "props.disabled",
+            false
+          ))
           return
         }
     }
@@ -363,6 +369,12 @@ export const previousButton = {
             );
         const response = await applyforApplication(state, dispatch, activeStep)
         if(!response) {
+          dispatch(handleField(
+            "_apply",
+            "components.div.children.footer.children.nextButton",
+            "props.disabled",
+            false
+          ))
           return
         }
     }
@@ -445,7 +457,15 @@ export const previousButton = {
                   ))
               break;
           case SUMMARY_STEP:
+              break;
         }
+
+        dispatch(handleField(
+          "_apply",
+          "components.div.children.footer.children.nextButton",
+          "props.disabled",
+          false
+        ))
         dispatch(toggleSnackbar(true, errorMessage, "warning"));
       }
     }
