@@ -83,6 +83,13 @@ export const moveToSuccess = (data, dispatch, type) => {
 };
 
 const callBackForNext = async (state, dispatch) => {
+  
+  dispatch(handleField(
+    "apply",
+    "components.div.children.footer.children.nextButton",
+    "props.disabled",
+    true
+  ))
   let activeStep = get(
     state.screenConfiguration.screenConfig[screenKey],
     "components.div.children.stepper.props.activeStep",
@@ -761,6 +768,13 @@ const callBackForNext = async (state, dispatch) => {
         labelName: "Date of possession should be on and after date of allotment",
         labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
     };
+
+    dispatch(handleField(
+      "apply",
+      "components.div.children.footer.children.nextButton",
+      "props.disabled",
+      false
+    ))
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
     } 
     else if(!ownerTwoPosAllotDateValid && ownerOnePosAllotDateValid){
@@ -768,6 +782,12 @@ const callBackForNext = async (state, dispatch) => {
           labelName: "Date of possession should be on and after date of allotment",
           labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
       };
+      dispatch(handleField(
+        "apply",
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
         dispatch(toggleSnackbar(true, errorMessage, "warning"));
     } 
     else if(!ownerTwoPosAllotDateValid && !ownerOnePosAllotDateValid){
@@ -775,6 +795,12 @@ const callBackForNext = async (state, dispatch) => {
         labelName: "Date of possession should be on and after date of allotment",
         labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
     };
+    dispatch(handleField(
+      "apply",
+      "components.div.children.footer.children.nextButton",
+      "props.disabled",
+      false
+    ))
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
   } 
   else if(ownerTwoPosAllotDateValid && !ownerOnePosAllotDateValid){
@@ -782,6 +808,12 @@ const callBackForNext = async (state, dispatch) => {
       labelName: "Date of possession should be on and after date of allotment",
       labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
   };
+  dispatch(handleField(
+    "apply",
+    "components.div.children.footer.children.nextButton",
+    "props.disabled",
+    false
+  ))
     dispatch(toggleSnackbar(true, errorMessage, "warning"));
 } 
     else if(!auctionEMDDateValid){
@@ -790,12 +822,24 @@ const callBackForNext = async (state, dispatch) => {
       labelName: "EMD date should be before date of auction",
       labelKey: "ES_ERR_EMD_DATE_BEFORE_AUCTION_DATE"
   };
+  dispatch(handleField(
+    "apply",
+    "components.div.children.footer.children.nextButton",
+    "props.disabled",
+    false
+  ))
     dispatch(toggleSnackbar(true, errorMessage, "warning"));
     } else if(!isStartAndEndYearValid) {
       let errorMessage = {
         labelName: "End Month should be greater than Start Month",
         labelKey: "ES_ERR_END_MONTH_START_MONTH"
       }
+      dispatch(handleField(
+        "apply",
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
     }
     else if (hasFieldToaster) {
@@ -814,6 +858,12 @@ const callBackForNext = async (state, dispatch) => {
             labelName: "Please fill all mandatory fields, then do next !",
             labelKey: "ES_ERR_FILL_MANDATORY_FIELDS"
           };
+          dispatch(handleField(
+            "apply",
+            "components.div.children.footer.children.nextButton",
+            "props.disabled",
+            false
+          ))
           break;
         case PAYMENT_DETAILS_STEP:
           if (!isLegacyDocUploaded) {
@@ -828,6 +878,12 @@ const callBackForNext = async (state, dispatch) => {
               labelKey: "ES_ERR_FILL_MANDATORY_FIELDS"
             };
           }
+          dispatch(handleField(
+            "apply",
+            "components.div.children.footer.children.nextButton",
+            "props.disabled",
+            false
+          ))
           break;
         case DOCUMENT_UPLOAD_STEP:
         case PURCHASER_DOCUMENTS_STEP:
@@ -835,6 +891,12 @@ const callBackForNext = async (state, dispatch) => {
             labelName: "Please upload all the required documents !",
             labelKey: "ES_ERR_UPLOAD_REQUIRED_DOCUMENTS"
           };
+          dispatch(handleField(
+            "apply",
+            "components.div.children.footer.children.nextButton",
+            "props.disabled",
+            false
+          ))
           break;
       }
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
@@ -970,6 +1032,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        screenName,
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
       break;
     case AUCTION_DETAILS_STEP:
       dispatchMultipleFieldChangeAction(
@@ -979,6 +1047,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        screenName,
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
       break;
     case ENTITY_OWNER_DETAILS_STEP:
       dispatchMultipleFieldChangeAction(
@@ -988,6 +1062,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        screenName,
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
       break;
     case ENTITY_OWNER_DOCUMENT_UPLOAD_STEP:
       dispatchMultipleFieldChangeAction(
@@ -997,6 +1077,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        screenName,
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
       break;
     case PURCHASER_DETAILS_STEP:
       dispatchMultipleFieldChangeAction(
@@ -1006,6 +1092,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        screenName,
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
       break;
     case PURCHASER_DOCUMENTS_STEP:
       dispatchMultipleFieldChangeAction(
@@ -1015,6 +1107,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        screenName,
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
       break;
       
     case COURT_CASE_DETAILS_STEP:
@@ -1025,6 +1123,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        screenName,
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
       break;
     case RENT_INFO_DETAILS_STEP:
       dispatchMultipleFieldChangeAction(
@@ -1034,6 +1138,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        screenName,
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
       break;
     case PAYMENT_DETAILS_STEP:
       dispatchMultipleFieldChangeAction(
@@ -1043,6 +1153,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        screenName,
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
       break;
     default:
       dispatchMultipleFieldChangeAction(
@@ -1052,6 +1168,12 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      dispatch(handleField(
+        screenName,
+        "components.div.children.footer.children.nextButton",
+        "props.disabled",
+        false
+      ))
   }
 };
 
