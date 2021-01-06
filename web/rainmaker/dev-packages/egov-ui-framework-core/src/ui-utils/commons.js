@@ -427,7 +427,24 @@ export const handleFileUpload = (event, handleDocument, props) => {
       if (moduleName === 'egov-echallan' && maxFiles > 1) {
         existingfileSize += parseFloat(file.size)
         isSizeValid = getFileSize(existingfileSize) <= maxFileSize;
-      } else {
+      } 
+      else if(moduleName === undefined)
+      {
+        const file_ = files[key];
+        //fileValid = isFileValid(file_, acceptedFiles(inputProps.accept));
+        if(file_.name.indexOf("xlsx")>1 || file_.name.indexOf("xls")>1)
+        {
+          fileValid = true
+        }
+        existingfileSize += parseFloat(file.size)
+        if(existingfileSize<=maxFileSize)
+        {
+          isSizeValid = true
+        }
+        
+      }
+      
+      else {
         isSizeValid = getFileSize(file.size) <= maxFileSize;
       }
       if (localStorageGet("modulecode") === "PR" || localStorageGet("modulecode") === "SCP") {
@@ -498,7 +515,7 @@ export const handleFileUpload = (event, handleDocument, props) => {
         } else {
           const fileStoreId = await uploadFile(
             S3_BUCKET.endPoint,
-            moduleName,
+            moduleName === undefined?"egov-wns":moduleName,
             file,
             commonConfig.tenantId
           );
