@@ -1801,7 +1801,6 @@ export const createEstimateData = async (
   const currentStatus = applicationData.state;
   const isPAID = isApplicationPaid(currentStatus, workflowCode);
   const fetchBillResponse = await getBill(getBillQueryObj);
-  dispatch(prepareFinalObject("Bill", fetchBillResponse.Bill));
   const payload = isPAID ?
     await getReceipt(queryObj) :
     fetchBillResponse && fetchBillResponse.Bill && fetchBillResponse.Bill[0];
