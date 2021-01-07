@@ -362,65 +362,8 @@ const updateAllFields = async (action, state, dispatch) => {
 
   let containers={}
   if(properties[0].propertyDetails.owners){
-    // properties[0].propertyDetails.owners.forEach((element,index) => { 
-    // await asyncForEach(properties[0].propertyDetails.owners, async (element,index) => {
-    //   if (!!element.ownerDetails.isCurrentOwner) {
-    //     let ownerdetailsComponent = getOwnerDetails(false, index, (!!findItem && applicationState == ESTATE_APPROVED_STATE));
-    //     let allotmentDetailsComponent = getAllotmentDetails(false,index);
-    //     let applicationBranchType = "EstateBranch";
-
-    //     if (applicationState == ESTATE_APPROVED_STATE) {
-    //       switch(branchType) {
-    //         case "BUILDING_BRANCH":
-    //           applicationBranchType = "BuildingBranch";
-    //           break;
-    //         case "MANI_MAJRA":
-    //           applicationBranchType = "ManiMajra";
-    //           break;
-    //       }
-    //       let ownerId = element.id;
-    //       let queryObject = [
-    //         { key: "ownerId", value: ownerId },
-    //         { key: "branchType", value: applicationBranchType }
-    //       ]
-    //       let payload = await getSearchApplicationsResults(queryObject);
-    //       let modeOfTransferArr = [];
-
-    //       if (payload.Applications && payload.Applications.length) {
-    //         payload.Applications.map(item => {
-    //           modeOfTransferArr.push({
-    //             applicationNumber: item.applicationNumber,
-    //             branchType: item.branchType,
-    //             moduleType: item.moduleType,
-    //             applicationType: item.applicationType
-    //           })
-    //         })
-
-    //         dispatch(
-    //           prepareFinalObject(`Properties[0].propertyDetails.owners[${index}].ownerDetails.modeOfTransferArr`, modeOfTransferArr)
-    //         )
-    //         var modeOfTransferComponent = {}
-  
-    //         // var modeOfTransferComponent = getModeOfTransferDetailsForApprovedProperty(applicationBranchType);
-    //       }
-    //     }
-    //     if (!!modeOfTransferComponent) {
-    //       containers[index] = getCommonCard({
-    //         ownerdetailsComponent,
-    //         allotmentDetailsComponent,
-    //         modeOfTransferComponent
-    //       });
-    //     }
-    //     else {
-    //       containers[index] = getCommonCard({
-    //         ownerdetailsComponent,
-    //         allotmentDetailsComponent
-    //       });  
-    //     }
-    //   }
-    // });
-        let applicationBranchType = "EstateBranch";
-        let applicationsPresent = false;
+    let applicationBranchType = "EstateBranch";
+    let applicationsPresent = false;
      await asyncForEach(properties[0].propertyDetails.owners, async (element,index) => {
       if (!!element.ownerDetails.isCurrentOwner) {
         let ownerdetailsComponent = getOwnerDetails(false, index, (!!findItem && applicationState == ESTATE_APPROVED_STATE));
