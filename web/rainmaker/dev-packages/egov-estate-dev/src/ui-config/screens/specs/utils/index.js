@@ -1801,6 +1801,7 @@ export const createEstimateData = async (
   const currentStatus = applicationData.state;
   const isPAID = isApplicationPaid(currentStatus, workflowCode);
   const fetchBillResponse = await getBill(getBillQueryObj);
+  dispatch(prepareFinalObject("Bill", fetchBillResponse.Bill));
   const payload = isPAID ?
     await getReceipt(queryObj) :
     fetchBillResponse && fetchBillResponse.Bill && fetchBillResponse.Bill[0];
@@ -2345,7 +2346,7 @@ export const _getPattern = (type) => {
     case "ownerShare":
       return /^[+-]?\d{2,5}(\.\d{1,2})?$/i;
     case "courtCase":
-      return /^[a-zA-Z0-9]{1,250}$/i;  
+      return /^([\s\S]){1,250}$/i;
   }
 }
 
