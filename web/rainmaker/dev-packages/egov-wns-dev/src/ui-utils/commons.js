@@ -129,7 +129,28 @@ export const getPropertyObj = async (waterConnection) => {
     return waterConnection;
 }
 
-
+export const getResults = async (queryObject,dispatch,screenName) => {
+    let url =""
+    switch(screenName){
+      case "download": url =  "/ws-services/wc/_search";
+      break;
+      
+    }
+    try {
+      const response = await httpRequest("post", url, "", queryObject, {} );
+      return response;
+  
+    } catch (error) {
+      store.dispatch(
+        toggleSnackbar(
+          true,
+          { labelName: error.message, labelCode: error.message },
+          "error"
+        )
+      );
+    }
+  
+  };
 export const getSearchResults = async queryObject => {
     try {
         const response = await httpRequest(
