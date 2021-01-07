@@ -1,5 +1,5 @@
 import { handleScreenConfigurationFieldChange as handleField, toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
+import { getTenantId,getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
 import get from "lodash/get";
 import { getSearchResultsEmployeeRequestFilter , returnNameFromCodeMdmsorViceVersa} from "../../../../../ui-utils/commons";
 import { getTextToLocalMapping, validateFields } from "../../utils";
@@ -146,6 +146,7 @@ export const searchApiCallForEmployeeFilter = async (state, dispatch) =>{
     let servicestatus = get(state.screenConfiguration.preparedFinalObject, "serviceRequests.servicestatus.value")
     let mohalla = get(state.screenConfiguration.preparedFinalObject, "serviceRequests.mohalla.value")
     let contactNumber = get(state.screenConfiguration.preparedFinalObject, "serviceRequests.contactNumber")
+    let assignedTo = get(state.screenConfiguration.preparedFinalObject, "serviceRequests.assignedTo.value")
     var dateFromObject = new Date(fromDate);
     var dateToObject = new Date(toDate);
     let fromDateNumeric = dateFromObject.getTime() 
@@ -155,6 +156,9 @@ export const searchApiCallForEmployeeFilter = async (state, dispatch) =>{
     // if (fromDateNumeric === toDateNumeric){
     //   toDateNumeric = toDateNumeric + oneDayDifference
     // }
+      if (assignedTo && assignedTo=="ASSIGNEDTOME") { 
+        assignedTo = JSON.parse(getUserInfo()).id;
+      }
       var data = 
         {"fromDate":fromDateNumeric,
         "toDate": toDateNumeric,
@@ -163,7 +167,9 @@ export const searchApiCallForEmployeeFilter = async (state, dispatch) =>{
         "serviceRequestSubtype":serviceRequestSubtype, 
         "serviceRequestStatus":servicestatus,
         "houseNoAndStreetName":mohalla,
-        "ownerContactNumber":contactNumber}
+        "ownerContactNumber": contactNumber,
+        "dataPayload": { "assignedTo": assignedTo }
+      }
     
     // debugger
     const response = await getSearchResultsEmployeeRequestFilter(data);
