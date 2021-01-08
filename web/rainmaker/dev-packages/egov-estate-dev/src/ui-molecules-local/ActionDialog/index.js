@@ -179,7 +179,7 @@ class ActionDialog extends React.Component {
                   >
                     <CloseIcon />
                   </Grid>
-                  {showEmployeeList && !!dropDownData.length && (
+                  {showEmployeeList && !!dropDownData.length && (moduleName === "ES-EB-IS-RefundOfEmd" ? buttonLabel !== "MODIFY" : true) && (
                     <Grid
                       item
                       sm="12"
