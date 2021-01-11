@@ -34,16 +34,14 @@ import {
   import { getSearchResults} from "../../../../ui-utils/commons";
 
   const header = getCommonHeader({
-    labelName: "My Applications",
-    labelKey: "ES_MY_APPLICATIONS_HEADER"
+    labelName: "Refund",
+    labelKey: "ES_REFUND_HEADER"
   }, {
     classes: {
       root: "common-header-cont"
     }
   });
-  
-  var homeURL;
-  
+    
   const searchApplications = (state, dispatch) => {
     const preparedFinalObject = get(state, "screenConfiguration.preparedFinalObject");
     const {
@@ -51,14 +49,11 @@ import {
       searchScreen = {}
     } = preparedFinalObject
     let searchResults = actualResults
-    if (!!searchScreen.applicationNumber) {
-      searchResults = searchResults.filter(item => item.applicationNumber === (searchScreen.applicationNumber).trim())
+    if (!!searchScreen.fileNumber) {
+      searchResults = searchResults.filter(item => item.fileNumber == (searchScreen.fileNumber).trim())
     }
     if (!!searchScreen.status) {
       searchResults = searchResults.filter(item => item.state === (searchScreen.status).trim())
-    }
-    if(!!searchScreen.applicationType) {
-      searchResults = searchResults.filter(item => item.applicationType === searchScreen.applicationType)
     }
     dispatch(prepareFinalObject("searchResults", searchResults))
   }
@@ -69,31 +64,24 @@ import {
       actualResults,
       searchScreen = {}
     } = preparedFinalObject
-    if (!!searchScreen.applicationNumber || !!searchScreen.status) {
+    if (!!searchScreen.fileNumber || !!searchScreen.status) {
       dispatch(
         handleField(
-          "my-applications",
-          "components.div.children.searchCard.children.cardContent.children.statusApplicationNumberContainer.children.applicationNo",
+          "refund-search-applications",
+          "components.div.children.searchCard.children.cardContent.children.statusApplicationNumberContainer.children.fileNumber",
           "props.value",
           ""
         )
       )
       dispatch(
         handleField(
-          "my-applications",
+          "refund-search-applications",
           "components.div.children.searchCard.children.cardContent.children.statusApplicationNumberContainer.children.status",
           "props.value",
           ""
         )
       )
-      dispatch(
-        handleField(
-          "my-applications",
-          "components.div.children.searchCard.children.cardContent.children.statusApplicationNumberContainer.children.applicationType",
-          "props.value",
-          ""
-        )
-      )
+    
       dispatch(prepareFinalObject("searchScreen", {}))
       dispatch(prepareFinalObject("searchResults", actualResults))
     }
@@ -101,22 +89,22 @@ import {
   
   const searchCard = getCommonCard({
     subHeader: getCommonTitle({
-      labelName: "Search Application",
-      labelKey: "ES_SEARCH_APPLICATION"
+      labelName: "Search Property",
+      labelKey: "ES_SEARCH_PROPERTY"
     }),
     subParagraph: getCommonParagraph({
-      labelName: "Provide at least one parameter to search for an application",
-      labelKey: "ES_PLEASE_PROVIDE_ONE_PARAMETER_TO_SEARCH_APPLICATIONS"
+      labelName: "Provide at least one parameter to search for the Property",
+      labelKey: "ES_PLEASE_PROVIDE_ONE_PARAMETER_TO_SEARCH_PROPERTY"
     }),
     statusApplicationNumberContainer: getCommonContainer({
-      applicationNo: getTextField({
+      fileNumber: getTextField({
         label: {
-          labelName: "Application No.",
-          labelKey: "ES_APPLICATION_NUMBER_LABEL"
+          labelName: "File Number.",
+          labelKey: "ES_FILE_NUMBER_LABEL"
         },
         placeholder: {
-          labelName: "Enter Application No.",
-          labelKey: "ES_APPLICATION_NUMBER_PLACEHOLDER"
+          labelName: "Enter File No.",
+          labelKey: "ES_FILE_NUMBER_PLACEHOLDER"
         },
         gridDefination: {
           xs: 12,
@@ -125,7 +113,7 @@ import {
         required: false,
         pattern: /^[a-zA-Z0-9-]*$/i,
         errorMessage: "ES_ERR_INVALID_APPLICATION_NO",
-        jsonPath: "searchScreen.applicationNumber"
+        jsonPath: "searchScreen.fileNumber"
       }),
       status: getSelectField({
         label: {
@@ -227,8 +215,6 @@ import {
           }
       })
     })
-  
-  
         
   }, {
     style: {
@@ -246,7 +232,6 @@ import {
     const response = await getSearchResults(queryObject);
     if (!!response && !!response.Properties && !!response.Properties.length) {
       response.Properties = response.Properties.filter(item => {
-          console.log(item.propertyDetails.bidders)
           if(item.propertyDetails.bidders && item.propertyDetails.bidders.length > 0 ){
               return item
           }
@@ -254,24 +239,6 @@ import {
       dispatch(prepareFinalObject("actualResults", response.Properties));
       dispatch(prepareFinalObject("searchResults", response.Properties));
     }
-  
-    let homeURL;
-    switch(branchType) {
-      case "BuildingBranch" : homeURL = "/estate-citizen/property-search?branchType=BUILDING_BRANCH&type=BuildingBranch_CitizenService_NOC"
-      break;
-      case "EstateBranch" : homeURL = "/estate-citizen/property-search?branchType=ESTATE_BRANCH"
-      break;
-      case "ManiMajra": homeURL = "/estate-citizen/property-search?branchType=MANI_MAJRA"
-      break
-    }
-    dispatch(
-      handleField(
-        action.screenKey,
-        "components.div.children.applicationsCard.props",
-        "homeURL",
-        homeURL
-      )
-    )
   }
   
   const refundSearchApplications = {
@@ -280,10 +247,18 @@ import {
     beforeInitScreen: (action, state, dispatch) => {
       dispatch(prepareFinalObject("actualResults", []));
       dispatch(prepareFinalObject("searchResults", []));
+      const queryObject = [{
+        key: "tenantId",
+        value: getTenantId()
+      },
+      {
+        key: "businessServices",
+        value: "ES-EB-AllotmentOfSite"
+      }
+    ]
       clearSearch(state, dispatch);
       getData(action, state, dispatch)
-    //   getStatusList( state, dispatch, queryObject, "refund-search-applications", "components.div.children.estateApplication.children.cardContent.children.colonyContainer.children.status", wkfConstant)
-      //   getApplicationTypes({action, state, dispatch, screenKey: "my-applications", componentJsonPath : "components.div.children.searchCard.children.cardContent.children.statusApplicationNumberContainer.children.applicationType"})
+      getStatusList(state, dispatch, queryObject, "refund-search-applications", "components.div.children.searchCard.children.cardContent.children.statusApplicationNumberContainer.children.status", "ES-EB-AllotmentOfSite")
       return action
     },
     components: {
@@ -298,10 +273,7 @@ import {
             componentPath: "SingleApplication",
             visible: true,
             props: {
-              contents: [{
-                  label: "ES_APPLICATION_NUMBER_LABEL",
-                  jsonPath: "applicationNumber"
-                },
+              contents: [
                 {
                   label: "ES_FILE_NUMBER_LABEL",
                   jsonPath: "fileNumber"
@@ -311,12 +283,12 @@ import {
                   jsonPath: "propertyDetails.bidders[0].auctionId"
                 },
                 {
-                  label: "ES_APPLICATION_STATUS",
+                  label: "ES_PROPERTY_STATUS",
                   jsonPath: "state"
                 }
               ],
-              moduleName: "EST",
-              homeURL: "/estate-citizen/property-search?branchType=ESTATE_BRANCH"
+              moduleName: "REFUNDOFEMD"
+            
             }
           }
         }

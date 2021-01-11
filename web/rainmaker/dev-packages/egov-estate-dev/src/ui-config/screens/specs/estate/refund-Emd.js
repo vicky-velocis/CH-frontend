@@ -19,15 +19,15 @@ const cardItems = [
   {
     label: {
       labelKey: "ES_ISSUANCE_OF_REFUND",
-      labelName: "Estate Branch"
+      labelName: "Issuance of Refund"
     },
     icon: < FormIcon / > ,
     route: `/estate/property-search?type=refund`
   },
   {
     label: {
-      labelKey: "ES_SEARCH_APPLICATIONS",
-      labelName: "Security Fee"
+      labelKey: "ES_SEARCH_PROPERTIES",
+      labelName: "Search Property"
     },
     icon: < FormIcon / > ,
     route: `/estate/refund-search-applications?branchType=ESTATE_BRANCH`
