@@ -1315,9 +1315,10 @@ export const downloadPrintContainer = (
   dispatch,
   applicationState,
   applicationType,
-  branchType
+  branchType,
+  application
 ) => {
- 
+  let typeOfNotice = application.applicationDetails.typeOfNotice
   /** MenuButton data based on status */
   let downloadMenu = [];
   let printMenu = [];  
@@ -2189,25 +2190,45 @@ export const downloadPrintContainer = (
                 applicationPrintObject
               ]
             }else{
-              downloadMenu = [
-                applicationDownloadObject,
-                NoticeDownloadObject,
-                IssuanceViolationOrderDownloadObject,
-                cancellationOrderDownloadObject,
-                nonPaymentNoticeDownloadObject,
-                nonPaymentOrderDownloadObject,
-                occupationCertificateDownloadObject
-              ]
-            
-              printMenu = [
-                applicationPrintObject,
-                NoticePrintObject,
-                IssuanceViolationOrderPrintObject,
-                cancellationOrderPrintObject,
-                nonPaymentNoticePrintObject,
-                nonPaymentOrderPrintObject,
-                occupationCertificatePrintObject
-              ]
+              if(typeOfNotice === 'TYPE_OF_NOTICE.NONPAYMENTRENT'){
+                downloadMenu = [
+                  applicationDownloadObject,
+                  nonPaymentNoticeDownloadObject,
+                  nonPaymentOrderDownloadObject
+                ]
+              
+                printMenu = [
+                  applicationPrintObject,
+                  nonPaymentNoticePrintObject,
+                  nonPaymentOrderPrintObject
+                ]
+              }
+              else if(typeOfNotice == 'TYPE_OF_NOTICE.VIOLATION'){
+                downloadMenu = [
+                  applicationDownloadObject,
+                  NoticeDownloadObject,
+                  IssuanceViolationOrderDownloadObject
+                ]
+              
+                printMenu = [
+                  applicationPrintObject,
+                  NoticePrintObject,
+                  IssuanceViolationOrderPrintObject
+                ]
+              }else{
+                downloadMenu = [
+                  applicationDownloadObject,
+                  cancellationOrderDownloadObject,
+                  occupationCertificateDownloadObject
+                ]
+              
+                printMenu = [
+                  applicationPrintObject,
+                  cancellationOrderPrintObject,
+                  occupationCertificatePrintObject
+                ]
+              }
+             
             }
             
             break;
@@ -2323,26 +2344,44 @@ export const downloadPrintContainer = (
             break;
 
             case 'IssuanceOfNotice':
-              
-                downloadMenu = [
-                  applicationDownloadObject,
-                  NoticeDownloadObject,
-                  IssuanceViolationOrderDownloadObject,
-                  cancellationOrderDownloadObject,
-                  nonPaymentNoticeDownloadObject,
-                  nonPaymentOrderDownloadObject,
-                  occupationCertificateDownloadObject
-                ]
-              
-                printMenu = [
-                  applicationPrintObject,
-                  NoticePrintObject,
-                  IssuanceViolationOrderPrintObject,
-                  cancellationOrderPrintObject,
-                  nonPaymentNoticePrintObject,
-                  nonPaymentOrderPrintObject,
-                  occupationCertificatePrintObject
-                ]
+                if(typeOfNotice === 'TYPE_OF_NOTICE.NONPAYMENTRENT'){
+                  downloadMenu = [
+                    applicationDownloadObject,
+                    nonPaymentNoticeDownloadObject,
+                    nonPaymentOrderDownloadObject
+                  ]
+                
+                  printMenu = [
+                    applicationPrintObject,
+                    nonPaymentNoticePrintObject,
+                    nonPaymentOrderPrintObject
+                  ]
+                }
+                else if(typeOfNotice == 'TYPE_OF_NOTICE.VIOLATION'){
+                  downloadMenu = [
+                    applicationDownloadObject,
+                    NoticeDownloadObject,
+                    IssuanceViolationOrderDownloadObject
+                  ]
+                
+                  printMenu = [
+                    applicationPrintObject,
+                    NoticePrintObject,
+                    IssuanceViolationOrderPrintObject
+                  ]
+                }else{
+                  downloadMenu = [
+                    applicationDownloadObject,
+                    cancellationOrderDownloadObject,
+                    occupationCertificateDownloadObject
+                  ]
+                
+                  printMenu = [
+                    applicationPrintObject,
+                    cancellationOrderPrintObject,
+                    occupationCertificatePrintObject
+                  ]
+                }
                 break;
           }  
           break;
@@ -2378,25 +2417,44 @@ export const downloadPrintContainer = (
                   
                   break;
               case 'IssuanceOfNotice':
-                  downloadMenu = [
-                    applicationDownloadObject,
-                    NoticeDownloadObject,
-                    IssuanceViolationOrderDownloadObject,
-                    cancellationOrderDownloadObject,
-                    nonPaymentNoticeDownloadObject,
-                    nonPaymentOrderDownloadObject,
-                    occupationCertificateDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,
-                    NoticePrintObject,
-                    IssuanceViolationOrderPrintObject,
-                    cancellationOrderPrintObject,
-                    nonPaymentNoticePrintObject,
-                    nonPaymentOrderPrintObject,
-                    occupationCertificatePrintObject
-                  ]
+                  if(typeOfNotice === 'TYPE_OF_NOTICE.NONPAYMENTRENT'){
+                    downloadMenu = [
+                      applicationDownloadObject,
+                      nonPaymentNoticeDownloadObject,
+                      nonPaymentOrderDownloadObject
+                    ]
+                  
+                    printMenu = [
+                      applicationPrintObject,
+                      nonPaymentNoticePrintObject,
+                      nonPaymentOrderPrintObject
+                    ]
+                  }
+                  else if(typeOfNotice == 'TYPE_OF_NOTICE.VIOLATION'){
+                    downloadMenu = [
+                      applicationDownloadObject,
+                      NoticeDownloadObject,
+                      IssuanceViolationOrderDownloadObject
+                    ]
+                  
+                    printMenu = [
+                      applicationPrintObject,
+                      NoticePrintObject,
+                      IssuanceViolationOrderPrintObject
+                    ]
+                  }else{
+                    downloadMenu = [
+                      applicationDownloadObject,
+                      cancellationOrderDownloadObject,
+                      occupationCertificateDownloadObject
+                    ]
+                  
+                    printMenu = [
+                      applicationPrintObject,
+                      cancellationOrderPrintObject,
+                      occupationCertificatePrintObject
+                    ]
+                  }
             }
             break;
       case `${applicationType}` && 'ES_APPROVED':  
@@ -2537,25 +2595,44 @@ export const downloadPrintContainer = (
               break;
 
               case 'IssuanceOfNotice':
-                  downloadMenu = [
-                    applicationDownloadObject,
-                    NoticeDownloadObject,
-                    IssuanceViolationOrderDownloadObject,
-                    cancellationOrderDownloadObject,
-                    nonPaymentNoticeDownloadObject,
-                    nonPaymentOrderDownloadObject,
-                    occupationCertificateDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,
-                    NoticePrintObject,
-                    IssuanceViolationOrderPrintObject,
-                    cancellationOrderPrintObject,
-                    nonPaymentNoticePrintObject,
-                    nonPaymentOrderPrintObject,
-                    occupationCertificatePrintObject
-                  ]
+                  if(typeOfNotice === 'TYPE_OF_NOTICE.NONPAYMENTRENT'){
+                    downloadMenu = [
+                      applicationDownloadObject,
+                      nonPaymentNoticeDownloadObject,
+                      nonPaymentOrderDownloadObject
+                    ]
+                  
+                    printMenu = [
+                      applicationPrintObject,
+                      nonPaymentNoticePrintObject,
+                      nonPaymentOrderPrintObject
+                    ]
+                  }
+                  else if(typeOfNotice == 'TYPE_OF_NOTICE.VIOLATION'){
+                    downloadMenu = [
+                      applicationDownloadObject,
+                      NoticeDownloadObject,
+                      IssuanceViolationOrderDownloadObject
+                    ]
+                  
+                    printMenu = [
+                      applicationPrintObject,
+                      NoticePrintObject,
+                      IssuanceViolationOrderPrintObject
+                    ]
+                  }else{
+                    downloadMenu = [
+                      applicationDownloadObject,
+                      cancellationOrderDownloadObject,
+                      occupationCertificateDownloadObject
+                    ]
+                  
+                    printMenu = [
+                      applicationPrintObject,
+                      cancellationOrderPrintObject,
+                      occupationCertificatePrintObject
+                    ]
+                  }
                   break;
             } 
           break;   
