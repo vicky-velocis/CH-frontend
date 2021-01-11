@@ -182,23 +182,24 @@ const callBackForNext = async (state, dispatch) => {
     let emdDate = get(state.screenConfiguration.screenConfig[screenKey], "components.div.children.formwizardSecondStep.children.AllotmentAuctionDetails.children.cardContent.children.detailsContainer.children.cardContent.children.auctionCard.children.emdAmountDate.props.value") || get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.emdDate");
 
     
-    let auctionDateEpoch = convertDateToEpoch(auctionDate)
-    let emdDateEpoch = convertDateToEpoch(emdDate)
-  
-    let typeOfAllocationSelected = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.typeOfAllocation");
-    auctionEMDDateValid = auctionDateEpoch - emdDateEpoch > 0 ? true : false
-  
 
-    if(typeOfAllocationSelected !== "ALLOCATION_TYPE.ALLOTMENT"){
-    if (isAuctionValid && auctionEMDDateValid) {
-      const res = await applyEstates(state, dispatch, activeStep);
-      if (!res) {
-        return
+    let typeOfAllocationSelected = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.typeOfAllocation");
+    if (typeOfAllocationSelected !== "ALLOCATION_TYPE.ALLOTMENT"){
+      if (!!auctionDate || !!emdDate) {
+        let auctionDateEpoch = convertDateToEpoch(auctionDate)
+        let emdDateEpoch = convertDateToEpoch(emdDate)
+        
+        auctionEMDDateValid = auctionDateEpoch - emdDateEpoch > 0 ? true : false;
       }
-    } else {
-      isFormValid = false;
+      if (isAuctionValid && auctionEMDDateValid) {
+        const res = await applyEstates(state, dispatch, activeStep);
+        if (!res) {
+          return
+        }
+      } else {
+        isFormValid = false;
+      }
     }
-  }
   }
 
   if (activeStep === ENTITY_OWNER_DETAILS_STEP) {
