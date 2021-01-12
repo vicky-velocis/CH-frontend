@@ -78,7 +78,7 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
         )
       )
     }
-    let refundInitiated = bidders.filter(item => !!item.refundStatus);
+    let refundInitiated = bidders.filter(item => !!item.refundStatus && item.refundStatus != "-");
 
     let refundInitiatedColDisplay = !!findItem && (bidders.length != refundInitiated.length) ? true : false;
 
