@@ -67,6 +67,17 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
       "Properties[0].propertyDetails.bidders",
       []
     )
+
+    if (!!bidders[0].state) {
+      dispatch(
+        handleField(
+          action.screenKey,
+          `components.div.children.taskStatus`,
+          `visible`,
+          `true`
+        )
+      )
+    }
     let refundInitiated = bidders.filter(item => !!item.refundStatus);
 
     let refundInitiatedColDisplay = !!findItem && (bidders.length != refundInitiated.length) ? true : false;
@@ -327,7 +338,8 @@ const refund = {
             style: {
               wordBreak: "break-word"
             }
-          }
+          },
+          visible:false
         },
         auctionDetailsContainer,
         breakAfterSearch: getBreak(),

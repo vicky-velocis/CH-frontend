@@ -41,10 +41,6 @@ class WorkFlowContainer extends React.Component {
     )
     const tenantId = getQueryArg(window.location.href, "tenantId");
 
-    if (this.props.moduleName == WF_EB_REFUND_OF_EMD) {
-      return;
-    }
-
     let queryObject = [
       { key: "history", value: true },
       { key: "tenantId", value: tenantId }
@@ -65,11 +61,11 @@ class WorkFlowContainer extends React.Component {
           { key: "businessIds", value: fileNumber }
       ]
       break;
-      // case WF_EB_REFUND_OF_EMD:
-      //   let auctionId = preparedFinalObject.Properties[0].propertyDetails.bidders[0].auctionId;
-      //   queryObject = [...queryObject,
-      //   { key: 'businessIds', value: auctionId }
-      // ]
+      case WF_EB_REFUND_OF_EMD:
+        let auctionId = preparedFinalObject.Properties[0].propertyDetails.bidders[0].auctionId;
+        queryObject = [...queryObject,
+        { key: 'businessIds', value: auctionId }
+      ]
       break;
       default: {
         queryObject = [
