@@ -370,7 +370,6 @@ export const prepareDocumentsUploadData = (state, dispatch, type) => {
   dispatch(prepareFinalObject("documentsContract", documentsContract));
 };
 export const furnishServiceRequestDetailResponse = (state, response, dispatch) => {
-  debugger
   let refurnishresponse = {};
   var serviceRequestType = []
   var sectorData = []
@@ -427,7 +426,6 @@ export const furnishServiceRequestDetailResponse = (state, response, dispatch) =
   return refurnishresponse;
 };
 export const furnishServiceRequestDetailResponseForEdit = (response, state,dispatch)=> {
-  debugger
   let refurnishresponse = {};
   var serviceRequestType = []
   var sectorData = []

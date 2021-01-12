@@ -324,6 +324,24 @@ catch(e)
     )
   );}
 
+try  { var  assignedToPlaceholder = get(state, "screenConfiguration.screenConfig.employeeServiceRequestsFilter.components.div.children.ServiceRequestFilterFormForEmployee.children.cardContent.children.StatusLocalityAndFromToDateContainer.children.assignedTo.props.placeholder", {})
+  dispatch(
+    handleField(
+      "employeeServiceRequestsFilter",
+      "components.div.children.ServiceRequestFilterFormForEmployee.children.cardContent.children.StatusLocalityAndFromToDateContainer.children.assignedTo",
+      "props.value",
+      assignedToPlaceholder.labelKey
+    )
+  );}
+catch(e)
+ { dispatch(
+    handleField(
+      "employeeServiceRequestsFilter",
+      "components.div.children.ServiceRequestFilterFormForEmployee.children.cardContent.children.StatusLocalityAndFromToDateContainer.children.assignedTo",
+      "props.value",
+      undefined
+    )
+  );}
 
       // resetting service request subtype
       dispatch(handleField("employeeServiceRequestsFilter",
