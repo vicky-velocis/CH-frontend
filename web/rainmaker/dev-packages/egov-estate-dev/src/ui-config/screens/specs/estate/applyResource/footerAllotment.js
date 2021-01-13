@@ -196,25 +196,6 @@ const callBackForNext = async (state, dispatch) => {
       "Properties[0].propertyDetails.entityType",
     )
 
-    if (!!entityType) {
-      if (entityType == "ET.PARTNERSHIP_FIRM") {
-        dispatch(
-          prepareFinalObject(
-            `Properties[0].propertyDetails.owners[${i}].ownershipType`,
-            "PARTNER"
-          )
-        )
-      }
-      else {
-        dispatch(
-          prepareFinalObject(
-            `Properties[0].propertyDetails.owners[${i}].ownershipType`,
-            "OWNER"
-          )
-        )
-      }
-    }
-
     let isOwnerOrPartnerDetailsValid = true;
 
     switch(entityType) {
@@ -227,7 +208,7 @@ const callBackForNext = async (state, dispatch) => {
           screenKey
         );
 
-        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "ownerDetails");
+        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "ownerDetails", entityType);
 
         if (isOwnerOrPartnerDetailsValid && isCompanyDetailsValid) {
           const res = await applyEstates(state, dispatch, activeStep, screenKey);
@@ -246,7 +227,7 @@ const callBackForNext = async (state, dispatch) => {
           screenKey
         )
 
-        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "partnerDetails");
+        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "partnerDetails", entityType);
 
         if (isFirmDetailsValid && isOwnerOrPartnerDetailsValid) {
           const res = await applyEstates(state, dispatch, activeStep, screenKey);
@@ -280,7 +261,7 @@ const callBackForNext = async (state, dispatch) => {
         }
         break;
       default:
-        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "ownerDetails");
+        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "ownerDetails", entityType);
 
         if (isOwnerOrPartnerDetailsValid) {
           const res = await applyEstates(state, dispatch, activeStep, screenKey);
@@ -591,7 +572,7 @@ const callBackForNext = async (state, dispatch) => {
   window.scrollTo(0,0)
 }
 
-const setOwnersOrPartners = (state, dispatch, container) => {
+const setOwnersOrPartners = (state, dispatch, container, entityType) => {
   let propertyOwners = get(
     state.screenConfiguration.preparedFinalObject,
     "Properties[0].propertyDetails.owners"
@@ -617,6 +598,25 @@ const setOwnersOrPartners = (state, dispatch, container) => {
       )
 
       var ownerName = propertyOwners ? propertyOwners[i] ? propertyOwners[i].ownerDetails.ownerName : "" : "";
+
+      if (!!entityType) {
+        if (entityType == "ET.PARTNERSHIP_FIRM") {
+          dispatch(
+            prepareFinalObject(
+              `Properties[0].propertyDetails.owners[${i}].ownershipType`,
+              "PARTNER"
+            )
+          )
+        }
+        else {
+          dispatch(
+            prepareFinalObject(
+              `Properties[0].propertyDetails.owners[${i}].ownershipType`,
+              "OWNER"
+            )
+          )
+        }
+      }
       
       if (i > 0) {
         var documentDetailsString = JSON.stringify(get(
