@@ -355,7 +355,7 @@ class DocumentList extends Component {
             );
           })}
       </div>
-      {/* {<SimpleModal open={this.state.open} maxFileSizeMsg={this.state.maxFileSizeMsg} closeModal={this.closeModal}/>} */}
+      {<SimpleModal open={this.state.open} maxFileSizeMsg={this.state.maxFileSizeMsg} closeModal={this.closeModal}/>}
       {!!showLoader && <LoadingIndicator status={"loading"} />}
       </div>
     );
