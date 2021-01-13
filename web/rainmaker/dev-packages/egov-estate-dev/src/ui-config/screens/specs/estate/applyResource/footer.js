@@ -702,9 +702,8 @@ const callBackForNext = async (state, dispatch) => {
           )
           }
         }
-
         const filterRentArr = rentItems.filter(item => !item.isDeleted)
-        rentItems = filterRentArr.map((item, index) => ({...item, groundRentStartMonth: !!index ? Number(filterRentArr[index-1].groundRentEndMonth) + 1 : 0, groundRentEndMonth: item.groundRentEndMonth, groundRentAmount: item.groundRentAmount}))
+        rentItems = filterRentArr.map((item, index) => ({...item, groundRentStartMonth: !!index ? Number(filterRentArr[index-1].groundRentEndMonth) + 1 : 1, groundRentEndMonth: item.groundRentEndMonth, groundRentAmount: item.groundRentAmount}))
 
       const rentValidation = rentItems.filter(item => !item.groundRentAmount || !item.groundRentEndMonth)
       isRentDetailsValid = rentValidation.length === 0
