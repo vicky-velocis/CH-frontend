@@ -35,7 +35,7 @@ export const documentDetails = getCommonCard({
 
       },
       description: "Only .jpg and .pdf files. 1MB max file size..",
-      moduleName: "egov-wns",
+      pageName: "egov-wns-upload",
       maxFiles:1,
       // description: "Only .jpg and .pdf files. 6MB max file size.",
       inputProps: {
