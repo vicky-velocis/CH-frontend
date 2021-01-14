@@ -829,7 +829,7 @@ export const getActionDefinationForStepper = path => {
   return actionDefination;
 };
 
-export const callBackForPrevious = (state, dispatch) => {
+export const callBackForPrevious = async (state, dispatch) => {
   const fileNumber = get(state.screenConfiguration.preparedFinalObject, "Properties[0].fileNumber")
   await getPMDetailsByFileNumber("", state, dispatch, fileNumber, screenKey, false)
   window.scrollTo(0,0)
