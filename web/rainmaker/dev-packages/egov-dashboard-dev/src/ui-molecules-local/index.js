@@ -65,33 +65,13 @@ const ReportMolecule = Loadable({
   loading: () => <Loading />
 });
 
-const ReportMoleculeLineBar = Loadable({
-  loader: () => import("./ReportMoleculeLineBar"),
-  loading: () => <Loading />
-});
-
 const ReportMoleculeBarPie = Loadable({
   loader: () => import("./ReportMoleculeBarPie"),
   loading: () => <Loading />
 });
 
-const ReportMoleculeRadar = Loadable({
-  loader: () => import("./ReportMoleculeRadar"),
-  loading: () => <Loading />
-});
-
-const ReportMoleculeBarGroup = Loadable({
-  loader: () => import("./ReportMoleculeBarGroup"),
-  loading: () => <Loading />
-});
-
-const ReportPreviewWF = Loadable({
-  loader: () => import("./ReportPreviewWF"),
-  loading: () => <Loading />
-});
-
-const WorkFlowChart = Loadable({
-  loader: () => import("./WorkFlowChart"),
+const HorizontalBarMolecule = Loadable({
+  loader: () => import("./HorizontalBarMolecule"),
   loading: () => <Loading />
 });
 
@@ -109,10 +89,6 @@ export {
   ImageUploadMolecule,
   MapLocatorEdit,
   ReportMolecule,
-  ReportMoleculeLineBar,
   ReportMoleculeBarPie,
-  ReportMoleculeRadar,
-  ReportMoleculeBarGroup,
-  ReportPreviewWF,
-  WorkFlowChart
+  HorizontalBarMolecule
 };

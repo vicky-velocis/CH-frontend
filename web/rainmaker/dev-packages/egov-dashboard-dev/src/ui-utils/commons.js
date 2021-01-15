@@ -988,3 +988,89 @@ export const getDashboardResult = async ( dispatch, data ) => {
     );
   }
 };
+
+// All Complaint Types DAshboard Result
+export const getAllDashboardResult = async ( dispatch, data ) => {
+  debugger
+
+  const moduleName = "rainmaker-pgr" 
+  const reportName = ["ComplaintTypesReport", "SourceWiseReport", "DepartmentReport"]
+  var payloadData = data
+  payloadData["reportName"] = reportName[0];
+  payloadData["moduleName"] = moduleName;
+  
+  try {
+    store.dispatch(toggleSpinner());
+    const ComplaintTypeResponse = await httpRequest(
+      "post",
+      // "/hc-services/serviceRequest/_get_DEMO_DASHBOARD", 
+      "/report/rainmaker-pgr/ComplaintTypesReport/_get?tenantId=ch.chandigarh&pageSize=false&offset=0",
+      "",
+      [],
+      payloadData
+    );
+    payloadData["reportName"] = reportName[1];
+    const SourceWiseResponse = await httpRequest(
+      "post",
+      // "/hc-services/serviceRequest/_get_DEMO_DASHBOARD", 
+      "/report/rainmaker-pgr/SourceWiseReport/_get?tenantId=ch.chandigarh&pageSize=false&offset=0",
+      "",
+      [],
+      payloadData
+    );
+    payloadData["reportName"] = reportName[2];
+    const DepartmentResponse = await httpRequest(
+      "post",
+      // "/hc-services/serviceRequest/_get_DEMO_DASHBOARD", 
+      "/report/rainmaker-pgr/DepartmentReport/_get?tenantId=ch.chandigarh&pageSize=false&offset=0",
+      "",
+      [],
+      payloadData
+    );
+
+    debugger
+    var response = []
+    response.push(ComplaintTypeResponse.reportResponses[0]);
+    response.push(SourceWiseResponse.reportResponses[0]);
+    response.push(DepartmentResponse.reportResponses[0]);
+
+    dispatch(prepareFinalObject("allDashboardSearchData", response));
+
+    dispatch(
+      handleField("dashboardType",
+      // "components.div.children.dashboardTypeSearchResults.children.cardContent.children.customGraph",
+      "components.div.children.dashboardTypeSearchResults",
+      "props.data",
+      response
+      )
+      );
+    
+    dispatch(
+      handleField("dashboardType",
+      // "components.div.children.dashboardTypeSearchResults.children.cardContent.children.customGraph",
+      "components.div.children.dashboardSearchResultHorizontalBar",
+      "props.data",
+      response
+      )
+      );
+
+    dispatch(
+      handleField("dashboardSource",
+      "components.div.children.dashboardSourceSearchResults.children.cardContent.children.dashboardResult.children.customGraph",
+      "props.data",
+      response
+        )
+        );
+    store.dispatch(toggleSpinner());
+    return response;
+  } catch (error) {
+    store.dispatch(toggleSpinner());
+    store.dispatch(
+      toggleSnackbar(
+        true,
+        { labelName: error.message, labelCode: error.message },
+        "error"
+      )
+    );
+  }
+};

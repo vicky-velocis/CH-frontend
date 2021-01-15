@@ -16,8 +16,8 @@ let role_name = JSON.parse(getUserInfo()).roles[0].code
 
 const header = getCommonHeader(
   {
-    labelName: "",
-    labelKey: "Complaint Source"
+    labelName: "Dashboard 2",
+    labelKey: "Dashboard_2"
   },
   {
     classes: {
@@ -25,74 +25,6 @@ const header = getCommonHeader(
     }
   }
 );
-// let cardItems = [];
-// // if (role_name === 'CITIZEN' || role_name === "EE") {
-  
-//   const cardlist = [
-//     {
-//       label: {
-//         labelName: "",
-//         labelKey: "PGR"
-//       },
-      
-//       icon: <i
-//           viewBox="0 -8 35 42"
-//           color="primary"
-//           font-size="40px"
-//           class="material-icons module-page-icon" style={{ fontSize: "40px" }}>
-//           wysiwyg
-//       </i>,
-//       route: "pgrDashboardReport"
-
-//     },
-//     {
-//       label: {
-//         labelName: "",
-//         labelKey: "E-Challan"
-//       },
-      
-//       icon: <i
-//           viewBox="0 -8 35 42"
-//           color="primary"
-//           font-size="40px"
-//           class="material-icons module-page-icon" style={{ fontSize: "40px" }}>
-//           wysiwyg
-//       </i>,
-//       route: "pgrDashboardReport"
-
-//     }
-//   ];
-//   cardItems = cardlist;
-// // }
-
-
-// const horticultureSearchAndResult = {
-//   uiFramework: "material-ui",
-//   name: "home",
-//   beforeInitScreen: (action, state, dispatch) => {
-//     clearlocalstorageAppDetails(state);     
-//     let response = previewWF(state, dispatch, status);
-//     return action;
-//   },
-//   components: {
-//     div: {
-//       uiFramework: "custom-atoms",
-//       componentPath: "Div",
-//       children: {
-//         header: header,
-//         applyCard: {
-//           uiFramework: "custom-molecules",
-//           componentPath: "LandingPage",
-//           props: {
-//             items: cardItems,
-//             history: {}
-//           }
-//         },
-//       }
-//     },
-  
-//   }
-// };
 
 const defaultDate = (date) => {
   var d = new Date(date),
@@ -145,10 +77,6 @@ const DashboardSource = {
 
           children: {
             header: {
-              // gridDefination: {
-              //   xs: 12,
-              //   sm: 6
-              // },
               ...header
             },
             
