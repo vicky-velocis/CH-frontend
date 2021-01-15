@@ -169,6 +169,14 @@ export const employeeDetails = getCommonCard({
             dateOfAppointment_
           )          
         );
+        //set defaule date for assignment start data and service start date to ease date selection
+        // dispatch(
+        //   handleField(`create`,        
+        //     "components.div.children.formwizardThirdStep.children.assignmentDetails.children.cardContent.children.assignmentDetailsCard.props.items.0.item0.children.cardContent.children.asmtDetailsCardContainer.children.assignFromDate",
+        //     "props.value",
+        //     dateOfAppointment_
+        //   )          
+        // );
       }
         
       }
@@ -268,6 +276,14 @@ export const professionalDetails = getCommonCard(
           //     { min: new Date(assignFromDate).toISOString().slice(0, 10)}
           //   )
           // ); 
+          // let dateOfAppointment_ =  convertDateToEpochDays(action.value, "",(1))
+          // dispatch(
+          //   handleField(`create`,        
+          //     "components.div.children.formwizardThirdStep.children.assignmentDetails.children.cardContent.children.assignmentDetailsCard.props.items.0.item0.children.cardContent.children.asmtDetailsCardContainer.children.assignFromDate",
+          //     "props.value",
+          //     dateOfAppointment_
+          //   )          
+          // );
         }
 
         }

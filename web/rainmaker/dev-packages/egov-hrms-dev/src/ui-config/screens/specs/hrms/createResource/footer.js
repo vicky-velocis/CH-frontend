@@ -134,12 +134,31 @@ export const callBackForNext = async (state, dispatch) => {
       }
     );
     if (!atLeastOneCurrentAssignmentSelected) {
+      let assignToDate = false
+      let employeeObject = get(
+        state.screenConfiguration.preparedFinalObject,
+        "Employee",
+        []
+      );
+      let toDate = assignmentsData.some(
+        assignment => {
+          return assignment.toDate;
+        }
+      );
+      if(toDate)
+      {
+        assignToDate = true
+      }
+    
+      if(!assignToDate)
+      {
       const errorMessage = {
         labelName: "Please select at least one current assignment",
         labelKey: "ERR_SELECT_CURRENT_ASSIGNMENT"
       };
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
       return;
+    }
     }
 
     let atLeastOnePrimaryAssignmentSelected = assignmentsData.some(
