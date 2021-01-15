@@ -26,6 +26,7 @@ import {
 } from "lodash";
 import "./index.css";
 import {
+  getPMDetailsByFileNumber,
   setDocumentData,
   setPrevOwnerDocs
 } from '../apply'
@@ -258,25 +259,6 @@ const callBackForNext = async (state, dispatch) => {
         }
   } */
   
-    if (!!entityType) {
-      if (entityType == "ET.PARTNERSHIP_FIRM") {
-        dispatch(
-          prepareFinalObject(
-            `Properties[0].propertyDetails.owners[${i}].ownershipType`,
-            "PARTNER"
-          )
-        )
-      }
-      else {
-        dispatch(
-          prepareFinalObject(
-            `Properties[0].propertyDetails.owners[${i}].ownershipType`,
-            "OWNER"
-          )
-        )
-      }
-    }
-
     let isOwnerOrPartnerDetailsValid = true;
 
     switch(entityType) {
@@ -289,7 +271,7 @@ const callBackForNext = async (state, dispatch) => {
           screenKey
         );
 
-        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "ownerDetails");
+        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "ownerDetails", entityType);
         if (isOwnerOrPartnerDetailsValid && isCompanyDetailsValid && (ownerPosAllotDateValid)) {
           const res = await applyEstates(state, dispatch, activeStep, screenKey);
           if (!res) {
@@ -307,7 +289,7 @@ const callBackForNext = async (state, dispatch) => {
           screenKey
         )
 
-        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "partnerDetails");
+        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "partnerDetails", entityType);
         if (isFirmDetailsValid && isOwnerOrPartnerDetailsValid && ownerPosAllotDateValid) {
           const res = await applyEstates(state, dispatch, activeStep, screenKey);
           if (!res) {
@@ -340,7 +322,7 @@ const callBackForNext = async (state, dispatch) => {
         }
         break;
       default:
-        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "ownerDetails");
+        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "ownerDetails", entityType);
         if (isOwnerOrPartnerDetailsValid && ownerPosAllotDateValid) {
           const res = await applyEstates(state, dispatch, activeStep, screenKey);
           if (!res) {
@@ -702,9 +684,8 @@ const callBackForNext = async (state, dispatch) => {
           )
           }
         }
-
         const filterRentArr = rentItems.filter(item => !item.isDeleted)
-        rentItems = filterRentArr.map((item, index) => ({...item, groundRentStartMonth: !!index ? Number(filterRentArr[index-1].groundRentEndMonth) + 1 : 0, groundRentEndMonth: item.groundRentEndMonth, groundRentAmount: item.groundRentAmount}))
+        rentItems = filterRentArr.map((item, index) => ({...item, groundRentStartMonth: !!index ? Number(filterRentArr[index-1].groundRentEndMonth) + 1 : 1, groundRentEndMonth: item.groundRentEndMonth, groundRentAmount: item.groundRentAmount}))
 
       const rentValidation = rentItems.filter(item => !item.groundRentAmount || !item.groundRentEndMonth)
       isRentDetailsValid = rentValidation.length === 0
@@ -882,7 +863,7 @@ const callBackForNext = async (state, dispatch) => {
   }
 }
 
-const setOwnersOrPartners = (state, dispatch, container) => {
+const setOwnersOrPartners = (state, dispatch, container, entityType) => {
   let propertyOwners = get(
     state.screenConfiguration.preparedFinalObject,
     "Properties[0].propertyDetails.owners"
@@ -908,6 +889,25 @@ const setOwnersOrPartners = (state, dispatch, container) => {
       )
 
       var ownerName = propertyOwners ? propertyOwners[i] ? propertyOwners[i].ownerDetails.ownerName ?  propertyOwners[i].ownerDetails.ownerName : "NA" : "NA" : "NA";
+
+      if (!!entityType) {
+        if (entityType == "ET.PARTNERSHIP_FIRM") {
+          dispatch(
+            prepareFinalObject(
+              `Properties[0].propertyDetails.owners[${i}].ownershipType`,
+              "PARTNER"
+            )
+          )
+        }
+        else {
+          dispatch(
+            prepareFinalObject(
+              `Properties[0].propertyDetails.owners[${i}].ownershipType`,
+              "OWNER"
+            )
+          )
+        }
+      }
       
       if (i > 0) {
         var documentDetailsString = JSON.stringify(get(
@@ -1199,9 +1199,11 @@ export const getActionDefinationForStepper = path => {
   return actionDefination;
 };
 
-export const callBackForPrevious = (state, dispatch) => {
-  window.scrollTo(0,0)
-  changeStep(state, dispatch, screenKey, "previous");
+export const callBackForPrevious = async (state, dispatch) => {
+    const fileNumber = get(state.screenConfiguration.preparedFinalObject, "Properties[0].fileNumber")
+    await getPMDetailsByFileNumber("", state, dispatch, fileNumber, screenKey, false)
+    window.scrollTo(0,0)
+    changeStep(state, dispatch, screenKey, "previous");
 };
 
 export const previousButton = {

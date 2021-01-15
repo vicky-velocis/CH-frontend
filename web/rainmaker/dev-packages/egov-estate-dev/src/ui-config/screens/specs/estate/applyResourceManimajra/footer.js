@@ -34,6 +34,9 @@ import { WF_ALLOTMENT_OF_SITE } from "../../../../../ui-constants";
 import { downloadAcknowledgementForm,downloadLetter,downloadEmailNotice,downloadNotice,downloadAmountLetter,downloadHousingBoardLetter} from "../../utils";
 import { getFileUrl, getFileUrlFromAPI } from "egov-ui-framework/ui-utils/commons";
 import { setDocumentData } from "../apply"
+import {
+  getSearchResults,
+} from "../../../../../ui-utils/commons";
 
 export const DEFAULT_STEP = -1;
 export const PROPERTY_DETAILS_STEP = 0;
@@ -44,6 +47,47 @@ export const PURCHASER_DOCUMENTS_STEP = 4;
 // export const PAYMENT_DETAILS_STEP = 5;
 export const COURT_CASE_DETAILS_STEP = 5;
 export const SUMMARY_STEP = 6;
+
+
+export const getPMDetailsByFileNumber = async (
+  action,
+  state,
+  dispatch,
+  fileNumber
+) => {
+  let queryObject = [
+    {
+      key: "tenantId",
+      value: getTenantId()
+    },
+    { 
+      key: "fileNumber", 
+      value: fileNumber 
+    }
+  ];
+
+  const payload = await getSearchResults(queryObject);
+
+  if (payload) {
+    let properties = payload.Properties;
+    let owners = properties[0].propertyDetails.owners;
+
+    owners = owners.map(item => ({...item, share: (item.share).toString(), ownerDetails: {...item.ownerDetails, isPreviousOwnerRequired: (item.ownerDetails.isPreviousOwnerRequired).toString()}}));
+
+    let currOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == true);
+    let prevOwners = owners.filter(item => item.ownerDetails.isCurrentOwner == false);
+    let areaSqft = (properties[0].propertyDetails.areaSqft).toString();
+
+    properties = [{...properties[0], propertyDetails: {...properties[0].propertyDetails, owners: currOwners, purchaser: prevOwners, areaSqft: areaSqft}}]
+
+    dispatch(
+      prepareFinalObject(
+        "Properties",
+        properties 
+      )
+    )
+  }
+}
 
 export const moveToSuccess = (data, dispatch, type) => {
   const id = get(data, "id");
@@ -704,9 +748,11 @@ export const getActionDefinationForStepper = path => {
   return actionDefination;
 };
 
-export const callBackForPrevious = (state, dispatch) => {
-  window.scrollTo(0,0)
-  changeStep(state, dispatch, "apply-manimajra", "previous");
+export const callBackForPrevious = async (state, dispatch) => {
+    const fileNumber = get(state.screenConfiguration.preparedFinalObject, "Properties[0].fileNumber")
+    await getPMDetailsByFileNumber("", state, dispatch, fileNumber)
+    window.scrollTo(0,0)
+    changeStep(state, dispatch, "apply-manimajra", "previous");
 };
 
 export const previousButton = {

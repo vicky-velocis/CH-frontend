@@ -32,6 +32,7 @@ import {
   getReviewOwner
 } from "./reviewDetails";
 import {
+  getPMDetailsByFileNumber,
  setDocumentData
 } from "../apply-building-branch";
 import { getFileUrl, getFileUrlFromAPI } from "egov-ui-framework/ui-utils/commons";
@@ -422,9 +423,11 @@ export const getActionDefinationForStepper = path => {
   return actionDefination;
 };
 
-export const callBackForPrevious = (state, dispatch) => {
-  window.scrollTo(0,0)
-  changeStep(state, dispatch, "apply-building-branch", "previous");
+export const callBackForPrevious = async (state, dispatch) => {
+    const fileNumber = get(state.screenConfiguration.preparedFinalObject, "Properties[0].fileNumber")
+    await getPMDetailsByFileNumber("", state, dispatch, fileNumber)
+    window.scrollTo(0,0)
+    changeStep(state, dispatch, "apply-building-branch", "previous");
 };
 
 export const previousButton = {
