@@ -256,7 +256,16 @@ dispatch(handleField("myServiceRequests",
 set(state, "screenConfiguration.preparedFinalObject.myServiceRequests", {});
   
 };
-
+export const testPOS = (state, dispatch) => {
+ 
+    ezetapApi.init("V3_TESTING", "V3_TESTING", "INR", "demo", false);
+    ezetapApi.startCardPayment($scope.transaction.username, $scope.transaction.accountLabel, $scope.transaction.amount, $scope.transaction.orderNumber,
+        0,
+        $scope.transaction.mobile,
+        $scope.transaction.externalReference2,
+        $scope.transaction.externalReference3
+    );
+}
 export const resetFieldsForEmployeeFilter = (state, dispatch) => {
   
   // var locality_path = get(state, "")

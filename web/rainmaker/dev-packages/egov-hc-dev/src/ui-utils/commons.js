@@ -156,7 +156,7 @@ export const getSearchResultsView = async queryObject => {
   try {
     //debugger
     const response = await httpRequest(
-      "post", "hc-services/serviceRequest/_getDetail", "",
+      "post", "/hc-services/serviceRequest/_getDetail", "",
       [],
       {
         "service_request_id": queryObject[1].value,
@@ -531,10 +531,33 @@ export const EditServiceRequest = async (state, dispatch, status) => {
     let arraypayload=[]
     arraypayload.push(payload);
 
-    if (method === "CREATE") {
-      
+    if (method === "CREATE") {      
       dispatch(toggleSpinner());
-      response = await httpRequest("post", "hc-services/serviceRequest/_create", "", [], {services: arraypayload });
+
+      const serviceTypes = get(
+        state,
+        "screenConfiguration.preparedFinalObject.applyScreenMdmsData['eg-horticulture'].ServiceType",
+        []
+      );
+      const oldServiceData = get(
+        state,
+        "screenConfiguration.preparedFinalObject.myRequestDetails",
+        []
+      );
+
+      
+      if (serviceTypes) { 
+        const oldServiceType = serviceTypes.find(type => type.code == oldServiceData.service_type);
+        let reminderSla = oldServiceType.sla - oldServiceData.sla;
+        if (reminderSla < 0)
+          reminderSla = reminderSla * -1;
+        
+        const newServiceType = serviceTypes.find(type => type.code == payload.serviceType);
+        const finalSla = newServiceType.sla - reminderSla;
+        set(payload, "sla", finalSla)
+      }
+  
+      response = await httpRequest("post", "/hc-services/serviceRequest/_create", "", [], {services: arraypayload });
 
       if (response.ResponseInfo.status === 'successful') {
         dispatch(prepareFinalObject("SERVICES", response));
@@ -574,8 +597,16 @@ try {
   if (method === "CREATE") {
     
     dispatch(toggleSpinner());
-
-    response = await httpRequest("post", "hc-services/serviceRequest/_create", "", [], {services: arraypayload });
+    const serviceTypes = get(
+      state,
+      "screenConfiguration.preparedFinalObject.applyScreenMdmsData['eg-horticulture'].ServiceType",
+      []
+    );
+    if (serviceTypes) { 
+      const serviceType=serviceTypes.find(type=>type.code==payload.serviceType)
+      set(payload, "sla", serviceType.sla ? serviceType.sla : 0)
+    }
+    response = await httpRequest("post", "/hc-services/serviceRequest/_create", "", [], {services: arraypayload });
     
     if (response.services[0].serviceRequestId !== 'null' || response.services[0].serviceRequestId !== '') {
       dispatch(prepareFinalObject("SERVICES", response));

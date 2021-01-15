@@ -166,7 +166,7 @@ const getMdmsData = async ( state, dispatch) => {
     let payload = null;
     payload = await httpRequest(
       "post",
-      "/egov-mdms-service/v1/_search",
+      "http://localhost:8096/egov-mdms-service/v1/_search",
       "_search",
       [],
       mdmsBody
