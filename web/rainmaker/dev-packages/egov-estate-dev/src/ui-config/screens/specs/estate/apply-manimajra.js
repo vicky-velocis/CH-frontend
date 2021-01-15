@@ -58,8 +58,8 @@ export const getMdmsData = async (dispatch, body) => {
 
 const header = getCommonContainer({
   header: getCommonHeader({
-    labelName: "Add Estate",
-    labelKey: "ES_COMMON_ESTATES_ADD"
+    labelName: "Add Property",
+    labelKey: "ES_COMMON_ADD_PROPERTY"
   }),
   fileNumber: {
     uiFramework: "custom-atoms-local",
