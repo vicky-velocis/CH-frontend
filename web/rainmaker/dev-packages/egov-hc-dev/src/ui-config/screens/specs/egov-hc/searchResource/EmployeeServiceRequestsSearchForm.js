@@ -1,6 +1,6 @@
 import { getCommonCard, getCommonContainer, getDateField, getLabel, getPattern, getSelectField, getTextField } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { searchApiCallForEmployeeFilter } from "./functions";
-import { resetFieldsForEmployeeFilter, testPOS } from "./citizenSearchFunctions";
+import { resetFieldsForEmployeeFilter } from "./citizenSearchFunctions";
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import  {TypeOfServiceRequest} from "../../../../../ui-utils/commons"
 import get from "lodash/get";
@@ -477,8 +477,7 @@ export const ServiceRequestFilterFormForEmployee = getCommonCard({
         },
         onClickDefination: {
           action: "condition",
-          // callBack: resetFieldsForEmployeeFilter
-          callBack: testPOS
+          callBack: resetFieldsForEmployeeFilter
         }
       },
       

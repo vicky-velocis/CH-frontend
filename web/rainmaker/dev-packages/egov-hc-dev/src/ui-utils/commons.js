@@ -156,7 +156,7 @@ export const getSearchResultsView = async queryObject => {
   try {
     //debugger
     const response = await httpRequest(
-      "post", "/hc-services/serviceRequest/_getDetail", "",
+      "post", "hc-services/serviceRequest/_getDetail", "",
       [],
       {
         "service_request_id": queryObject[1].value,
@@ -557,7 +557,7 @@ export const EditServiceRequest = async (state, dispatch, status) => {
         set(payload, "sla", finalSla)
       }
   
-      response = await httpRequest("post", "/hc-services/serviceRequest/_create", "", [], {services: arraypayload });
+      response = await httpRequest("post", "hc-services/serviceRequest/_create", "", [], {services: arraypayload });
 
       if (response.ResponseInfo.status === 'successful') {
         dispatch(prepareFinalObject("SERVICES", response));
@@ -606,7 +606,7 @@ try {
       const serviceType=serviceTypes.find(type=>type.code==payload.serviceType)
       set(payload, "sla", serviceType.sla ? serviceType.sla : 0)
     }
-    response = await httpRequest("post", "/hc-services/serviceRequest/_create", "", [], {services: arraypayload });
+    response = await httpRequest("post", "hc-services/serviceRequest/_create", "", [], {services: arraypayload });
     
     if (response.services[0].serviceRequestId !== 'null' || response.services[0].serviceRequestId !== '') {
       dispatch(prepareFinalObject("SERVICES", response));
