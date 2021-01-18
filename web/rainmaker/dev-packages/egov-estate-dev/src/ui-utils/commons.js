@@ -1,4 +1,7 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+import $ from 'jquery';
+import createReactClass from 'create-react-class';
 import { httpRequest } from "./api";
 import {
   toggleSnackbar,
@@ -322,7 +325,6 @@ export const getExcelData = async (excelUrl, fileStoreId, screenKey, componentJs
   }
 }
 
-
 export const populateBiddersTable = (biddersList, screenKey, componentJsonPath) => {
   console.log(biddersList);
 
@@ -339,8 +341,64 @@ export const populateBiddersTable = (biddersList, screenKey, componentJsonPath) 
           type:"checkbox",
           defaultChecked: !!item.refundStatus && item.refundStatus != "-" ? true : false, 
           onClick: (e) => { 
-            store.dispatch(toggleSpinner());
-            if (confirm('Are you sure you want to initiate refund?')) {
+            // store.dispatch(toggleSpinner());
+            let isMarked = e.target.checked;
+            customConfirmDialog('Are you sure you want to initiate refund?')
+            .then(function() {
+              store.dispatch(toggleSpinner());
+              setTimeout(() => {
+                let { Properties } = store.getState().screenConfiguration.preparedFinalObject;
+                let bidderData = store.getState().screenConfiguration.preparedFinalObject.BidderData;
+
+                biddersList = biddersList.map((item, index) => {
+                  if (bidderData[1] == item.bidderName) {
+                    item.refundStatus = isMarked ? "Initiated" : "-";
+                  }
+                  return item;
+                });
+
+                populateBiddersTable(biddersList, screenKey, componentJsonPath)
+
+                let refundedBidders = biddersList.filter(item => item.refundStatus == "Initiated");
+                store.dispatch(
+                  handleField(
+                    "refund", 
+                    "components.div.children.submitButton",
+                    "visible",
+                    (biddersList.length === refundedBidders.length)
+                  )
+                )
+                store.dispatch(
+                  handleField(
+                    "refund", 
+                    "components.div.children.saveButton",
+                    "visible",
+                    (biddersList.length !== refundedBidders.length)
+                  )
+                )
+
+                if (biddersList.length == refundedBidders.length) {
+                  biddersList = biddersList.map(item => ({...item, action: "SUBMIT"}));
+                }
+                else {
+                  biddersList = biddersList.map(item => ({...item, action: "", state: ""}));
+                }
+
+                let properties = [{...Properties[0], propertyDetails: {...Properties[0].propertyDetails, bidders: biddersList}}]
+                store.dispatch(
+                  prepareFinalObject(
+                    "Properties",
+                    properties
+                  )
+                )
+                store.dispatch(toggleSpinner());
+              }, 1000)
+            })
+            .fail(function() {
+              populateBiddersTable(biddersList, screenKey, componentJsonPath);    
+              console.log('Cancelled');
+            });
+            /*if (confirm('Are you sure you want to initiate refund?')) {
               let isMarked = e.target.checked;
               setTimeout((e) => {
                 store.dispatch(toggleSpinner());
@@ -393,7 +451,7 @@ export const populateBiddersTable = (biddersList, screenKey, componentJsonPath) 
               e.preventDefault();
               store.dispatch(toggleSpinner());
               console.log('Cancelled');
-            }
+            }*/
           }
         }),
         [getTextToLocalMapping("Refund Status")]: item.refundStatus || "-",
@@ -538,3 +596,130 @@ export const getXLSData = async (getUrl, componentJsonPath, screenKey, fileStore
     store.dispatch(toggleSpinner());
   }
 }
+
+/* Code for confirm dialog */
+var Modal = createReactClass({
+  displayName: 'Modal',
+
+  backdrop: function() {
+    return <div className='modal-backdrop in' />;
+  },
+
+  modal: function() {
+    var style = {display: 'block', width: '100%', padding: '0 8px', position: 'fixed', bottom: '0',zIndex: '1101', alignItems: 'center',justifyContent: 'center', overflow: 'hidden', left: '0', top: '50px'};
+    return (
+      <div
+        tabIndex='-1'
+        role='dialog'
+        aria-hidden='false'
+        ref='modal'
+        style={style}
+      >
+        <div className='modal-dialog'>
+          <div className='modal-content'>
+            {this.props.children}
+          </div>
+        </div>
+      </div>
+    );
+  },
+
+  render: function() {
+    return (
+      <div>
+        {this.backdrop()}
+        {this.modal()}
+      </div>
+    );
+  }
+});
+
+var Confirm = createReactClass({
+  displayName: 'Confirm',
+
+  getDefaultProps: function() {
+    return {
+      confirmLabel: 'Yes',
+      abortLabel: 'Cancel'
+    };
+  },
+
+  abort: function(e) {
+    return this.promise.reject();
+  },
+
+  confirm: function() {
+    return this.promise.resolve();
+  },
+
+  componentDidMount: function() {
+    this.promise = new $.Deferred();
+    return ReactDOM.findDOMNode(this.refs.confirm).focus();
+  },
+
+  render: function() {
+    var modalBody;
+    if (this.props.description) {
+      modalBody = (
+        <div className='modal-body'>
+          {this.props.description}
+        </div>
+      );
+    }
+
+    return (
+      <Modal>
+        <div className='modal-header'>
+          <h4 className='modal-title'>
+            {this.props.message}
+          </h4>
+        </div>
+        {modalBody}
+        <div className='modal-footer'>
+          <div className='text-right'>
+            <button
+              role='abort'
+              type='button'
+              className='btn btn-default'
+              onClick={this.abort}
+            >
+              {this.props.abortLabel}
+            </button>
+            {' '}
+            <button
+              role='confirm'
+              type='button'
+              className='btn btn-primary'
+              ref='confirm'
+              onClick={this.confirm}
+            >
+              {this.props.confirmLabel}
+            </button>
+          </div>
+        </div>
+      </Modal>
+    );
+  }
+});
+
+export const customConfirmDialog = function(message, options = {}) {
+  var cleanup, component, props, wrapper;
+
+  if (options == null) {
+    options = {};
+  }
+  props = $.extend({
+    message: message
+  }, options);
+  wrapper = document.body.appendChild(document.createElement('div'));
+  component = ReactDOM.render(<Confirm {...props}/>, wrapper);
+  cleanup = function() {
+    ReactDOM.unmountComponentAtNode(wrapper);
+    return setTimeout(function() {
+      return wrapper.remove();
+    });
+  };
+  return component.promise.always(cleanup).promise();
+};
+
+/********************************************************************************/
