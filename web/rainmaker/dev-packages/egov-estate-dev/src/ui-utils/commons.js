@@ -1,7 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import $ from 'jquery';
-import createReactClass from 'create-react-class';
 import { httpRequest } from "./api";
 import {
   toggleSnackbar,
@@ -31,7 +28,6 @@ import {
   ES_DATE_OF_RECEIPT, ES_NO_OF_DAYS, ES_INTEREST_ON_DELAYED_PAYMENT, ESTATE_SERVICES_MDMS_MODULE
 } from '../ui-constants'
 import moment from "moment";
-import Button from "@material-ui/core/Button";
 
 export const getApplicationStatusList = async ({ action, state, dispatch, screenKey, componentJsonPath }) => {
   try {

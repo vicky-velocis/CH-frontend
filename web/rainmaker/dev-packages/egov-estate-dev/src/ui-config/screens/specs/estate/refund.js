@@ -302,30 +302,6 @@ const callBackForSaveOrSubmit = async (state, dispatch) => {
   }
 }
 
-export const callBackYes = () => {
-  console.log("callBackYes");
-  store.dispatch(
-    handleField(
-      "refund",
-      `components.div.children.confirmDialog`,
-      `props.open`,
-      false
-    )
-  )
-}
-
-export const callBackCancel = () => {
-  console.log("callBackCancel");
-  store.dispatch(
-    handleField(
-      "refund",
-      `components.div.children.confirmDialog`,
-      `props.open`,
-      false
-    )
-  )
-}
-
 const refund = {
   uiFramework: "material-ui",
   name: "refund",
