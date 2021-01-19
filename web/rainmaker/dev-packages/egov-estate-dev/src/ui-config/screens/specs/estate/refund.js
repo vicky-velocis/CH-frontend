@@ -354,7 +354,7 @@ const refund = {
             screenKey: "refund",
             open: false,
             title: "Confirm",
-            content: "Are you sure u want to initiate refund ?",
+            content: "Are you sure you want to initiate refund ?",
             populateBiddersTable: populateBiddersTable
           }
         },
