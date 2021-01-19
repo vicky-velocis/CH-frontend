@@ -230,6 +230,8 @@ const callBackForNext = async (state, dispatch) => {
         let ownerPossessionDate = get(state.screenConfiguration.preparedFinalObject, `Properties[0].propertyDetails.owners[${i}].ownerDetails.possesionDate`);
         let ownerDateOfAllotment = get(state.screenConfiguration.preparedFinalObject, `Properties[0].propertyDetails.owners[${i}].ownerDetails.dateOfAllotment`);
 
+        if(!!ownerPossessionDate)
+        {
         let ownerPossessionDateEpoch = convertDateToEpoch(ownerPossessionDate)
         let ownerDateOfAllotmentEpoch = convertDateToEpoch(ownerDateOfAllotment)
 
@@ -241,6 +243,7 @@ const callBackForNext = async (state, dispatch) => {
         if (!ownerPosAllotDateValid) {
           break;
         }
+      }
       }
     }
     /* let ownerOnePossessionDate = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.owners[0].ownerDetails.possesionDate");
