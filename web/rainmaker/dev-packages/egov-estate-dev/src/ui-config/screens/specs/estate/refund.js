@@ -68,16 +68,18 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
       []
     )
 
-    if (!!bidders[0].state) {
-      dispatch(
-        handleField(
-          action.screenKey,
-          `components.div.children.taskStatus`,
-          `visible`,
-          `true`
+    if(bidders.length > 0){
+      if (!!bidders[0].state) {
+        dispatch(
+          handleField(
+            action.screenKey,
+            `components.div.children.taskStatus`,
+            `visible`,
+            `true`
+          )
         )
-      )
-    }
+      }
+    }  
     let refundInitiated = bidders.filter(item => !!item.refundStatus && item.refundStatus != "-");
 
     let refundInitiatedColDisplay = !!findItem && (bidders.length != refundInitiated.length) ? true : false;
@@ -303,6 +305,14 @@ const refund = {
   name: "refund",
   beforeInitScreen: (action, state, dispatch) => {
     let fileNumber = getQueryArg(window.location.href, "fileNumber");
+    dispatch(
+      handleField(
+        `refund`,
+        `components.div.children.headerDiv.children.header1.children.fileNumber`,
+        `props.number`,
+        fileNumber
+      )
+    )
     beforeInitFn(action, state, dispatch, fileNumber);
     return action;
   },
