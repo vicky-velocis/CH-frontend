@@ -189,7 +189,7 @@ const setSearchResponse = async (state, dispatch, action, serviceRequestId) => {
   try{  
     // var businessServiceSla = response.ResponseInfo.resMsgId
     // setSLADays(businessServiceSla)
-    var businessServiceSla = response.ResponseBody[0].sla;
+    var businessServiceSla = Number(response.ResponseBody[0].sla)-Number(response.ResponseBody[0].remaining_sla);
     setSLADays(businessServiceSla)
   }
   catch(e){
