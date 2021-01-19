@@ -37,6 +37,7 @@ import { setDocumentData } from "../apply"
 import {
   getSearchResults,
 } from "../../../../../ui-utils/commons";
+import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 
 export const DEFAULT_STEP = -1;
 export const PROPERTY_DETAILS_STEP = 0;
@@ -136,7 +137,21 @@ const callBackForNext = async (state, dispatch) => {
       "apply-manimajra"
     )
 
-    if (isPropertyInfoValid && isAdditionalValid) {
+    const annualDetailsValid = validateFields(
+      "components.div.children.formwizardFirstStep.children.annualDetails.children.cardContent.children.detailsContainer.children",
+      state,
+      dispatch,
+      "apply-manimajra"   
+    )
+
+    const monthlyDetails = validateFields(
+      "components.div.children.formwizardFirstStep.children.monthlyDetails.children.cardContent.children.detailsContainer.children",
+      state,
+      dispatch,
+      "apply-manimajra"
+    )
+
+    if (isPropertyInfoValid && isAdditionalValid && annualDetailsValid && monthlyDetails) {
       const res = await applyEstates(state, dispatch, activeStep, "apply-manimajra");
       if (!res) {
         return
