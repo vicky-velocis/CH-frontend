@@ -11,7 +11,8 @@ import {
 import {
   prepareFinalObject,
   handleScreenConfigurationFieldChange as handleField,
-  toggleSnackbar
+  toggleSnackbar,
+  toggleSpinner
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import {
   getSearchResults,
@@ -40,6 +41,7 @@ const {
     roles = []
 } = userInfo
 const findItem = roles.find(item => item.code === "ES_EB_SECTION_OFFICER");
+import store from "../../../../ui-redux/store";
 
 const searchResults = async (action, state, dispatch, fileNumber) => {
   let queryObject = [
@@ -132,6 +134,8 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
     )
 
   }
+
+  dispatch(toggleSpinner());
 }
 
 let auctionDetailsCont = getReviewAuction(false);
@@ -298,10 +302,35 @@ const callBackForSaveOrSubmit = async (state, dispatch) => {
   }
 }
 
+export const callBackYes = () => {
+  console.log("callBackYes");
+  store.dispatch(
+    handleField(
+      "refund",
+      `components.div.children.confirmDialog`,
+      `props.open`,
+      false
+    )
+  )
+}
+
+export const callBackCancel = () => {
+  console.log("callBackCancel");
+  store.dispatch(
+    handleField(
+      "refund",
+      `components.div.children.confirmDialog`,
+      `props.open`,
+      false
+    )
+  )
+}
+
 const refund = {
   uiFramework: "material-ui",
   name: "refund",
   beforeInitScreen: (action, state, dispatch) => {
+    dispatch(toggleSpinner());
     let fileNumber = getQueryArg(window.location.href, "fileNumber");
     beforeInitFn(action, state, dispatch, fileNumber);
     return action;
@@ -340,6 +369,18 @@ const refund = {
             }
           },
           visible:false
+        },
+        confirmDialog: {
+          uiFramework: "custom-containers-local",
+          moduleName: "egov-estate",
+          componentPath: "ConfirmDialog",
+          props: {
+            screenKey: "refund",
+            open: false,
+            title: "Confirm",
+            content: "Are you sure u want to initiate refund ?",
+            populateBiddersTable: populateBiddersTable
+          }
         },
         auctionDetailsContainer,
         breakAfterSearch: getBreak(),
