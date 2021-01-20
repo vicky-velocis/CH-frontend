@@ -85,7 +85,6 @@ export const moveToSuccess = (data, dispatch, type) => {
 };
 
 const callBackForNext = async (state, dispatch) => {
-  dispatch(toggleSpinner());
   let scrollTop = true;
   let activeStep = get(
     state.screenConfiguration.screenConfig[screenKey],
@@ -874,7 +873,6 @@ const callBackForNext = async (state, dispatch) => {
   if(scrollTop){
     window.scrollTo(0,0)
   }
-  dispatch(toggleSpinner());
 }
 
 const setOwnersOrPartners = (state, dispatch, container, entityType) => {
