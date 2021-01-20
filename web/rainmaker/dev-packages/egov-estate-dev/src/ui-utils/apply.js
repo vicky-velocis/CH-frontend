@@ -95,6 +95,11 @@ export const applyforApplication = async (state, dispatch, activeIndex) => {
     const keys = Object.keys(queryObject[0].applicationDetails);
     const values = Object.values(queryObject[0].applicationDetails);
 
+    // to fix backend issue which occurs when transferee.id is set to ""
+    if (!!queryObject[0].applicationDetails.transferee && queryObject[0].applicationDetails.transferee.id == "") {
+      set(queryObject[0], "applicationDetails.transferee.id", null);
+    }
+
     keys.forEach((key, index) => {
      if(Array.isArray(values[index])) {
        let arr = values[index]
