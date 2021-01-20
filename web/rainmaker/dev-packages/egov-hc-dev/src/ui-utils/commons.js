@@ -549,7 +549,7 @@ export const EditServiceRequest = async (state, dispatch, status) => {
       if (serviceTypes) {         
         const newServiceType = serviceTypes.find(type => type.code == payload.serviceType);
         set(payload, "sla", newServiceType.sla);
-        set(payload, "remainingSla", oldServiceData.remaining_sla);
+        set(payload, "slaDaysElapsed", oldServiceData.sla_days_elapsed);
       }
   
       response = await httpRequest("post", "hc-services/serviceRequest/_create", "", [], {services: arraypayload });
@@ -600,7 +600,7 @@ try {
     if (serviceTypes) { 
       const serviceType=serviceTypes.find(type=>type.code==payload.serviceType)
       set(payload, "sla", serviceType.sla ? serviceType.sla : 0)
-      set(payload, "remainingSla", 0)
+      set(payload, "slaDaysElapsed", 0)
     }
     response = await httpRequest("post", "hc-services/serviceRequest/_create", "", [], {services: arraypayload });
     
