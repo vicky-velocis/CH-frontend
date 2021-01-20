@@ -18,6 +18,7 @@
     "dev-packages/egov-services-emp-dev",
     "dev-packages/egov-hc-dev",
 	"dev-packages/egov-report-dev",
+	"dev-packages/egov-dashboard-dev",
     "dev-packages/egov-pms-dev",
     "dev-packages/egov-store-asset-dev",
     "dev-packages/egov-echallan-dev",
