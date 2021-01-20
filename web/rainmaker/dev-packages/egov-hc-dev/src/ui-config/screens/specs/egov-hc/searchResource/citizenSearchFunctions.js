@@ -256,7 +256,6 @@ dispatch(handleField("myServiceRequests",
 set(state, "screenConfiguration.preparedFinalObject.myServiceRequests", {});
   
 };
-
 export const resetFieldsForEmployeeFilter = (state, dispatch) => {
   
   // var locality_path = get(state, "")

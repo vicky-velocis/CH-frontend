@@ -187,7 +187,9 @@ const setSearchResponse = async (state, dispatch, action, serviceRequestId) => {
     console.log("Error in setting ServiceRequestStatus ")
   }
   try{  
-    var businessServiceSla = response.ResponseInfo.resMsgId
+    // var businessServiceSla = response.ResponseInfo.resMsgId
+    // setSLADays(businessServiceSla)
+    var businessServiceSla = Number(response.ResponseBody[0].sla)-Number(response.ResponseBody[0].sla_days_elapsed);
     setSLADays(businessServiceSla)
   }
   catch(e){

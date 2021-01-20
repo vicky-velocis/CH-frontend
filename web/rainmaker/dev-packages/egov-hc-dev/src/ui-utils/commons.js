@@ -531,9 +531,27 @@ export const EditServiceRequest = async (state, dispatch, status) => {
     let arraypayload=[]
     arraypayload.push(payload);
 
-    if (method === "CREATE") {
-      
+    if (method === "CREATE") {      
       dispatch(toggleSpinner());
+
+      const serviceTypes = get(
+        state,
+        "screenConfiguration.preparedFinalObject.applyScreenMdmsData['eg-horticulture'].ServiceType",
+        []
+      );
+      const oldServiceData = get(
+        state,
+        "screenConfiguration.preparedFinalObject.myRequestDetails",
+        []
+      );
+
+      
+      if (serviceTypes) {         
+        const newServiceType = serviceTypes.find(type => type.code == payload.serviceType);
+        set(payload, "sla", newServiceType.sla);
+        set(payload, "slaDaysElapsed", oldServiceData.sla_days_elapsed);
+      }
+  
       response = await httpRequest("post", "hc-services/serviceRequest/_create", "", [], {services: arraypayload });
 
       if (response.ResponseInfo.status === 'successful') {
@@ -574,7 +592,16 @@ try {
   if (method === "CREATE") {
     
     dispatch(toggleSpinner());
-
+    const serviceTypes = get(
+      state,
+      "screenConfiguration.preparedFinalObject.applyScreenMdmsData['eg-horticulture'].ServiceType",
+      []
+    );
+    if (serviceTypes) { 
+      const serviceType=serviceTypes.find(type=>type.code==payload.serviceType)
+      set(payload, "sla", serviceType.sla ? serviceType.sla : 0)
+      set(payload, "slaDaysElapsed", 0)
+    }
     response = await httpRequest("post", "hc-services/serviceRequest/_create", "", [], {services: arraypayload });
     
     if (response.services[0].serviceRequestId !== 'null' || response.services[0].serviceRequestId !== '') {
