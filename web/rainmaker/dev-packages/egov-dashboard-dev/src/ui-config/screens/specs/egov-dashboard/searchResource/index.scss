@@ -47,3 +47,35 @@ word-break: break-all !important;
 
 // span[class*="MUIDataTableBody-emptyTitle"] {
 //   color: red; }
+.MuiGrid-container-59 {
+  width: 125%;
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  }
+
+  div#material-ui-FilterConstraintsContainer {
+    width: 121%;
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+}
+
+input#custom-containers-toDate {
+  height: 10%;
+}
+input#custom-containers-fromDate {
+  height: 10%;
+}
+div#custom-containers-local-moduleDashboardDropdown {
+  width: 150%;
+}
+
+div#custom-containers-local-moduleDashboardDropdown {
+  position: inherit;
+  /* width: 50%; */
+}
+
+div#material-ui-FilterConstraintsContainer {
+  width: 150%;
+}

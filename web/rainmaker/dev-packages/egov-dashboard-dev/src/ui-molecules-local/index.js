@@ -75,6 +75,17 @@ const HorizontalBarMolecule = Loadable({
   loading: () => <Loading />
 });
 
+
+const DashboardPIEGraph = Loadable({
+  loader: () => import("./DashboardPIEGraph"),
+  loading: () => <Loading />
+});
+
+const DescriptionDashboard = Loadable({
+  loader: () => import("./DescriptionDashboard"),
+  loading: () => <Loading />
+});
+
 export {
   TestMolecules,
   RadioButtonsGroup,
@@ -90,5 +101,7 @@ export {
   MapLocatorEdit,
   ReportMolecule,
   ReportMoleculeBarPie,
-  HorizontalBarMolecule
+  HorizontalBarMolecule,
+  DashboardPIEGraph,
+  DescriptionDashboard
 };

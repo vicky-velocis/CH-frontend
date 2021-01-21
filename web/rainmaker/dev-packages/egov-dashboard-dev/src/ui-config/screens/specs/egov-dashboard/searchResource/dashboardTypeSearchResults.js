@@ -1,4 +1,4 @@
-import { getCommonHeader } from "egov-ui-framework/ui-config/screens/specs/utils";
+import { getCommonHeader, getCommonContainer } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 import "./index.css";
 
@@ -14,6 +14,22 @@ export const dashboardTypeSearchResults = {
     },
     visible: true,
 }
+
+
+export const PGRDashboardResults = {
+    uiFramework: "custom-molecules-local",
+    moduleName: "egov-dashboard",
+    componentPath: "DescriptionDashboard",
+    props: {
+    // className: "dashboard-graph",
+    formKey: `newapplication`,
+    data : []
+    },
+    style: {
+    },
+    visible: true,
+}
+
 
 // export const dashboardSearchResultHorizontalBar =  {
 //   uiFramework: "custom-molecules-local",

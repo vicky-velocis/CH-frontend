@@ -1074,3 +1074,101 @@ export const getAllDashboardResult = async ( dispatch, data ) => {
     );
   }
 };
+
+// Get Description Report
+export const getDescriptionReport = async ( dispatch, data ) => {
+  debugger
+
+  const moduleName = "rainmaker-pgr" 
+  const reportName = "DescriptionReport"
+  var payloadData = data
+  payloadData["reportName"] = reportName;
+  payloadData["moduleName"] = moduleName;
+  
+  try {
+    store.dispatch(toggleSpinner());
+    const DescriptionReport = await httpRequest(
+      "post",
+      // "/hc-services/serviceRequest/_get_DEMO_DASHBOARD", 
+      "/report/rainmaker-pgr/DescriptionReport/_get?tenantId=ch.chandigarh&pageSize=false&offset=0",
+      "",
+      [],
+      payloadData
+    );
+
+    debugger
+    var response = DescriptionReport
+    dispatch(prepareFinalObject("allDashboardSearchData", response));
+
+    // OK
+    dispatch(
+      handleField("PGRDashboard",
+      "components.div.children.PGRDashboardResults",
+      "props.data",
+      response
+      )
+      );
+      
+    store.dispatch(toggleSpinner());
+    return response;
+  } catch (error) {
+    store.dispatch(toggleSpinner());
+    store.dispatch(
+      toggleSnackbar(
+        true,
+        { labelName: error.message, labelCode: error.message },
+        "error"
+      )
+    );
+  }
+};
+
+
+// Get Description Report New Function
+export const getDescriptionReportDashboard = async ( dispatch, data ) => {
+  
+  debugger;
+  const moduleName = "rainmaker-pgr" 
+  const reportName = "DescriptionReport"
+  var payloadData = data
+  payloadData["reportName"] = reportName;
+  payloadData["moduleName"] = moduleName;
+  
+  try {
+    store.dispatch(toggleSpinner());
+    const DescriptionReport = await httpRequest(
+      "post",
+      // "/hc-services/serviceRequest/_get_DEMO_DASHBOARD", 
+      "/report/rainmaker-pgr/DescriptionReport/_get?tenantId=ch.chandigarh&pageSize=false&offset=0",
+      "",
+      [],
+      payloadData
+    );
+
+    debugger
+    var response = [ DescriptionReport, payloadData.reportSortBy ];
+    dispatch(prepareFinalObject("allDashboardSearchData", response));
+
+    // OK
+    dispatch(
+      handleField("PGRDashboard",
+      "components.div.children.PGRDashboardResults",
+      // "components.div.children.PGRDashboardResults.children.dashboardResult",
+      "props.data",
+      response
+      )
+      );
+      
+    store.dispatch(toggleSpinner());
+    return response;
+  } catch (error) {
+    store.dispatch(toggleSpinner());
+    store.dispatch(
+      toggleSnackbar(
+        true,
+        { labelName: error.message, labelCode: error.message },
+        "error"
+      )
+    );
+  }
+};

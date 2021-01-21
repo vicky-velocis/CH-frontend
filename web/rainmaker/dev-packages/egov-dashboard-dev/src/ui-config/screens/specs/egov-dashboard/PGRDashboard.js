@@ -2,27 +2,25 @@
 import { getBreak, getCommonHeader } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getUserInfo, setapplicationType } from "egov-ui-kit/utils/localStorageUtils";
-import get from "lodash/get";
-import set from "lodash/set";
-import React from "react";
 import { getDashboardDropdownData } from "../../../../ui-utils/commons";
-import { clearlocalstorageAppDetails, getRequiredDocData } from "../utils";
-import { dashboardSourceFilterForm } from "./searchResource/dashboardSourceFilterForm";
-import { dashboardSourceSearchResults } from "./searchResource/dashboardSourceSearchResults";
-import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-
+import { FilterFormDashboard } from "./searchResource/FilterFormaforEmployee";
+import { PGRDashboardResults } from "./searchResource/dashboardTypeSearchResults";
+import { allDashboardSearchAPICall, SearchDashboardData } from "../egov-dashboard/searchResource/functions";
 
 let role_name = JSON.parse(getUserInfo()).roles[0].code
 
 const header = getCommonHeader(
   {
-    labelName: "Dashboard 2",
-    labelKey: "Dashboard_2"
+    labelName: "PGR Dashboard",
+    labelKey: "DASHBOARD_1"
   },
   {
     classes: {
       root: "common-header-cont"
-    }
+    },
+    style: {
+      padding : "8px"
+    },
   }
 );
 
@@ -43,23 +41,41 @@ const defaultDate = (date) => {
 const getDropDownData = async (action, state, dispatch) => {
 
   debugger
-  let data = getDashboardDropdownData(state, dispatch, status)
+//   let data = getDashboardDropdownData(state, dispatch, status)
+  var data =  [
+  {
+    "name" : "Complaint By Status",
+    "code" : "status"
+  },
+  {
+  "name" : "Complaint By Source",
+  "code" : "source"
+  },
+  {
+  "name" : "Complaint By Department",
+  "code" : "department"
+  },
+  ]
+  var selectedDefaultData = {value: "status", label: "Complaint By Status"};
 
   // Date default
-  var fromDate = new Date()
-  var formatDt = defaultDate(fromDate)
+  var fromDate = new Date();
+  var formatDt = defaultDate(fromDate);
+
+  dispatch(prepareFinalObject("dahsboardHome.dropDownData", data));
+  dispatch(prepareFinalObject("dahsboardHome.dropDownData2", selectedDefaultData));
   dispatch(prepareFinalObject("dahsboardHome.defaultFromDate", formatDt));
   dispatch(prepareFinalObject("dahsboardHome.defaulttoDate", formatDt));
 }
 
-const DashboardSource = {
+const PGRDashboard = {
   uiFramework: "material-ui",
-  name: "dashboardSource",
+  name: "PGRDashboard",
   beforeInitScreen: (action, state, dispatch) => {
     
     debugger
     getDropDownData(action, state, dispatch);
-    
+    // SearchDashboardData(state, dispatch);
     return action;
   },
   components: {
@@ -82,12 +98,13 @@ const DashboardSource = {
             
           }
         },
-        dashboardSourceFilterForm,
+        // FilterFormforEmployee,
+        FilterFormDashboard,
         breakAfterSearch: getBreak(),
-        dashboardSourceSearchResults
+        PGRDashboardResults,
       }
     },
-      }
+  }
 };
 
-export default DashboardSource;
+export default PGRDashboard;

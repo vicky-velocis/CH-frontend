@@ -17,7 +17,10 @@ const header = getCommonHeader(
   {
     classes: {
       root: "common-header-cont"
-    }
+    },
+    style: {
+      padding: "0px 0px 0px 8px"
+    },
   }
 );
 let cardItems = [];
@@ -26,7 +29,7 @@ let cardItems = [];
   const cardlist = [
     {
       label: {
-        labelName: "Dashboard 1",
+        labelName: "PGR Dashboard",
         labelKey: "DASHBOARD_1"
       },
       
@@ -37,23 +40,7 @@ let cardItems = [];
           class="material-icons module-page-icon" style={{ fontSize: "40px" }}>
           wysiwyg
       </i>,
-      route: "dashboardType"
-
-    },
-    {
-      label: {
-        labelName: "Dashboard 2",
-        labelKey: "DASHBOARD_2"
-      },
-      
-      icon: <i
-          viewBox="0 -8 35 42"
-          color="primary"
-          font-size="40px"
-          class="material-icons module-page-icon" style={{ fontSize: "40px" }}>
-          wysiwyg
-      </i>,
-      route: "dashboardSource"
+      route: "PGRDashboard"
 
     }
   ];
@@ -76,7 +63,7 @@ let cardItems = [];
 const getDropDownData = async (action, state, dispatch) => {
 
   debugger
-  let data = getDashboardDropdownData(state, dispatch, status)
+  // let data = getDashboardDropdownData(state, dispatch, status)
 
   // Date default
   var fromDate = new Date()
