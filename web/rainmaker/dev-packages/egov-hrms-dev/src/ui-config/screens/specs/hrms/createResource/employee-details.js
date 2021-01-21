@@ -36,7 +36,7 @@ export const employeeDetails = getCommonCard({
         },
         required: true,
         pattern: /^[a-zA-Z]{0,5}$/i,
-        jsonPath: "Employee[0].user.appellation"
+        jsonPath: "Employee[0].user.salutation"
       }),  
     },
     employeeName: {
