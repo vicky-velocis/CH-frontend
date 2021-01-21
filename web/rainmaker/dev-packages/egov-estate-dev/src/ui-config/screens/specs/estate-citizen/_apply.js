@@ -142,7 +142,6 @@ const getData = async (action, state, dispatch) => {
       "children.cardContent.children.ES_SAMPLE_SITE_MAP_HEADER.visible",
       process.env.REACT_APP_NAME !== "Citizen"
     )
-    debugger
     inputProps.push(...second_step_sections);
     return {
       div: {
