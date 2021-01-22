@@ -1362,7 +1362,6 @@ export const downloadPrintContainer = (
   let downloadMenu = [];
   let printMenu = [];  
  
-
   let receiptDownloadObject = {
     label: { labelName: "Payment Receipt", labelKey: "ES_PAYMENT_RECEIPT" },
     link: () => {
@@ -2090,6 +2089,7 @@ export const downloadPrintContainer = (
          case 'LeaseDeed':
          case 'NOC':
          case 'Mortgage':
+         case 'MortgageIntimation':  
          case 'ScfToSco':
          if(process.env.REACT_APP_NAME === "Citizen"){
            downloadMenu = [
@@ -2285,6 +2285,7 @@ export const downloadPrintContainer = (
            case 'PartnershipDeed':
            case 'DuplicateCopy':
            case 'Mortgage':
+           case 'MortgageIntimation':  
            case 'FamilySettlement':
            case 'LeaseDeed':
                downloadMenu = [
@@ -2606,6 +2607,7 @@ export const downloadPrintContainer = (
                  ]
              break;
              case 'Mortgage':
+             case 'MortgageIntimation': 
                  downloadMenu = [
                    applicationDownloadObject,LetterDownloadObject
                  ]
