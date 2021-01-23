@@ -777,7 +777,7 @@ class AllRequests extends Component {
       </div>
     ) : role === "employee" ? (
       <Screen loading={loading}>
-         {foundWaterTanker ?
+         {/* {foundWaterTanker ?   // Apply for water tanker hide for temporary
           <Button
             className="responsive-action-button"
             label={<Label buttonLabel={true} label="BK_MYBK_WATER_TANKER_APPLY" />}
@@ -786,7 +786,7 @@ class AllRequests extends Component {
             style={{ float: 'right', marginRight: '50px', marginTop: '40px' }}
             onClick={() => this.gotoWaterTanker()
             } /> : ''
-        } 
+        }  */}
         {foundFirstLavel || foundSecondLavel || foundthirdLavel ?
           <Button
             className="responsive-action-button"
@@ -816,7 +816,7 @@ class AllRequests extends Component {
             className="complaint-search-main-card"
             textChildren={
               <div className="complaint-search-cont clearfix">
-                <div className="col-xs-12" style={{ paddingLeft: 8 }}>
+                <div className="col-xs-12" style={{ paddingLeft: 8, marginTop: "-6%" }}>
                   <Label
                     label="BK_MYBK_SEARCH_APPLICATIONS"
                     fontSize={16}

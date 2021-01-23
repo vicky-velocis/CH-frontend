@@ -469,12 +469,17 @@ downloadApplicationMCCButton = async (mode) => {
    downloadApplicationFunction = async (e) => {
     
 	const { transformedComplaint,paymentDetails,downloadApplicationforCG,paymentDetailsForReceipt,userInfo,bkDate,
-		bkTime } = this.props;
+		bkTime,bookingForDate,
+		bookingForTime } = this.props;
 	const {complaint} = transformedComplaint;
 	console.log("complaint--In-Water-Tanker--",complaint)
 	const { createWaterTankerApplicationData,downloadBWTApplication } = this.props;
     let applicationDetails = createWaterTankerApplicationData ? createWaterTankerApplicationData.data : '';
 	let paymentData = paymentDetails;
+
+	var date2 = new Date();
+
+	var generatedDateTime = `${date2.getDate()}-${date2.getMonth() + 1}-${date2.getFullYear()}, ${date2.getHours()}:${date2.getMinutes() < 10 ? "0" : ""}${date2.getMinutes()}`;
 	
     let BookingInfo = [
       {
@@ -499,8 +504,8 @@ downloadApplicationMCCButton = async (mode) => {
           "completeAddress": complaint.address,
           "applicationDate": complaint.dateCreated,
           "propertyType": complaint.residentialCommercial,
-          "date": "20/10/2020",
-          "time": "20/10/2020",
+          "date": bookingForDate,
+          "time": bkTime,
           "applicationStatus": complaint.status,
           "applicationType": complaint.bkStatus
         },
@@ -517,7 +522,8 @@ downloadApplicationMCCButton = async (mode) => {
 					: paymentData.totalAmount,
 		},
         "generatedBy": {
-          "generatedBy": userInfo.name
+		  "generatedBy": userInfo.name,
+		  "generatedDateTime":generatedDateTime
         }
       }
     ]
@@ -685,8 +691,10 @@ console.log("requestBodyOfApplication--",BookingInfo)
 		let { comments, openMap } = this.state;
 		let { complaint, timeLine } = this.props.transformedComplaint;
 		let { documentMap } = this.props;
-		let { historyApiData, paymentDetails, match, userInfo } = this.props;
-		
+		let { historyApiData, paymentDetails, match, userInfo,
+			bookingForTime,bookingForDate} = this.props;
+		console.log("bookingForTime--props--",bookingForTime)
+		console.log("bookingForDate--props--",bookingForDate)
 
 		let {
 			role,
@@ -841,6 +849,8 @@ console.log("requestBodyOfApplication--",BookingInfo)
 								<BookingDetails
 									{...complaint}
 									historyApiData={historyApiData && historyApiData}
+									bookingForDate={bookingForDate && bookingForDate}
+                                    bookingForTime={bookingForTime && bookingForTime}
 								/>
 								
 								{(complaint.bkStatus).includes("Paid") &&
@@ -1003,8 +1013,14 @@ const mapStateToProps = (state, ownProps) => {
 	let bkDate =  selectedComplaint ? selectedComplaint.bkDate : "NoTimeFound"
 	console.log("bkDate--",bkDate)
 
+	let bookingForDate = selectedComplaint.bkDate != null ? electedComplaint.bkDate : 'NA'
+	console.log("bookingForDate--",bookingForDate)
+	let bookingForTime = selectedComplaint.bkTime != null ? selectedComplaint.bkTime : 'NA'
+    console.log("bookingForTime--",bookingForTime)
+
 	let documentMap = applicationData && applicationData.documentMap ? applicationData.documentMap : '';
 	const { HistoryData } = bookings;
+
 
 	let historyObject = HistoryData ? HistoryData : ''
 	const { paymentData } = bookings;
@@ -1056,7 +1072,7 @@ let paymentDetailsForReceipt = fetchPaymentAfterPayment;
 			driverMobileNumber: selectedComplaint ? selectedComplaint.bkContactNo : 'NA',
 			approverName: selectedComplaint ? selectedComplaint.bkApproverName : 'NA',
 			time: selectedComplaint.bkTime,
-			date: selectedComplaint.bkDate
+			date: selectedComplaint.bkDate,		
 		}
 
 
@@ -1089,7 +1105,9 @@ let paymentDetailsForReceipt = fetchPaymentAfterPayment;
 			complaintTypeLocalised,
 			paymentDetailsForReceipt,
 			bkDate,
-			bkTime
+			bkTime,
+			bookingForDate,
+            bookingForTime
 			
 		};
 	} else {
@@ -1107,7 +1125,9 @@ let paymentDetailsForReceipt = fetchPaymentAfterPayment;
 			serviceRequestId,
 			isAssignedToEmployee,
 			bkDate,
-			bkTime
+			bkTime,
+			bookingForDate,
+            bookingForTime
 		};
 	}
 };
