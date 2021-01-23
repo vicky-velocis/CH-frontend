@@ -130,6 +130,7 @@ const getData = async (action, state, dispatch) => {
       )
     )
   }
+  
   const mdmsPayload = [{
     moduleName: ESTATE_SERVICES_MDMS_MODULE,
     masterDetails: [{
@@ -176,6 +177,22 @@ const applyManimajra = {
   uiFramework: "material-ui",
   name: "apply-manimajra",
   beforeInitScreen: (action, state, dispatch) => {
+    dispatch(
+      handleField(
+        action.screenKey,
+        "components.div.children.formwizardFirstStep.children",
+        "monthlyDetails.visible",
+         false
+      )
+    )
+    dispatch(
+      handleField(
+        action.screenKey,
+        "components.div.children.formwizardFirstStep.children",
+        "annualDetails.visible",
+        false
+      )
+    )
     getData(action, state, dispatch)
     return action;
   },
@@ -206,7 +223,7 @@ const applyManimajra = {
         formwizardThirdStep,
         formwizardFourthStep,
         formwizardFifthStep,
-        formwizardSixthStep,
+        // formwizardSixthStep,
         formwizardSeventhStep,
         formwizardEighthStep,
         footer

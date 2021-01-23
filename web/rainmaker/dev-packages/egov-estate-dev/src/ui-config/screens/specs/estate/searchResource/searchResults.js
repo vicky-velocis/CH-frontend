@@ -115,6 +115,46 @@ export const searchApplicationResults = {
   }
 };
 
+export const demandResults = {
+  uiFramework: "custom-molecules",
+  componentPath: "Table",
+  visible: true,
+  props: {
+    columns: [
+      getTextToLocalMapping("Date"),
+      getTextToLocalMapping("Rent"),
+      getTextToLocalMapping("Total Due"),
+      getTextToLocalMapping("GST"),
+    ],
+    options: {
+      filter: false,
+      download: false,
+      responsive: "stacked",
+      selectableRows: false,
+      hover: true,
+      rowsPerPageOptions: [10, 15, 20],
+      onRowClick: (row, index) => {
+        // onApplicationRowClick(row);
+      }
+    },
+    customSortColumn: {
+      column: "Application Date",
+      sortingFn: (data, i, sortDateOrder) => {
+        const epochDates = data.reduce((acc, curr) => {
+          acc.push([...curr, getEpochForDate(curr[4], "dayend")]);
+          return acc;
+        }, []);
+        const order = sortDateOrder === "asc" ? true : false;
+        const finalData = sortByEpoch(epochDates, !order).map(item => {
+          item.pop();
+          return item;
+        });
+        return { data: finalData, currentOrder: !order ? "asc" : "desc" };
+      }
+    }
+  }
+};
+
 const onApplicationRowClick = rowData => {
   let applicationState = rowData[2];
   let branchType = getQueryArg(window.location.href, "branchType");

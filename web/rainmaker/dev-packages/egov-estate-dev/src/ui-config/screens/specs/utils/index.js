@@ -48,7 +48,7 @@ import {
   getSearchApplicationsResults, getSearchResults
 } from "../../../../ui-utils/commons";
 import moment from "moment";
-import { ESTATE_PROPERTY_MASTER_BILLING_BUSINESS_SERVICE } from "../../../../ui-constants";
+import { ESTATE_PROPERTY_MASTER_BILLING_BUSINESS_SERVICE,ESTATE_SERVICE_MANI_MAJRA_PROPERTY_MASTER} from "../../../../ui-constants";
 
 export const getCommonApplyHeader = ({label, number}) => {
   return getCommonContainer({
@@ -283,18 +283,33 @@ export const getMdmsData = async queryObject => {
   }
 };
 
-export const downloadSummary = (Properties, PropertiesTemp ,mode = "download") => {
-
-  const isGroundRent = Properties[0].propertyDetails.paymentConfig.isGroundRent
-  let queryStr = [{
-    key: "key",
-    value: `property-summary`
-  },
-  {
-    key: "tenantId",
-    value: `${getTenantId().split('.')[0]}`
+export const downloadSummary = (Properties, PropertiesTemp, branch, mode = "download") => {
+  let queryStr = []
+  switch(branch){
+    case "MANI_MAJRA":
+        queryStr = [{
+          key: "key",
+          value: `mm-property-master`
+        },
+        {
+          key: "tenantId",
+          value: `${getTenantId().split('.')[0]}`
+        }
+      ]
+      break;
+    default:
+     queryStr = [{
+          key: "key",
+          value: `property-summary`
+        },
+        {
+          key: "tenantId",
+          value: `${getTenantId().split('.')[0]}`
+        }
+      ]
   }
-]
+  const isGroundRent = Properties[0].propertyDetails.paymentConfig.isGroundRent
+  
 
 let PropertiesTempOwners = PropertiesTemp[0].propertyDetails.owners;
 const modifiedOwner = PropertiesTempOwners.map((owner) => {
@@ -613,6 +628,62 @@ export const downloadAcknowledgementForm = (Applications, applicationType,feeEst
             value:"bb-IssuanceOfNotice-application"
           }] 
           break; 
+      case 'MM-NDC':
+          queryStr = [{
+            key:"key",
+            value:(state == "ES_MM_PENDING_PAYMENT" || state == "ES_MM_PENDING_DA_PREPARE_LETTER" || state == "ES_MM_PENDING_SRA_REVIEW_LETTER" |
+            state == "ES_MM_PENDING_SO_APPROVAL" || state == "ES_MM_APPROVED") ? "mm-ndc-application-paid" : "mm-ndc-application"
+          }] 
+          break;
+      case 'MM-NOC':
+          queryStr = [{
+            key:"key",
+            value:(state == "ES_MM_PENDING_PAYMENT" || state == "ES_MM_PENDING_DA_PREPARE_LETTER" || state == "ES_MM_PENDING_SRA_REVIEW_LETTER" |
+            state == "ES_MM_PENDING_SO_APPROVAL" || state == "ES_MM_APPROVED") ? "mm-noc-application-paid" : "mm-noc-application"
+          }] 
+          break;
+      case 'MM-AllotmentOfNewHouse':
+          queryStr = [{
+            key:"key",
+            value:(state == "ES_MM_PENDING_PAYMENT" || state == "ES_MM_PENDING_DA_PREPARE_LETTER" || state == "ES_MM_PENDING_SRA_REVIEW_LETTER" |
+            state == "ES_MM_PENDING_SO_APPROVAL" || state == "ES_MM_APPROVED") ? "mm-house-allotment-application-paid" : "mm-house-allotment-application"
+          }] 
+          break; 
+      case 'MM-FamilySettlement':
+          queryStr = [{
+            key:"key",
+            value:(state == "ES_MM_PENDING_PAYMENT" || state == "ES_MM_PENDING_DA_PREPARE_LETTER" || state == "ES_MM_PENDING_SRA_REVIEW_LETTER" |
+            state == "ES_MM_PENDING_SO_APPROVAL" || state == "ES_MM_APPROVED") ? "mm-family-settlement-application-paid" : "mm-family-settlement-application"
+          }] 
+          break; 
+      case 'MM-UnRegisteredWill':
+          queryStr = [{
+            key:"key",
+            value:(state == "ES_MM_PENDING_PAYMENT" || state == "ES_MM_PENDING_DA_PREPARE_LETTER" || state == "ES_MM_PENDING_SRA_REVIEW_LETTER" |
+            state == "ES_MM_PENDING_SO_APPROVAL" || state == "ES_MM_APPROVED") ? "mm-unregisteredWill-application-paid" : "mm-unregisteredWill-application"
+          }] 
+          break; 
+      case 'MM-IntestateDeath':
+          queryStr = [{
+            key:"key",
+            value:(state == "ES_MM_PENDING_PAYMENT" || state == "ES_MM_PENDING_DA_PREPARE_LETTER" || state == "ES_MM_PENDING_SRA_REVIEW_LETTER" |
+            state == "ES_MM_PENDING_SO_APPROVAL" || state == "ES_MM_APPROVED") ? "mm-inestate-death-application-paid" : "mm-inestate-death-application"
+          }] 
+          break; 
+      case 'MM-RegisteredWill':
+          queryStr = [{
+            key:"key",
+            value:(state == "ES_MM_PENDING_PAYMENT" || state == "ES_MM_PENDING_DA_PREPARE_LETTER" || state == "ES_MM_PENDING_SRA_REVIEW_LETTER" |
+            state == "ES_MM_PENDING_SO_APPROVAL" || state == "ES_MM_APPROVED") ? "mm-registeredWill-application-paid" : "mm-registeredWill-application"
+          }] 
+          break; 
+      case 'MM-SaleGift':
+          queryStr = [{
+            key:"key",
+            value:(state == "ES_MM_PENDING_PAYMENT" || state == "ES_MM_PENDING_DA_PREPARE_LETTER" || state == "ES_MM_PENDING_SRA_REVIEW_LETTER" |
+            state == "ES_MM_PENDING_SO_APPROVAL" || state == "ES_MM_APPROVED") ? "mm-sale-gift-application-paid" : "mm-sale-gift-application"
+          }] 
+          break;                       
   }
   queryStr[1] = {
     key: "tenantId",
@@ -765,7 +836,7 @@ export const downloadPaymentReceipt = (receiptQueryString, payload, data , gener
         case 'rent-payment':
            if(process.env.REACT_APP_NAME != "Citizen"){
             const {payment} = state.screenConfiguration.preparedFinalObject
-            const {paymentType} = payment
+            const {paymentType} = payment || ""
              switch(paymentType){
               case 'PAYMENTTYPE.EXTENSIONFEE':
                  const {ExtensionStatementSummary} = state.screenConfiguration.preparedFinalObject
@@ -1157,6 +1228,55 @@ let queryStr = []
       }
       ]
       break;
+
+      case 'MM-FamilySettlement':
+        queryStr = [{
+            key: "key",
+            value: `mm-court-decree-final-letter`
+        }]
+        break;
+      case 'MM-AllotmentOfNewHouse':
+        queryStr = [{
+            key: "key",
+            value: `mm-aos-letter`
+        }]
+        break;
+      case 'MM-IntestateDeath':
+        queryStr = [{
+            key: "key",
+            value: `mm-inestate-without-will-letter`
+        }]
+        break;
+      case 'MM-NOC':
+        queryStr = [{
+            key: "key",
+            value: `mm-noc-final-letter`
+        }]
+        break;
+      case 'MM-NDC':
+        queryStr = [{
+            key: "key",
+            value: `mm-ndc-final-letter`
+        }]
+        break;
+      case 'MM-UnRegisteredWill':
+        queryStr = [{
+            key: "key",
+            value: `mm-un-registeredWill-final-letter`
+        }]
+        break;
+      case 'MM-RegisteredWill':
+        queryStr = [{
+            key: "key",
+            value: `mm-registeredWill-final-letter`
+        }]
+        break;
+      case 'MM-SaleGift' :
+        queryStr = [{
+            key: "key",
+            value: `mm-sale-deed-final-letter`
+        }]
+        break;
          
       
   }
@@ -1215,6 +1335,33 @@ export const downloadEmailNotice = (Applications, applicationType, mode = 'downl
           }
         ]
       break;
+
+      case 'MM-UnRegisteredWill':
+          queryStr = [
+            {
+              key:"key",
+              value:"mm-unregistered-will-email-notice"              
+            }
+          ]  
+            break;
+
+      case 'MM-RegisteredWill':
+          queryStr = [
+            {
+              key:"key",
+              value:"mm-registered-will-email-notice"              
+            }
+          ]  
+            break;
+
+      case 'MM-IntestateDeath':
+          queryStr = [
+            {
+              key:"key",
+              value:"mm-inestate-death-without-will-email-notice"              
+            }
+          ]   
+          break;
   
     }
     queryStr[1] = {
@@ -1365,6 +1512,34 @@ export const downloadNotice = (Applications, applicationType,noticeType, mode = 
             }
           ]
         break;
+    
+      case 'MM-UnRegisteredWill':
+          queryStr = [
+            {
+              key:"key",
+              value:"mm-unregistered-will-notice"              
+            }
+          ]  
+            break;
+
+      case 'MM-RegisteredWill':
+          queryStr = [
+            {
+              key:"key",
+              value:"mm-registered-will-notice"              
+            }
+          ]  
+            break;
+
+      case 'MM-IntestateDeath':
+          queryStr = [
+            {
+              key:"key",
+              value:"mm-inestate-death-without-will-notice"              
+            }
+          ]   
+            break;
+
      default:
         queryStr = [
           {
@@ -1733,7 +1908,9 @@ export const fetchBill = async (action, state, dispatch) => {
     }
   ];
   let payload;
-  if(businessService === ESTATE_PROPERTY_MASTER_BILLING_BUSINESS_SERVICE) {
+  
+  if(businessService === ESTATE_PROPERTY_MASTER_BILLING_BUSINESS_SERVICE 
+    || businessService === ESTATE_SERVICE_MANI_MAJRA_PROPERTY_MASTER) {
     const applicationNumber = getQueryArg(window.location.href, "consumerCode")
     let propertyPayload = get(state.screenConfiguration.preparedFinalObject, "Properties")
     if(applicationNumber.startsWith("SITE")) {
@@ -2101,6 +2278,12 @@ export const getTextToLocalMapping = label => {
         "ES_DUE_DATE_INSTALLMENT_LABEL",
         localisationLabels
       );
+    case "Rent" :
+        return getLocaleLabels(
+          "Rent",
+          "ES_RENT_LABEL",
+          localisationLabels
+        );
     default: return getLocaleLabels(label, label, localisationLabels)   
   }
 };
@@ -2136,10 +2319,16 @@ export const _getPattern = (type) => {
       return /^[a-zA-Z0-9]{1,100}$/i;
     case "fileNumber":
       return /^[A-Za-z0-9_@./#&+-]{1,50}$/i;
-    case "alphabet":
+    case "alphabet":  
       return /^[a-zA-Z ]{1,150}$/i;
+    case "rateSqFeet":
+      return /^[+-]?\d{2,5}(\.\d{1,2})?$/i;
     case "address":
       return /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,150}$/i
+    case "ownerShare":
+      return /^[+-]?\d{2,5}(\.\d{1,2})?$/i;
+    case "courtCase":
+      return /^[a-zA-Z0-9]{1,250}$/i;  
   }
 }
 

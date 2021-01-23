@@ -13,8 +13,8 @@ import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-fra
 let role_name = JSON.parse(getUserInfo()).roles[0].code
 const header = getCommonHeader(
   {
-    labelName: "Horticulture",
-    labelKey: "Report Module"
+    labelName: "Report Module",
+    labelKey: "WF_REPORT_MODULE_HEADER"
   },
   {
     classes: {
@@ -26,122 +26,10 @@ let cardItems = [];
 // if (role_name === 'CITIZEN' || role_name === "EE") {
   
   const cardlist = [
-    // {
-    //   label: {
-    //     labelName: "Report",
-    //     labelKey: "Report Line Pie "
-    //   },
-      
-    //   icon: <i
-    //     viewBox="0 -8 35 42"
-    //     color="primary"
-    //     font-size="40px"
-    //     class="material-icons module-page-icon" style={{ fontSize: "42px" }}>
-    //     nature
-    // </i>,
-    //   route: "report"
-
-    // },
-    // {
-    //   label: {
-    //     labelName: "Report",
-    //     labelKey: "Report Line Bar "
-    //   },
-      
-    //   icon: <i
-    //     viewBox="0 -8 35 42"
-    //     color="primary"
-    //     font-size="40px"
-    //     class="material-icons module-page-icon" style={{ fontSize: "42px" }}>
-    //     nature
-    // </i>,
-    //   route: "report_Line_Bar"
-
-    // },
-    // {
-    //   label: {
-    //     labelName: "Report",
-    //     labelKey: "Report Bar Pie "
-    //   },
-      
-    //   icon: <i
-    //     viewBox="0 -8 35 42"
-    //     color="primary"
-    //     font-size="40px"
-    //     class="material-icons module-page-icon" style={{ fontSize: "42px" }}>
-    //     nature
-    // </i>,
-    //   route: "report_Bar_Pie"
-
-    // },
-    // {
-    //   label: {
-    //     labelName: "Report",
-    //     labelKey: "Report_Radar"
-    //   },
-      
-    //   icon: <i
-    //     viewBox="0 -8 35 42"
-    //     color="primary"
-    //     font-size="40px"
-    //     class="material-icons module-page-icon" style={{ fontSize: "42px" }}>
-    //     nature
-    // </i>,
-    //   route: "report_Radar"
-
-    // },
     {
       label: {
-        labelName: "Report",
-        labelKey: "Horticulture"
-      },
-      
-      icon: <i
-        viewBox="0 -8 35 42"
-        color="primary"
-        font-size="40px"
-        class="material-icons module-page-icon" style={{ fontSize: "42px" }}>
-        nature
-    </i>,
-      route: "report_Horticulture"
-
-    },
-    {
-      label: {
-        labelName: "Report",
-        labelKey: "EChallan"
-      },
-      
-      icon: <i
-          viewBox="0 -8 35 42"
-          color="primary"
-          font-size="40px"
-          class="material-icons module-page-icon" style={{ fontSize: "40px" }}>
-          wysiwyg
-      </i>,
-      route: "report_Echallan"
-
-    },
-    {
-      label: {
-        labelName: "Report",
-        labelKey: "Finance and Account"
-      },
-      
-      icon: <i
-          viewBox="0 -8 35 42"
-          color="primary"
-          font-size="40px"
-          class="material-icons module-page-icon" style={{ fontSize: "40px" }}>
-          wysiwyg
-      </i>,
-      route: "report_Finance_and_Account"
-
-    },
-    {
-      label: {
-        labelName: "WrokFlow",
-        labelKey: "WorkFlow_Preview"
+        labelName: "WrokFlow Previewm",
+        labelKey: "WORKFLOW_PREVIEW_TITLE"
       },
       
       icon: <i

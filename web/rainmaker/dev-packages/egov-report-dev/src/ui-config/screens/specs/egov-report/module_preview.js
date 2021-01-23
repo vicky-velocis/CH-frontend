@@ -2,12 +2,12 @@ import { getCommonCard, getTextField, getCommonContainer, getCommonHeader } from
 import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getFileUrlFromAPI, getQueryArg, setBusinessServiceDataToLocalStorage } from "egov-ui-framework/ui-utils/commons";
-import { getTenantId, getUserInfo, setapplicationNumber, setapplicationType, setCurrentAssignee, setHCRoles, setServiceRequestStatus, setSLADays } from "egov-ui-kit/utils/localStorageUtils";
+import { getTenantId, getUserInfo, setapplicationNumber, getapplicationNumber, setapplicationType, setCurrentAssignee, setHCRoles, setServiceRequestStatus, setSLADays } from "egov-ui-kit/utils/localStorageUtils";
 import jp from "jsonpath";
 import get from "lodash/get";
 import set from "lodash/set";
 // import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import { previewWF } from "../../../../ui-utils/commons";
+import { getData, previewWF } from "../../../../ui-utils/commons";
 import { getCommonApplyFooter } from "../utils";
 import { getLabel } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
@@ -38,38 +38,52 @@ export const footer = getCommonApplyFooter({
       },
       children: {
         nextButtonLabel: getLabel({
-          labelName: "BUTTON",
-          labelKey: "HOME"
+          labelName: "Home",
+          labelKey: "WF_REPORT_HOME_BTN_LABEL"
         }),
   
         
       },
-      onClickDefination: {
-        action: "page_change",
-        path: `${getRedirectionURL()}`
-      },
+      // onClickDefination: {
+      //   action: "page_change",
+      //   path: `${getRedirectionURL()}`
+      // },
       visible: true
     }  
   });
 
 const titlebar = getCommonContainer({
-  header: getCommonHeader({
-    labelName: "",
-    labelKey: "Module Name : Pending"
-  }
-  )        
+  // header: getCommonHeader({
+  //   labelName: "",
+  //   labelKey: "Module Name"
+  // }),
+  applicationNumber: {
+    uiFramework: "custom-atoms-local",
+    moduleName: "egov-report",
+    componentPath: "ServiceRequestId",
+  },        
 });
 
 const fetchData = async (action, state, dispatch) => {
-//   let response = previewWF(state, dispatch, status);
+  let response = getData(state, dispatch, status);
 }
 
 const screenConfig = {
   uiFramework: "material-ui",
   name: "module_preview",
   beforeInitScreen: (action, state, dispatch) => {
-    
+
     let res = fetchData(action, state, dispatch)
+
+    const serviceName =  get(state.screenConfiguration.preparedFinalObject, "dropDownData2.label", "");
+	  if(serviceName !== ""){
+      setapplicationNumber(serviceName);
+    }
+    else{
+      setapplicationNumber(getapplicationNumber());
+    }
+    
+    // dispatch(prepareFinalObject("WF_CHARTDATA", payloadData));
     return action;
   },
   components: {
@@ -83,6 +97,7 @@ const screenConfig = {
         headerDiv: {
           uiFramework: "custom-atoms",
           componentPath: "Container",
+          jsonPath: "dropDownData2.label",
           children: {
             header: {
               gridDefination: {

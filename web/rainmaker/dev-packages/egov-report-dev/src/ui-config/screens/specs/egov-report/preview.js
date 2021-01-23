@@ -2,7 +2,7 @@ import { getCommonCard, getTextField, getCommonContainer, getCommonHeader } from
 import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getFileUrlFromAPI, getQueryArg, setBusinessServiceDataToLocalStorage } from "egov-ui-framework/ui-utils/commons";
-import { getTenantId, getUserInfo, setapplicationNumber, setapplicationType, setCurrentAssignee, setHCRoles, setServiceRequestStatus, setSLADays } from "egov-ui-kit/utils/localStorageUtils";
+import { getTenantId, getUserInfo, setapplicationNumber, getapplicationNumber, setapplicationType, setCurrentAssignee, setHCRoles, setServiceRequestStatus, setSLADays } from "egov-ui-kit/utils/localStorageUtils";
 import jp from "jsonpath";
 import get from "lodash/get";
 import set from "lodash/set";
@@ -38,8 +38,8 @@ export const footer = getCommonApplyFooter({
       },
       children: {
         nextButtonLabel: getLabel({
-          labelName: "BUTTON",
-          labelKey: "HOME"
+          labelName: "Home",
+          labelKey: "WF_REPORT_HOME_BTN_LABEL"
         }),
   
         
@@ -54,8 +54,8 @@ export const footer = getCommonApplyFooter({
 
 const titlebar = getCommonContainer({
   header: getCommonHeader({
-    labelName: "",
-    labelKey: "WorkFlow Preview"
+    labelName: "WorkFlow Preview",
+    labelKey: "WF_REPORT_PREVIEW_HEADER"
   })        
 });
 
@@ -71,6 +71,8 @@ const screenConfig = {
     
     // let response = previewWF(state, dispatch, status);
     debugger
+    setapplicationNumber(getapplicationNumber());
+    
     const qData = getQueryArg(window.location.href, "wfName");
     const payloadData = {"lable" : "", "value" : qData }
     dispatch(prepareFinalObject("dropDownData2", payloadData));

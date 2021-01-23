@@ -41,9 +41,9 @@ export const OWNER_DETAILS_STEP = 1;
 export const OWNER_DOCUMENT_UPLOAD_STEP = 2;
 export const PURCHASER_DETAILS_STEP = 3;
 export const PURCHASER_DOCUMENTS_STEP = 4;
-export const PAYMENT_DETAILS_STEP = 5;
-export const COURT_CASE_DETAILS_STEP = 6;
-export const SUMMARY_STEP = 7;
+// export const PAYMENT_DETAILS_STEP = 5;
+export const COURT_CASE_DETAILS_STEP = 5;
+export const SUMMARY_STEP = 6;
 
 export const moveToSuccess = (data, dispatch, type) => {
   const id = get(data, "id");
@@ -76,7 +76,6 @@ const callBackForNext = async (state, dispatch) => {
   );
   let isFormValid = true;
   let hasFieldToaster = true;
-
   if (activeStep === PROPERTY_DETAILS_STEP) {
     const isPropertyInfoValid = validateFields(
       "components.div.children.formwizardFirstStep.children.propertyInfoDetails.children.cardContent.children.detailsContainer.children",
@@ -118,7 +117,7 @@ const callBackForNext = async (state, dispatch) => {
 
     if (propertyOwnersItems && propertyOwnersItems.length > 0) {
       for (var i = 0; i < propertyOwnersItems.length; i++) {
-        if (typeof propertyOwnersItems[i].isDeleted !== "undefined") {
+        if (!!propertyOwnersItems[i].isDeleted) {
           continue;
         }
         isOwnerDetailsValid = validateFields(
@@ -270,7 +269,7 @@ const callBackForNext = async (state, dispatch) => {
 
     if (propertyPurchaserItems && propertyPurchaserItems.length > 0) {
       for (var i = 0; i < propertyPurchaserItems.length; i++) {
-        if (typeof propertyPurchaserItems[i].isDeleted !== "undefined") {
+        if (!!propertyPurchaserItems[i].isDeleted) {
           continue;
         }
         var isPurchaserDetailsValid = validateFields(
@@ -434,7 +433,7 @@ const callBackForNext = async (state, dispatch) => {
 
     if (courtCaseItems && courtCaseItems.length > 0) {
       for (var i = 0; i < courtCaseItems.length; i++) {
-        if (typeof courtCaseItems[i].isDeleted !== "undefined") {
+        if (!!courtCaseItems[i].isDeleted) {
           continue;
         }
         var isCourtCaseDetailsValid = validateFields(
@@ -443,7 +442,7 @@ const callBackForNext = async (state, dispatch) => {
           dispatch
         )
 
-        const reviewCourtCaseDetails = getReviewCourtCase(true, i, 6, "apply-manimajra");
+        const reviewCourtCaseDetails = getReviewCourtCase(true, i, 5, "apply-manimajra");
         set(
           state.screenConfiguration.screenConfig,
           `apply-manimajra.components.div.children.formwizardEighthStep.children.reviewDetails.children.cardContent.children.reviewCourtCaseDetails_${i}`,
@@ -462,9 +461,9 @@ const callBackForNext = async (state, dispatch) => {
     }
   }
 
-  if (activeStep === PAYMENT_DETAILS_STEP) {
+  // if (activeStep === PAYMENT_DETAILS_STEP) {
     
-  }
+  // }
 
   if (activeStep === SUMMARY_STEP) {
     isFormValid = await applyEstates(state, dispatch, activeStep, "apply-manimajra");
@@ -507,6 +506,7 @@ const callBackForNext = async (state, dispatch) => {
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
     }
   }
+  window.scrollTo(0,0)
 }
 
 export const changeStep = (
@@ -516,6 +516,7 @@ export const changeStep = (
   mode = "next",
   defaultActiveStep = -1
 ) => {
+
   let activeStep = get(
     state.screenConfiguration.screenConfig[screenName],
     "components.div.children.manimajraStepper.props.activeStep",
@@ -560,6 +561,7 @@ export const changeStep = (
 };
 
 export const renderSteps = (activeStep, dispatch, screenName) => {
+
   switch (activeStep) {
     case PROPERTY_DETAILS_STEP:
       dispatchMultipleFieldChangeAction(
@@ -606,15 +608,15 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         dispatch
       );
       break;
-    case PAYMENT_DETAILS_STEP:
-    dispatchMultipleFieldChangeAction(
-      screenName,
-      getActionDefinationForStepper(
-        "components.div.children.formwizardSixthStep"
-      ),
-      dispatch
-    );
-    break;
+    // case PAYMENT_DETAILS_STEP:
+    // dispatchMultipleFieldChangeAction(
+    //   screenName,
+    //   getActionDefinationForStepper(
+    //     "components.div.children.formwizardSixthStep"
+    //   ),
+    //   dispatch
+    // );
+    // break;
     case COURT_CASE_DETAILS_STEP:
       dispatchMultipleFieldChangeAction(
         screenName,
@@ -692,6 +694,7 @@ export const getActionDefinationForStepper = path => {
 };
 
 export const callBackForPrevious = (state, dispatch) => {
+  window.scrollTo(0,0)
   changeStep(state, dispatch, "apply-manimajra", "previous");
 };
 

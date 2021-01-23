@@ -196,7 +196,7 @@ export const searchApplicationApiCall = async (state, dispatch, onInit, offset, 
         [getTextToLocalMapping("File Number")]: item.property.fileNumber || "-",
         [getTextToLocalMapping("Application Number")]: item.applicationNumber || "-",
         [getTextToLocalMapping("Application Status")]: getLocaleLabels(item.state, item.state) || "-",
-        [APPLICATION_TYPE]: getLocaleLabels(item.applicationType, item.applicationType) || "-",
+        [APPLICATION_TYPE]: getLocaleLabels(`ES_${item.applicationType.toUpperCase()}`, `ES_${item.applicationType.toUpperCase()}`) || "-",
         [LAST_MODIFIED_ON]: convertEpochToDate(item.auditDetails.lastModifiedTime) || "-"
       }));
       dispatch(
@@ -323,7 +323,8 @@ export const penaltyStatmentResult = async(state, dispatch ,Criteria) => {
       )
     )
 
-    let data = response.PropertyPenalty.map(item => ({
+    let sortedData = response.PropertyPenalty.sort((a, b) => (a.generationDate < b.generationDate) ? 1 : -1)
+    let data = sortedData.map(item => ({
       [getTextToLocalMapping("Date")]: moment(new Date(item.generationDate)).format("DD-MMM-YYYY") || "-",
       [TYPE]: (item.violationType) || "-",
       [AMOUNT]:(item.penaltyAmount.toFixed(2)) || "-",
@@ -370,7 +371,8 @@ export const extensionStatmentResult = async(state, dispatch ,Criteria) => {
       )
     )
 
-    let data = response.ExtensionFee.map(item => ({
+    let sortedData = response.ExtensionFee.sort((a, b) => (a.generationDate < b.generationDate) ? 1 : -1)
+    let data = sortedData.map(item => ({
       [getTextToLocalMapping("Date")]: moment(new Date(item.generationDate)).format("DD-MMM-YYYY") || "-",
       [AMOUNT]:(item.amount.toFixed(2)) || "-",
       [getTextToLocalMapping("Status")]: (item.status) || "-"
@@ -415,7 +417,8 @@ export const securityStatmentResult = async(state, dispatch ,Criteria) => {
       )
     )
 
-    let data = response.PaymentDetails.map(item => ({
+    let sortedData = response.PaymentDetails.sort((a, b) => (a.dateOfPayment < b.dateOfPayment) ? 1 : -1)
+    let data = sortedData.map(item => ({
       [OFFLINE_PAYMENT_DATE]: moment(new Date(item.dateOfPayment)).format("DD-MMM-YYYY") || "-",
       [AMOUNT]:(item.amount.toFixed(2)) || "-",
       [TRANSACTION_ID]: (item.transactionNumber) || "-"
