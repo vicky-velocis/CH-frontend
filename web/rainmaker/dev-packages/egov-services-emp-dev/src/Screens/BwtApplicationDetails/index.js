@@ -244,19 +244,20 @@ class BwtApplicationDetails extends Component {
 
 
 //Payment Receipt
+// 
 downloadReceiptButton = async (mode) => {
 	
 	await this.downloadReceiptFunction();
 
-	
+	setTimeout(async()=>{
 	let documentsPreviewData;
-	const {waterTankerPaymentReceipt,userInfo } = this.props;
+	const { DownloadReceiptDetailsforCG,userInfo } = this.props;
 	
 	var documentsPreview = [];
-	if (waterTankerPaymentReceipt && waterTankerPaymentReceipt.filestoreIds.length > 0) {
+	if (DownloadReceiptDetailsforCG && DownloadReceiptDetailsforCG.filestoreIds.length > 0) {
 
 		
-		 documentsPreviewData=waterTankerPaymentReceipt.filestoreIds[0];
+		 documentsPreviewData=DownloadReceiptDetailsforCG.filestoreIds[0];
 		
 		
 		documentsPreview.push({
@@ -326,7 +327,10 @@ downloadReceiptButton = async (mode) => {
 		
 		prepareFinalObject('documentsPreview', documentsPreview)
 	}
+},1500)
 }
+
+
 
 downloadReceiptFunction = async (e) => {
 	const { transformedComplaint, paymentDetailsForReceipt, downloadPaymentReceiptforCG,downloadReceiptforCG,downloadWaterTankerReceipt, userInfo, paymentDetails,bkDate,
@@ -386,9 +390,12 @@ downloadReceiptFunction = async (e) => {
 //Payment Receipt
 
 //ApplicationDownload
+// 
+
 downloadApplicationMCCButton = async (mode) => {
 
 	await this.downloadApplicationFunction();
+	setTimeout(async()=>{
 	
 	 const {DownloadBWTApplicationDetails,userInfo}=this.props;
    //  let fileStoreId=DownloadBWTApplicationDetails&&DownloadBWTApplicationDetails.filestoreIds[0];
@@ -464,7 +471,12 @@ downloadApplicationMCCButton = async (mode) => {
 				
 				prepareFinalObject('documentsPreview', documentsPreview)
 			}
+		},1500)
    }
+   
+
+
+
 
    downloadApplicationFunction = async (e) => {
     
