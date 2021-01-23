@@ -816,14 +816,24 @@ class AllRequests extends Component {
             className="complaint-search-main-card"
             textChildren={
               <div className="complaint-search-cont clearfix">
-                <div className="col-xs-12" style={{ paddingLeft: 8, marginTop: "-6%" }}>
+                  {userInfo.roles.code === 'BK_MCC_APPROVER' && userInfo.roles.code === 'BK_OSBM_APPROVER' && userInfo.roles.code === 'EMPLOYEE' ? 
+                    <div className="col-xs-12" style={{ paddingLeft: 8, marginTop: "5%" }}>
+                    <Label
+                      label="BK_MYBK_SEARCH_APPLICATIONS"
+                      fontSize={16}
+                      dark={true}
+                      bold={true}
+                    />
+                  </div>
+                  :<div className="col-xs-12" style={{ paddingLeft: 8, marginTop: "1%" }}>
                   <Label
                     label="BK_MYBK_SEARCH_APPLICATIONS"
                     fontSize={16}
                     dark={true}
                     bold={true}
                   />
-                </div>
+                  </div>
+                } 
                 <div
                   className="col-sm-4 col-xs-12"
                   style={{ paddingLeft: 8 }}
