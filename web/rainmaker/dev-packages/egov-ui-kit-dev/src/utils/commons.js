@@ -194,7 +194,7 @@ export const mapCompIDToName = (IDObj, compID) => {
   return IDObj[compID] ? IDObj[compID].serviceCode : compID;
 };
 
-export const getDateFromEpoch = () => {
+export const getDateFromEpoch = (epoch) => {
   const dateObj = new Date(epoch);
   const year = dateObj.getFullYear().toString().slice(2, 4);
   const month = getMonthName(dateObj.getMonth() + 1);
