@@ -581,7 +581,20 @@ class AllRequests extends Component {
 
     };
 
-    const { loading, histor, userInfo, applicationType } = this.props;
+    const { loading, histor, userInfo, applicationType,roles } = this.props;
+    console.log("propsInMainPage--",this.props)
+    let oneRole = roles[0]
+    let RoleOneCode = oneRole.code
+    let twoRole = roles[1]
+    let RoleTwoCode = twoRole.code
+    console.log(typeof(roles),"RolesArray")
+console.log("oneRole--",oneRole)
+console.log("twoRole--",twoRole)
+    if(RoleOneCode == "BK_MCC_APPROVER" && RoleTwoCode == "BK_OSBM_APPROVER"){
+      console.log("yes roles Found")
+    }else{
+      "wrong Condition"
+    }
       const {
       mobileNo,
       bookingType,
@@ -816,8 +829,8 @@ class AllRequests extends Component {
             className="complaint-search-main-card"
             textChildren={
               <div className="complaint-search-cont clearfix">
-                  {userInfo.roles.code === 'BK_MCC_APPROVER' && userInfo.roles.code === 'BK_OSBM_APPROVER' && userInfo.roles.code === 'EMPLOYEE' ? 
-                    <div className="col-xs-12" style={{ paddingLeft: 8, marginTop: "5%" }}>
+                  {RoleOneCode === 'BK_MCC_APPROVER' && RoleTwoCode === 'BK_OSBM_APPROVER' ? 
+                    <div className="col-xs-12" style={{ paddingLeft: 8, marginTop: "-4%" }}>
                     <Label
                       label="BK_MYBK_SEARCH_APPLICATIONS"
                       fontSize={16}
@@ -833,7 +846,7 @@ class AllRequests extends Component {
                     bold={true}
                   />
                   </div>
-                } 
+                }
                 <div
                   className="col-sm-4 col-xs-12"
                   style={{ paddingLeft: 8 }}
@@ -1261,6 +1274,10 @@ const mapStateToProps = state => {
   const { fetchSuccess, applicationData,applicationType } = bookings;
   const loading = false;
   const { userInfo } = state.auth;
+  const roles = userInfo.roles
+  console.log("roles--Of-mainUser",roles)
+
+  console.log()
   const role =
     roleFromUserInfo(userInfo.roles, "GRO") ||
       roleFromUserInfo(userInfo.roles, "DGRO")
@@ -1293,8 +1310,8 @@ const mapStateToProps = state => {
     employeeComplaints,
     role,
     loading,
-    transformedComplaints
-
+    transformedComplaints,
+    roles
   };
 };
 
