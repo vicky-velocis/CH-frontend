@@ -116,7 +116,11 @@ class CGBookingDetails extends Component {
     })
   }
   Second = e => {
+<<<<<<< HEAD
     // alert("hello Second"),
+=======
+    alert("hello Second"),
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
     this.setState({
       thirdOption: false,
       fourthOption: false,
@@ -126,7 +130,11 @@ class CGBookingDetails extends Component {
   }
 //Third
 Third = e => {
+<<<<<<< HEAD
   // alert("hello Third"),
+=======
+  alert("hello Third"),
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
   this.setState({
     thirdOption: true,
     fourthOption: false,
@@ -136,7 +144,11 @@ Third = e => {
 }
 //Fourth
 Fourth = e => {
+<<<<<<< HEAD
   // alert("hello Fourth"),
+=======
+  alert("hello Fourth"),
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
   this.setState({
     fourthOption: true,
     thirdOption: false,

@@ -145,16 +145,23 @@ class BwtApplicationDetails extends Component {
 			"_search",
 			RequestGateWay
 			);
-		 console.log("payloadGateWay--",payloadGateWay)
+		 console.log("payloadGateWay--",payloadGateWay)   //Transaction[0].gateway
 		 
-		 let gateWay = payloadGateWay.Transaction[0].gateway;
-		 console.log("gateWay--",gateWay ? gateWay : "NotFound")
+		 if(payloadGateWay.Transaction.length > 0){
+console.log("consoleDataForGateWay--",payloadGateWay.Transaction.length > 0 ? payloadGateWay.Transaction : "abababa") 
+	
+let gateWay = payloadGateWay.Transaction[0].gateway; 
 
-		 prepareFinalObject('GateWayName', gateWay)
+console.log("gateWay--",gateWay ? gateWay : "NotFound")
 
-		 this.setState({
-			BankName: gateWay
-		 })
+prepareFinalObject('GateWayName', gateWay)
+
+this.setState({
+   BankName: gateWay
+})
+
+}
+		
 		
 		  let mdmsData =  await this.getMdmsTenantsData();
 		  this.setState({
@@ -326,8 +333,12 @@ class BwtApplicationDetails extends Component {
 		}
 	}
 //Payment Receipt
+<<<<<<< HEAD
 // 
 // downloadReceiptButton = async (mode) => {
+=======
+downloadReceiptButton = async (mode) => {
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 	
 // 	let responseOfPaymentReceipt = await this.downloadReceiptFunction();
 // console.log("responseOfPaymentReceipt--",responseOfPaymentReceipt)
@@ -336,11 +347,22 @@ class BwtApplicationDetails extends Component {
 // 	let documentsPreviewData;
 // 	const { downloadWaterTankerReceipt,userInfo } = this.props;
 	
+<<<<<<< HEAD
 // 	var documentsPreview = [];
 // 	if (downloadWaterTankerReceipt && downloadWaterTankerReceipt.filestoreIds.length > 0) {
 
 		
 // 		 documentsPreviewData=downloadWaterTankerReceipt.filestoreIds[0];
+=======
+	let documentsPreviewData;
+	const {waterTankerPaymentReceipt,userInfo } = this.props;
+	
+	var documentsPreview = [];
+	if (waterTankerPaymentReceipt && waterTankerPaymentReceipt.filestoreIds.length > 0) {
+
+		
+		 documentsPreviewData=waterTankerPaymentReceipt.filestoreIds[0];
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 		
 		
 // 		documentsPreview.push({
@@ -374,6 +396,7 @@ class BwtApplicationDetails extends Component {
 // 			return doc;
 // 		});
 		
+<<<<<<< HEAD
 // 		if(mode==='print'){
 
 // 			var response = await axios.get(documentsPreview[0].link, {
@@ -412,6 +435,45 @@ class BwtApplicationDetails extends Component {
 // 	}
 // },1500)
 // }
+=======
+		if(mode==='print'){
+
+			var response = await axios.get(documentsPreview[0].link, {
+				//responseType: "blob",
+				responseType: "arraybuffer",
+				
+				
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/pdf",
+				},
+			});
+			console.log("responseData---", response);
+			const file = new Blob([response.data], { type: "application/pdf" });
+			const fileURL = URL.createObjectURL(file);
+			var myWindow = window.open(fileURL);
+			if (myWindow != undefined) {
+				myWindow.addEventListener("load", (event) => {
+					myWindow.focus();
+					myWindow.print();
+				});
+			}
+
+		}
+
+
+		else{
+
+			setTimeout(() => {
+			
+				window.open(documentsPreview[0].link);
+			}, 100);
+		}
+		
+		prepareFinalObject('documentsPreview', documentsPreview)
+	}
+}
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 
 downloadReceiptFunction = async (e) => {
 	const { transformedComplaint, paymentDetailsForReceipt, downloadPaymentReceiptforCG,downloadReceiptforCG,downloadWaterTankerReceipt, userInfo, paymentDetails,bkDate,
@@ -420,11 +482,14 @@ downloadReceiptFunction = async (e) => {
 		console.log("stateBankName--",this.state.BankName ? this.state.BankName : "NotFound")
 	const { complaint } = transformedComplaint;
 	console.log("complaintPayemnet--",complaint)
+<<<<<<< HEAD
 
 	var date2 = new Date();
 
 	var generatedDateTime = `${date2.getDate()}-${date2.getMonth() + 1}-${date2.getFullYear()}, ${date2.getHours()}:${date2.getMinutes() < 10 ? "0" : ""}${date2.getMinutes()}`;
 
+=======
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 
 	let BookingInfo = [{
 		"applicantDetail": {
@@ -540,8 +605,11 @@ downloadReceiptFunction = async (e) => {
 //Payment Receipt
 
 //ApplicationDownload
+<<<<<<< HEAD
 // 
 
+=======
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 downloadApplicationMCCButton = async (mode) => {
 
 	await this.downloadApplicationFunction();
@@ -607,6 +675,7 @@ downloadApplicationMCCButton = async (mode) => {
 							myWindow.print();
 						});
 					}
+<<<<<<< HEAD
 
 				}
 
@@ -628,6 +697,28 @@ downloadApplicationFunction = async (e) => {
 	const { transformedComplaint,paymentDetails,downloadApplicationforCG,paymentDetailsForReceipt,userInfo,bkDate,
 		bkTime,bookingForDate,
 		bookingForTime } = this.props;
+=======
+
+				}
+
+
+				else{
+
+					setTimeout(() => {
+					
+						window.open(documentsPreview[0].link);
+					}, 100);
+				}
+				
+				prepareFinalObject('documentsPreview', documentsPreview)
+			}
+   }
+
+   downloadApplicationFunction = async (e) => {
+    
+	const { transformedComplaint,paymentDetails,downloadApplicationforCG,paymentDetailsForReceipt,userInfo,bkDate,
+		bkTime } = this.props;
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 	const {complaint} = transformedComplaint;
 	console.log("complaint--In-Water-Tanker--",complaint)
 	const { createWaterTankerApplicationData,downloadBWTApplication } = this.props;
@@ -661,8 +752,13 @@ downloadApplicationFunction = async (e) => {
           "completeAddress": complaint.address,
           "applicationDate": complaint.dateCreated,
           "propertyType": complaint.residentialCommercial,
+<<<<<<< HEAD
           "date": bookingForDate,
           "time": bkTime,
+=======
+          "date": "20/10/2020",
+          "time": "20/10/2020",
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
           "applicationStatus": complaint.status,
           "applicationType": complaint.bkStatus
         },
@@ -852,6 +948,7 @@ console.log("requestBodyOfApplication--",BookingInfo)
 			bookingForTime,bookingForDate} = this.props;
 		console.log("bookingForTime--props--",bookingForTime)
 		console.log("bookingForDate--props--",bookingForDate)
+		console.log("StateForWaterTanker--",this.state)
 
 		let {
 			role,
@@ -1143,7 +1240,11 @@ let gro = "";
 const mapStateToProps = (state, ownProps) => {
 	const { bookings, common, auth, form } = state;
 	const { applicationData } = bookings;
+<<<<<<< HEAD
 	const { waterTankerPaymentReceipt,DownloadBWTApplicationDetails} = bookings;
+=======
+	const { waterTankerPaymentReceipt,DownloadBWTApplicationDetails } = bookings;
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 	
 	const { id } = auth.userInfo;
 	const { citizenById } = common || {};
@@ -1169,11 +1270,14 @@ const mapStateToProps = (state, ownProps) => {
 	
 	let bkDate =  selectedComplaint ? selectedComplaint.bkDate : "NoTimeFound"
 	console.log("bkDate--",bkDate)
+<<<<<<< HEAD
 
 	let bookingForDate = selectedComplaint.bkDate != null ? selectedComplaint.bkDate : 'NA'
 	console.log("bookingForDate--",bookingForDate)
 	let bookingForTime = selectedComplaint.bkTime != null ? selectedComplaint.bkTime : 'NA'
     console.log("bookingForTime--",bookingForTime)
+=======
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 
 	let documentMap = applicationData && applicationData.documentMap ? applicationData.documentMap : '';
 	const { HistoryData } = bookings;
@@ -1229,7 +1333,11 @@ let paymentDetailsForReceipt = fetchPaymentAfterPayment;
 			driverMobileNumber: selectedComplaint ? selectedComplaint.bkContactNo : 'NA',
 			approverName: selectedComplaint ? selectedComplaint.bkApproverName : 'NA',
 			time: selectedComplaint.bkTime,
+<<<<<<< HEAD
 			date: selectedComplaint.bkDate,		
+=======
+			date: selectedComplaint.bkDate
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 		}
 
 
@@ -1262,9 +1370,13 @@ let paymentDetailsForReceipt = fetchPaymentAfterPayment;
 			complaintTypeLocalised,
 			paymentDetailsForReceipt,
 			bkDate,
+<<<<<<< HEAD
 			bkTime,
 			bookingForDate,
             bookingForTime
+=======
+			bkTime
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 			
 		};
 	} else {
@@ -1282,9 +1394,13 @@ let paymentDetailsForReceipt = fetchPaymentAfterPayment;
 			serviceRequestId,
 			isAssignedToEmployee,
 			bkDate,
+<<<<<<< HEAD
 			bkTime,
 			bookingForDate,
             bookingForTime
+=======
+			bkTime
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 		};
 	}
 };

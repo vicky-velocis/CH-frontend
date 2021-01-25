@@ -649,6 +649,7 @@ else{  /**loop for new Booking Create**/
 };
 
   render() {
+<<<<<<< HEAD
     const {
       firstName,
       email,
@@ -668,6 +669,10 @@ else{  /**loop for new Booking Create**/
     } = this.props;
     console.log("propsInCheckAvail--", this.props);
     console.log("StateInCheckAvailPage--", this.state);
+=======
+    const { firstName, email, mobileNo, lastName, stateData,handleChange,sImageUrl,applicationSector, complaintSector , classes} = this.props;
+   console.log("propsInCheckAvail--",this.props)
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
     let sectorData = [];
     let vanueData = this.props.stateData.screenConfiguration.preparedFinalObject
       .bkBookingData;

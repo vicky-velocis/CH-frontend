@@ -111,6 +111,7 @@ const PaymentSuccessForEmployee = Loadable({
   loader: () => import("../Screens/PaymentSuccessForEmployee"),
   loading: Loading
 });
+<<<<<<< HEAD
 //Cancel an application from emp
 const ApplyCancelEmpApplication = Loadable({
   loader: () => import("../Screens/ApplyCancelEmpApplication"),
@@ -126,6 +127,10 @@ const applyResourceCommercialGround = Loadable({
   loader: () => import("../Screens/ApplyCommercialGround"),
   loading: Loading
 });
+=======
+
+
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 const CheckAvailabilityPcc= Loadable({
   loader: () => import("../Screens/ApplyParkAndCommunity/components/CheckAvailability"),
   loading: Loading
@@ -355,6 +360,7 @@ const routes = [
     redirectionUrl
   }
 },
+<<<<<<< HEAD
 //ApplyRefundEmpApplication
 {
   path: "egov-services/apply-refund-success",
@@ -415,6 +421,10 @@ const routes = [
     customTitle: "BK_MYBK_APPLY_PACC_REQUEST_HEADER"
   }
 },
+=======
+
+
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 //newMasterData
 {
   path: "egov-services/MasterData",

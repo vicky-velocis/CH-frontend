@@ -16,7 +16,27 @@ import commonConfig from "config/common.js";
 
 
 export class StepForm extends Component {
+<<<<<<< HEAD
 // this.props.appData &&  this.props.appData.bkApplicantName ||  "" 
+=======
+
+
+/* 
+ childrenArray: [
+                { labelName: "APPLICANT DETAILS", labelKey: "BK_PCC_APPLICANT_DETAILS" },
+                { labelName: "BOOKING DETAILS", labelKey: "BK_PCC_BOOKING_DETAILS" },
+                { labelName: "Payments Details", labelKey: "BK_PCC_PAYMENT_DETAILS" },
+                { labelName: "DOCUMENTS", labelKey: "BK_PCC_DOCUMENTS" },
+                { labelName: "SUMMARY", labelKey: "BK_PCC_SUMMARY" },]
+ childrenArray: [
+            { labelName: "Applicant Details", labelKey: "BK_MYBK_PCC_EMP_APPLICANT_DETAILS" },
+            { labelName: "Booking Details", labelKey: "BK_MYBK_PCC_EMP_BOOKING_DETAILS" },
+            { labelName: "Payments Details", labelKey: "BK_PCC_PAYMENT_DETAILS" },
+            { labelName: "Documents", labelKey: "BK_MYBK_PCC_EMP_DOCUMENTS" },
+            { labelName: "Summary", labelKey: "BK_MYBK_PCC_EMP_SUMMARY" },]
+
+*/
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 
     state = {
         step: 0,

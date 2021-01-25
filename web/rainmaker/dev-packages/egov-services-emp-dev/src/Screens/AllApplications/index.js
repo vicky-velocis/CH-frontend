@@ -1094,7 +1094,11 @@ console.log("twoRole--",twoRole)
           <CustomComplaints
             noComplaintMessage={
               search
+<<<<<<< HEAD
                 ? "No Records Found"
+=======
+                ? "No Search Results Found"
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
                 : "BK_MYBK_NO_APPLICATION_ASSIGNED"
             }
             onComplaintClick={onComplaintClick}

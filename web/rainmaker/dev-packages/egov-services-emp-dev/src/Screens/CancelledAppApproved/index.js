@@ -191,8 +191,11 @@ if(selectedComplaint.bkAction == "OFFLINE_CANCEL"){
     let totalRes = await this.calculateCancelledBookingRefundAmount(applicationNumber, userInfo.tenantId, dateForCancel);
     console.log("totalRes--",totalRes)
 
+<<<<<<< HEAD
     
 
+=======
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
     //RefundAmountRefundAPI
     /* 
     "gatewayTxnId": gatewayTxnId,
@@ -416,6 +419,24 @@ console.log("todayDate--",todayDate)
                 "_search",[],
                 mdmsBody
             );
+<<<<<<< HEAD
+=======
+
+
+/*
+payloadRes = await httpRequest(
+                "/egov-mdms-service/v1/_search",
+                "_search",
+                mdmsBody
+            );
+*/
+
+            // let dataforSectorAndCategory = await httpRequest( 	
+            //   "bookings/api/employee/_search",
+            //   "_search",[],
+            //   complaintCountRequest
+            //   );
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
             console.log(payloadRes, "RefundPercentage");
             refundPercentage = payloadRes.MdmsRes.Booking.bookingCancellationRefundCalc[0];
 console.log("refundPercentage--2--",refundPercentage)
