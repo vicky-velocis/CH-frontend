@@ -12,6 +12,7 @@ const { getSearchApplicationsResults } = require("../../../../ui-utils/commons")
 const { setThirdStep } = require("../estate-citizen/applyResource/review");
 import {downloadPrintContainer} from './applyResource/footer';
 import { getApplicationConfig } from "../estate-citizen/_apply";
+import { set } from "lodash";
 
 const userInfo = JSON.parse(getUserInfo());
 const {
@@ -48,6 +49,8 @@ const getWfDocuments = (status) => {
 }
 
 const getData = async (action, state, dispatch) => {
+    let siteReportUser = roles.find(item => item.code === "ES_MM_DEALING_ASSISTANT" || item.code === "ES_MM_TAX_CONTROLLER_MANIMAJRA" || item.code === "ES_MM_SR_ASSISTANT" || item.code === "ES_MM_SECTION_OFFICER" | item.code === "ES_ADDITIONAL_COMMISSIONER");
+
     await dispatch(prepareFinalObject("workflow.ProcessInstances", []))
     await dispatch(prepareFinalObject("templateDocuments", []))
     await dispatch(prepareFinalObject("temp", []))
@@ -103,13 +106,23 @@ const getData = async (action, state, dispatch) => {
        const application = Applications[0]
        const headerLabel = `ES_${type.toUpperCase()}`
 
+       if (branchType == "ManiMajra") {
+        await setDocuments(
+          response,
+          "Applications[0].applicationDetails.sampleSiteMap",
+          "temp[0].reviewSampleSiteMap",
+          dispatch,'ES'
+        );
+       }
+
        const headerrow = getCommonApplyHeader({label: headerLabel, number: applicationNumber});
        let {uiConfig, wfDocumentList = []} = await getApplicationConfig({dispatch, applicationType: type})
        wfDocumentList = wfDocumentList.filter(item => eval(item.filter))
        let {preview} = uiConfig
        let reviewDetails = await setThirdStep({state, dispatch, preview, applicationType: type, data: Applications[0], isEdit: false, showHeader: false});
        const estimateResponse = await createEstimateData(Applications[0], dispatch, window.location.href)
-       if(!!estimateResponse) {
+
+       if(!!estimateResponse && estimateResponse.Payments.length) {
          const estimate = !!estimateResponse ? getCommonGrayCard({
            estimateSection: getFeesEstimateCard({
              sourceJsonPath: "temp[0].estimateCardData"
@@ -176,7 +189,19 @@ const getData = async (action, state, dispatch) => {
           branchType,
           application
         );        
-        reviewDetails = getCommonCard({...reviewDetails})
+        reviewDetails = getCommonCard({...reviewDetails});
+        
+        set(
+          reviewDetails, 
+          "children.cardContent.children.ES_SITE_REPORT_DETAILS_HEADER.visible",
+          (!!siteReportUser && branchType == "ManiMajra" && process.env.REACT_APP_NAME !== "Citizen")
+        )
+        set(
+          reviewDetails, 
+          "children.cardContent.children.ES_SAMPLE_SITE_MAP_HEADER.visible",
+          (!!siteReportUser && branchType == "ManiMajra" && process.env.REACT_APP_NAME !== "Citizen")
+        )
+      
         return {
                 div: {
                     uiFramework: "custom-atoms",

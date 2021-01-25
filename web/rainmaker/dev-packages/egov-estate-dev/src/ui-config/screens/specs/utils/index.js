@@ -568,7 +568,7 @@ export const downloadAcknowledgementForm = (Applications, applicationType,feeEst
       }
     ]
       break;
-      case 'PatnershipDeed':
+      case 'PartnershipDeed':
       queryStr = [{
             key: "key",
             value: (state == "ES_PENDING_PAYMENT" || state == "ES_PENDING_DA_PREPARE_LETTER" ||
@@ -585,6 +585,7 @@ export const downloadAcknowledgementForm = (Applications, applicationType,feeEst
         ]
       break;
       case 'Mortgage':
+      case 'MortgageIntimation':  
           queryStr = [{
             key: "key",
             value: (state == "ES_PENDING_PAYMENT" || state == "ES_PENDING_DA_PREPARE_LETTER" ||
@@ -1174,16 +1175,17 @@ let queryStr = []
       ]
       break;
 
-      case 'PatnershipDeed':  
+      case 'PartnershipDeed':  
           queryStr = [{
             key: "key",
-            value: `private-limited-company`
+            value: `private-limited-company-letter`
           }
           
         ]
     break;
     
       case 'Mortgage':
+      case 'MortgageIntimation':  
         let mortgageType = Applications[0].applicationDetails.mortgageType;
         if(mortgageType == 'PERMISSION_TO_MORTAGAGE.LEASEHOLD'){
           queryStr = [{
@@ -2341,7 +2343,7 @@ export const _getPattern = (type) => {
     case "rateSqFeet":
       return /^[+-]?\d{2,5}(\.\d{1,2})?$/i;
     case "address":
-      return /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,150}$/i
+      return /^([\s\S]){1,150}$/i
     case "ownerShare":
       return /^[+-]?\d{2,5}(\.\d{1,2})?$/i;
     case "courtCase":
