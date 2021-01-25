@@ -250,7 +250,7 @@ const getField = async (item, fieldData = {}, state) => {
           const isLocalizationFlag = findItem.isLocalization;
           let buttons;
           
-          if(isLocalizationFlag === "false"){
+          if(isLocalizationFlag === false){
             buttons = !!findItem && !!findItem.params && !!findItem.params.values ? findItem.params.values.map(value => 
               ({
                   labelName: `${value}`,
