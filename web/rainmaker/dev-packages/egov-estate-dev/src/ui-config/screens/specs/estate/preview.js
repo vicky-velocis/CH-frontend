@@ -122,7 +122,18 @@ const getData = async (action, state, dispatch) => {
        let reviewDetails = await setThirdStep({state, dispatch, preview, applicationType: type, data: Applications[0], isEdit: false, showHeader: false});
        const estimateResponse = await createEstimateData(Applications[0], dispatch, window.location.href)
 
-       if(!!estimateResponse && estimateResponse.Payments.length) {
+       var url = window.location.pathname;
+       var filename = url.substring(url.lastIndexOf('/')+1);
+       // For preview page ALONE the response has no property called Payments, only Bill details.
+       if(filename === "preview" && !!estimateResponse && estimateResponse.billDetails.length){
+        const estimate = !!estimateResponse ? getCommonGrayCard({
+          estimateSection: getFeesEstimateCard({
+            sourceJsonPath: "temp[0].estimateCardData"
+           })
+         }) : {}
+         reviewDetails = {estimate, ...reviewDetails}
+       }
+       else if(!!estimateResponse && estimateResponse.Payments.length) {
          const estimate = !!estimateResponse ? getCommonGrayCard({
            estimateSection: getFeesEstimateCard({
              sourceJsonPath: "temp[0].estimateCardData"
