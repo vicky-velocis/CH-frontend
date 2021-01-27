@@ -116,7 +116,7 @@ export const propertyTypeField = {
     ]
     
     var yearlyData = []
-    const min = 1992
+    const min = 1990
     const max = moment(new Date()).format('YYYY')
     for(var i = min; i <= max; i++){
       yearlyData.push({"code": i})
@@ -166,6 +166,14 @@ export const propertyTypeField = {
       handleField(
         action.screenKey,
         "components.div.children.formwizardFirstStep.children.annualDetails.children.cardContent.children.detailsContainer.children.annual",
+        "props.data",
+        yearlyData
+      )
+    )
+    dispatch(
+      handleField(
+        action.screenKey,
+        "components.div.children.formwizardFirstStep.children.monthlyDetails.children.cardContent.children.detailsContainer.children.yearly",
         "props.data",
         yearlyData
       )
@@ -293,7 +301,22 @@ export const annualTextField = {
   }
  
 }
-
+export const yearTextField = {
+  label: {
+      labelName: "Annual License fee Pending from",
+      labelKey: "ES_ANNUAL_LICENSE_FEE_PENDING_LABEL"
+  },
+  placeholder: {
+      labelName: "Select Year",
+      labelKey: "ES_SELECT_YEAR_PLACEHOLDER"
+  },
+  required: true,
+  jsonPath: "Properties[0].propertyDetails.mmYear",
+  gridDefination: {
+      xs: 12,
+      sm: 6
+  }
+}
 export const monthTextField = {
   label: {
       labelName: "Monthly Charges pending from",
@@ -344,7 +367,8 @@ export const annualDetails = getCommonCard({
 export const monthlyDetails = getCommonCard({
   header: monthlyDetailsHeader,
   detailsContainer: getCommonContainer({
-      monthly: getSelectField(monthTextField)
+      monthly: getSelectField(monthTextField),
+      yearly: getSelectField(yearTextField)
   })
 })
 
