@@ -343,14 +343,11 @@ class ApplicationDetails extends Component {
 		let value2 = ab[1];
 		console.log("value2--",value2)
 
-<<<<<<< HEAD
 		var date2 = new Date();
 
 	var generatedDateTime = `${date2.getDate()}-${date2.getMonth() + 1}-${date2.getFullYear()}, ${date2.getHours()}:${date2.getMinutes() < 10 ? "0" : ""}${date2.getMinutes()}`;
 
 
-=======
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 		const { complaint } = transformedComplaint;
 		let bookingDataOsbm = {
             applicationNumber: complaint.applicationNo,
@@ -497,11 +494,7 @@ class ApplicationDetails extends Component {
 	}
 	
 
-<<<<<<< HEAD
 	
-=======
-
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 downloadPermissionLetterButton = async (mode) => {
 	await this.downloadPermissionLetterFunction();
 	setTimeout(async()=>{
@@ -520,7 +513,6 @@ downloadPermissionLetterButton = async (mode) => {
 			let fileUrls =
 				fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds,userInfo.tenantId) : {};
 		
-<<<<<<< HEAD
 	
 			documentsPreview = documentsPreview.map(function (doc, index) {
 				doc["link"] =
@@ -577,41 +569,6 @@ downloadPermissionLetterButton = async (mode) => {
 			
 			prepareFinalObject('documentsPreview', documentsPreview)
 			
-=======
-		if(mode==='print'){
-
-			var response = await axios.get(documentsPreview[0].link, {
-				//responseType: "blob",
-				responseType: "arraybuffer",
-				
-				
-				headers: {
-					"Content-Type": "application/json",
-					Accept: "application/pdf",
-				},
-			});
-			console.log("responseData---", response);
-			const file = new Blob([response.data], { type: "application/pdf" });
-			const fileURL = URL.createObjectURL(file);
-			var myWindow = window.open(fileURL);
-			if (myWindow != undefined) {
-				myWindow.addEventListener("load", (event) => {
-					myWindow.focus();
-					myWindow.print();
-				});
-			}
-
-		}
-		else{
-
-			setTimeout(() => {
-			
-				window.open(documentsPreview[0].link);
-			}, 100);
-		}
-		
-		prepareFinalObject('documentsPreview', documentsPreview)
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 	}
 	},1500)
 	
@@ -681,7 +638,6 @@ downloadPermissionLetterFunction = async (e) => {
 	downloadPermissionLetter({BookingInfo:receiptData})
 }
 
-<<<<<<< HEAD
 	// downloadPaymentReceiptButton = async (mode) => {
 	// 	this.downloadPaymentReceiptFunction();
 	// 	let documentsPreviewData;
@@ -757,8 +713,6 @@ downloadPermissionLetterFunction = async (e) => {
 	// }
 
 	
-=======
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 	downloadPaymentReceiptButton = async (mode) => {
 		this.downloadPaymentReceiptFunction();
 		setTimeout(async()=>{
@@ -832,15 +786,10 @@ downloadPermissionLetterFunction = async (e) => {
 			
 			prepareFinalObject('documentsPreview', documentsPreview)
 		}
-<<<<<<< HEAD
 	},1500)
 	}
 
 
-=======
-	}
-
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 	callApiForDocumentData = async (e) => {
 		const { xyz,userInfo } = this.props;
 		console.log("xyzInPDF--",xyz)
