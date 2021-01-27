@@ -17,6 +17,8 @@ const _getPattern = (type) => {
         return /^[0-9]{0,9}$/i;
     case "numeric-only":
         return /^[0-9]*$/i;
+    case "address":
+        return /^([\s\S]){1,150}$/i;
   }
 }
 
