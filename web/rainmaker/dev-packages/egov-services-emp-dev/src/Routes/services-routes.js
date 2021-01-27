@@ -111,8 +111,26 @@ const PaymentSuccessForEmployee = Loadable({
   loader: () => import("../Screens/PaymentSuccessForEmployee"),
   loading: Loading
 });
+<<<<<<< HEAD
+//Cancel an application from emp
+const ApplyCancelEmpApplication = Loadable({
+  loader: () => import("../Screens/ApplyCancelEmpApplication"),
+  loading: Loading
+});
+//ApplyRefundEmpApplication
+const ApplyRefundEmpApplication = Loadable({
+  loader: () => import("../Screens/ApplyRefundEmpApplication"),
+  loading: Loading
+});
+//applyResourceCommercialGround
+const applyResourceCommercialGround = Loadable({
+  loader: () => import("../Screens/ApplyCommercialGround"),
+  loading: Loading
+});
+=======
 
 
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 const CheckAvailabilityPcc= Loadable({
   loader: () => import("../Screens/ApplyParkAndCommunity/components/CheckAvailability"),
   loading: Loading
@@ -342,8 +360,71 @@ const routes = [
     redirectionUrl
   }
 },
+<<<<<<< HEAD
+//ApplyRefundEmpApplication
+{
+  path: "egov-services/apply-refund-success",
+  component: ApplyRefundEmpApplication,
+  needsAuthentication: true,
+  options: {
+    hideBackButton: true,
+    customFor: "employee",
+    hideFooter: true,
+    title: "CS_COMPLAINT_DETAILS_COMPLAINT_RESOLVED",
+    hideTitle: true,
+    redirectionUrl
+  }
+},
+
+//ApplyCancelEmpApplication 
+{
+  path: "egov-services/application-cancelled-success",
+  component: ApplyCancelEmpApplication,
+  needsAuthentication: true,
+  options: {
+    hideBackButton: true,
+    customFor: "employee",
+    hideFooter: true,
+    title: "CS_COMPLAINT_DETAILS_COMPLAINT_RESOLVED",
+    hideTitle: true,
+    redirectionUrl
+  }
+},
+//ApplyCommercial
+{
+  path: "egov-services/applyResourceCommercialGround",
+  component: applyResourceCommercialGround,
+  needsAuthentication: true,
+  options: {
+    hideBackButton: true,
+    customFor: "employee",
+    hideFooter: true,
+    title: "BK_CGB_APPLY",
+    hideTitle: false,
+    redirectionUrl,
+    hideFor: "ao",
+    customTitle: "BK_CGB_APPLY"
+  }
+},
+//Apply PACC
+{
+  path: "egov-services/applyPark-community-center",
+  component: ApplyPArkAndCommunity,
+  needsAuthentication: true,
+  options: {
+    hideFooter: true,
+    title: "BK_MYBK_APPLY_PACC_REQUEST_HEADER",
+    hideTitle: false,
+    redirectionUrl,
+    hideFor: "ao",
+    customFor: "employee",
+    customTitle: "BK_MYBK_APPLY_PACC_REQUEST_HEADER"
+  }
+},
+=======
 
 
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 //newMasterData
 {
   path: "egov-services/MasterData",
@@ -455,21 +536,6 @@ const routes = [
       hideFor: "ao",
       customFor: "employee",
       customTitle: "BK_MYBK_APPLY_SPECIAL_REQUEST_HEADER"
-    }
-  },
-
-  {
-    path: "egov-services/applyPark-community-center",
-    component: ApplyPArkAndCommunity,
-    needsAuthentication: true,
-    options: {
-      hideFooter: true,
-      title: "BK_MYBK_APPLY_PACC_REQUEST_HEADER",
-      hideTitle: false,
-      redirectionUrl,
-      hideFor: "ao",
-      customFor: "employee",
-      customTitle: "BK_MYBK_APPLY_PACC_REQUEST_HEADER"
     }
   },
   {
@@ -605,7 +671,7 @@ const routes = [
   //   }
   // },
   {
-    path: "egov-services/resolve-success",
+    path: "egov-services/DataSubmitted",
     component: ResolveSuccess,
     needsAuthentication: true,
     options: {
@@ -646,7 +712,7 @@ const routes = [
     }
   },
   {
-    path: "egov-services/assign-to-success",
+    path: "egov-services/DriverAssigned",
     component: AssignToDriverSuccess,
     needsAuthentication: true,
     options: {

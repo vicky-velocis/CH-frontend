@@ -5,7 +5,10 @@ import SuccessMessageForPayment from "../../modules/SuccessMessageForPayment";
 import { connect } from "react-redux";
 import { createWaterTankerApplication, downloadBWTApplication,downloadReceiptForPCC } from "../../redux/bookings/actions";
 import jp from "jsonpath";
+<<<<<<< HEAD
+=======
 import { getDurationDate, getFileUrlFromAPI} from '../../modules/commonFunction'
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 import "./index.css";
 import { SortDialog, Screen } from "modules/common";
 import isEmpty from "lodash/isEmpty";
@@ -13,10 +16,86 @@ import {
 	downloadEsamparkApp,updatePACCApplication
 } from "egov-ui-kit/redux/bookings/actions";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+<<<<<<< HEAD
+import { convertEpochToDate, getDurationDate,getFileUrlFromAPI} from '../../modules/commonFunction'
+=======
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 
 
 class CreateWBTApplicationSuccess extends Component {
 
+<<<<<<< HEAD
+
+  NumInWords = (number) => {
+		const first = [
+			"",
+			"One ",
+			"Two ",
+			"Three ",
+			"Four ",
+			"Five ",
+			"Six ",
+			"Seven ",
+			"Eight ",
+			"Nine ",
+			"Ten ",
+			"Eleven ",
+			"Twelve ",
+			"Thirteen ",
+			"Fourteen ",
+			"Fifteen ",
+			"Sixteen ",
+			"Seventeen ",
+			"Eighteen ",
+			"Nineteen ",
+		];
+		const tens = [
+			"",
+			"",
+			"Twenty",
+			"Thirty",
+			"Forty",
+			"Fifty",
+			"Sixty",
+			"Seventy",
+			"Eighty",
+			"Ninety",
+		];
+		const mad = ["", "Thousand", "Million", "Billion", "Trillion"];
+		let word = "";
+
+		for (let i = 0; i < mad.length; i++) {
+			let tempNumber = number % (100 * Math.pow(1000, i));
+			if (Math.floor(tempNumber / Math.pow(1000, i)) !== 0) {
+				if (Math.floor(tempNumber / Math.pow(1000, i)) < 20) {
+					word =
+						first[Math.floor(tempNumber / Math.pow(1000, i))] +
+						mad[i] +
+						" " +
+						word;
+				} else {
+					word =
+						tens[Math.floor(tempNumber / (10 * Math.pow(1000, i)))] +
+						first[Math.floor(tempNumber / Math.pow(1000, i)) % 10] +
+						mad[i] +
+						" " +
+						word;
+				}
+			}
+
+			tempNumber = number % Math.pow(1000, i + 1);
+			if (Math.floor(tempNumber / (100 * Math.pow(1000, i))) !== 0)
+				word =
+					first[Math.floor(tempNumber / (100 * Math.pow(1000, i)))] +
+					"Hunderd " +
+					word;
+		}
+		return word + "Rupees Only";
+	};
+
+
+=======
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
   Submit = async () => {
 	  alert("comesInSubmit Function")
    let { updatePACCApplication, documentMap,createAppData, bookingData, venueType,prepareFinalObject,createPACCApplicationData } = this.props;
@@ -56,8 +135,14 @@ console.log("AllPropsOfSubmitPage--",this.props)
                     "fileStoreId": fid[0]
                 }],
                 "tenantId": userInfo.tenantId,
+<<<<<<< HEAD
+                "bkAction": data.bkApplicationStatus == "OFFLINE_RE_INITIATED" ? "OFFLINE_MODIFY" : "OFFLINE_APPLY",
+				"businessService": "PACC",
+				"reInitiateStatus": false,
+=======
                 "bkAction": "OFFLINE_APPLY",
                 "businessService": "PACC",
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
                 "financialYear": "2020-2021"
             }
 
@@ -142,8 +227,14 @@ console.log("Booking-requestBody--",Booking)
 	}
 
   downloadPaymentReceiptFunction = async (e) => {
+<<<<<<< HEAD
+    const {  paymentDetailsForReceipt, downloadReceiptForPCC, userInfo, selectedComplaint,offlineTransactionNum,
+      offlineTransactionDate,offlinePayementMode,location,RecNumber,totalAmountPaid,six,one,Summarysurcharge,cleanOne,SummarycGST } = this.props;
+	//offlineTransactionNum,offlineTransactionDate,offlinePayementMode	
+=======
 		const {  paymentDetailsForReceipt, downloadReceiptForPCC, userInfo, selectedComplaint } = this.props;
 		
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 		let BookingInfo = [{
 			"applicantDetail": {
 				"name": selectedComplaint.bkApplicantName,
@@ -157,6 +248,36 @@ console.log("Booking-requestBody--",Booking)
 				"bkApplicationNumber": selectedComplaint.bkApplicationNumber
 			},
 			"paymentInfo": {
+<<<<<<< HEAD
+				"paymentDate": convertEpochToDate(offlineTransactionDate, "dayend"),
+				"transactionId": offlineTransactionNum,
+				"bookingPeriod": getDurationDate(
+					selectedComplaint.bkFromDate,
+					selectedComplaint.bkToDate
+        ),
+				"bookingItem": `Online Payment Against Booking of ${location}`,
+				"amountInWords": this.NumInWords(
+					totalAmountPaid
+				),
+        paymentItemExtraColumnLabel: "Booking Period",
+				"paymentMode": offlinePayementMode,
+				"receiptNo": RecNumber,
+				"baseCharge": one,
+				"cleaningCharges": cleanOne,
+				"surcharges": Summarysurcharge,
+				"facilitationCharge": six,
+				"utgst": SummarycGST,
+				"cgst": SummarycGST,
+				"gst": SummarycGST,
+				"totalAmount": totalAmountPaid
+			},
+			"payerInfo": {
+				"payerName":  selectedComplaint.bkApplicantName,
+				"payerMobile":  selectedComplaint.bkMobileNumber
+			},
+			"generatedBy": {
+				"generatedBy": userInfo.name,
+=======
 				"paymentDate": "13th Augest 2020",
 				"transactionId": "EDR654GF35",
 				"bookingPeriod": "13th Aug 2020 to 12th Sep 2020",
@@ -180,6 +301,7 @@ console.log("Booking-requestBody--",Booking)
 			},
 			"generatedBy": {
 				"generatedBy": "Anil Clerk"
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 			},
 			"tenantInfo": {
 				"municipalityName": "Municipal Corporation Chandigarh",
@@ -194,7 +316,11 @@ console.log("Booking-requestBody--",Booking)
 
 
   render() {
+<<<<<<< HEAD
+  const { RecNumber,createWaterTankerApplicationData,myLocationtwo, downloadBWTApplication,loading,createPACCApplicationData, updatePACCApplicationData,AppNum} = this.props;
+=======
 	const { RecNumber,createWaterTankerApplicationData,myLocationtwo, downloadBWTApplication,loading,createPACCApplicationData, updatePACCApplicationData,AppNum } = this.props;
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 	console.log("this.props-in-paymentSuccessForEmp-",this.props)
 	console.log(RecNumber?RecNumber:"notfound","RecNumber")
 	console.log("AppNum--",AppNum?AppNum:"non")
@@ -275,11 +401,92 @@ console.log("bokingType--",bokingType)
 
 let createAppData = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.createAppData:""
 console.log("createAppData--",createAppData)
+<<<<<<< HEAD
+
+//ResponseOfCashPayment
+
+let offlinePayment = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.ResponseOfCashPayment:"notFound"
+console.log("offlinePayment--",offlinePayment)
+
+//transactionNum
+let offlineTransactionNum = offlinePayment ? offlinePayment.Payments[0].transactionNumber : "NotFound"
+console.log("offlineTransactionNum--",offlineTransactionNum)  
+
+//transactionDate
+let offlineTransactionDate = offlinePayment ? offlinePayment.Payments[0].transactionDate : "NotFound"
+console.log("offlineTransactionDate--",offlineTransactionDate) 
+
+//paymentMode
+let offlinePayementMode = offlinePayment ? offlinePayment.Payments[0].paymentMode : "NotFound"
+console.log("offlinePayementMode--",offlinePayementMode)
+
+//screenConfiguration.preparedFinalObject.availabilityCheckData.bkLocation
+let location = state.screenConfiguration.preparedFinalObject.availabilityCheckData.bkLocation ? state.screenConfiguration.preparedFinalObject.availabilityCheckData.bkLocation : "notfound"
+console.log("location--",location)
+
+//totalAmountPaid
+let totalAmountPaid = offlinePayment ? offlinePayment.Payments[0].paymentDetails[0].bill.totalAmount : "NotFound"
+console.log("totalAmountPaid--",totalAmountPaid)
+
+//base charges
+let totalAmount =  offlinePayment ? offlinePayment.Payments[0].paymentDetails[0].bill : "NotFound" // till here
+
+let billAccountDetailsArray =  offlinePayment ? offlinePayment.Payments[0].paymentDetails[0].bill.billDetails[0].billAccountDetails : "NOt found Any Array"
+console.log("billAccountDetailsArray--",billAccountDetailsArray)
+let one = 0;
+let two = 0;
+let three = 0;
+let four = 0;
+let five = 0;
+let six = 0;
+for(let i = 0; i < billAccountDetailsArray.length ; i++ ){
+
+if(billAccountDetailsArray[i].taxHeadCode == "PACC"){
+    one = billAccountDetailsArray[i].amount
+}
+else if(billAccountDetailsArray[i].taxHeadCode == "LUXURY_TAX"){
+    two = billAccountDetailsArray[i].amount
+}
+else if(billAccountDetailsArray[i].taxHeadCode == "REFUNDABLE_SECURITY"){
+    three = billAccountDetailsArray[i].amount
+}
+else if(billAccountDetailsArray[i].taxHeadCode == "PACC_TAX"){
+    four = billAccountDetailsArray[i].amount
+}
+else if(billAccountDetailsArray[i].taxHeadCode == "PACC_ROUND_OFF"){
+    five = billAccountDetailsArray[i].amount
+}
+else if(billAccountDetailsArray[i].taxHeadCode == "FACILITATION_CHARGE"){
+    six = billAccountDetailsArray[i].amount
+}
+}
+
+//surcharges
+let firstrent = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.bkBookingData: "";
+console.log("firstrent--",firstrent)
+
+let cleanOne =  firstrent?firstrent.cleaningCharges:""; 
+console.log("cleanOne--",cleanOne)
+
+let Summarysurcharge = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.Summarysurcharge: "NotFound";
+console.log("Summarysurcharge-2-",Summarysurcharge)
+
+let SummarycGST = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.SummarycGST: "NotFound";
+console.log("SummarycGST-2-",SummarycGST)
+
+
+  return {
+    createWaterTankerApplicationData, DownloadBWTApplicationDetails,loading,fetchSuccess,createPACCApplicationData,selectedComplaint,
+    updatePACCApplicationData,Downloadesamparkdetails,userInfo,documentMap,AppNum,DownloadReceiptDetailsforPCC,RecNumber,createAppData
+ ,venueType,vanueData,bookingData,bookingData,offlinePayment,offlineTransactionNum,offlineTransactionDate,
+ offlinePayementMode,location,totalAmountPaid,six,one,Summarysurcharge,cleanOne,SummarycGST
+=======
   
   return {
     createWaterTankerApplicationData, DownloadBWTApplicationDetails,loading,fetchSuccess,createPACCApplicationData,selectedComplaint,
     updatePACCApplicationData,Downloadesamparkdetails,userInfo,documentMap,AppNum,DownloadReceiptDetailsforPCC,RecNumber,createAppData
  ,venueType,vanueData,bookingData,bookingData
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 }
 }
 

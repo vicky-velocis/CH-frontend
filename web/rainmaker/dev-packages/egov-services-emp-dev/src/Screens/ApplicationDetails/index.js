@@ -10,7 +10,7 @@ import { prepareFormData } from "egov-ui-kit/redux/common/actions";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 import OSMCCBookingDetails from "../AllApplications/components/OSMCCBookingDetails"
 import AppDetails from "../AllApplications/components/ApplicantDetails"
-import BookingDetails from "../AllApplications/components/BookingDetails"
+import OSBMBookingDetails from "../AllApplications/components/OSBMBookingDetails"
 import DocumentPreview from "../AllApplications/components/DocumentPreview"
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import PaymentDetails from "../AllApplications/components/PaymentDetails"
@@ -277,6 +277,10 @@ class ApplicationDetails extends Component {
 		const { transformedComplaint, paymentDetailsForReceipt, downloadPaymentReceipt, userInfo } = this.props;
 		const { complaint } = transformedComplaint;
 		
+		var date2 = new Date();
+
+		var generatedDateTime = `${date2.getDate()}-${date2.getMonth() + 1}-${date2.getFullYear()}, ${date2.getHours()}:${date2.getMinutes() < 10 ? "0" : ""}${date2.getMinutes()}`;
+	
 
 		let BookingInfo = [{
 			"applicantDetail": {
@@ -321,9 +325,10 @@ class ApplicationDetails extends Component {
 				payerMobile:
 					paymentDetailsForReceipt.Payments[0].mobileNumber,
 			},
-			generatedBy: {
-				generatedBy: userInfo.name,
-			},
+			"generatedBy": {
+				"generatedBy": userInfo.name,
+				"generatedDateTime":generatedDateTime
+			  }
 		}
 		]
 		downloadPaymentReceipt({ BookingInfo: BookingInfo })
@@ -338,6 +343,14 @@ class ApplicationDetails extends Component {
 		let value2 = ab[1];
 		console.log("value2--",value2)
 
+<<<<<<< HEAD
+		var date2 = new Date();
+
+	var generatedDateTime = `${date2.getDate()}-${date2.getMonth() + 1}-${date2.getFullYear()}, ${date2.getHours()}:${date2.getMinutes() < 10 ? "0" : ""}${date2.getMinutes()}`;
+
+
+=======
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 		const { complaint } = transformedComplaint;
 		let bookingDataOsbm = {
             applicationNumber: complaint.applicationNo,
@@ -385,9 +398,10 @@ class ApplicationDetails extends Component {
                             ? null
                             : paymentDetails.totalAmount,
 				},
-				generatedBy: {
-					generatedBy: userInfo.name,
-				},
+				"generatedBy": {
+					"generatedBy": userInfo.name,
+					"generatedDateTime":generatedDateTime
+				  },
 				documentDetail:{
 					documentName: value1,
 					document2: value2
@@ -405,6 +419,7 @@ class ApplicationDetails extends Component {
 	downloadApplicationButton = async (mode) => {
 		
 		await this.downloadApplicationFunction();
+		setTimeout(async()=>{
 		const { DownloadApplicationDetails,userInfo } = this.props;
 		var documentsPreview = [];
 		let documentsPreviewData;
@@ -478,49 +493,91 @@ class ApplicationDetails extends Component {
 				
 				prepareFinalObject('documentsPreview', documentsPreview)
 			}
-
+		},1500)
 	}
 	
 
+<<<<<<< HEAD
+	
+=======
 
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 downloadPermissionLetterButton = async (mode) => {
 	await this.downloadPermissionLetterFunction();
-	let documentsPreviewData;
-	const { DownloadPermissionLetterDetails,userInfo } = this.props;
-	var documentsPreview = [];
-	if (DownloadPermissionLetterDetails && DownloadPermissionLetterDetails.filestoreIds.length > 0) {
-		 documentsPreviewData=DownloadPermissionLetterDetails.filestoreIds[0];
-		documentsPreview.push({
-			title: "DOC_DOC_PICTURE",
-			fileStoreId: documentsPreviewData,
-			linkText: "View",
-		});
-		let fileStoreIds = jp.query(documentsPreview, "$.*.fileStoreId");
-		let fileUrls =
-			fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds,userInfo.tenantId) : {};
+	setTimeout(async()=>{
 	
-
-		documentsPreview = documentsPreview.map(function (doc, index) {
-			doc["link"] =
-				(fileUrls &&
-					fileUrls[doc.fileStoreId] &&
-					fileUrls[doc.fileStoreId].split(",")[0]) ||
-				"";
-			
-			doc["name"] =
-				(fileUrls[doc.fileStoreId] &&
-					decodeURIComponent(
-						fileUrls[doc.fileStoreId]
-							.split(",")[0]
-							.split("?")[0]
-							.split("/")
-							.pop()
-							.slice(13)
-					)) ||
-				`Document - ${index + 1}`;
-			return doc;
-		});
+		let documentsPreviewData;
+		const { DownloadPermissionLetterDetails,userInfo } = this.props;
+		var documentsPreview = [];
+		if (DownloadPermissionLetterDetails && DownloadPermissionLetterDetails.filestoreIds.length > 0) {
+			 documentsPreviewData=DownloadPermissionLetterDetails.filestoreIds[0];
+			documentsPreview.push({
+				title: "DOC_DOC_PICTURE",
+				fileStoreId: documentsPreviewData,
+				linkText: "View",
+			});
+			let fileStoreIds = jp.query(documentsPreview, "$.*.fileStoreId");
+			let fileUrls =
+				fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds,userInfo.tenantId) : {};
 		
+<<<<<<< HEAD
+	
+			documentsPreview = documentsPreview.map(function (doc, index) {
+				doc["link"] =
+					(fileUrls &&
+						fileUrls[doc.fileStoreId] &&
+						fileUrls[doc.fileStoreId].split(",")[0]) ||
+					"";
+				
+				doc["name"] =
+					(fileUrls[doc.fileStoreId] &&
+						decodeURIComponent(
+							fileUrls[doc.fileStoreId]
+								.split(",")[0]
+								.split("?")[0]
+								.split("/")
+								.pop()
+								.slice(13)
+						)) ||
+					`Document - ${index + 1}`;
+				return doc;
+			});
+			
+			if(mode==='print'){
+	
+				var response = await axios.get(documentsPreview[0].link, {
+					//responseType: "blob",
+					responseType: "arraybuffer",
+					
+					
+					headers: {
+						"Content-Type": "application/json",
+						Accept: "application/pdf",
+					},
+				});
+				console.log("responseData---", response);
+				const file = new Blob([response.data], { type: "application/pdf" });
+				const fileURL = URL.createObjectURL(file);
+				var myWindow = window.open(fileURL);
+				if (myWindow != undefined) {
+					myWindow.addEventListener("load", (event) => {
+						myWindow.focus();
+						myWindow.print();
+					});
+				}
+	
+			}
+			else{
+	
+				setTimeout(() => {
+				
+					window.open(documentsPreview[0].link);
+				}, 100);
+			}
+			
+			prepareFinalObject('documentsPreview', documentsPreview)
+			
+=======
 		if(mode==='print'){
 
 			var response = await axios.get(documentsPreview[0].link, {
@@ -554,7 +611,10 @@ downloadPermissionLetterButton = async (mode) => {
 		}
 		
 		prepareFinalObject('documentsPreview', documentsPreview)
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 	}
+	},1500)
+	
 
 }
 
@@ -621,8 +681,87 @@ downloadPermissionLetterFunction = async (e) => {
 	downloadPermissionLetter({BookingInfo:receiptData})
 }
 
+<<<<<<< HEAD
+	// downloadPaymentReceiptButton = async (mode) => {
+	// 	this.downloadPaymentReceiptFunction();
+	// 	let documentsPreviewData;
+	// 	const { DownloadPaymentReceiptDetails,userInfo } = this.props;
+	// 	var documentsPreview = [];
+	// 	if (DownloadPaymentReceiptDetails && DownloadPaymentReceiptDetails.filestoreIds.length > 0) {	
+	// 	documentsPreviewData = DownloadPaymentReceiptDetails.filestoreIds[0];
+	// 		documentsPreview.push({
+	// 			title: "DOC_DOC_PICTURE",
+	// 			fileStoreId: documentsPreviewData,
+	// 			linkText: "View",
+	// 		});
+	// 		let fileStoreIds = jp.query(documentsPreview, "$.*.fileStoreId");
+	// 		let fileUrls =
+	// 			fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds,userInfo.tenantId) : {};
+		
+
+	// 		documentsPreview = documentsPreview.map(function (doc, index) {
+	// 			doc["link"] =
+	// 				(fileUrls &&
+	// 					fileUrls[doc.fileStoreId] &&
+	// 					fileUrls[doc.fileStoreId].split(",")[0]) ||
+	// 				"";
+				
+	// 			doc["name"] =
+	// 				(fileUrls[doc.fileStoreId] &&
+	// 					decodeURIComponent(
+	// 						fileUrls[doc.fileStoreId]
+	// 							.split(",")[0]
+	// 							.split("?")[0]
+	// 							.split("/")
+	// 							.pop()
+	// 							.slice(13)
+	// 					)) ||
+	// 				`Document - ${index + 1}`;
+	// 			return doc;
+	// 		});
+			
+	// 		if(mode==='print'){
+
+	// 			var response = await axios.get(documentsPreview[0].link, {
+	// 				//responseType: "blob",
+	// 				responseType: "arraybuffer",
+					
+					
+	// 				headers: {
+	// 					"Content-Type": "application/json",
+	// 					Accept: "application/pdf",
+	// 				},
+	// 			});
+	// 			console.log("responseData---", response);
+	// 			const file = new Blob([response.data], { type: "application/pdf" });
+	// 			const fileURL = URL.createObjectURL(file);
+	// 			var myWindow = window.open(fileURL);
+	// 			if (myWindow != undefined) {
+	// 				myWindow.addEventListener("load", (event) => {
+	// 					myWindow.focus();
+	// 					myWindow.print();
+	// 				});
+	// 			}
+
+	// 		}
+	// 		else{
+
+	// 			setTimeout(() => {
+				
+	// 				window.open(documentsPreview[0].link);
+	// 			}, 100);
+	// 		}
+			
+	// 		prepareFinalObject('documentsPreview', documentsPreview)
+	// 	}
+	// }
+
+	
+=======
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 	downloadPaymentReceiptButton = async (mode) => {
 		this.downloadPaymentReceiptFunction();
+		setTimeout(async()=>{
 		let documentsPreviewData;
 		const { DownloadPaymentReceiptDetails,userInfo } = this.props;
 		var documentsPreview = [];
@@ -693,8 +832,15 @@ downloadPermissionLetterFunction = async (e) => {
 			
 			prepareFinalObject('documentsPreview', documentsPreview)
 		}
+<<<<<<< HEAD
+	},1500)
 	}
 
+
+=======
+	}
+
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 	callApiForDocumentData = async (e) => {
 		const { xyz,userInfo } = this.props;
 		console.log("xyzInPDF--",xyz)
@@ -969,7 +1115,7 @@ downloadPermissionLetterFunction = async (e) => {
 
 								/>
 
-								<BookingDetails
+								<OSBMBookingDetails
 									{...complaint}
 									historyApiData={historyApiData && historyApiData}
 								/>

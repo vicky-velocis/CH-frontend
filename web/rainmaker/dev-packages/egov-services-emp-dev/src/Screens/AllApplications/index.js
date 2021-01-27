@@ -581,7 +581,20 @@ class AllRequests extends Component {
 
     };
 
-    const { loading, histor, userInfo, applicationType } = this.props;
+    const { loading, histor, userInfo, applicationType,roles } = this.props;
+    console.log("propsInMainPage--",this.props)
+    let oneRole = roles[0]
+    let RoleOneCode = oneRole.code
+    let twoRole = roles[1]
+    let RoleTwoCode = twoRole.code
+    console.log(typeof(roles),"RolesArray")
+console.log("oneRole--",oneRole)
+console.log("twoRole--",twoRole)
+    if(RoleOneCode == "BK_MCC_APPROVER" && RoleTwoCode == "BK_OSBM_APPROVER"){
+      console.log("yes roles Found")
+    }else{
+      "wrong Condition"
+    }
       const {
       mobileNo,
       bookingType,
@@ -777,7 +790,7 @@ class AllRequests extends Component {
       </div>
     ) : role === "employee" ? (
       <Screen loading={loading}>
-         {foundWaterTanker ?
+         {/* {foundWaterTanker ?   // Apply for water tanker hide for temporary
           <Button
             className="responsive-action-button"
             label={<Label buttonLabel={true} label="BK_MYBK_WATER_TANKER_APPLY" />}
@@ -786,7 +799,7 @@ class AllRequests extends Component {
             style={{ float: 'right', marginRight: '50px', marginTop: '40px' }}
             onClick={() => this.gotoWaterTanker()
             } /> : ''
-        } 
+        }  */}
         {foundFirstLavel || foundSecondLavel || foundthirdLavel ?
           <Button
             className="responsive-action-button"
@@ -816,14 +829,24 @@ class AllRequests extends Component {
             className="complaint-search-main-card"
             textChildren={
               <div className="complaint-search-cont clearfix">
-                <div className="col-xs-12" style={{ paddingLeft: 8 }}>
+                  {RoleOneCode === 'BK_MCC_APPROVER' && RoleTwoCode === 'BK_OSBM_APPROVER' ? 
+                    <div className="col-xs-12" style={{ paddingLeft: 8, marginTop: "-4%" }}>
+                    <Label
+                      label="BK_MYBK_SEARCH_APPLICATIONS"
+                      fontSize={16}
+                      dark={true}
+                      bold={true}
+                    />
+                  </div>
+                  :<div className="col-xs-12" style={{ paddingLeft: 8, marginTop: "1%" }}>
                   <Label
                     label="BK_MYBK_SEARCH_APPLICATIONS"
                     fontSize={16}
                     dark={true}
                     bold={true}
                   />
-                </div>
+                  </div>
+                }
                 <div
                   className="col-sm-4 col-xs-12"
                   style={{ paddingLeft: 8 }}
@@ -1071,7 +1094,11 @@ class AllRequests extends Component {
           <CustomComplaints
             noComplaintMessage={
               search
+<<<<<<< HEAD
+                ? "No Records Found"
+=======
                 ? "No Search Results Found"
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
                 : "BK_MYBK_NO_APPLICATION_ASSIGNED"
             }
             onComplaintClick={onComplaintClick}
@@ -1220,7 +1247,7 @@ class AllRequests extends Component {
                 //noComplaintMessage={"ES_MYCOMPLAINTS_NO_COMPLAINTS_ASSIGNED"}
                 noComplaintMessage={
                   search
-                    ? "No Search Results Found"
+                    ? "No Records Found"
                     : "BK_MYBK_NO_APPLICATION_ASSIGNED"
                 }
                 onComplaintClick={onComplaintClick}
@@ -1251,6 +1278,10 @@ const mapStateToProps = state => {
   const { fetchSuccess, applicationData,applicationType } = bookings;
   const loading = false;
   const { userInfo } = state.auth;
+  const roles = userInfo.roles
+  console.log("roles--Of-mainUser",roles)
+
+  console.log()
   const role =
     roleFromUserInfo(userInfo.roles, "GRO") ||
       roleFromUserInfo(userInfo.roles, "DGRO")
@@ -1283,8 +1314,8 @@ const mapStateToProps = state => {
     employeeComplaints,
     role,
     loading,
-    transformedComplaints
-
+    transformedComplaints,
+    roles
   };
 };
 

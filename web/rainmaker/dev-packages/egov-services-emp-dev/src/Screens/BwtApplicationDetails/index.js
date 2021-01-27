@@ -145,16 +145,23 @@ class BwtApplicationDetails extends Component {
 			"_search",
 			RequestGateWay
 			);
-		 console.log("payloadGateWay--",payloadGateWay)
+		 console.log("payloadGateWay--",payloadGateWay)   //Transaction[0].gateway
 		 
-		 let gateWay = payloadGateWay.Transaction[0].gateway;
-		 console.log("gateWay--",gateWay ? gateWay : "NotFound")
+		 if(payloadGateWay.Transaction.length > 0){
+console.log("consoleDataForGateWay--",payloadGateWay.Transaction.length > 0 ? payloadGateWay.Transaction : "abababa") 
+	
+let gateWay = payloadGateWay.Transaction[0].gateway; 
 
-		 prepareFinalObject('GateWayName', gateWay)
+console.log("gateWay--",gateWay ? gateWay : "NotFound")
 
-		 this.setState({
-			BankName: gateWay
-		 })
+prepareFinalObject('GateWayName', gateWay)
+
+this.setState({
+   BankName: gateWay
+})
+
+}
+		
 		
 		  let mdmsData =  await this.getMdmsTenantsData();
 		  this.setState({
@@ -242,13 +249,111 @@ class BwtApplicationDetails extends Component {
 		return word + "Rupees Only";
 	};
 
-
+	downloadReceiptButton = async (mode) => {
+	
+		await this.downloadReceiptFunction();
+	
+		
+		let documentsPreviewData;
+		const {waterTankerPaymentReceipt,userInfo } = this.props;
+		
+		var documentsPreview = [];
+		if (waterTankerPaymentReceipt && waterTankerPaymentReceipt.filestoreIds.length > 0) {
+	
+			
+			 documentsPreviewData=waterTankerPaymentReceipt.filestoreIds[0];
+			
+			
+			documentsPreview.push({
+				title: "DOC_DOC_PICTURE",
+				fileStoreId: documentsPreviewData,
+				linkText: "View",
+			});
+			let fileStoreIds = jp.query(documentsPreview, "$.*.fileStoreId");
+			let fileUrls =
+				fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds,userInfo.tenantId) : {};
+			
+	
+			documentsPreview = documentsPreview.map(function (doc, index) {
+				doc["link"] =
+					(fileUrls &&
+						fileUrls[doc.fileStoreId] &&
+						fileUrls[doc.fileStoreId].split(",")[0]) ||
+					"";
+				//doc["name"] = doc.fileStoreId;
+				doc["name"] =
+					(fileUrls[doc.fileStoreId] &&
+						decodeURIComponent(
+							fileUrls[doc.fileStoreId]
+								.split(",")[0]
+								.split("?")[0]
+								.split("/")
+								.pop()
+								.slice(13)
+						)) ||
+					`Document - ${index + 1}`;
+				return doc;
+			});
+			
+			if(mode==='print'){
+	
+				var response = await axios.get(documentsPreview[0].link, {
+					//responseType: "blob",
+					responseType: "arraybuffer",
+					
+					
+					headers: {
+						"Content-Type": "application/json",
+						Accept: "application/pdf",
+					},
+				});
+				console.log("responseData---", response);
+				const file = new Blob([response.data], { type: "application/pdf" });
+				const fileURL = URL.createObjectURL(file);
+				var myWindow = window.open(fileURL);
+				if (myWindow != undefined) {
+					myWindow.addEventListener("load", (event) => {
+						myWindow.focus();
+						myWindow.print();
+					});
+				}
+	
+			}
+	
+	
+			else{
+	
+				setTimeout(() => {
+				
+					window.open(documentsPreview[0].link);
+				}, 100);
+			}
+			
+			prepareFinalObject('documentsPreview', documentsPreview)
+		}
+	}
 //Payment Receipt
+<<<<<<< HEAD
+// 
+// downloadReceiptButton = async (mode) => {
+=======
 downloadReceiptButton = async (mode) => {
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 	
-	await this.downloadReceiptFunction();
+// 	let responseOfPaymentReceipt = await this.downloadReceiptFunction();
+// console.log("responseOfPaymentReceipt--",responseOfPaymentReceipt)
 
+// 	setTimeout(async()=>{
+// 	let documentsPreviewData;
+// 	const { downloadWaterTankerReceipt,userInfo } = this.props;
 	
+<<<<<<< HEAD
+// 	var documentsPreview = [];
+// 	if (downloadWaterTankerReceipt && downloadWaterTankerReceipt.filestoreIds.length > 0) {
+
+		
+// 		 documentsPreviewData=downloadWaterTankerReceipt.filestoreIds[0];
+=======
 	let documentsPreviewData;
 	const {waterTankerPaymentReceipt,userInfo } = this.props;
 	
@@ -257,39 +362,80 @@ downloadReceiptButton = async (mode) => {
 
 		
 		 documentsPreviewData=waterTankerPaymentReceipt.filestoreIds[0];
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 		
 		
-		documentsPreview.push({
-			title: "DOC_DOC_PICTURE",
-			fileStoreId: documentsPreviewData,
-			linkText: "View",
-		});
-		let fileStoreIds = jp.query(documentsPreview, "$.*.fileStoreId");
-		let fileUrls =
-			fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds,userInfo.tenantId) : {};
+// 		documentsPreview.push({
+// 			title: "DOC_DOC_PICTURE",
+// 			fileStoreId: documentsPreviewData,
+// 			linkText: "View",
+// 		});
+// 		let fileStoreIds = jp.query(documentsPreview, "$.*.fileStoreId");
+// 		let fileUrls =
+// 			fileStoreIds.length > 0 ? await getFileUrlFromAPI(fileStoreIds,userInfo.tenantId) : {};
 		
 
-		documentsPreview = documentsPreview.map(function (doc, index) {
-			doc["link"] =
-				(fileUrls &&
-					fileUrls[doc.fileStoreId] &&
-					fileUrls[doc.fileStoreId].split(",")[0]) ||
-				"";
-			//doc["name"] = doc.fileStoreId;
-			doc["name"] =
-				(fileUrls[doc.fileStoreId] &&
-					decodeURIComponent(
-						fileUrls[doc.fileStoreId]
-							.split(",")[0]
-							.split("?")[0]
-							.split("/")
-							.pop()
-							.slice(13)
-					)) ||
-				`Document - ${index + 1}`;
-			return doc;
-		});
+// 		documentsPreview = documentsPreview.map(function (doc, index) {
+// 			doc["link"] =
+// 				(fileUrls &&
+// 					fileUrls[doc.fileStoreId] &&
+// 					fileUrls[doc.fileStoreId].split(",")[0]) ||
+// 				"";
+// 			//doc["name"] = doc.fileStoreId;
+// 			doc["name"] =
+// 				(fileUrls[doc.fileStoreId] &&
+// 					decodeURIComponent(
+// 						fileUrls[doc.fileStoreId]
+// 							.split(",")[0]
+// 							.split("?")[0]
+// 							.split("/")
+// 							.pop()
+// 							.slice(13)
+// 					)) ||
+// 				`Document - ${index + 1}`;
+// 			return doc;
+// 		});
 		
+<<<<<<< HEAD
+// 		if(mode==='print'){
+
+// 			var response = await axios.get(documentsPreview[0].link, {
+// 				//responseType: "blob",
+// 				responseType: "arraybuffer",
+				
+				
+// 				headers: {
+// 					"Content-Type": "application/json",
+// 					Accept: "application/pdf",
+// 				},
+// 			});
+// 			console.log("responseData---", response);
+// 			const file = new Blob([response.data], { type: "application/pdf" });
+// 			const fileURL = URL.createObjectURL(file);
+// 			var myWindow = window.open(fileURL);
+// 			if (myWindow != undefined) {
+// 				myWindow.addEventListener("load", (event) => {
+// 					myWindow.focus();
+// 					myWindow.print();
+// 				});
+// 			}
+
+// 		}
+
+
+// 		else{
+
+// 			setTimeout(() => {
+			
+// 				window.open(documentsPreview[0].link);
+// 			}, 100);
+// 		}
+		
+// 		prepareFinalObject('documentsPreview', documentsPreview)
+// 	}
+// },1500)
+// }
+=======
 		if(mode==='print'){
 
 			var response = await axios.get(documentsPreview[0].link, {
@@ -327,6 +473,7 @@ downloadReceiptButton = async (mode) => {
 		prepareFinalObject('documentsPreview', documentsPreview)
 	}
 }
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 
 downloadReceiptFunction = async (e) => {
 	const { transformedComplaint, paymentDetailsForReceipt, downloadPaymentReceiptforCG,downloadReceiptforCG,downloadWaterTankerReceipt, userInfo, paymentDetails,bkDate,
@@ -335,6 +482,14 @@ downloadReceiptFunction = async (e) => {
 		console.log("stateBankName--",this.state.BankName ? this.state.BankName : "NotFound")
 	const { complaint } = transformedComplaint;
 	console.log("complaintPayemnet--",complaint)
+<<<<<<< HEAD
+
+	var date2 = new Date();
+
+	var generatedDateTime = `${date2.getDate()}-${date2.getMonth() + 1}-${date2.getFullYear()}, ${date2.getHours()}:${date2.getMinutes() < 10 ? "0" : ""}${date2.getMinutes()}`;
+
+=======
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 
 	let BookingInfo = [{
 		"applicantDetail": {
@@ -374,21 +529,91 @@ downloadReceiptFunction = async (e) => {
 			payerMobile:
 				paymentDetailsForReceipt.Payments[0].mobileNumber,
 		},
-		generatedBy: {
-			generatedBy: userInfo.name,
-		},
+		"generatedBy": {
+			"generatedBy": userInfo.name,
+			"generatedDateTime":generatedDateTime
+		  }
 	}
 	]
 	// downloadReceiptforCG({BookingInfo: BookingInfo})
 	console.log("requestBodyOfPayment--",BookingInfo)
 	downloadWaterTankerReceipt({BookingInfo: BookingInfo})
 }
+
+
+// downloadReceiptFunction = async (e) => {
+// 	const { transformedComplaint, paymentDetailsForReceipt, downloadPaymentReceiptforCG,downloadReceiptforCG,downloadWaterTankerReceipt, userInfo, paymentDetails,bkDate,
+// 		pdfBankName,bkTime } = this.props;
+// 		console.log("propsofPdfPayment--",this.props)
+// 		console.log("stateBankName--",this.state.BankName ? this.state.BankName : "NotFound")
+// 	const { complaint } = transformedComplaint;
+// 	console.log("complaintPayemnet--",complaint)
+
+// 	var date2 = new Date();
+
+// 	var generatedDateTime = `${date2.getDate()}-${date2.getMonth() + 1}-${date2.getFullYear()}, ${date2.getHours()}:${date2.getMinutes() < 10 ? "0" : ""}${date2.getMinutes()}`;
+
+
+// 	let BookingInfo = [{
+// 		"applicantDetail": {
+// 			"name": complaint && complaint.applicantName ? complaint.applicantName : 'NA',
+// 			"mobileNumber": complaint && complaint.bkMobileNumber ? complaint.bkMobileNumber : '',
+// 			"houseNo": complaint && complaint.houseNo ? complaint.houseNo : '',
+// 			"permanentAddress": complaint && complaint.address ? complaint.address : '',
+// 			"permanentCity": complaint && complaint.villageCity ? complaint.villageCity : '',
+// 			"sector": complaint && complaint.sector ? complaint.sector : ''
+// 		},
+// 		"booking": {
+// 			"bkApplicationNumber": complaint && complaint.applicationNo ? complaint.applicationNo : ''
+// 		},
+// 		"paymentInfo": {
+// 			"paymentDate": paymentDetailsForReceipt && convertEpochToDate(paymentDetailsForReceipt.Payments[0].transactionDate, "dayend"),
+// 			"transactionId": paymentDetailsForReceipt && paymentDetailsForReceipt.Payments[0].transactionNumber,
+// 			"bookingPeriod": `${bkDate} , ${bkTime} `,
+// 			"bookingItem": "Online Payment Against Booking of Water Tanker",
+// 			"amount": paymentDetailsForReceipt.Payments[0].paymentDetails[0].bill.billDetails[0].billAccountDetails[0].amount,
+// 			// "tax": paymentDetailsForReceipt.Payments[0].paymentDetails[0].bill.billDetails[0].billAccountDetails.filter(
+// 			// 	(el) => el.taxHeadCode.includes("TAX")
+// 			// )[0].amount,
+// 			"grandTotal": paymentDetailsForReceipt.Payments[0].totalAmountPaid,
+// 			"amountInWords": this.NumInWords(
+// 				paymentDetailsForReceipt.Payments[0].totalAmountPaid
+// 			),
+// 			"paymentItemExtraColumnLabel": "Date & Time",
+// 			paymentMode:
+// 				paymentDetailsForReceipt.Payments[0].paymentMode,
+// 			bankName: pdfBankName ? pdfBankName : this.state.BankName,
+// 			receiptNo:
+// 				paymentDetailsForReceipt.Payments[0].paymentDetails[0]
+// 					.receiptNumber,
+// 		},
+// 		payerInfo: {
+// 			payerName: paymentDetailsForReceipt.Payments[0].payerName,
+// 			payerMobile:
+// 				paymentDetailsForReceipt.Payments[0].mobileNumber,
+// 		},
+// 		"generatedBy": {
+// 			"generatedBy": userInfo.name,
+// 			"generatedDateTime":generatedDateTime
+// 		  }
+// 	}
+// 	]
+// 	// downloadReceiptforCG({BookingInfo: BookingInfo})
+// 	console.log("requestBodyOfPayment--",BookingInfo)
+// 	downloadWaterTankerReceipt({BookingInfo: BookingInfo})
+// }
 //Payment Receipt
 
 //ApplicationDownload
+<<<<<<< HEAD
+// 
+
+=======
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 downloadApplicationMCCButton = async (mode) => {
 
 	await this.downloadApplicationFunction();
+	setTimeout(async()=>{
 	
 	 const {DownloadBWTApplicationDetails,userInfo}=this.props;
    //  let fileStoreId=DownloadBWTApplicationDetails&&DownloadBWTApplicationDetails.filestoreIds[0];
@@ -450,6 +675,29 @@ downloadApplicationMCCButton = async (mode) => {
 							myWindow.print();
 						});
 					}
+<<<<<<< HEAD
+
+				}
+
+
+				else{
+
+					setTimeout(() => {
+					
+						window.open(documentsPreview[0].link);
+					}, 100);
+				}
+				
+				prepareFinalObject('documentsPreview', documentsPreview)
+			}
+		},1500)
+   }
+   
+downloadApplicationFunction = async (e) => {    
+	const { transformedComplaint,paymentDetails,downloadApplicationforCG,paymentDetailsForReceipt,userInfo,bkDate,
+		bkTime,bookingForDate,
+		bookingForTime } = this.props;
+=======
 
 				}
 
@@ -470,11 +718,16 @@ downloadApplicationMCCButton = async (mode) => {
     
 	const { transformedComplaint,paymentDetails,downloadApplicationforCG,paymentDetailsForReceipt,userInfo,bkDate,
 		bkTime } = this.props;
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 	const {complaint} = transformedComplaint;
 	console.log("complaint--In-Water-Tanker--",complaint)
 	const { createWaterTankerApplicationData,downloadBWTApplication } = this.props;
     let applicationDetails = createWaterTankerApplicationData ? createWaterTankerApplicationData.data : '';
 	let paymentData = paymentDetails;
+
+	var date2 = new Date();
+
+	var generatedDateTime = `${date2.getDate()}-${date2.getMonth() + 1}-${date2.getFullYear()}, ${date2.getHours()}:${date2.getMinutes() < 10 ? "0" : ""}${date2.getMinutes()}`;
 	
     let BookingInfo = [
       {
@@ -499,8 +752,13 @@ downloadApplicationMCCButton = async (mode) => {
           "completeAddress": complaint.address,
           "applicationDate": complaint.dateCreated,
           "propertyType": complaint.residentialCommercial,
+<<<<<<< HEAD
+          "date": bookingForDate,
+          "time": bkTime,
+=======
           "date": "20/10/2020",
           "time": "20/10/2020",
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
           "applicationStatus": complaint.status,
           "applicationType": complaint.bkStatus
         },
@@ -517,7 +775,8 @@ downloadApplicationMCCButton = async (mode) => {
 					: paymentData.totalAmount,
 		},
         "generatedBy": {
-          "generatedBy": userInfo.name
+		  "generatedBy": userInfo.name,
+		  "generatedDateTime":generatedDateTime
         }
       }
     ]
@@ -685,8 +944,11 @@ console.log("requestBodyOfApplication--",BookingInfo)
 		let { comments, openMap } = this.state;
 		let { complaint, timeLine } = this.props.transformedComplaint;
 		let { documentMap } = this.props;
-		let { historyApiData, paymentDetails, match, userInfo } = this.props;
-		
+		let { historyApiData, paymentDetails, match, userInfo,
+			bookingForTime,bookingForDate} = this.props;
+		console.log("bookingForTime--props--",bookingForTime)
+		console.log("bookingForDate--props--",bookingForDate)
+		console.log("StateForWaterTanker--",this.state)
 
 		let {
 			role,
@@ -841,6 +1103,8 @@ console.log("requestBodyOfApplication--",BookingInfo)
 								<BookingDetails
 									{...complaint}
 									historyApiData={historyApiData && historyApiData}
+									bookingForDate={bookingForDate && bookingForDate}
+                                    bookingForTime={bookingForTime && bookingForTime}
 								/>
 								
 								{(complaint.bkStatus).includes("Paid") &&
@@ -976,7 +1240,11 @@ let gro = "";
 const mapStateToProps = (state, ownProps) => {
 	const { bookings, common, auth, form } = state;
 	const { applicationData } = bookings;
+<<<<<<< HEAD
+	const { waterTankerPaymentReceipt,DownloadBWTApplicationDetails} = bookings;
+=======
 	const { waterTankerPaymentReceipt,DownloadBWTApplicationDetails } = bookings;
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 	
 	const { id } = auth.userInfo;
 	const { citizenById } = common || {};
@@ -1002,9 +1270,18 @@ const mapStateToProps = (state, ownProps) => {
 	
 	let bkDate =  selectedComplaint ? selectedComplaint.bkDate : "NoTimeFound"
 	console.log("bkDate--",bkDate)
+<<<<<<< HEAD
+
+	let bookingForDate = selectedComplaint.bkDate != null ? selectedComplaint.bkDate : 'NA'
+	console.log("bookingForDate--",bookingForDate)
+	let bookingForTime = selectedComplaint.bkTime != null ? selectedComplaint.bkTime : 'NA'
+    console.log("bookingForTime--",bookingForTime)
+=======
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 
 	let documentMap = applicationData && applicationData.documentMap ? applicationData.documentMap : '';
 	const { HistoryData } = bookings;
+
 
 	let historyObject = HistoryData ? HistoryData : ''
 	const { paymentData } = bookings;
@@ -1056,7 +1333,11 @@ let paymentDetailsForReceipt = fetchPaymentAfterPayment;
 			driverMobileNumber: selectedComplaint ? selectedComplaint.bkContactNo : 'NA',
 			approverName: selectedComplaint ? selectedComplaint.bkApproverName : 'NA',
 			time: selectedComplaint.bkTime,
+<<<<<<< HEAD
+			date: selectedComplaint.bkDate,		
+=======
 			date: selectedComplaint.bkDate
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 		}
 
 
@@ -1089,7 +1370,13 @@ let paymentDetailsForReceipt = fetchPaymentAfterPayment;
 			complaintTypeLocalised,
 			paymentDetailsForReceipt,
 			bkDate,
+<<<<<<< HEAD
+			bkTime,
+			bookingForDate,
+            bookingForTime
+=======
 			bkTime
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 			
 		};
 	} else {
@@ -1107,7 +1394,13 @@ let paymentDetailsForReceipt = fetchPaymentAfterPayment;
 			serviceRequestId,
 			isAssignedToEmployee,
 			bkDate,
+<<<<<<< HEAD
+			bkTime,
+			bookingForDate,
+            bookingForTime
+=======
 			bkTime
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 		};
 	}
 };
