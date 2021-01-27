@@ -124,7 +124,7 @@ const getData = async (action, state, dispatch) => {
 
        var url = window.location.pathname;
        var filename = url.substring(url.lastIndexOf('/')+1);
-       // For preview page ALONE the response has no property called Payments, only Bill details.
+       // For preview page ALONE the response has no property called Payments, only Bill details available.
        if(filename === "preview" && !!estimateResponse && estimateResponse.billDetails.length){
         const estimate = !!estimateResponse ? getCommonGrayCard({
           estimateSection: getFeesEstimateCard({
