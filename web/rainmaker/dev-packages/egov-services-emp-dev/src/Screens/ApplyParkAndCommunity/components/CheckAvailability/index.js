@@ -649,7 +649,6 @@ else{  /**loop for new Booking Create**/
 };
 
   render() {
-<<<<<<< HEAD
     const {
       firstName,
       email,
@@ -669,10 +668,6 @@ else{  /**loop for new Booking Create**/
     } = this.props;
     console.log("propsInCheckAvail--", this.props);
     console.log("StateInCheckAvailPage--", this.state);
-=======
-    const { firstName, email, mobileNo, lastName, stateData,handleChange,sImageUrl,applicationSector, complaintSector , classes} = this.props;
-   console.log("propsInCheckAvail--",this.props)
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
     let sectorData = [];
     let vanueData = this.props.stateData.screenConfiguration.preparedFinalObject
       .bkBookingData;
@@ -776,7 +771,7 @@ else{  /**loop for new Booking Create**/
             </div>
 
             {/*New Requirement Changes*/}
-            {this.state.vanueType === "Community Center" || this.state.vanueType === "Parks"? (
+            {/* {this.state.vanueType === "Community Center" || this.state.vanueType === "Parks"? (
             <div>
               <div className="col-sm-6 col-xs-6">
                 <FormControl component="fieldset">
@@ -807,7 +802,7 @@ else{  /**loop for new Booking Create**/
                   </RadioGroup>
                 </FormControl>
               </div>
-            </div>) : ""}
+            </div>) : ""} */}
 
             {/*condition rendering for Dropdown according to Booking Type*/}
             {this.props.DropDownValue != "notfound" &&

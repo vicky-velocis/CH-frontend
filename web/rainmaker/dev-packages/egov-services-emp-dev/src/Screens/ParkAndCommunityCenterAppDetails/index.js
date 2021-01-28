@@ -12,6 +12,7 @@ import { prepareFormData } from "egov-ui-kit/redux/common/actions";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 import OSMCCBookingDetails from "../AllApplications/components/OSMCCBookingDetails"
 import AppDetails from "./components/ApplicantDetails"; 
+import UserBankDetails from "./components/UserBankDetails";
 import RefundCard from "./components/RefundCard"; 
 import BookingDetails from "./components/BookingDetails"
 import DocumentPreview from "../AllApplications/components/DocumentPreview"
@@ -65,7 +66,6 @@ class ApplicationDetails extends Component {
 			actionOnApplication: '',
 			actionTittle: '',
 			actionOpen: false,
-<<<<<<< HEAD
 			refundCard: false,
 			totalRefundAmount: '',
 			payload: '',
@@ -77,9 +77,6 @@ class ApplicationDetails extends Component {
 			newPaymentDetails: 'NotFound',
 			checkGreaterDate: '',
 			checkNumDays: ''
-=======
-			Amount: "1"
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 		};
 	};
 
@@ -256,7 +253,6 @@ const {Amount} = this.state
 		fetchDataAfterPayment(
 			[{ key: "consumerCodes", value: match.params.applicationId }, { key: "tenantId", value: userInfo.tenantId }
 			])
-<<<<<<< HEAD
 		// if(selectedComplaint.bkApplicationStatus === "PENDING_FOR_APPROVAL_CLEARK_DEO" || selectedComplaint.bkApplicationStatus === "PENDING_FOR_APPROVAL_SENIOR_ASSISTANT" || selectedComplaint.bkApplicationStatus === "PENDING_FOR_APPROVAL_AUDIT_DEPARTMENT" ||
 		// selectedComplaint.bkApplicationStatus === "PENDING_FOR_APPROVAL_CAO" || 	selectedComplaint.bkApplicationStatus === "PENDING_FOR_APPROVAL_CAO"
 		// )
@@ -275,12 +271,6 @@ const {Amount} = this.state
 		}
 
 
-=======
-
-		// fetchResponseForRefdunf(
-		// 		[{ key: "consumerCodes", value: match.params.applicationId }, { key: "tenantId", value: userInfo.tenantId }
-		// 		])
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 
 		let { details } = this.state;
 	}
@@ -1032,7 +1022,6 @@ console.log("AmountCondition--",AmountCondition)
 
 	}
 
-<<<<<<< HEAD
 GOTOPAY = (selectedNumber) => {
 	this.props.history.push(`/egov-services/PaymentReceiptDteail/${selectedNumber}`);
 }
@@ -1236,14 +1225,6 @@ else{
 // }
 
 
-=======
-
-
-GOTOPAY = (selectedNumber) => {
-	this.props.history.push(`/egov-services/PaymentReceiptDteail/${selectedNumber}`);
-}
-
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 	render() {
 		const dropbordernone = {
 			float: "right",
@@ -1254,16 +1235,10 @@ GOTOPAY = (selectedNumber) => {
 		let { comments, openMap,AppName,checkNumDays,checkGreaterDate} = this.state;
 		console.log("CheckstateForRefund--",this.state)
 		let { complaint, timeLine } = this.props.transformedComplaint;
-<<<<<<< HEAD
 		let { documentMap,selectedComplaint,Difference_In_Days_check,first } = this.props;
 		let { historyApiData, paymentDetails, match, userInfo,paymentDetailsForReceipt,PayMentTwo,PayMentOne,selectedNumber } = this.props;
 		console.log("this.props.match--",this.props)
 		console.log("this.state.totalRefundAmount",this.state.totalRefundAmount)
-=======
-		let { documentMap } = this.props;
-		let { historyApiData, paymentDetails, match, userInfo,paymentDetailsForReceipt,PayMentTwo,PayMentOne,selectedNumber } = this.props;
-		console.log("this.props.match--",match)
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 		let {
 			role,
 			serviceRequestId,
@@ -1444,6 +1419,10 @@ GOTOPAY = (selectedNumber) => {
 									{...complaint}
 									historyApiData={historyApiData && historyApiData}
 								/>
+								
+								<UserBankDetails
+									{...complaint}
+								/>
 								{this.state.CheckStatus != "OFFLINE_MODIFIED" ? <PaymentDetails
 									paymentDetails={paymentDetails && paymentDetails}
 									PayMentTwo={PayMentTwo && PayMentTwo}
@@ -1525,13 +1504,9 @@ paymentDetails={this.state.fullAmountDetail && this.state.fullAmountDetail}
 													}
 													
 												]
-<<<<<<< HEAD
 												}} />
 												}
 												></Footer>
-=======
-												}} />}></Footer>
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 						// 						<button
                         // onClick={(e)=>this.GOTOPAY(selectedNumber)}
                         // >PAY </button>
@@ -1727,26 +1702,11 @@ paymentDetails={this.state.fullAmountDetail && this.state.fullAmountDetail}
 											},
 											{
 												label: {
-<<<<<<< HEAD
-=======
-													labelName: "ApplyRefund",
-													labelKey: "BK_MYBK_PAY_ACTION_BUTTON"
-												},
-												link: () => this.GOTOPAY(selectedNumber)
-											},
-											{
-												label: {
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 													labelName: "Reject",
 													labelKey: "BK_MYBK_REJECT_ACTION_BUTTON"
 												},
 												link: () => this.actionButtonOnClick('state', "dispatch", 'REJECT')
-<<<<<<< HEAD
 											}]
-=======
-											}
-										]
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 										}} />}></Footer>
 
 									)
@@ -1935,7 +1895,6 @@ const mapStateToProps = (state, ownProps) => {
 	let selectedComplaint = applicationData ? applicationData.bookingsModelList[0] : ''
 	let selectedNumber = selectedComplaint ? selectedComplaint.bkApplicationNumber : "NotFoundAnyApplicationNumber"
 	console.log("selectedNumber--",selectedNumber)
-<<<<<<< HEAD
 
 	let bookFDate = selectedComplaint ? selectedComplaint.bkFromDate : ""
 	console.log("bookFDate--",bookFDate)
@@ -1967,8 +1926,6 @@ console.log("Difference_In_Days--dadada",Difference_In_Days_check)
 	 let CurrentDate = new Date();
 	 console.log("CurrentDate--",CurrentDate)
 */
-=======
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 	let businessService = applicationData ? applicationData.businessService : "";
 	let bookingDocs;
 	let documentMap = applicationData && applicationData.documentMap ? applicationData.documentMap : '';
@@ -1998,13 +1955,8 @@ console.log("offlineApplied--",selectedComplaint.bkApplicationStatus)
    if(selectedComplaint.bkPaymentStatus == "SUCCESS"){
       console.log("one")
 	paymentDetails = fetchPaymentAfterPayment && fetchPaymentAfterPayment.Payments[0] && fetchPaymentAfterPayment.Payments[0].paymentDetails[0].bill;
-<<<<<<< HEAD
      console.log("paymentDetails-One--",paymentDetails)
 }
-=======
-console.log("paymentDetails-One--",paymentDetails)
-   }
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 else{
 	console.log("two")
 	paymentDetails = paymentData ? paymentData.Bill[0] : '';
@@ -2012,7 +1964,6 @@ else{
     }
 }
   else{
-<<<<<<< HEAD
 	paymentDetails = fetchPaymentAfterPayment && fetchPaymentAfterPayment.Payments[0] && fetchPaymentAfterPayment.Payments[0].paymentDetails[0].bill;
   }
 
@@ -2067,14 +2018,6 @@ else if(billAccountDetailsArray[i].taxHeadCode == "FACILITATION_CHARGE"){
 }
 }
 
-=======
-
-	paymentDetails = fetchPaymentAfterPayment && fetchPaymentAfterPayment.Payments[0] && fetchPaymentAfterPayment.Payments[0].paymentDetails[0].bill;
-
-  }
-
-	
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 
 	let historyApiData = {}
 	if (historyObject) {
@@ -2154,12 +2097,8 @@ else if(billAccountDetailsArray[i].taxHeadCode == "FACILITATION_CHARGE"){
 			userInfo,
 			PayMentOne,
 			PayMentTwo,
-<<<<<<< HEAD
 			selectedNumber,
 			offlinePayementMode,Difference_In_Days_check,first
-=======
-			selectedNumber
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 		};
 	} else {
 		return {
@@ -2206,12 +2145,8 @@ const mapDispatchToProps = dispatch => {
 			dispatch(prepareFinalObject(jsonPath, value)),
 			downloadEsamparkApp: criteria => dispatch(downloadEsamparkApp(criteria)),  
 			downloadEsamparkPL: criteria => dispatch(downloadEsamparkPL(criteria)),
-<<<<<<< HEAD
 		toggleSnackbarAndSetText: (open, message, error) =>
 			dispatch(toggleSnackbarAndSetText(open, message, error)),
-=======
-		
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 
 	};
 };

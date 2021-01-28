@@ -5,10 +5,6 @@ import SuccessMessageForPayment from "../../modules/SuccessMessageForPayment";
 import { connect } from "react-redux";
 import { createWaterTankerApplication, downloadBWTApplication,downloadReceiptForPCC } from "../../redux/bookings/actions";
 import jp from "jsonpath";
-<<<<<<< HEAD
-=======
-import { getDurationDate, getFileUrlFromAPI} from '../../modules/commonFunction'
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 import "./index.css";
 import { SortDialog, Screen } from "modules/common";
 import isEmpty from "lodash/isEmpty";
@@ -16,15 +12,11 @@ import {
 	downloadEsamparkApp,updatePACCApplication
 } from "egov-ui-kit/redux/bookings/actions";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-<<<<<<< HEAD
 import { convertEpochToDate, getDurationDate,getFileUrlFromAPI} from '../../modules/commonFunction'
-=======
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 
 
 class CreateWBTApplicationSuccess extends Component {
 
-<<<<<<< HEAD
 
   NumInWords = (number) => {
 		const first = [
@@ -94,8 +86,6 @@ class CreateWBTApplicationSuccess extends Component {
 	};
 
 
-=======
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
   Submit = async () => {
 	  alert("comesInSubmit Function")
    let { updatePACCApplication, documentMap,createAppData, bookingData, venueType,prepareFinalObject,createPACCApplicationData } = this.props;
@@ -129,20 +119,20 @@ console.log("AllPropsOfSubmitPage--",this.props)
                 bkEmail: data.bkEmail,
                 bkHouseNo: data.bkHouseNo,
                 bkBookingPurpose: data.bkBookingPurpose,
-                bkApplicationNumber: data.bkApplicationNumber,
+				bkApplicationNumber: data.bkApplicationNumber,
+				bkBankAccountNumber: data.bkBankAccountNumber,
+				bkBankName: data.bkBankName, 
+                bkIfscCode: data.bkIfscCode,
+                bkAccountType :data.bkAccountType,
+                bkBankAccountHolder: data.bkBankAccountHolder,
                 bkCustomerGstNo: data.bkCustomerGstNo ? data.bkCustomerGstNo : 'NA',
                 "wfDocuments": [{
                     "fileStoreId": fid[0]
                 }],
                 "tenantId": userInfo.tenantId,
-<<<<<<< HEAD
                 "bkAction": data.bkApplicationStatus == "OFFLINE_RE_INITIATED" ? "OFFLINE_MODIFY" : "OFFLINE_APPLY",
 				"businessService": "PACC",
 				"reInitiateStatus": false,
-=======
-                "bkAction": "OFFLINE_APPLY",
-                "businessService": "PACC",
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
                 "financialYear": "2020-2021"
             }
 
@@ -227,14 +217,9 @@ console.log("Booking-requestBody--",Booking)
 	}
 
   downloadPaymentReceiptFunction = async (e) => {
-<<<<<<< HEAD
     const {  paymentDetailsForReceipt, downloadReceiptForPCC, userInfo, selectedComplaint,offlineTransactionNum,
       offlineTransactionDate,offlinePayementMode,location,RecNumber,totalAmountPaid,six,one,Summarysurcharge,cleanOne,SummarycGST } = this.props;
 	//offlineTransactionNum,offlineTransactionDate,offlinePayementMode	
-=======
-		const {  paymentDetailsForReceipt, downloadReceiptForPCC, userInfo, selectedComplaint } = this.props;
-		
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 		let BookingInfo = [{
 			"applicantDetail": {
 				"name": selectedComplaint.bkApplicantName,
@@ -248,7 +233,6 @@ console.log("Booking-requestBody--",Booking)
 				"bkApplicationNumber": selectedComplaint.bkApplicationNumber
 			},
 			"paymentInfo": {
-<<<<<<< HEAD
 				"paymentDate": convertEpochToDate(offlineTransactionDate, "dayend"),
 				"transactionId": offlineTransactionNum,
 				"bookingPeriod": getDurationDate(
@@ -277,31 +261,6 @@ console.log("Booking-requestBody--",Booking)
 			},
 			"generatedBy": {
 				"generatedBy": userInfo.name,
-=======
-				"paymentDate": "13th Augest 2020",
-				"transactionId": "EDR654GF35",
-				"bookingPeriod": "13th Aug 2020 to 12th Sep 2020",
-				"bookingItem": "Online Payment Against Booking of PARK NO 69 INFRONT OF HNO 3259-60 SEC 44 CHD",
-				"amountInWords": "Three Thousands Five Hundred Fourty Rupees",
-				"paymentItemExtraColumnLabel": "Booking Period",
-				"paymentMode": "Online",
-				"receiptNo": "08/2020-21/000304",
-				"baseCharge": 4000,
-				"cleaningCharges": 345,
-				"surcharges": 100,
-				"facilitationCharge": 100,
-				"utgst": 100,
-				"cgst": 100,
-				"gst": 200,
-				"totalAmount": 4400
-			},
-			"payerInfo": {
-				"payerName": "Ramadesh KushWaha",
-				"payerMobile": "9877782389"
-			},
-			"generatedBy": {
-				"generatedBy": "Anil Clerk"
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 			},
 			"tenantInfo": {
 				"municipalityName": "Municipal Corporation Chandigarh",
@@ -316,11 +275,7 @@ console.log("Booking-requestBody--",Booking)
 
 
   render() {
-<<<<<<< HEAD
   const { RecNumber,createWaterTankerApplicationData,myLocationtwo, downloadBWTApplication,loading,createPACCApplicationData, updatePACCApplicationData,AppNum} = this.props;
-=======
-	const { RecNumber,createWaterTankerApplicationData,myLocationtwo, downloadBWTApplication,loading,createPACCApplicationData, updatePACCApplicationData,AppNum } = this.props;
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 	console.log("this.props-in-paymentSuccessForEmp-",this.props)
 	console.log(RecNumber?RecNumber:"notfound","RecNumber")
 	console.log("AppNum--",AppNum?AppNum:"non")
@@ -401,7 +356,6 @@ console.log("bokingType--",bokingType)
 
 let createAppData = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.createAppData:""
 console.log("createAppData--",createAppData)
-<<<<<<< HEAD
 
 //ResponseOfCashPayment
 
@@ -480,13 +434,6 @@ console.log("SummarycGST-2-",SummarycGST)
     updatePACCApplicationData,Downloadesamparkdetails,userInfo,documentMap,AppNum,DownloadReceiptDetailsforPCC,RecNumber,createAppData
  ,venueType,vanueData,bookingData,bookingData,offlinePayment,offlineTransactionNum,offlineTransactionDate,
  offlinePayementMode,location,totalAmountPaid,six,one,Summarysurcharge,cleanOne,SummarycGST
-=======
-  
-  return {
-    createWaterTankerApplicationData, DownloadBWTApplicationDetails,loading,fetchSuccess,createPACCApplicationData,selectedComplaint,
-    updatePACCApplicationData,Downloadesamparkdetails,userInfo,documentMap,AppNum,DownloadReceiptDetailsforPCC,RecNumber,createAppData
- ,venueType,vanueData,bookingData,bookingData
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 }
 }
 

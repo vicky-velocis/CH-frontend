@@ -10,12 +10,8 @@ import "./index.css";
 import Footer from "../../../../modules/footer"
 import PaymentReceiptDetail from "../PaymentReceiptDetail"
 import PaymentOptionDetails from "../PaymentOptionDetails"
-<<<<<<< HEAD
 import PaymentDetails from "../PaymentDetails"  
 import DateVenueChangePayDetail from "../DateVenueChangePayDetail"
-=======
-import PaymentDetails from "../PaymentDetails"
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 import SubmitPaymentDetails from "../SubmitPaymentDetails"
 import { getFileUrlFromAPI } from '../../../../modules/commonFunction'
 import jp from "jsonpath";
@@ -114,11 +110,7 @@ class SummaryDetails extends Component {
 
     submit = async (e) => {
     
-<<<<<<< HEAD
     // alert("hello generate receipt")
-=======
-    alert("hello generate receipt")
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
     const { TotalAmount,billId, userInfo,ApplicantName,ApplicantMobNum,prepareFinalObject,paymentMode,ppaidBy,pChequeNo,
     ChnChqDate,newDDno,NewTrxNo,NewddDate,pddIFSC,pIFSC} = this.props
     console.log("this.props---",this.props)
@@ -230,11 +222,8 @@ let EmpPayment = await httpRequest(
 
 console.log("EmpPayment--",EmpPayment)
 
-<<<<<<< HEAD
 prepareFinalObject("ResponseOfCashPayment",EmpPayment)
 
-=======
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 let ReceiptNum = EmpPayment && EmpPayment ? EmpPayment.Payments[0].paymentDetails[0].receiptNumber : "notFound"
 console.log("ReceiptNum--",ReceiptNum)
 
@@ -322,7 +311,6 @@ console.log("this.state--PaidBy",PaidBy)
                 <div className="form-without-button-cont-generic">
                     <div classsName="container">
                         <div className="col-xs-12">
-<<<<<<< HEAD
 {this.props.ApplicantAppStatus != "OFFLINE_RE_INITIATED" ? 
  <PaymentDetails
  paymentDetails={paymentDetails && paymentDetails}
@@ -336,12 +324,6 @@ paymentDetails={paymentDetails && paymentDetails}
 Status={this.props.ApplicantAppStatus && this.props.ApplicantAppStatus}
 />
 :""}
-=======
-
-                        <PaymentDetails
-              paymentDetails={paymentDetails && paymentDetails}
-               />           
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
                             
                <PaymentOptionDetails 
                PaymentReceiptNumber={PaymentReceiptNumber}
@@ -439,7 +421,6 @@ const mapStateToProps = state => {
     
     let ApplicantName = selectedComplaint ? selectedComplaint.bkApplicantName : 'notFound'
     console.log("ApplicantName--",ApplicantName)
-<<<<<<< HEAD
 
     let ApplicantMobNum = selectedComplaint ? selectedComplaint.bkMobileNumber : 'notFound'
     console.log("ApplicantMobNum--",ApplicantMobNum)
@@ -447,27 +428,14 @@ const mapStateToProps = state => {
     let ApplicantAppStatus = selectedComplaint ? selectedComplaint.bkApplicationStatus : 'notFound'
     console.log("ApplicantAppStatus--",ApplicantAppStatus)
 
-=======
-    let ApplicantMobNum = selectedComplaint ? selectedComplaint.bkMobileNumber : 'notFound'
-    console.log("ApplicantMobNum--",ApplicantMobNum)
-  
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
     let paymentDetails;
 
     // paymentDetails = paymentData ? paymentData.Bill[0] : '';
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
     const { paymentData } = bookings;
 
 	console.log("paymentData--",paymentData ? paymentData : "NopaymentData")
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 	const { fetchPaymentAfterPayment } = bookings;
 	console.log("fetchPaymentAfterPayment--",fetchPaymentAfterPayment ? fetchPaymentAfterPayment : "NofetchPaymentAfterPaymentData")
 
@@ -476,11 +444,7 @@ const mapStateToProps = state => {
     if(selectedComplaint && selectedComplaint.bkApplicationStatus == "OFFLINE_INITIATE" || selectedComplaint.bkApplicationStatus == "OFFLINE_INITIATED"){
         console.log("offlineApplied--",selectedComplaint.bkApplicationStatus)
            if(selectedComplaint.bkPaymentStatus == "SUCCESS"){
-<<<<<<< HEAD
             console.log("one")
-=======
-              console.log("one")
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
             paymentDetails = fetchPaymentAfterPayment && fetchPaymentAfterPayment.Payments[0] && fetchPaymentAfterPayment.Payments[0].paymentDetails[0].bill;
         console.log("paymentDetails-One--",paymentDetails)
            }
@@ -490,7 +454,6 @@ const mapStateToProps = state => {
             console.log("paymentDetails-two--",paymentDetails)
             }
         }
-<<<<<<< HEAD
         else if(selectedComplaint && selectedComplaint.bkApplicationStatus == "OFFLINE_RE_INITIATED" || selectedComplaint.bkApplicationStatus == "OFFLINE_RE_INITIATE"){
                   console.log("OFFLINE_RE_INITIATE--",selectedComplaint.bkApplicationStatus)
                   console.log("one+++++")
@@ -499,10 +462,6 @@ const mapStateToProps = state => {
             }
           else{
             console.log("else-last-condition--")
-=======
-          else{
-        
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
             paymentDetails = fetchPaymentAfterPayment && fetchPaymentAfterPayment.Payments[0] && fetchPaymentAfterPayment.Payments[0].paymentDetails[0].bill;
         
           }
@@ -577,11 +536,7 @@ let IFSC = state.screenConfiguration.preparedFinalObject.IFSC ?  state.screenCon
     console.log("NewTrxNo--",NewTrxNo)
 
     return {
-<<<<<<< HEAD
         createPACCApplicationData,userInfo,ppaidBy,pChequeNo,ChnChqDate,newDDno,NewTrxNo,NewddDate,ApplicantAppStatus,
-=======
-        createPACCApplicationData,userInfo,ppaidBy,pChequeNo,ChnChqDate,newDDno,NewTrxNo,NewddDate,
->>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
         documentMap,facilationChargesSuccess,billId,ApplicantName,ApplicantMobNum,pddIFSC,pIFSC,
         fCharges,myLocationtwo,paymentDetails,TotalAmount,paymentMode
     }
