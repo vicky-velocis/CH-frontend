@@ -4,6 +4,8 @@ import {
   getCommonContainer,
   getLabelWithValue,
   getTextField,
+  getSelectField,
+  getPattern,
   getLabel
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { propertySearchApiCall } from './functions';
@@ -19,48 +21,48 @@ export const propertyID = getCommonContainer({
     label: { labelKey: "WS_PROPERTY_ID_LABEL" },
     placeholder: { labelKey: "WS_PROPERTY_ID_PLACEHOLDER" },
     gridDefination: { xs: 12, sm: 5, md: 5 },
-    required: true,
+    required: false,
     props: {
       style: {
         width: "100%"
       }
     },
     sourceJsonPath: "applyScreen.property.propertyId",
-    title: {
-      value: "Fill the form by searching your old approved trade license",
-      // key: "TL_OLD_TL_NO"
-    },
+    // title: {
+    //   value: "Fill the form by searching your old approved trade license",
+    //   // key: "TL_OLD_TL_NO"
+    // },
     // pattern: /^[a-zA-Z0-9-]*$/i,
-    errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
+    //errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
     jsonPath: "searchScreen.propertyIds",
   }),
-  searchButton: {
-    componentPath: "Button",
-    gridDefination: { xs: 12, sm: 1, md: 1 },
-    props: {
-      variant: "contained",
-      style: {
-        color: "white",
-        marginTop: "19px",
-        marginBottom: "10px",
-        marginLeft: "10px",
-        marginRight: "10px",
-        backgroundColor: "rgba(0, 0, 0, 0.6000000238418579)",
-        borderRadius: "2px",
-        width: "95%",
-        height: "32px"
-      }
-    },
-    children: {
-      buttonLabel: getLabel({
-        labelKey: "WS_SEARCH_CONNECTION_SEARCH_BUTTON"
-      })
-    },
-    onClickDefination: {
-      action: "condition",
-      callBack: propertySearchApiCall
-    },
-  },
+  // searchButton: {
+  //   componentPath: "Button",
+  //   gridDefination: { xs: 12, sm: 1, md: 1 },
+  //   props: {
+  //     variant: "contained",
+  //     style: {
+  //       color: "white",
+  //       marginTop: "19px",
+  //       marginBottom: "10px",
+  //       marginLeft: "10px",
+  //       marginRight: "10px",
+  //       backgroundColor: "rgba(0, 0, 0, 0.6000000238418579)",
+  //       borderRadius: "2px",
+  //       width: "95%",
+  //       height: "32px"
+  //     }
+  //   },
+  //   children: {
+  //     buttonLabel: getLabel({
+  //       labelKey: "WS_SEARCH_CONNECTION_SEARCH_BUTTON"
+  //     })
+  //   },
+  //   onClickDefination: {
+  //     action: "condition",
+  //     callBack: propertySearchApiCall
+  //   },
+  // },
   // clickHereLink: {
   //   uiFramework: "custom-atoms-local",
   //   moduleName: "egov-wns",
@@ -86,43 +88,115 @@ const propertyDetails = getCommonContainer({
 
   //   }
   // ),
-  propertyUsageType: getLabelWithValue(
-    {
-      labelKey: "WS_PROPERTY_USAGE_TYPE_LABEL"
-    },
-    {
-      jsonPath: "applyScreen.property.usageCategory",
-      callBack: handleNA,
-      localePrefix: {
-        moduleName: "WS",
-        masterName: "PROPUSGTYPE"
-      }
-    }
-  ),
-  propertySubUsageType: getLabelWithValue(
-    {
-      labelKey: "WS_PROPERTY_SUB_USAGE_TYPE_LABEL",
-      labelName: "Property Sub Usage Type"
-    },
-    {
-      jsonPath: "applyScreen.property.units[0].usageCategory",
-      callBack: handlePropertySubUsageType,
-      localePrefix: {
-        moduleName: "WS",
-        masterName: "PROPSUBUSGTYPE"
-      }
-    }
-  ),
-  plotSize: getLabelWithValue(
-    {
-      labelKey: "WS_PROP_DETAIL_PLOT_SIZE_LABEL"
-    },
-    {
-      jsonPath: "applyScreen.property.landArea",
-      callBack: handleNA
 
+  propertyUsageType: {
+    ...getSelectField({
+      label: { labelKey: "WS_PROPERTY_USAGE_TYPE_LABEL_INPUT" },
+      placeholder: { labelKey: "WS_PROPERTY_USAGE_TYPE_LABEL_INPUT_PLACEHOLDER" },
+      required: true,
+      sourceJsonPath: "applyScreenMdmsData.PropertyTax.UsageType",
+      gridDefination: { xs: 12, sm: 6 },
+     // errorMessage: "ERR_INVALID_BILLING_PERIOD",
+      jsonPath: "applyScreen.property.usageCategory",
+      props: {
+        optionValue: "code",
+        optionLabel: "name",
+      }
+    }),
+    beforeFieldChange: async (action, state, dispatch) => {
+    
     }
-  ),
+  },
+
+  propertySubUsageType: {
+    ...getSelectField({
+      label: { labelKey: "WS_PROPERTY_SUB_USAGE_TYPE_LABEL_INPUT" },
+      placeholder: { labelKey: "WS_PROPERTY_SUB_USAGE_TYPE_LABEL_INPUT_PLACEHOLDER" },
+      required: true,
+      sourceJsonPath: "applyScreenMdmsData.PropertyTax.subUsageType",
+      gridDefination: { xs: 12, sm: 6 },
+     // errorMessage: "ERR_INVALID_BILLING_PERIOD",
+      jsonPath: "applyScreen.property.subusageCategory",
+      props: {
+        optionValue: "code",
+        optionLabel: "name",
+      }
+    }),
+    beforeFieldChange: async (action, state, dispatch) => {
+    
+    }
+  },
+  plotSize: {
+    ...getTextField({
+      label: { labelKey: "WS_PROP_DETAIL_PLOT_SIZE_LABEL_INPUT" },
+      placeholder: { labelKey: "WS_PROP_DETAIL_PLOT_SIZE_LABEL_INPUT_PLACEHOLDER" },
+      required: true,
+      sourceJsonPath: "applyScreenMdmsData.ws-services-masters.waterSource",
+      gridDefination: { xs: 12, sm: 6 },
+      pattern: getPattern("numeric-only"),
+     // errorMessage: "ERR_INVALID_BILLING_PERIOD",
+      jsonPath: "applyScreen.property.landArea"
+    }),
+    beforeFieldChange: async (action, state, dispatch) => {
+    
+    }
+  },
+
+  propertyFloornumber : {
+    ...getSelectField({
+      label: { labelKey: "WS_PROPERTY_FLOOR_NUMBER_LABEL_INPUT" },
+      placeholder: { labelKey: "WS_PROPERTY_FLOOR_NUMBER_LABEL_INPUT_PLACEHOLDER" },
+      required: true,
+      sourceJsonPath: "applyScreenMdmsData.PropertyTax.Floor",
+      gridDefination: { xs: 12, sm: 6 },
+     // errorMessage: "ERR_INVALID_BILLING_PERIOD",
+      jsonPath: "applyScreen.property.floorNumber",
+      props: {
+        optionValue: "code",
+        optionLabel: "name",
+      }
+    }),
+    beforeFieldChange: async (action, state, dispatch) => {
+    
+    }
+  },
+  // propertyUsageType: getLabelWithValue(
+  //   {
+  //     labelKey: "WS_PROPERTY_USAGE_TYPE_LABEL"
+  //   },
+  //   {
+  //     jsonPath: "applyScreen.property.usageCategory",
+  //     callBack: handleNA,
+  //     localePrefix: {
+  //       moduleName: "WS",
+  //       masterName: "PROPUSGTYPE"
+  //     }
+  //   }
+  // ),
+  // propertySubUsageType: getLabelWithValue(
+  //   {
+  //     labelKey: "WS_PROPERTY_SUB_USAGE_TYPE_LABEL",
+  //     labelName: "Property Sub Usage Type"
+  //   },
+  //   {
+  //     jsonPath: "applyScreen.property.units[0].usageCategory",
+  //     callBack: handlePropertySubUsageType,
+  //     localePrefix: {
+  //       moduleName: "WS",
+  //       masterName: "PROPSUBUSGTYPE"
+  //     }
+  //   }
+  // ),
+  // plotSize: getLabelWithValue(
+  //   {
+  //     labelKey: "WS_PROP_DETAIL_PLOT_SIZE_LABEL"
+  //   },
+  //   {
+  //     jsonPath: "applyScreen.property.landArea",
+  //     callBack: handleNA
+
+  //   }
+  // ),
   // numberOfFloors: getLabelWithValue(
   //   {
   //     labelKey: "WS_PROPERTY_NO_OF_FLOOR_LABEL",

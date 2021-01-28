@@ -72,9 +72,11 @@ export const searchApiCall = async (state, dispatch) => {
    try { searcSewerageConnectionResults = await getSearchResultForSewerage } catch (error) { finalArray = []; console.log(error) }
    const waterConnections = searchWaterConnectionResults ? searchWaterConnectionResults.WaterConnection.map(e => { e.service = 'WATER'; return e }) : []
    const sewerageConnections = searcSewerageConnectionResults ? searcSewerageConnectionResults.SewerageConnections.map(e => { e.service = 'SEWERAGE'; return e }) : [];
+   
    let combinedSearchResults = searchWaterConnectionResults || searcSewerageConnectionResults ? sewerageConnections.concat(waterConnections) : []
-  
+   dispatch(prepareFinalObject("combinedSearchResults", combinedSearchResults));
    for (let i = 0; i < combinedSearchResults.length; i++) {
+     
     let element = combinedSearchResults[i];
     finalArray.push({
       due: 'NA',
@@ -85,7 +87,8 @@ export const searchApiCall = async (state, dispatch) => {
       status: element.status,
       address: handleAddress(element),
       connectionType: element.connectionType,
-      tenantId: element.tenantId
+      tenantId: element.tenantId,
+      id:element.id,
     })
     // if (element.connectionNo !== "NA" && element.connectionNo !== null) {
     //   let queryObjectForWaterFetchBill;
@@ -190,7 +193,8 @@ const showConnectionResults = (connections, dispatch) => {
      [getTextToLocalMapping("Address")]: item.address,
     // [getTextToLocalMapping("Due Date")]: (item.dueDate !== undefined && item.dueDate !== "NA") ? convertEpochToDate(item.dueDate) : item.dueDate,
     [getTextToLocalMapping("tenantId")]: item.tenantId,
-    [getTextToLocalMapping("connectionType")]: item.connectionType
+    [getTextToLocalMapping("connectionType")]: item.connectionType,
+    [getTextToLocalMapping("id")]: item.id
   }));
   dispatch(handleField("link-connection", "components.div.children.searchResults", "props.data", data));
   dispatch(handleField("link-connection", "components.div.children.searchResults", "props.rows",

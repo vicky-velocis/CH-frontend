@@ -57,6 +57,12 @@ export const getTextToLocalMapping = (label) => {
         "WS_COMMON_TABLE_COL_TENANTID_LABEL",
         localisationLabels
       );
+      case "id":
+      return getLocaleLabels(
+        "id",
+        "ID",
+        localisationLabels
+      );
     case "service":
       return getLocaleLabels(
         "service",
@@ -146,7 +152,13 @@ export const searchResults = {
         options: {
           display: false
         }
-      }
+      },
+      {
+        name: getTextToLocalMapping("id"),
+        options: {
+          display: false
+        }
+      }, 
     ],
     title: getTextToLocalMapping("Search Results for House"),
     options: {
@@ -165,7 +177,7 @@ export const searchResults = {
 
 const onRowClick = (rowData) => {
  // const tenantId = "ch.chandigarh" // process.env.REACT_APP_NAME === "Employee" ?  getTenantId() : JSON.parse(getUserInfo()).permanentCity;
-  //window.location.href = `dashboardPT?propertyId=${rowData[0]}`;
+  window.location.href = `link-connection-details?id=${rowData[7]}`;
 };
 
 

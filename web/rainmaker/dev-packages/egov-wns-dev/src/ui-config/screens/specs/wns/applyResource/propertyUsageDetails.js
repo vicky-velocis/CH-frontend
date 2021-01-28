@@ -29,9 +29,9 @@ import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-fra
 
   const PropertyUsageDetails = getCommonContainer({
     propertyUsageType: getSelectField({
-        label: { labelKey: "WS_PROPERTY_USAGE_TYPE_LABEL" },
+        label: { labelKey: "WS_PROPERTY_USAGE_TYPE_TARRIF_LABEL_INPUT" },
         sourceJsonPath: "applyScreenMdmsData.PropertyTax.UsageType",
-        placeholder: { labelKey: "WS_PROPERTY_USAGE_TYPE_LABEL_PLACEHOLDER" },
+        placeholder: { labelKey: "WS_PROPERTY_USAGE_TYPE_TARRIF_LABEL_INPUT_PLACEHOLDER" },
         required: true,
         gridDefination: { xs: 12, sm: 6 },
         jsonPath: "applyScreen.waterProperty.usageCategory",
@@ -45,10 +45,10 @@ import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-fra
       }),
 
       propertySubUsageType: getSelectField({
-        label: { labelKey: "WS_PROPERTY_SUB_USAGE_TYPE_LABEL" },
+        label: { labelKey: "WS_PROPERTY_SUB_USAGE_CAT_TYPE_LABEL_INPUT" },
         sourceJsonPath: "propsubusagetypeForSelectedusageCategory",
-        placeholder: { labelKey: "WS_PROPERTY_SUB_USAGE_TYPE_LABEL_PLACEHOLDER" },
-        //required: true,
+        placeholder: { labelKey: "WS_PROPERTY_SUB_USAGE_CAT_TYPE_LABEL_INPUT_PLACEHOLDER" },
+        required: true,
         gridDefination: { xs: 12, sm: 6 },
         jsonPath: "applyScreen.waterProperty.usageSubCategory",
         props: {

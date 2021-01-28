@@ -2,6 +2,9 @@ import {
     getCommonGrayCard,
     getCommonSubHeader,
     getCommonContainer,
+    getTextField,
+    getSelectField,
+    getPattern,
     getLabelWithValue,
     getLabel
   } from "egov-ui-framework/ui-config/screens/specs/utils";
@@ -59,54 +62,183 @@ import {
   // const locationOnMap = WaterConnection[0].property.address.locality.code + WaterConnection[0].property.address.locality.code
   
   export const propertyLocationDetails = getCommonContainer({
-    city: getLabelWithValue(
-      {
-        labelKey: "WS_PROP_DETAIL_CITY"
-      },
-      {
+    // city: getLabelWithValue(
+    //   {
+    //     labelKey: "WS_PROP_DETAIL_CITY"
+    //   },
+    //   {
+    //     jsonPath: "applyScreen.property.address.city",
+    //   }
+    // ),
+    city: {
+      ...getTextField({
+        label: { labelKey: "WS_PROP_DETAIL_CITY_INPUT" },
+        placeholder: { labelKey: "WS_PROP_DETAIL_CITY_INPUT_PLACEHOLDER" },
+        required: true,
+       // sourceJsonPath: "applyScreenMdmsData.City",
+        gridDefination: { xs: 12, sm: 6 },
+       // errorMessage: "ERR_INVALID_BILLING_PERIOD",
         jsonPath: "applyScreen.property.address.city",
+        // props: {
+        //   optionValue: "code",
+        //   optionLabel: "name",
+          
+        // },
+      }),
+      beforeFieldChange: async (action, state, dispatch) => {
+      
       }
-    ),
-    plotOrHouseOrSurveyNo: getLabelWithValue(
-      {
-        labelKey: "WS_PROP_DETAIL_DHNO",
-        labelName:"Door/House No."
+    },
+    locality: {
+      uiFramework: "custom-containers-local",
+      moduleName: "egov-wns",
+      componentPath: "AutosuggestContainer",
+      jsonPath: "applyScreen.property.address.locality.name",
+      required: true,
+      props: {
+        optionLabel: "name",
+        optionValue: "code",
+        style: {
+          width: "100%",
+          cursor: "pointer"
+        },
+        label: { labelName: "locality", labelKey: "WS_PROP_DETAIL_LOCALITY_MOHALLA_LABEL_INPUT" },
+        placeholder: {
+          labelName: "Select locality",
+          labelKey: "WS_PROP_DETAIL_LOCALITY_MOHALLA_LABEL_INPUT_PLACEHOLDER"
+        },
+       
+       // sourceJsonPath: "applyScreenMdmsData.ws-services-locality",
+        sourceJsonPath: "applyScreenMdmsData.PropertyTax.Floor",
+        labelsFromLocalisation: true,
+        suggestions: [],
+        fullwidth: true,
+        required: true,
+        inputLabelProps: {
+          shrink: true
+        },
+        // localePrefix: {
+        //   moduleName: "ACCESSCONTROL_ROLES",
+        //   masterName: "ROLES"
+        // },
+        isMulti: false,
       },
-      {
+      gridDefination: {
+        xs: 12,
+        sm: 6
+      }
+    },
+    // plotOrHouseOrSurveyNo: getLabelWithValue(
+    //   {
+    //     labelKey: "WS_PROP_DETAIL_DHNO",
+    //     labelName:"Door/House No."
+    //   },
+    //   {
+    //     jsonPath: "applyScreen.property.address.doorNo",
+    //   }
+    // ),
+    plotOrHouseOrSurveyNo: {
+      ...getTextField({
+        label: { labelKey: "WS_PROP_DETAIL_DHNO_INPUT" },
+        placeholder: { labelKey: "WS_PROP_DETAIL_DHNO_INPUT_PLACEHOLDER" },
+        required: true,
+        sourceJsonPath: "applyScreenMdmsData.ws-services-masters.waterSource",
+        gridDefination: { xs: 12, sm: 6 },
+       // errorMessage: "ERR_INVALID_BILLING_PERIOD",
         jsonPath: "applyScreen.property.address.doorNo",
+        pattern: getPattern("alpha-numeric-with-space-and-newline"),
+      }),
+      beforeFieldChange: async (action, state, dispatch) => {
+      
       }
-    ),
-    buildingOrColonyName: getLabelWithValue(
-      {
-        labelKey: "WS_PROP_DETAIL_BUILD_NAME_LABEL"
-      },
-      {
+    },
+    // buildingOrColonyName: getLabelWithValue(
+    //   {
+    //     labelKey: "WS_PROP_DETAIL_BUILD_NAME_LABEL"
+    //   },
+    //   {
+    //     jsonPath: "applyScreen.property.address.buildingName"
+    //   }
+    // ),
+    buildingOrColonyName: {
+      ...getTextField({
+        label: { labelKey: "WS_PROP_DETAIL_BUILD_NAME_LABEL_INPUT" },
+        placeholder: { labelKey: "WS_PROP_DETAIL_BUILD_NAME_LABEL_INPUT_PLACEHOLDER" },
+        required: true,       
+        gridDefination: { xs: 12, sm: 6 },
+       // errorMessage: "ERR_INVALID_BILLING_PERIOD",
         jsonPath: "applyScreen.property.address.buildingName"
+      }),
+      beforeFieldChange: async (action, state, dispatch) => {
+      
       }
-    ),
-    streetName: getLabelWithValue(
-      {
-        labelKey: "WS_PROP_DETAIL_STREET_NAME"
-      },
-      {
+    },
+    // streetName: getLabelWithValue(
+    //   {
+    //     labelKey: "WS_PROP_DETAIL_STREET_NAME"
+    //   },
+    //   {
+    //     jsonPath: "applyScreen.property.address.street"
+    //   }
+    // ),
+    streetName: {
+      ...getTextField({
+        label: { labelKey: "WS_PROP_DETAIL_STREET_NAME_INPUT" },
+        placeholder: { labelKey: "WS_PROP_DETAIL_STREET_NAME_INPUT_PLACEHOLDER" },
+        required: true,
+       
+        gridDefination: { xs: 12, sm: 6 },
+       // errorMessage: "ERR_INVALID_BILLING_PERIOD",
         jsonPath: "applyScreen.property.address.street"
+      }),
+      beforeFieldChange: async (action, state, dispatch) => {
+      
       }
-    ),
-    locality: getLabelWithValue(
-      {
-        labelKey: "WS_PROP_DETAIL_LOCALITY_MOHALLA_LABEL",
-        labelName:"Locality/Mohalla"
-      },
-      {
-        jsonPath: "applyScreen.property.address.locality.name",
+    },
+    // locality: getLabelWithValue(
+    //   {
+    //     labelKey: "WS_PROP_DETAIL_LOCALITY_MOHALLA_LABEL",
+    //     labelName:"Locality/Mohalla"
+    //   },
+    //   {
+    //     jsonPath: "applyScreen.property.address.locality.name",
+    //   }
+    // ),
+    locality: {
+      ...getSelectField({
+        label: { labelKey: "WS_PROP_DETAIL_LOCALITY_MOHALLA_LABEL_INPUT" },
+        placeholder: { labelKey: "WS_PROP_DETAIL_LOCALITY_MOHALLA_LABEL_INPUT_PLACEHOLDER" },
+        required: true,
+        sourceJsonPath: "applyScreenMdmsData.ws-services-locality",
+        gridDefination: { xs: 12, sm: 6 },
+       // errorMessage: "ERR_INVALID_BILLING_PERIOD",
+        jsonPath: "applyScreen.property.address.locality.name"
+      }),
+      beforeFieldChange: async (action, state, dispatch) => {
+      
       }
-    ),
-    pincode: getLabelWithValue(
-      {
-        labelKey: "WS_PROP_DETAIL_PINCODE"
-      },
-      { jsonPath: "applyScreen.property.address.pincode" }
-    ),
+    },
+
+    // pincode: getLabelWithValue(
+    //   {
+    //     labelKey: "WS_PROP_DETAIL_PINCODE"
+    //   },
+    //   { jsonPath: "applyScreen.property.address.pincode" }
+    // ),
+    pincode: {
+      ...getTextField({
+        label: { labelKey: "WS_PROP_DETAIL_PINCODE_INPUT" },
+        placeholder: { labelKey: "WS_PROP_DETAIL_PINCODE_INPUT_PLACEHOLDER" },
+        required: false,
+        pattern: getPattern("Pincode"),
+        gridDefination: { xs: 12, sm: 6 },
+       // errorMessage: "ERR_INVALID_BILLING_PERIOD",
+        jsonPath: "applyScreen.property.address.pincode"
+      }),
+      beforeFieldChange: async (action, state, dispatch) => {
+      
+      }
+    },
     // ExistingPropertyId: getLabelWithValue(
     //   {
     //     labelKey: "WS_PROPERTY_EXIST_ID_LABEL",
