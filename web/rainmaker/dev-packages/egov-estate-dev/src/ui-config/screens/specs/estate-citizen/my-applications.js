@@ -248,11 +248,8 @@ const getData = async (action, state, dispatch) => {
   const response = await getSearchApplicationsResults(queryObject);
   if (!!response && !!response.Applications && !!response.Applications.length) {
     // When BE response has state as "" Need to show drafted instead of NA
-    for (let i = 0; i < response.Applications.length; i++) {
-      if(response.Applications[i].state.length === 0){
-        response.Applications[i].state = "ES_DRAFTED"
-      } 
-    }
+    response.Applications.map(item => item.state = "ES_DRAFTED").filter(item => item.state.length === 0)
+    
     dispatch(prepareFinalObject("actualResults", response.Applications));
     dispatch(prepareFinalObject("searchResults", response.Applications));
   }
