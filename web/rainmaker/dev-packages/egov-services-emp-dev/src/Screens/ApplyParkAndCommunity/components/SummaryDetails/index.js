@@ -16,22 +16,37 @@ import jp from "jsonpath";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import SummaryDocumentDetail from "../SummaryDocumentDetail"
 import { httpRequest } from "egov-ui-kit/utils/api";
+import SummaryBankDetails from "../SummaryBankDetails"
 
 class SummaryDetails extends Component {
 
     state = {
         createPACCApp: '',
+<<<<<<< HEAD
+        CashPaymentApplicationNumber: '',
+        appStatus: '',
+        currentAppStatus: ''
+=======
         CashPaymentApplicationNumber: ''
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
     }
 
     componentDidMount = async () => {
        
         let { createPACCApplication, userInfo, documentMap,fetchPayment,prepareFinalObject,fetchApplications } = this.props;
         let { firstName, venueType, bokingType, bookingData, email, mobileNo, surcharge, fromDate, toDate,myLocationtwo,
-            utGST, cGST, GSTnumber, dimension, location, facilitationCharges, cleaningCharges, rent, houseNo, type, purpose, locality, residenials, facilationChargesSuccess,discountType } = this.props;
+            utGST, cGST, GSTnumber, dimension, location, facilitationCharges, cleaningCharges, rent, houseNo, type, purpose, 
+            BankAccountName,NomineeName,BankAccountNumber,IFSCCode,AccountHolderName,accountType,
+            locality, residenials, facilationChargesSuccess,discountType,checkAppStatus,checkAppNum } = this.props;
 console.log("this.propos--insummaryPage--",this.props)
 console.log("discountType--",discountType)
 console.log("newConsole--ut",utGST)
+
+console.log("checkAppStatus-props-",checkAppStatus ? checkAppStatus : "notFound")
+console.log("checkAppStatus-props-",checkAppNum ? checkAppNum : "notFound")
+this.setState({
+    appStatus : checkAppStatus
+})
 
 prepareFinalObject("SummaryutGST",this.props.utGST);
 prepareFinalObject("SummarycGST",this.props.cGST);
@@ -89,15 +104,27 @@ else if(discountType == "20%"){
             "bkEmail": email,
             "bkHouseNo": houseNo,
             "bkBookingPurpose": purpose,
+            "bkPaymentStatus": checkAppStatus == "OFFLINE_APPLIED" ? "SUCCESS" : "",
+            "bkApplicationNumber": checkAppNum ? checkAppNum : null,
             "bkCustomerGstNo": GSTnumber,
             "wfDocuments": [{
                 "fileStoreId": fid[0]
             }],
             "tenantId": userInfo.tenantId,
-            "bkAction": "OFFLINE_INITIATE",
+            "bkAction": checkAppStatus == "OFFLINE_APPLIED" ? "OFFLINE_RE_INITIATE" : "OFFLINE_INITIATE",
             "businessService": "PACC",
             "financeBusinessService": "PACC",
+<<<<<<< HEAD
+            "reInitiateStatus": checkAppStatus == "OFFLINE_APPLIED" ? true : false,
+            "financialYear": "2020-2021",
+            "bkBankAccountNumber":BankAccountNumber,
+            "bkBankName":BankAccountName,
+            "bkIfscCode":IFSCCode,
+            "bkAccountType":accountType,
+            "bkBankAccountHolder":AccountHolderName
+=======
             "financialYear": "2020-2021"
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
         }
 
         if (venueType == "Community Center" && bookingData && bookingData.bkFromTime) {
@@ -120,7 +147,7 @@ else if(discountType == "20%"){
              
                 "applicationType": "PACC",
                 "applicationStatus": "",
-                "applicationId": null,
+                "applicationId": checkAppNum ? checkAppNum : null,
                 "tenantId": userInfo.tenantId,
                 "Booking": Booking   
             }
@@ -139,12 +166,21 @@ let payloadfund = await httpRequest(
 
  let appNumber = payloadfund.data.bkApplicationNumber
  console.log("appNumber--",appNumber)
+ let AAppStatus = payloadfund.data.bkApplicationStatus
+ console.log("AAppStatus--",AAppStatus)
+
+ prepareFinalObject("CurrentApplicationNumber",appNumber)
 
  prepareFinalObject("CurrentApplicationNumber",appNumber)
 
  this.setState({
     createPACCApp : payloadfund,
+<<<<<<< HEAD
+    CashPaymentApplicationNumber : appNumber,
+    currentAppStatus : AAppStatus
+=======
     CashPaymentApplicationNumber : appNumber
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
  })
 
 
@@ -216,6 +252,8 @@ let NumberApp = this.state.CashPaymentApplicationNumber;
 
 console.log("NumberApp--",NumberApp)
 
+<<<<<<< HEAD
+=======
 // let AppNo;
 // if(InitiateAppNumber != "NotDetemine"){
 //     AppNo = InitiateAppNumber
@@ -332,6 +370,7 @@ console.log("NumberApp--",NumberApp)
 
 //  console.log("payloadfund--",payloadfund)
 
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 this.props.history.push(`/egov-services/PaymentReceiptDteail/${this.state.CashPaymentApplicationNumber}`);
    
 }
@@ -341,8 +380,14 @@ this.props.history.push(`/egov-services/PaymentReceiptDteail/${this.state.CashPa
             onFromDateChange, onToDateChange, utGST, cGST, GSTnumber, handleChange, bankName, amount, transactionDate, transactionNumber, paymentMode,
             dimension, location, facilitationCharges, cleaningCharges, rent, approverName, comment, houseNo, type, purpose, residenials, documentMap,
             BK_FEE_HEAD_PACC,LUXURY_TAX,REFUNDABLE_SECURITY,PACC_TAX,totalAmountSuPage,one,two,three,four,five,six,
+<<<<<<< HEAD
+            PACPACC_ROUND_OFFC_TAX,FACILITATION_CHARGE,InitiateAppNumber,seven,
+            BankAccountName,NomineeName,BankAccountNumber,IFSCCode,AccountHolderName,accountType,
+=======
             PACPACC_ROUND_OFFC_TAX,FACILITATION_CHARGE,InitiateAppNumber
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
             } = this.props;
+            
             console.log(",one,two,three,four,five,six--",one,two,three,four,five,six)
             console.log("propsInRendersummary--",this.props)
             let fc = fCharges?fCharges.facilitationCharge:'100';
@@ -354,22 +399,7 @@ this.props.history.push(`/egov-services/PaymentReceiptDteail/${this.state.CashPa
                 <div className="form-without-button-cont-generic">
                     <div classsName="container">
                         <div className="col-xs-12">
-                            {/* <PaccFeeEstimate
-BK_FEE_HEAD_PACC={BK_FEE_HEAD_PACC}
-LUXURY_TAX={LUXURY_TAX}
-REFUNDABLE_SECURITY={REFUNDABLE_SECURITY}
-PACC_TAX={PACC_TAX}
-PACPACC_ROUND_OFFC_TAX={PACPACC_ROUND_OFFC_TAX}
-FACILITATION_CHARGE={FACILITATION_CHARGE}
-totalAmountSuPage={totalAmountSuPage}
-                                amount={amount}
-                                cGST={cGST}
-                                utGST={utGST}
-                                fc={fc}
-                                firstStep={this.firstStep}
-
-                                one,two,three,four,four,six
-                            /> */}
+                           
 
 <PaccFeeEstimate
 one={one}
@@ -378,6 +408,7 @@ three={three}
 four={four}
 five={five}
 six={six}
+seven={seven && seven ? seven :"notfound"}
 REFUNDABLE_SECURITY={REFUNDABLE_SECURITY}
 PACC_TAX={PACC_TAX}
 PACPACC_ROUND_OFFC_TAX={PACPACC_ROUND_OFFC_TAX}
@@ -388,6 +419,7 @@ totalAmountSuPage={totalAmountSuPage}
                                 utGST={utGST}
                                 fc={fc}
                                 firstStep={this.firstStep}
+                                currentAppStatus= {this.state.currentAppStatus && this.state.currentAppStatus}
                             />
 
                             <SummaryApplicantDetail
@@ -407,6 +439,14 @@ totalAmountSuPage={totalAmountSuPage}
                                 cGST={this.props.cGST}
                                 utGST={this.props.utGST}
                                 GSTnumber={GSTnumber}
+                            />
+                            <SummaryBankDetails   
+                                BankAccountName={BankAccountName}
+                                NomineeName={NomineeName}
+                                BankAccountNumber={BankAccountNumber}
+                                IFSCCode={IFSCCode}
+                                AccountHolderName={AccountHolderName}
+                                accountType={accountType}
                             />
                             <SummaryDocumentDetail
                                 documentMap={documentMap}
@@ -472,6 +512,7 @@ const mapStateToProps = state => {
     let four = 0;
     let five = 0;
     let six = 0;
+    let seven = 0;
 for(let i = 0; i < billAccountDetailsArray.length ; i++ ){
 
     if(billAccountDetailsArray[i].taxHeadCode == "PACC"){
@@ -492,6 +533,9 @@ for(let i = 0; i < billAccountDetailsArray.length ; i++ ){
     else if(billAccountDetailsArray[i].taxHeadCode == "FACILITATION_CHARGE"){
         six = billAccountDetailsArray[i].amount
     }
+    else if(billAccountDetailsArray[i].taxHeadCode == "PACC_LOCATION_AND_VENUE_CHANGE_AMOUNT"){
+        seven = billAccountDetailsArray[i].amount
+    }
 }
 
 console.log("one--",one)
@@ -500,6 +544,10 @@ console.log("three--",three)
 console.log("four--",four)
 console.log("five--",five)
 console.log("six--",six)
+<<<<<<< HEAD
+console.log("seven--",seven ? seven : "sdfg")
+=======
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
 
     let myLocation = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.availabilityCheckData:"";  
     let myLocationtwo = myLocation?myLocation.bkLocation:"";  
@@ -508,12 +556,21 @@ console.log("six--",six)
     console.log("NewAppNumber--",NewAppNumber)
 
     let tryMyNumber;
+<<<<<<< HEAD
 
     if(NewAppNumber != "NotDetemine"){
         tryMyNumber = NewAppNumber && NewAppNumber;
     }
     console.log("tryMyNumber--",tryMyNumber)
 
+=======
+
+    if(NewAppNumber != "NotDetemine"){
+        tryMyNumber = NewAppNumber && NewAppNumber;
+    }
+    console.log("tryMyNumber--",tryMyNumber)
+
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
     let InitiateAppNumber = NewAppNumber && NewAppNumber ? NewAppNumber : "NotDetemine";
     
     console.log("InitiateAppNumber--",InitiateAppNumber)
@@ -529,12 +586,26 @@ console.log("six--",six)
     }
     let documentMap = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.documentMap : "";
     let bkLocation = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.availabilityCheckData.bkLocation : "";
+   
+   let checkAppStatus = state.bookings.applicationData ? state.bookings.applicationData.bookingsModelList[0].bkApplicationStatus : "NOTFOUND";
+   console.log("checkAppStatus--",checkAppStatus)
+
+   let checkAppNum = state.bookings.applicationData ? state.bookings.applicationData.bookingsModelList[0].bkApplicationNumber : "NOTFOUND";
+   console.log("checkAppStatus--bkApplicationNumber",checkAppNum)
+
+   //OFFLINE_APPLIED
+
     return {
         //BK_FEE_HEAD_PACC,LUXURY_TAX,REFUNDABLE_SECURITY,PACC_TAX,
         //PACPACC_ROUND_OFFC_TAX,FACILITATION_CHARGE,
         createPACCApplicationData,userInfo,InitiateAppNumber,
+<<<<<<< HEAD
+        documentMap, bkLocation, facilationChargesSuccess,seven,
+        fCharges,myLocationtwo,totalAmountSuPage,one,two,three,four,five,six,checkAppStatus,checkAppNum
+=======
         documentMap, bkLocation, facilationChargesSuccess,
         fCharges,myLocationtwo,totalAmountSuPage,one,two,three,four,five,six
+>>>>>>> 20cd8ee0acc49b4f576ceb366b34012fa48e16c9
     }
 
 }

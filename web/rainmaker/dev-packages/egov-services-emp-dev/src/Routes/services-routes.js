@@ -112,7 +112,6 @@ const PaymentSuccessForEmployee = Loadable({
   loading: Loading
 });
 
-
 const CheckAvailabilityPcc= Loadable({
   loader: () => import("../Screens/ApplyParkAndCommunity/components/CheckAvailability"),
   loading: Loading
@@ -342,8 +341,21 @@ const routes = [
     redirectionUrl
   }
 },
-
-
+//Apply PACC
+{
+  path: "egov-services/applyPark-community-center",
+  component: ApplyPArkAndCommunity,
+  needsAuthentication: true,
+  options: {
+    hideFooter: true,
+    title: "BK_MYBK_APPLY_PACC_REQUEST_HEADER",
+    hideTitle: false,
+    redirectionUrl,
+    hideFor: "ao",
+    customFor: "employee",
+    customTitle: "BK_MYBK_APPLY_PACC_REQUEST_HEADER"
+  }
+},
 //newMasterData
 {
   path: "egov-services/MasterData",
@@ -455,21 +467,6 @@ const routes = [
       hideFor: "ao",
       customFor: "employee",
       customTitle: "BK_MYBK_APPLY_SPECIAL_REQUEST_HEADER"
-    }
-  },
-
-  {
-    path: "egov-services/applyPark-community-center",
-    component: ApplyPArkAndCommunity,
-    needsAuthentication: true,
-    options: {
-      hideFooter: true,
-      title: "BK_MYBK_APPLY_PACC_REQUEST_HEADER",
-      hideTitle: false,
-      redirectionUrl,
-      hideFor: "ao",
-      customFor: "employee",
-      customTitle: "BK_MYBK_APPLY_PACC_REQUEST_HEADER"
     }
   },
   {
@@ -605,7 +602,7 @@ const routes = [
   //   }
   // },
   {
-    path: "egov-services/resolve-success",
+    path: "egov-services/DataSubmitted",
     component: ResolveSuccess,
     needsAuthentication: true,
     options: {
@@ -646,7 +643,7 @@ const routes = [
     }
   },
   {
-    path: "egov-services/assign-to-success",
+    path: "egov-services/DriverAssigned",
     component: AssignToDriverSuccess,
     needsAuthentication: true,
     options: {
