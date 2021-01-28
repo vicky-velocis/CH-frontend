@@ -17,7 +17,7 @@ import {
 } from "../../utils";
 import moment from 'moment'
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-
+import get from "lodash/get";
 let screenName = "apply-manimajra"
 
 const houseNumberField = {
@@ -298,8 +298,21 @@ export const annualTextField = {
   gridDefination: {
       xs: 12,
       sm: 6
+  },
+  afterFieldChange: (action, state, dispatch) => {
+let mmyear=get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.mmDemandStartYear")
+
+if(!!mmyear){
+dispatch(
+  handleField(
+    action.screenKey,
+    "components.div.children.formwizardFirstStep.children.monthlyDetails.children.cardContent.children.detailsContainer.children.yearly",
+    "props.disabled",
+    true
+  )
+)
   }
- 
+  }
 }
 export const yearTextField = {
   label: {
@@ -311,10 +324,24 @@ export const yearTextField = {
       labelKey: "ES_SELECT_YEAR_PLACEHOLDER"
   },
   required: true,
-  jsonPath: "Properties[0].propertyDetails.mmYear",
+  jsonPath: "Properties[0].propertyDetails.mmDemandStartYear",
   gridDefination: {
       xs: 12,
       sm: 6
+  },
+  afterFieldChange: (action, state, dispatch) => {
+let mmanualyear=get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.mmDemandStartYear")
+
+if(!!mmanualyear){
+dispatch(
+  handleField(
+    action.screenKey,
+    "components.div.children.formwizardFirstStep.children.annualDetails.children.cardContent.children.detailsContainer.children.annual",
+    "props.disabled",
+    true
+  )
+)
+  }
   }
 }
 export const monthTextField = {

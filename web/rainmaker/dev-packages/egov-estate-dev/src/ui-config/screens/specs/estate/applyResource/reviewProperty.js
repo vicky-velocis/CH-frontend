@@ -304,11 +304,6 @@ export const getReviewMonthlyDetals = (isEditable = true, screenkey = "apply") =
         monthlyLabel, {
           jsonPath: "Properties[0].propertyDetails.mmDemandStartMonth"
         }
-      ),
-      yearlyLabel: getLabelWithValue(
-        annualLabel, {
-          jsonPath: "Properties[0].propertyDetails.mmYear"
-        }
       )
     })
   })
