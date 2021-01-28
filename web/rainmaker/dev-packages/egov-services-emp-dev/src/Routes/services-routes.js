@@ -111,7 +111,21 @@ const PaymentSuccessForEmployee = Loadable({
   loader: () => import("../Screens/PaymentSuccessForEmployee"),
   loading: Loading
 });
-
+//Cancel an application from emp
+const ApplyCancelEmpApplication = Loadable({
+  loader: () => import("../Screens/ApplyCancelEmpApplication"),
+  loading: Loading
+});
+//ApplyRefundEmpApplication
+const ApplyRefundEmpApplication = Loadable({
+  loader: () => import("../Screens/ApplyRefundEmpApplication"),
+  loading: Loading
+});
+//applyResourceCommercialGround
+const applyResourceCommercialGround = Loadable({
+  loader: () => import("../Screens/ApplyCommercialGround"),
+  loading: Loading
+});
 const CheckAvailabilityPcc= Loadable({
   loader: () => import("../Screens/ApplyParkAndCommunity/components/CheckAvailability"),
   loading: Loading
@@ -339,6 +353,51 @@ const routes = [
     title: "CS_COMPLAINT_DETAILS_COMPLAINT_RESOLVED",
     hideTitle: true,
     redirectionUrl
+  }
+},
+//ApplyRefundEmpApplication
+{
+  path: "egov-services/apply-refund-success",
+  component: ApplyRefundEmpApplication,
+  needsAuthentication: true,
+  options: {
+    hideBackButton: true,
+    customFor: "employee",
+    hideFooter: true,
+    title: "CS_COMPLAINT_DETAILS_COMPLAINT_RESOLVED",
+    hideTitle: true,
+    redirectionUrl
+  }
+},
+
+//ApplyCancelEmpApplication 
+{
+  path: "egov-services/application-cancelled-success",
+  component: ApplyCancelEmpApplication,
+  needsAuthentication: true,
+  options: {
+    hideBackButton: true,
+    customFor: "employee",
+    hideFooter: true,
+    title: "CS_COMPLAINT_DETAILS_COMPLAINT_RESOLVED",
+    hideTitle: true,
+    redirectionUrl
+  }
+},
+//ApplyCommercial
+{
+  path: "egov-services/applyResourceCommercialGround",
+  component: applyResourceCommercialGround,
+  needsAuthentication: true,
+  options: {
+    hideBackButton: true,
+    customFor: "employee",
+    hideFooter: true,
+    title: "BK_CGB_APPLY",
+    hideTitle: false,
+    redirectionUrl,
+    hideFor: "ao",
+    customTitle: "BK_CGB_APPLY"
   }
 },
 //Apply PACC
