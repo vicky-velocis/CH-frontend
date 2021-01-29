@@ -4,12 +4,11 @@ import { Line } from 'react-chartjs-2';
 import { Bar } from 'react-chartjs-2';
 import { Scatter } from 'react-chartjs-2';
 import Grid from "@material-ui/core/Grid";
-import DoughnutChart from './DoughnutChart';
-import HorizontalBarChart from './HorizontalBarChart'
+import HorizontalBarChart from './HorizontalBarChart';
 import Card from '@material-ui/core/Card';
 import './index.css'
 
-class ReportMolecule extends React.Component {
+class HorizontalBarMolecule extends React.Component {
   constructor(props) {
     super(props);
     this.state ={
@@ -40,7 +39,6 @@ class ReportMolecule extends React.Component {
 
   render() {
        
-    debugger
     return (
       <div>
         {/* Doughnut Chart */}
@@ -50,7 +48,7 @@ class ReportMolecule extends React.Component {
             this.state.AllDataRes.map((graphData)=>{
               return(
                 <Card id="cardSpacing">
-                  <DoughnutChart graphData={graphData} />
+                  <HorizontalBarChart graphData={graphData} />
                 </Card>
               )
             }): null
@@ -61,4 +59,4 @@ class ReportMolecule extends React.Component {
   }
 }
 
-export default ReportMolecule;
+export default HorizontalBarMolecule;
