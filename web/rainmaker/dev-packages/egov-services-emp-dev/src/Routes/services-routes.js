@@ -569,16 +569,16 @@ const routes = [
   },
 
   
-  {
-    path: "egov-services/new-location-details/:applicationId",
-    component: LocationSummary,
-    needsAuthentication: true,
-    options: {
-      hideFooter: true,
-      // title: "BK_CS_HEADER_APPLICATION_SUMMARY",
-      redirectionUrl
-    }
-  },
+  // {
+  //   path: "egov-services/new-location-details/:applicationId",
+  //   component: LocationSummary,
+  //   needsAuthentication: true,
+  //   options: {
+  //     hideFooter: true,
+  //     // title: "BK_CS_HEADER_APPLICATION_SUMMARY",
+  //     redirectionUrl
+  //   }
+  // },
  
   {
     path: "egov-services/cg-application-details/:applicationId",
