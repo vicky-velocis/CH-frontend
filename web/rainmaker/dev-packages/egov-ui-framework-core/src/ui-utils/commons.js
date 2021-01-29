@@ -852,7 +852,8 @@ const footerCallBackForRequiredDataModal = (moduleName) => {
         dispatch(prepareFinalObject("SewerageConnection", []));
         dispatch(prepareFinalObject("applyScreen", {}));
         dispatch(prepareFinalObject("searchScreen", {}));
-       const url = `/pt-common-screens/propertySearch?redirectUrl=/wns/apply`;
+      // const url = `/pt-common-screens/propertySearch?redirectUrl=/wns/apply`;
+       const url = `/wns/apply`;
         const applyUrl = process.env.REACT_APP_NAME === "Citizen" ? url : url
         dispatch(setRoute(applyUrl));
       };

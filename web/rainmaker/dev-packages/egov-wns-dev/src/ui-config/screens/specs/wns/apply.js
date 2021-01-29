@@ -130,7 +130,7 @@ export const documentDetails = getCommonCard({
   }
 });
 
-export const getMdmsData = async dispatch => {
+export const getMdmsData = async (state,dispatch) => {
   let mdmsBody = {
     MdmsCriteria: {
       tenantId: commonConfig.tenantId,
@@ -142,7 +142,8 @@ export const getMdmsData = async dispatch => {
         {
           moduleName: "PropertyTax",
           masterDetails: [
-          {name: "UsageCategory"}
+          {name: "UsageCategory"},
+          {name:"Floor"},
           ]
         },
         {
@@ -232,7 +233,23 @@ export const getMdmsData = async dispatch => {
       });
       payload.MdmsRes.PropertyTax.subUsageType=subUsageType;
     }
+    let cities = state.common.cities || [];
+    let City = []
+    for (let index = 0; index < cities.length; index++) {
+      const element = cities[index];
+      
+      City.push(
+        {
+          name:element.city.name,
+          code:element.code
+        }
+      )
+    }
+   // dispatch(prepareFinalObject("applyScreenMdmsData.City", City));
+    payload.MdmsRes.City = City
+    dispatch(prepareFinalObject("applyScreen.property.address.city", City[0].name));
     dispatch(prepareFinalObject("applyScreenMdmsData", payload.MdmsRes));
+    //
   } catch (e) { console.log(e); }
 };
 
@@ -240,7 +257,7 @@ export const getData = async (action, state, dispatch) => {
   const applicationNo = getQueryArg(window.location.href, "applicationNumber");
   let tenantId = getQueryArg(window.location.href, "tenantId");
   const propertyID = getQueryArg(window.location.href, "propertyId");
-  await getMdmsData(dispatch);
+  await getMdmsData(state, dispatch);
   setModule("rainmaker-ws,rainmaker-pt");
  // setModule("rainmaker-pt");
     const userInfo = JSON.parse(getUserInfo());
@@ -510,7 +527,7 @@ const commentDetails = getCommentDetails();
  const connectionConversionDetails =getConnectionConversionDetails();
  const propertyUsage = getPropertyUsageDetails();
 export const ownerDetails = getCommonCard({ ownerDetailsHeader, ownershipType, ownerDetail });
-export const IDDetails = getCommonCard({ propertyHeader, propertyID, propertyIDDetails });
+export const IDDetails = getCommonCard({ propertyHeader, propertyID, propertyIDDetails });//propertyID
 export const Details = getCommonCard({ propertyDetail });
 export const connectionHolderDetails = getCommonCard({ holderHeader, sameAsOwner, holderDetails })
 export const propertyUsageDetails = getCommonCard({PropertyUsageHeader,propertyUsage});
@@ -608,16 +625,27 @@ const screenConfig = {
        window.localStorage.removeItem("isTubeWell");
       }
     } else {
-      togglePropertyFeilds(action, false)
+      // togglePropertyFeilds(action, false)
+      // if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.water") && get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage")) {
+      //   toggleWaterFeilds(action, true);
+      //   toggleSewerageFeilds(action, true);
+      // } else if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage")) {
+      //   toggleWaterFeilds(action, false);
+      //   toggleSewerageFeilds(action, true);
+      // } else {
+      //   toggleWaterFeilds(action, true);
+      //   toggleSewerageFeilds(action, false);
+      // }
+      togglePropertyFeilds(action, true)
       if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.water") && get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage")) {
         toggleWaterFeilds(action, true);
         toggleSewerageFeilds(action, true);
       } else if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage")) {
-        toggleWaterFeilds(action, false);
+        toggleWaterFeilds(action, true);
         toggleSewerageFeilds(action, true);
       } else {
         toggleWaterFeilds(action, true);
-        toggleSewerageFeilds(action, false);
+        toggleSewerageFeilds(action, true);
       }
     }
 
