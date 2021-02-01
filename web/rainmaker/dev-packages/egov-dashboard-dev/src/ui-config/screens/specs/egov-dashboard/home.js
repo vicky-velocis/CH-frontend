@@ -6,23 +6,21 @@ import get from "lodash/get";
 import set from "lodash/set";
 import React from "react";
 import { getDashboardDropdownData } from "../../../../ui-utils/commons";
-import { clearlocalstorageAppDetails, getRequiredDocData } from "../utils";
-// import { FilterFormforEmployee } from "./searchResource/FilterFormaforEmployee";
-// import { dashboardSearchResults } from "./searchResource/";
-import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 
-
-let role_name = JSON.parse(getUserInfo()).roles[0].code
+// let role_name = JSON.parse(getUserInfo()).roles[0].code
 
 const header = getCommonHeader(
   {
-    labelName: "",
-    labelKey: "Dashboard"
+    labelName: "Dashboard",
+    labelKey: "DASHBOARD_HOME_HEADER"
   },
   {
     classes: {
       root: "common-header-cont"
-    }
+    },
+    style: {
+      padding: "0px 0px 0px 8px"
+    },
   }
 );
 let cardItems = [];
@@ -31,8 +29,8 @@ let cardItems = [];
   const cardlist = [
     {
       label: {
-        labelName: "",
-        labelKey: "Dashboard"
+        labelName: "PGR Dashboard",
+        labelKey: "DASHBOARD_1"
       },
       
       icon: <i
@@ -42,59 +40,13 @@ let cardItems = [];
           class="material-icons module-page-icon" style={{ fontSize: "40px" }}>
           wysiwyg
       </i>,
-      route: "dashboardType"
-
-    },
-    {
-      label: {
-        labelName: "",
-        labelKey: "Dashboard 2"
-      },
-      
-      icon: <i
-          viewBox="0 -8 35 42"
-          color="primary"
-          font-size="40px"
-          class="material-icons module-page-icon" style={{ fontSize: "40px" }}>
-          wysiwyg
-      </i>,
-      route: "dashboardSource"
+      route: "PGRDashboard"
 
     }
   ];
   cardItems = cardlist;
-// // }
 
-
-// const horticultureSearchAndResult = {
-//   uiFramework: "material-ui",
-//   name: "home",
-//   beforeInitScreen: (action, state, dispatch) => {
-//     clearlocalstorageAppDetails(state);     
-//     let response = previewWF(state, dispatch, status);
-//     return action;
-//   },
-//   components: {
-//     div: {
-//       uiFramework: "custom-atoms",
-//       componentPath: "Div",
-//       children: {
-//         header: header,
-//         applyCard: {
-//           uiFramework: "custom-molecules",
-//           componentPath: "LandingPage",
-//           props: {
-//             items: cardItems,
-//             history: {}
-//           }
-//         },
-//       }
-//     },
-  
-//   }
-// };
-
-const defaultDate = (date) => {
+  const defaultDate = (date) => {
   var d = new Date(date),
       month = '' + (d.getMonth() + 1),
       day = '' + d.getDate(),
@@ -111,7 +63,7 @@ const defaultDate = (date) => {
 const getDropDownData = async (action, state, dispatch) => {
 
   debugger
-  let data = getDashboardDropdownData(state, dispatch, status)
+  // let data = getDashboardDropdownData(state, dispatch, status)
 
   // Date default
   var fromDate = new Date()
@@ -145,10 +97,6 @@ const DashboardHome = {
 
           children: {
             header: {
-              // gridDefination: {
-              //   xs: 12,
-              //   sm: 6
-              // },
               ...header
             },
             applyCard: {
@@ -161,10 +109,6 @@ const DashboardHome = {
             },
           }
         },
-
-        // FilterFormforEmployee,
-        // breakAfterSearch: getBreak(),
-        // dashboardSearchResults
       }
     },
       }
