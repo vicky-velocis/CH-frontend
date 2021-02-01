@@ -274,13 +274,82 @@ else if(wnsStatus && (wnsStatus === "REACTIVATE_CONNECTION"||wnsStatus === "TEMP
 
     } else {
 
+     
+
+      const isPropertyDetailsValid= validateFields(
+        "components.div.children.formwizardFirstStep.children.IDDetails.children.cardContent.children.propertyIDDetails.children.viewTwo.children",
+        state,
+        dispatch,
+        "apply"
+      );
+      const isPropertyLocationDetailValid= validateFields(
+        "components.div.children.formwizardFirstStep.children.Details.children.cardContent.children.propertyDetail.children.viewFour.children",
+        state,
+        dispatch,
+        "apply"
+      );  
+      const isOwnershipTypeInputValid =  validateFields(
+        "components.div.children.formwizardFirstStep.children.ownerDetails.children.cardContent.children.ownershipTypeInput",
+        state,
+        dispatch,
+        "apply"
+      ); 
+
+      // for Ownership Type
+      let x = get('applyScreen.property.ownershipCategory')
+      let ownershipCategory= get(state.screenConfiguration.preparedFinalObject,"applyScreen.property.ownershipCategory", '' )
+      if(ownershipCategory)
+      {
+        if(ownershipCategory ==='INDIVIDUAL.MULTIPLEOWNERS')
+        {
+          const isOwnershipsingleValid =  validateFields(
+            "components.div.children.formwizardFirstStep.children.ownerDetails.children.cardContent.children.ownershipTypeInput",
+            state,
+            dispatch,
+            "apply"
+          ); 
+
+        }
+        else{
+          let SingleOwnerDetailsCardPath =
+          "components.div.children.formwizardSecondStep.children.ownerDetails.children.cardContent.children.ownerDetail.children.cardContent.children.headerDiv.props.items";
+        let SingleOwnerDetailsItems = get(
+          state.screenConfiguration.screenConfig.apply,
+          SingleOwnerDetailsCardPath,
+          []
+        );
+        let isMasterDetailsValid = true;
+        for (var j = 0; j < SingleOwnerDetailsItems.length; j++) {
+          if (
+            (SingleOwnerDetailsItems[j].isDeleted === undefined ||
+              SingleOwnerDetailsItems[j].isDeleted !== false) &&
+            !validateFields(
+              `${SingleOwnerDetailsCardPath}[${j}].item${j}.children.cardContent.children.viewFive.children`,
+              state,
+              dispatch,
+              "apply"
+            )
+          )
+          isMasterDetailsValid = false; 
+
+        }
+      }
+
+      }
+
       const isPropertyUsageValid= validateFields(
         "components.div.children.formwizardFirstStep.children.propertyUsageDetails.children.cardContent.children.propertyUsage.children.PropertyUsageDetails.children",
         state,
         dispatch,
         "apply"
       );
-      if(!isPropertyUsageValid){
+      const isConnectionHolderDetailsValid= validateFields(
+        "components.div.children.formwizardFirstStep.children.connectionHolderDetails.children.cardContent.children.holderDetails.children.holderDetails.children",
+        state,
+        dispatch,
+        "apply"
+      );
+      if(!isPropertyUsageValid || !isConnectionHolderDetailsValid || !isOwnershipTypeInputValid ||!isPropertyLocationDetailValid || !isPropertyDetailsValid){
         isFormValid = false;
       }
       const water = get(
@@ -295,7 +364,7 @@ else if(wnsStatus && (wnsStatus === "REACTIVATE_CONNECTION"||wnsStatus === "TEMP
         state.screenConfiguration.preparedFinalObject,
         "applyScreen.tubewell"
       );
-      const searchPropertyId = get(
+      let searchPropertyId = get(
         state.screenConfiguration.preparedFinalObject,
         "searchScreen.propertyIds"
       )
@@ -316,11 +385,82 @@ else if(wnsStatus && (wnsStatus === "REACTIVATE_CONNECTION"||wnsStatus === "TEMP
         arrayHolderData.push(holderData);
         applyScreenObject.connectionHolders = arrayHolderData;
       }
+      if(isFormValid)
+      {
+        let propertyPayload = get(
+          state,
+          "screenConfiguration.preparedFinalObject.applyScreen.property"
+        );
+        let tenantId = get(
+          state,
+          "screenConfiguration.preparedFinalObject.applyScreenMdmsData.tenant.tenants[0].code"
+        );
+        set(propertyPayload, "channel", "SYSTEM");
+        set(propertyPayload, "source", "MUNICIPAL_RECORDS");
+        set(propertyPayload, "noOfFloors", 1);
+        set(propertyPayload, "propertyType", "VACANT");
+        propertyPayload.landArea = parseInt(propertyPayload.landArea);
+        propertyPayload.totalConstructedArea = parseInt(propertyPayload.landArea);
+        propertyPayload.tenantId = tenantId;
+        propertyPayload.address.city = propertyPayload.address.city;
+        if(propertyPayload.address.locality.code.value)
+            propertyPayload.address.locality.code = propertyPayload.address.locality.code.value;
+            else
+            propertyPayload.address.locality.code = "DB_1";
+       // propertyPayload.address.locality.code = propertyPayload.address.locality.code.value;
+        propertyPayload.rainWaterHarvesting=false;
+        try {
+        propertyPayload.creationReason = 'CREATE';
+        let payload = null;
+        payload = await httpRequest(
+          "post",
+          "/property-services/property/_create",
+          "_update",
+          [],
+          { Property: propertyPayload }
+  
+        );
+        if (payload) {
+          if(payload.Properties[0].propertyId != null)
+          searchPropertyId = payload.Properties[0].propertyId
+          else{
+            searchPropertyId = payload.Properties[0].id
+          }
+        }
+        else{
+          dispatch(
+            toggleSnackbar(
+              true, {
+              labelKey: "PT_COMMON_FAILED_TO_REGISTER_PROPERTY",
+              labelName: "Failed to register property"
+            },
+              "warning"
+            )
+          )
+          return;
+        }
+      } catch (error) {
+        console.log(error.message);
+        dispatch(
+          toggleSnackbar(
+            true, {
+            // labelKey: "PT_COMMON_FAILED_TO_REGISTER_PROPERTY",
+            // labelName: "Failed to register property"
+            labelKey:error.message,
+            labelName: error.message
+          },
+            "warning"
+          )
+        )
+        return false;
+        isFormValid = false
+      }
+      }
       if (searchPropertyId !== undefined && searchPropertyId !== "") {
         if(!isActiveProperty(applyScreenObject.property)){
           dispatch(toggleSnackbar(true, { labelKey: `ERR_WS_PROP_STATUS_${applyScreenObject.property.status}`, labelName: `Property Status is ${applyScreenObject.property.status}` }, "warning"));     
           showHideFieldsFirstStep(dispatch,"",false);
-          return false;
+          return true;
         }
         // TODO else part update propertyId.
         if (validateConnHolderDetails(applyScreenObject)) {
@@ -387,7 +527,8 @@ else if(wnsStatus && (wnsStatus === "REACTIVATE_CONNECTION"||wnsStatus === "TEMP
                 )
               }
             }
-          } else {
+          } 
+          else {
             isFormValid = false;
             dispatch(
               toggleSnackbar(
@@ -469,8 +610,11 @@ else if(wnsStatus && (wnsStatus === "REACTIVATE_CONNECTION"||wnsStatus === "TEMP
                   )
                 )
               }
-            }else {
-        isFormValid = false;
+            }
+            else {
+        isFormValid = isFormValid;
+        if(!isFormValid)
+        {
         dispatch(
           toggleSnackbar(
             true, {
@@ -480,6 +624,7 @@ else if(wnsStatus && (wnsStatus === "REACTIVATE_CONNECTION"||wnsStatus === "TEMP
             "warning"
           )
         );
+        }
       }
     }
     prepareDocumentsUploadData(state, dispatch);

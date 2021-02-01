@@ -74,16 +74,16 @@ import {
       ...getTextField({
         label: { labelKey: "WS_PROP_DETAIL_CITY_INPUT" },
         placeholder: { labelKey: "WS_PROP_DETAIL_CITY_INPUT_PLACEHOLDER" },
-        required: true,
+        required: false,
        // sourceJsonPath: "applyScreenMdmsData.City",
         gridDefination: { xs: 12, sm: 6 },
        // errorMessage: "ERR_INVALID_BILLING_PERIOD",
         jsonPath: "applyScreen.property.address.city",
-        // props: {
-        //   optionValue: "code",
-        //   optionLabel: "name",
-          
-        // },
+        props: {
+          // optionValue: "code",
+          // optionLabel: "name",
+          disabled: true
+        },
       }),
       beforeFieldChange: async (action, state, dispatch) => {
       
@@ -93,7 +93,7 @@ import {
       uiFramework: "custom-containers-local",
       moduleName: "egov-wns",
       componentPath: "AutosuggestContainer",
-      jsonPath: "applyScreen.property.address.locality.name",
+      jsonPath: "applyScreen.property.address.locality.code",
       required: true,
       props: {
         optionLabel: "name",
@@ -102,14 +102,14 @@ import {
           width: "100%",
           cursor: "pointer"
         },
-        label: { labelName: "locality", labelKey: "WS_PROP_DETAIL_LOCALITY_MOHALLA_LABEL_INPUT" },
+        label: { labelName: "Sector/Locality", labelKey: "WS_PROP_DETAIL_LOCALITY_MOHALLA_LABEL_INPUT" },
         placeholder: {
-          labelName: "Select locality",
+          labelName: "Select Sector/Locality",
           labelKey: "WS_PROP_DETAIL_LOCALITY_MOHALLA_LABEL_INPUT_PLACEHOLDER"
         },
        
        // sourceJsonPath: "applyScreenMdmsData.ws-services-locality",
-        sourceJsonPath: "applyScreenMdmsData.PropertyTax.Floor",
+        sourceJsonPath: "applyScreenMdmsData.ws-services-masters.sectorList",
         labelsFromLocalisation: true,
         suggestions: [],
         fullwidth: true,
@@ -142,7 +142,7 @@ import {
         label: { labelKey: "WS_PROP_DETAIL_DHNO_INPUT" },
         placeholder: { labelKey: "WS_PROP_DETAIL_DHNO_INPUT_PLACEHOLDER" },
         required: true,
-        sourceJsonPath: "applyScreenMdmsData.ws-services-masters.waterSource",
+       // sourceJsonPath: "applyScreenMdmsData.ws-services-masters.waterSource",
         gridDefination: { xs: 12, sm: 6 },
        // errorMessage: "ERR_INVALID_BILLING_PERIOD",
         jsonPath: "applyScreen.property.address.doorNo",
@@ -204,20 +204,20 @@ import {
     //     jsonPath: "applyScreen.property.address.locality.name",
     //   }
     // ),
-    locality: {
-      ...getSelectField({
-        label: { labelKey: "WS_PROP_DETAIL_LOCALITY_MOHALLA_LABEL_INPUT" },
-        placeholder: { labelKey: "WS_PROP_DETAIL_LOCALITY_MOHALLA_LABEL_INPUT_PLACEHOLDER" },
-        required: true,
-        sourceJsonPath: "applyScreenMdmsData.ws-services-locality",
-        gridDefination: { xs: 12, sm: 6 },
-       // errorMessage: "ERR_INVALID_BILLING_PERIOD",
-        jsonPath: "applyScreen.property.address.locality.name"
-      }),
-      beforeFieldChange: async (action, state, dispatch) => {
+    // locality: {
+    //   ...getSelectField({
+    //     label: { labelKey: "WS_PROP_DETAIL_LOCALITY_MOHALLA_LABEL_INPUT" },
+    //     placeholder: { labelKey: "WS_PROP_DETAIL_LOCALITY_MOHALLA_LABEL_INPUT_PLACEHOLDER" },
+    //     required: true,
+    //     sourceJsonPath: "applyScreenMdmsData.ws-services-locality",
+    //     gridDefination: { xs: 12, sm: 6 },
+    //    // errorMessage: "ERR_INVALID_BILLING_PERIOD",
+    //     jsonPath: "applyScreen.property.address.locality.name"
+    //   }),
+    //   beforeFieldChange: async (action, state, dispatch) => {
       
-      }
-    },
+    //   }
+    // },
 
     // pincode: getLabelWithValue(
     //   {

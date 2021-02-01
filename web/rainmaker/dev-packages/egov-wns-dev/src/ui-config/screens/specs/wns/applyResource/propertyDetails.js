@@ -22,6 +22,7 @@ export const propertyID = getCommonContainer({
     placeholder: { labelKey: "WS_PROPERTY_ID_PLACEHOLDER" },
     gridDefination: { xs: 12, sm: 5, md: 5 },
     required: false,
+    visible:false,
     props: {
       style: {
         width: "100%"
@@ -89,8 +90,7 @@ const propertyDetails = getCommonContainer({
   //   }
   // ),
 
-  propertyUsageType: {
-    ...getSelectField({
+  propertyUsageType:getSelectField({
       label: { labelKey: "WS_PROPERTY_USAGE_TYPE_LABEL_INPUT" },
       placeholder: { labelKey: "WS_PROPERTY_USAGE_TYPE_LABEL_INPUT_PLACEHOLDER" },
       required: true,
@@ -101,12 +101,12 @@ const propertyDetails = getCommonContainer({
       props: {
         optionValue: "code",
         optionLabel: "name",
-      }
+      },
+      beforeFieldChange: async (action, state, dispatch) => {
+       
+   }
     }),
-    beforeFieldChange: async (action, state, dispatch) => {
     
-    }
-  },
 
   propertySubUsageType: {
     ...getSelectField({
@@ -150,7 +150,7 @@ const propertyDetails = getCommonContainer({
       sourceJsonPath: "applyScreenMdmsData.PropertyTax.Floor",
       gridDefination: { xs: 12, sm: 6 },
      // errorMessage: "ERR_INVALID_BILLING_PERIOD",
-      jsonPath: "applyScreen.property.floorNumber",
+      jsonPath: "applyScreen.property.noOfFloors",
       props: {
         optionValue: "code",
         optionLabel: "name",

@@ -33,10 +33,10 @@ export const conectionDetails = () => {
        
         service: getLabelWithValue(
       {
-        labelKey: "WS_PROP_DETAIL_CITY"
+        labelKey: "WS_COMMON_TABLE_COL_SERVICE_LABEL"
       },
       {
-        jsonPath: "applyScreen.property.address.service",
+        jsonPath: "combinedSearchResults[0].service",
       }
     ),
     consumerno: getLabelWithValue(
@@ -44,7 +44,7 @@ export const conectionDetails = () => {
         labelKey: "WS_COMMON_TABLE_COL_CONSUMER_NO_LABEL"
       },
       {
-        jsonPath: "applyScreen.property.address.service",
+        jsonPath: "combinedSearchResults[0].connectionNo",
       }
     ),
     ownername: getLabelWithValue(
@@ -52,7 +52,7 @@ export const conectionDetails = () => {
         labelKey: "WS_COMMON_TABLE_COL_OWN_NAME_LABEL"
       },
       {
-        jsonPath: "applyScreen.property.address.service",
+        jsonPath: "combinedSearchResults[0].property.address.service",
       }
     ),
     status: getLabelWithValue(
@@ -60,7 +60,7 @@ export const conectionDetails = () => {
         labelKey: "WS_COMMON_TABLE_COL_STATUS_LABEL"
       },
       {
-        jsonPath: "applyScreen.property.address.service",
+        jsonPath: "combinedSearchResults[0].status",
       }
     ),
     address: getLabelWithValue(
@@ -68,7 +68,7 @@ export const conectionDetails = () => {
         labelKey: "WS_COMMON_TABLE_COL_ADDRESS"
       },
       {
-        jsonPath: "applyScreen.property.address.service",
+        jsonPath: "combinedSearchResults[0].property.address.service",
       }
     ),
        

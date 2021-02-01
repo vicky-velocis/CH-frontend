@@ -12,6 +12,11 @@ import {
   getLocaleLabels,
   getTransformedLocalStorgaeLabels,
 } from "egov-ui-framework/ui-utils/commons";
+import {
+  getLabel,
+
+} from "egov-ui-framework/ui-config/screens/specs/utils";
+import { addConnectionMappingApiCall } from "./functions";
 const localisationLabels = getTransformedLocalStorgaeLabels();
 export const getTextToLocalMapping = (label) => {
   switch (label) {
@@ -130,11 +135,38 @@ export const searchResults = {
         labelKey: "WS_COMMON_TABLE_COL_CONSUMER_NO_LABEL",
         options: {
           filter: false,
-          customBodyRender: (value, index) => (
-            <div className="linkStyle" onClick={() => getConnectionDetails(index)}>
-              <a>{value}</a>
-            </div>
-          )
+          // customBodyRender: (value, index) => (
+          //   <div className="linkStyle" onClick={() => addConnectionMappingApiCall}>
+          //     <a>{value}</a>
+          //   </div>
+          // )
+          SubmitButton: {
+            componentPath: "Button",
+            
+            props: {
+              variant: "contained",
+              color: "primary",
+              style: {
+                //minWidth: "200px",
+                height: "48px",
+                marginRight: "10px"
+              }
+            },
+            children: {
+              
+              submitButtonLabel: getLabel({
+                labelName: "Submit",
+                labelKey: "WS_COMMON_BUTTON_SUBMIT"
+              }),
+              
+              
+            },
+            onClickDefination: {
+              action: "condition",
+              callBack: addConnectionMappingApiCall
+            },
+            visible: true
+          },
         }
       },
       getTextToLocalMapping("Owner Name"),
@@ -177,7 +209,9 @@ export const searchResults = {
 
 const onRowClick = (rowData) => {
  // const tenantId = "ch.chandigarh" // process.env.REACT_APP_NAME === "Employee" ?  getTenantId() : JSON.parse(getUserInfo()).permanentCity;
-  window.location.href = `link-connection-details?id=${rowData[7]}`;
+ let x = rowData;
+ //const connectionNumber = get()
+ window.location.href = `link-connection-details?id=${rowData[7]}&connectionNumber=${rowData[1]}`;
 };
 
 

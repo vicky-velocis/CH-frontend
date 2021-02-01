@@ -2114,7 +2114,8 @@ export const validateConnHolderDetails = (holderData) => {
                 holderOwners[i]["relationship"] !== ""
             ) { valid.push(1) } else { valid.push(0) }
         }
-        if (valid.includes(0)) { return false; } else { return true; }
+        //if (valid.includes(0)) { return false; } else { return true; }
+        return true
     }
 }
 
