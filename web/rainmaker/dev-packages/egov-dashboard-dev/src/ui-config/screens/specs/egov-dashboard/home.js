@@ -100,7 +100,22 @@ const displayCards = async (action, state, dispatch) => {
   let roles = JSON.parse(getUserInfo()).roles;
   debugger;
 
-  cardList = []
+  cardList = [{
+    label: {
+      labelName: "WrokFlow Previewm",
+      labelKey: "WORKFLOW_PREVIEW_TITLE"
+    },
+    
+    icon: <i
+        viewBox="0 -8 35 42"
+        color="primary"
+        font-size="40px"
+        class="material-icons module-page-icon" style={{ fontSize: "40px" }}>
+        wysiwyg
+    </i>,
+    route: "review"
+
+  }]
   data.map((item)=>{
     roles.some(r => {
       if (item.roles.includes(r.code)) {
