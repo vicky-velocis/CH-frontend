@@ -4,12 +4,12 @@ import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configurat
 import { getFileUrlFromAPI, getQueryArg, setBusinessServiceDataToLocalStorage } from "egov-ui-framework/ui-utils/commons";
 import { getTenantId, getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
 import get from "lodash/get";
-import "../../../../customstyle.css";
+// import "../../../../customstyle.css";
 import { workflowPreview, previewWF, getWorkflowDropdownData } from "../../../../ui-utils/commons";
 import { getCommonApplyFooter } from "../utils";
 import { getLabel } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import "./index.css"
+import "./WFindex.css"
 
 let role_name = JSON.parse(getUserInfo()).roles[0].code;
 

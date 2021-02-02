@@ -86,6 +86,16 @@ const DescriptionDashboard = Loadable({
   loading: () => <Loading />
 });
 
+const HCDashboard = Loadable({
+  loader: () => import("./HCDashboard"),
+  loading: () => <Loading />
+});
+
+const ReportPreviewWF = Loadable({
+  loader: () => import("./ReportPreviewWF"),
+  loading: () => <Loading />
+});
+
 export {
   TestMolecules,
   RadioButtonsGroup,
@@ -103,5 +113,7 @@ export {
   ReportMoleculeBarPie,
   HorizontalBarMolecule,
   DashboardPIEGraph,
-  DescriptionDashboard
+  DescriptionDashboard,
+  HCDashboard,
+  ReportPreviewWF
 };
