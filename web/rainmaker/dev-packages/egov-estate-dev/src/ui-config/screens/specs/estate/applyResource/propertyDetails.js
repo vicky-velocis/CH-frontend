@@ -164,7 +164,8 @@ const areaOfPropertyField = {
         xs: 12,
         sm: 6
     },
-    pattern: _getPattern("areaOfProperty"),
+    errorMessage:"ES_ERR_AREA_OF_PROPERTY_FIELD",
+    pattern: _getPattern("numeric-with-no-firstdigit-zero"),
     required: true,
     jsonPath: "Properties[0].propertyDetails.areaSqft"
 }
@@ -311,7 +312,7 @@ const siteNumberField = {
         sm: 6
     },
     required: true,
-    pattern: _getPattern("fileNumber"),
+    pattern: _getPattern("file-number-only-with-no-firstdigit-zero"),
     jsonPath: "Properties[0].siteNumber",
     afterFieldChange: (action, state, dispatch) => {
         if (action.value.length > 50) {
@@ -358,6 +359,18 @@ export const fileNumberField = {
     pattern: _getPattern("fileNumber"),
     jsonPath: "Properties[0].fileNumber",
     afterFieldChange: (action, state, dispatch) => {
+        dispatch(handleField(
+            "apply",
+            "components.div.children.footer.children.nextButton",
+            "props.disabled",
+            false
+          ))
+          dispatch(handleField(
+            "apply-manimajra",
+            "components.div.children.footer.children.nextButton",
+            "props.disabled",
+            false
+          ))
         if (action.value.length > 50) {
             displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_50", screenName);
         }
@@ -378,11 +391,11 @@ const lastNocDateField = {
     },
     pattern: getPattern("Date"),
     jsonPath: "Properties[0].propertyDetails.lastNocDate",
-    // props: {
-    //     inputProps: {
-    //         max: getTodaysDateInYMD()
-    //     }
-    // }
+    props: {
+        inputProps: {
+            max: getTodaysDateInYMD()
+        }
+    }
 }
 
 export const propertyTypeField = {
@@ -467,9 +480,9 @@ const getPropertyRegisteredToRadioButton = {
     required: true,
     type: "array",
     beforeFieldChange: (action, state, dispatch) => {
-        if (!!action.value) {
-            toggleEntityOwnersDivsBasedOnPropertyRegisteredTo(action.value, dispatch);
-        }
+      if (!!action.value) {
+          toggleEntityOwnersDivsBasedOnPropertyRegisteredTo(action.value, dispatch, state);
+      }
     }
 };
 
@@ -567,7 +580,7 @@ export const additionalDetails = getCommonCard({
     })
 })
 
-export const toggleEntityOwnersDivsBasedOnPropertyRegisteredTo = (value, dispatch) =>  {
+export const toggleEntityOwnersDivsBasedOnPropertyRegisteredTo = (value, dispatch, state) =>  {
     let screenName = "apply";
     let stepNameFirst = "formwizardFirstStep";
     let stepNameThird = "formwizardThirdStep";
@@ -581,6 +594,12 @@ export const toggleEntityOwnersDivsBasedOnPropertyRegisteredTo = (value, dispatc
         stepNameReview = "formwizardSeventhStepAllotment";
         reviewContainer = "reviewAllotmentDetails"
     }
+
+    let owners = get(
+      state.screenConfiguration.screenConfig,
+      `${screenName}.components.div.children.${stepNameThird}.children.ownerDetails.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items`,
+      []
+    );
 
     dispatch(
         handleField(
@@ -623,6 +642,17 @@ export const toggleEntityOwnersDivsBasedOnPropertyRegisteredTo = (value, dispatc
             !!(value == "ENTITY")
         )
     )
+
+    for (var i = 0; i < owners.length; i++) {
+      dispatch(
+          handleField(
+              screenName,
+              `components.div.children.${stepNameThird}.children.ownerDetails.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items[${i}].item${i}.children.cardContent.children.ownerCard.children.isDirector`,
+              "visible",
+              !!(value == "ENTITY")
+          )
+      )
+    }
     dispatch(
         handleField(
             screenName,

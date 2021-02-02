@@ -2,9 +2,10 @@ import { getLabel, getStepperObject, dispatchMultipleFieldChangeAction } from "e
 import { getCommonApplyFooter, validateFields } from "../utils";
 import { get, some } from "lodash";
 import { applyforApplication } from "../../../../ui-utils/apply";
-import { prepareFinalObject, toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { prepareFinalObject, toggleSnackbar, handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { moveToSuccess } from "../estate/applyResource/footer";
 import { getFileUrl, getFileUrlFromAPI } from "egov-ui-framework/ui-utils/commons";
+import { inputProps, setDocumentData } from "./applyResource/documentsStep";
 
 export const DEFAULT_STEP = -1;
 export const DETAILS_STEP = 0;
@@ -171,7 +172,15 @@ export const previousButton = {
                     "components.div.children.formwizardFirstStep"
                 ),
                 dispatch
+                
             );
+
+            dispatch(handleField(
+              screenName,
+              "components.div.children.footer.children.nextButton",
+              "props.disabled",
+              false
+            ))
             break;
         case DOCUMENT_UPLOAD_STEP:
             dispatchMultipleFieldChangeAction(
@@ -181,6 +190,12 @@ export const previousButton = {
                 ),
                 dispatch
             );
+            dispatch(handleField(
+              screenName,
+              "components.div.children.footer.children.nextButton",
+              "props.disabled",
+              false
+            ))
             break;
         default:
             dispatchMultipleFieldChangeAction(
@@ -190,6 +205,12 @@ export const previousButton = {
                 ),
                 dispatch
             );
+            dispatch(handleField(
+              "screenName",
+              "components.div.children.footer.children.nextButton",
+              "props.disabled",
+              false
+            ))
     }
   };
   
@@ -233,6 +254,14 @@ export const previousButton = {
   };
 
   const callBackForNext = async(state, dispatch) => {
+    let scrollTop = true;
+
+    dispatch(handleField(
+      "_apply",
+      "components.div.children.footer.children.nextButton",
+      "props.disabled",
+      true
+    ))
     let activeStep = get(
         state.screenConfiguration.screenConfig["_apply"],
         "components.div.children.stepper.props.activeStep",
@@ -270,8 +299,35 @@ export const previousButton = {
         isFormValid = isFormValid && isValid
       })
     if(!!isFormValid) {
+
+      // dispatch(handleField(
+      //   screenName,
+      //   "components.div.children.footer.children.nextButton",
+      //   "props.disabled",
+      //   false
+      // ))
+      const Applications = get(state.screenConfiguration.preparedFinalObject, "Applications");
+      const documentList = get(state.screenConfiguration.preparedFinalObject, "temp[0].documentList")
+      const second_step = get(state.screenConfiguration.preparedFinalObject, "temp[0].second_step")
+      let _documents = documentList.filter((item, index) => {
+        return eval(item.filter)
+      })
+        const second_step_sections = await setDocumentData(state, dispatch, { format_config: second_step, documentList: _documents})
+        inputProps.push(...second_step_sections);
+        // dispatch(handleField(
+        //   "_apply",
+        //   "components.div.children.formwizardSecondStep.children.documentDetails.children.cardContent.children.documentList.props",
+        //   "inputProps",
+        //   second_step_sections
+        // ))
       const res =  await applyforApplication(state, dispatch, activeStep)
         if(!res) {
+          dispatch(handleField(
+            "_apply",
+            "components.div.children.footer.children.nextButton",
+            "props.disabled",
+            false
+          ))
           return
         }
     }
@@ -298,6 +354,12 @@ export const previousButton = {
       }
     }
     if(isFormValid) {
+      // dispatch(handleField(
+      //   "_apply",
+      //   "components.div.children.footer.children.nextButton",
+      //   "props.disabled",
+      //   false
+      // ))
       const fileStoreIds = uploadedDocData && uploadedDocData.map(item => item.fileStoreId).join(",");
       const fileUrlPayload = fileStoreIds && (await getFileUrlFromAPI(fileStoreIds));
       const reviewDocData =
@@ -323,6 +385,12 @@ export const previousButton = {
             );
         const response = await applyforApplication(state, dispatch, activeStep)
         if(!response) {
+          dispatch(handleField(
+            "_apply",
+            "components.div.children.footer.children.nextButton",
+            "props.disabled",
+            false
+          ))
           return
         }
     }
@@ -333,6 +401,12 @@ export const previousButton = {
       isFormValid = isDeclarationboxvalid ? await applyforApplication(state, dispatch, activeStep) : false;
 
         if (isFormValid) {
+          // dispatch(handleField(
+          //   "_apply",
+          //   "components.div.children.footer.children.nextButton",
+          //   "props.disabled",
+          //   false
+          // ))
           const data = get(
             state.screenConfiguration.preparedFinalObject,
             "Applications[0]"
@@ -347,6 +421,7 @@ export const previousButton = {
               "Please check the declaration!",
           labelKey: "ES_ERR_DECLARATION_NOT_CHECKED"
         };
+        scrollTop = false;
         dispatch(toggleSnackbar(true, errorMessageBox, "warning"));
       }
 
@@ -354,6 +429,12 @@ export const previousButton = {
       isDeclarationboxvalid = get(state.screenConfiguration.preparedFinalObject,"temp[0].declaration");
     
       if(isFormValid) {
+        // dispatch(handleField(
+        //   "_apply",
+        //   "components.div.children.footer.children.nextButton",
+        //   "props.disabled",
+        //   false
+        // ))
           changeStep(state, dispatch, "_apply");
         }
       
@@ -370,19 +451,46 @@ export const previousButton = {
                         "Please fill all mandatory fields, then do next !",
                     labelKey: "ES_ERR_FILL_MANDATORY_FIELDS"
                   };
+
+                  dispatch(handleField(
+                    "_apply",
+                    "components.div.children.footer.children.nextButton",
+                    "props.disabled",
+                    false
+                  ))
+                  
               break
           case DOCUMENT_UPLOAD_STEP:
                   errorMessage = {
                       labelName: "Please upload all the required documents !",
                       labelKey: "ES_ERR_UPLOAD_REQUIRED_DOCUMENTS"
                   };
+
+                  dispatch(handleField(
+                    "_apply",
+                    "components.div.children.footer.children.nextButton",
+                    "props.disabled",
+                    false
+                  ))
               break;
           case SUMMARY_STEP:
+              break;
         }
+
+        dispatch(handleField(
+          "_apply",
+          "components.div.children.footer.children.nextButton",
+          "props.disabled",
+          false
+        ))
+        scrollTop = false;
         dispatch(toggleSnackbar(true, errorMessage, "warning"));
       }
     }
-    window.scrollTo(0,0)
+    
+    if(activeStep != SUMMARY_STEP && scrollTop){
+      window.scrollTo(0,0)
+    }
   }
 
   export const footer = getCommonApplyFooter({

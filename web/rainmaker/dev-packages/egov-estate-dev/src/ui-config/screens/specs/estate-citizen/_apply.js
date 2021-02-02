@@ -13,6 +13,7 @@ import { registerDatasource } from "./dataSources";
 import { getCommonApplyHeader } from "../utils";
 import commonConfig from "config/common.js";
 import { getMdmsData } from "../estate/apply";
+import { set } from "lodash";
 
 export const getApplicationConfig = async({dispatch, applicationType}) => {
   const payload = [
@@ -105,9 +106,12 @@ const getData = async (action, state, dispatch) => {
     dispatch(prepareFinalObject("property", property));
 
     let {fields: data_config, documentList, uiConfig} = await getApplicationConfig({dispatch, applicationType})
+    documentList = documentList.map(_doc => ({filter: true, ..._doc}))
+    dispatch(prepareFinalObject("temp[0].documentList", documentList))
     // const dataConfig = require(`./${applicationType}.json`);
     // let {fields: data_config, documentList, uiConfig} = dataConfig[applicationType][0];
     let {first_step, second_step, dataSources, preview} = uiConfig
+    dispatch(prepareFinalObject("temp[0].second_step", second_step))
     const values = applicationType.split("_")
     dispatch(prepareFinalObject("Applications[0].branchType", values[0] ))
     dispatch(prepareFinalObject("Applications[0].moduleType", values[1] ))
@@ -128,6 +132,16 @@ const getData = async (action, state, dispatch) => {
     const second_step_sections = await setDocumentData(state, dispatch, { format_config: second_step, documentList})
     let third_step = await setThirdStep({state, dispatch, applicationType, preview})
     third_step = getCommonCard({...third_step})
+    set(
+      third_step, 
+      "children.cardContent.children.ES_SITE_REPORT_DETAILS_HEADER.visible",
+      process.env.REACT_APP_NAME !== "Citizen"
+    )
+    set(
+      third_step, 
+      "children.cardContent.children.ES_SAMPLE_SITE_MAP_HEADER.visible",
+      process.env.REACT_APP_NAME !== "Citizen"
+    )
     inputProps.push(...second_step_sections);
     return {
       div: {
@@ -202,7 +216,7 @@ const getData = async (action, state, dispatch) => {
                 required: true,
                 props: {
                   label: {
-                    labelName: "I hereby declare and affirm that the above-furnished information is true and correct and nothing has been concealed therefrom. I am also aware of the fact that in case this information is found false/inconect, the authorities are at liberty to initiate recovery of amount/interest/penalty/fine as providod in Punjab Municipal Act 1911 or Punjab Municipal Corporation Act 1976.",
+                    labelName: "I hereby declare and affirm that the above-furnished information is true and correct and nothing has been concealed therefrom. I am also aware of the fact that in case this information is found false/incorrect, the authorities are at liberty to initiate recovery of amount/interest/penalty/fine as provided in Punjab Municipal Act 1911 or Punjab Municipal Corporation Act 1976.",
                     labelKey: "ES_DECLARATION_SUMMARY_VALUE"
                   },
                   style: { margin: "10px",

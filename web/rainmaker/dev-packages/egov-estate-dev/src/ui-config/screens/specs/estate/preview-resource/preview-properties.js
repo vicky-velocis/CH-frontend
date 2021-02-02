@@ -7,6 +7,7 @@ import {
     getLabel
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { convertEpochToDate, } from "../../utils";
+import {getPropertyInfoManimajra} from "../applyResourceManimajra/reviewDetails"
 // import { changeStep } from "./footer";
 
 
@@ -375,8 +376,13 @@ export const extensionFeeInfo = (isEditable) => ({
 })
 
 export const getPropertyDetails = (isEditable = true) => {
+  // return getCommonGrayCard(getPropertyInfoManimajra(false))
     return getCommonGrayCard(propertyInfo(isEditable))
   }
+
+  export const getPropertyDetailsManimajra = (isEditable = true) => {
+    return getCommonGrayCard(getPropertyInfoManimajra(false))
+    }
 
 
   export const getReviewAuction = (isEditable = true) => {
@@ -400,7 +406,10 @@ export const getPropertyDetails = (isEditable = true) => {
       viewFour: getCommonContainer({
         auctionId: getLabelWithValue(
           auctionIdLabel, {
-            jsonPath: `Properties[0].propertyDetails.bidders[0].auctionId`
+            jsonPath: `Properties[0].propertyDetails.bidders[0].auctionId`,
+            callBack: (value) => {
+              return Math.floor(value)
+            }
           }
         ),
         modeOfAuction: getLabelWithValue(

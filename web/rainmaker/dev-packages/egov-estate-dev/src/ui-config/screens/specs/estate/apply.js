@@ -361,8 +361,8 @@ export const setLegacyAccStmtDoc = async (action, state, dispatch) => {
 
 const header = getCommonContainer({
   header: getCommonHeader({
-    labelName: "Add Estate",
-    labelKey: "ES_COMMON_ESTATES_ADD"
+    labelName: "Add Property",
+    labelKey: "ES_COMMON_ADD_PROPERTY"
   }),
   fileNumber: {
     uiFramework: "custom-atoms-local",
@@ -423,10 +423,11 @@ export const setData = (properties, screenName, dispatch, state) => {
       true
     )
   )
+
   dispatch(
     handleField(
       screenName,
-      `components.div.children.formwizardFirstStep.children.propertyInfoDetails.children.cardContent.children.detailsContainer.children.fileNumber`,
+      `components.div.children.${stepFirst}.children.propertyInfoDetails.children.cardContent.children.detailsContainer.children.fileNumber`,
       `props.disabled`,
       true
     )
@@ -446,7 +447,7 @@ export const setData = (properties, screenName, dispatch, state) => {
     toggleEntityOwnersDivsBasedOnEntityType(entityType, dispatch);
   }
   else {
-    toggleEntityOwnersDivsBasedOnPropertyRegisteredTo(propertyRegisteredTo, dispatch)
+    toggleEntityOwnersDivsBasedOnPropertyRegisteredTo(propertyRegisteredTo, dispatch, state)
   }
   /**********************************************************************************************/
 
@@ -577,7 +578,8 @@ export const getPMDetailsByFileNumber = async (
   state,
   dispatch,
   fileNumber,
-  screenName
+  screenName,
+  isNotPrev = true
 ) => {
   let queryObject = [
     {
@@ -617,7 +619,7 @@ export const getPMDetailsByFileNumber = async (
       )
     )
 
-    setData(properties, screenName, dispatch, state);
+    !!isNotPrev && setData(properties, screenName, dispatch, state);
   }
 }
 

@@ -13,9 +13,9 @@ import { getSearchResults } from "../../../../ui-utils/commons";
 import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 import { getTenantId} from "egov-ui-kit/utils/localStorageUtils";
 import { MANIMAJRA_BRANCH_TABS as tabs, WF_MM_PROPERTY_MASTER } from "../../../../ui-constants";
-import { getPropertyDetails, getAdditionalDetails} from "./preview-resource/preview-properties"
+import { getPropertyDetailsManimajra, getAdditionalDetails} from "./preview-resource/preview-properties"
 import { onTabChange } from "./search-preview";
-
+import { getReviewAnnualDetails, getReviewMonthlyDetals } from "./applyResource/reviewProperty"
 let fileNumber = getQueryArg(window.location.href, "fileNumber");
 let tenantId = getTenantId();
 
@@ -26,12 +26,16 @@ export const headerrow = getCommonContainer({
   })
 });
 
-const reviewPropertyDetails = getPropertyDetails(false);
+const reviewPropertyDetails = getPropertyDetailsManimajra(false);
 const additionalDetails = getAdditionalDetails(false);
+const annualDetails = getReviewAnnualDetails(false)
+const monthlyDetails = getReviewMonthlyDetals(false)
 
 export const propertyReviewDetails = getCommonCard({
   reviewPropertyDetails,
-  additionalDetails
+  additionalDetails,
+  annualDetails,
+  monthlyDetails
 });
 
 export const searchResults = async (action, state, dispatch, fileNumber) => {

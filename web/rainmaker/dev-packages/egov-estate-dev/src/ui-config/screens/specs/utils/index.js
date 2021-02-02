@@ -568,7 +568,7 @@ export const downloadAcknowledgementForm = (Applications, applicationType,feeEst
       }
     ]
       break;
-      case 'PatnershipDeed':
+      case 'PartnershipDeed':
       queryStr = [{
             key: "key",
             value: (state == "ES_PENDING_PAYMENT" || state == "ES_PENDING_DA_PREPARE_LETTER" ||
@@ -585,6 +585,7 @@ export const downloadAcknowledgementForm = (Applications, applicationType,feeEst
         ]
       break;
       case 'Mortgage':
+      case 'MortgageIntimation':  
           queryStr = [{
             key: "key",
             value: (state == "ES_PENDING_PAYMENT" || state == "ES_PENDING_DA_PREPARE_LETTER" ||
@@ -881,7 +882,8 @@ export const downloadPaymentReceipt = (receiptQueryString, payload, data , gener
               default:
                  queryStr = [{
                    key: "key",
-                   value: "rent-payment-receipt"
+                   value: payload[0].propertyDetails.branchType == "MANI_MAJRA" ? "mm-rent-payment-receip": "rent-payment-receipt"
+                  //  value: "rent-payment-receipt"
                  },
                  {
                    key: "tenantId",
@@ -892,7 +894,8 @@ export const downloadPaymentReceipt = (receiptQueryString, payload, data , gener
            }else{
               queryStr = [{
                 key: "key",
-                value: "rent-payment-receipt"
+                value: payload[0].propertyDetails.branchType == "MANI_MAJRA" ? "mm-rent-payment-receipt": "rent-payment-receipt"
+                // value: "rent-payment-receipt"
                 },
                 {
                 key: "tenantId",
@@ -910,6 +913,7 @@ export const downloadPaymentReceipt = (receiptQueryString, payload, data , gener
               payload[0].propertyDetails.offlinePaymentDetails.push(transactionNumber)
              }
               if(process.env.REACT_APP_NAME === "Employee"){
+                Payments[0].transactionNumber
                 Payments = [
                   {
                     ...Payments[0],transactionDate : payload[0].propertyDetails.offlinePaymentDetails[0].dateOfPayment
@@ -938,6 +942,14 @@ export const downloadPaymentReceipt = (receiptQueryString, payload, data , gener
             });
           break
         case 'application-payment':
+          if(process.env.REACT_APP_NAME === "Employee"){
+            let paymentDetails = state.screenConfiguration.preparedFinalObject.payment
+            Payments = [
+              {
+                ...Payments[0],transactionNumber : paymentDetails.transactionNumber
+              }
+            ]
+            }
             let {
               billAccountDetails
             } = Payments[0].paymentDetails[0].bill.billDetails[0];
@@ -1163,16 +1175,17 @@ let queryStr = []
       ]
       break;
 
-      case 'PatnershipDeed':  
+      case 'PartnershipDeed':  
           queryStr = [{
             key: "key",
-            value: `private-limited-company`
+            value: `private-limited-company-letter`
           }
           
         ]
     break;
     
       case 'Mortgage':
+      case 'MortgageIntimation':  
         let mortgageType = Applications[0].applicationDetails.mortgageType;
         if(mortgageType == 'PERMISSION_TO_MORTAGAGE.LEASEHOLD'){
           queryStr = [{
@@ -1873,7 +1886,7 @@ export const epochToYmdDate = et => {
 export const getTodaysDateInYMD = () => {
   let date = new Date();
   //date = date.valueOf();
-  let month = date.getMonth() + 1;
+  let month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
   let day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
   date = `${date.getFullYear()}-${month}-${day}`;
   // date = epochToYmdDate(date);
@@ -2284,6 +2297,12 @@ export const getTextToLocalMapping = label => {
           "ES_RENT_LABEL",
           localisationLabels
         );
+    case "Demand Type":
+        return getLocaleLabels(
+          "Demand Type",
+          "ES_DEMAND_TYPE_LABEL",
+          localisationLabels
+        );   
     default: return getLocaleLabels(label, label, localisationLabels)   
   }
 };
@@ -2314,7 +2333,7 @@ export const _getPattern = (type) => {
     case "share":
       return /^[+-]?\d{1,5}(\.\d{1,2})?$/i;
     case "areaOfProperty":
-      return /^[+-]?\d{1,15}(\.\d{1,2})?$/i;
+      return /^[+-]?\d{2,15}(\.\d{1,2})?$/i;
     case "alphaNumeric":
       return /^[a-zA-Z0-9]{1,100}$/i;
     case "fileNumber":
@@ -2324,11 +2343,17 @@ export const _getPattern = (type) => {
     case "rateSqFeet":
       return /^[+-]?\d{2,5}(\.\d{1,2})?$/i;
     case "address":
-      return /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,150}$/i
+      return /^([\s\S]){1,150}$/i
     case "ownerShare":
       return /^[+-]?\d{2,5}(\.\d{1,2})?$/i;
     case "courtCase":
-      return /^[a-zA-Z0-9]{1,250}$/i;  
+      return /^([\s\S]){1,250}$/i;
+      case "numeric-with-no-firstdigit-zero":
+      return /^[1-9][0-9]{2,24}$/i;
+      case "file-number-only-with-no-firstdigit-zero":
+      return /^[1-9a-zA-Z][0-9a-zA-Z]{2,49}$/i;
+      case "NocReason":
+        return /^([\s\S]){3,150}$/i;
   }
 }
 

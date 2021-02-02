@@ -11,7 +11,8 @@ import {
 import {
   prepareFinalObject,
   handleScreenConfigurationFieldChange as handleField,
-  toggleSnackbar
+  toggleSnackbar,
+  toggleSpinner
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import {
   getSearchResults,
@@ -40,12 +41,22 @@ const {
     roles = []
 } = userInfo
 const findItem = roles.find(item => item.code === "ES_EB_SECTION_OFFICER");
+import store from "../../../../ui-redux/store";
 
-const searchResults = async (action, state, dispatch, fileNumber) => {
-  let queryObject = [
-    { key: "fileNumber", value: fileNumber },
-    {key: "relations", value: "bidder"}
-  ];
+const searchResults = async (action, state, dispatch, fileNumber, auctionId) => {
+  let queryObject = []
+  if(auctionId){
+    queryObject = [
+      { key: "auctionId", value: auctionId },
+      {key: "relations", value: "bidder"}
+    ];
+  }
+  else if(fileNumber){
+    queryObject = [
+      { key: "fileNumber", value: fileNumber },
+      {key: "relations", value: "bidder"}
+    ];
+  }
   let payload = await getSearchResults(queryObject);
   if (payload) {
     let properties = payload.Properties;
@@ -57,17 +68,30 @@ const searchResults = async (action, state, dispatch, fileNumber) => {
   }
 }
 
-const beforeInitFn = async (action, state, dispatch, fileNumber) => {
+const beforeInitFn = async (action, state, dispatch, fileNumber, auctionId) => {
   dispatch(prepareFinalObject("workflow.ProcessInstances", []))
-  if (fileNumber) {
-    await searchResults(action, state, dispatch, fileNumber);
+  if (fileNumber || auctionId) {
+    await searchResults(action, state, dispatch, fileNumber, auctionId);
 
     let bidders = get(
       state.screenConfiguration.preparedFinalObject,
       "Properties[0].propertyDetails.bidders",
       []
     )
-    let refundInitiated = bidders.filter(item => !!item.refundStatus);
+
+    if(bidders.length > 0){
+      if (!!bidders[0].state) {
+        dispatch(
+          handleField(
+            action.screenKey,
+            `components.div.children.taskStatus`,
+            `visible`,
+            `true`
+          )
+        )
+      }
+    }  
+    let refundInitiated = bidders.filter(item => !!item.refundStatus && item.refundStatus != "-");
 
     let refundInitiatedColDisplay = !!findItem && (bidders.length != refundInitiated.length) ? true : false;
 
@@ -121,6 +145,8 @@ const beforeInitFn = async (action, state, dispatch, fileNumber) => {
     )
 
   }
+
+  dispatch(toggleSpinner());
 }
 
 let auctionDetailsCont = getReviewAuction(false);
@@ -244,6 +270,43 @@ const callBackForSaveOrSubmit = async (state, dispatch) => {
           false
         )
       )
+
+      let bidders = properties[0].propertyDetails.bidders;
+      let refundInitiated = bidders.filter(item => !!item.refundStatus);
+  
+      let refundInitiatedColDisplay = !!findItem && (bidders.length != refundInitiated.length) ? true : false;
+
+      const auctionTableColumns = [
+        getTextToLocalMapping("Auction Id"),
+        getTextToLocalMapping("Bidder Name"),
+        getTextToLocalMapping("Deposited EMD Amount"),
+        getTextToLocalMapping("Deposit Date"),
+        getTextToLocalMapping("EMD Validity Date"),
+        {
+          name: getTextToLocalMapping("Initiate Refund"),
+          options: { 
+            display: refundInitiatedColDisplay,
+            viewColumns: refundInitiatedColDisplay
+          }
+        },
+        {
+          name: getTextToLocalMapping("Refund Status"),
+          options: { 
+            display: true,
+            viewColumns: true
+          }
+        }
+      ]
+  
+      dispatch(
+        handleField(
+          "refund",
+          "components.div.children.auctionTableContainer",
+          "props.columns",
+          auctionTableColumns
+        )
+      )
+  
     }
   } catch(err) {
     dispatch(toggleSnackbar(true, { labelName: err.message }, "error"));
@@ -254,8 +317,19 @@ const refund = {
   uiFramework: "material-ui",
   name: "refund",
   beforeInitScreen: (action, state, dispatch) => {
+    dispatch(toggleSpinner());
     let fileNumber = getQueryArg(window.location.href, "fileNumber");
-    beforeInitFn(action, state, dispatch, fileNumber);
+    let auctionId = getQueryArg(window.location.href, "auctionId");
+    dispatch(
+      handleField(
+        `refund`,
+        `components.div.children.headerDiv.children.header1.children.fileNumber`,
+        `props.number`,
+        fileNumber
+      )
+    )
+    beforeInitFn(action, state, dispatch, fileNumber, auctionId);
+    
     return action;
   },
   components: {
@@ -290,6 +364,19 @@ const refund = {
             style: {
               wordBreak: "break-word"
             }
+          },
+          visible:false
+        },
+        confirmDialog: {
+          uiFramework: "custom-containers-local",
+          moduleName: "egov-estate",
+          componentPath: "ConfirmDialog",
+          props: {
+            screenKey: "refund",
+            open: false,
+            title: "Confirm",
+            content: "Are you sure you want to initiate refund ?",
+            populateBiddersTable: populateBiddersTable
           }
         },
         auctionDetailsContainer,
