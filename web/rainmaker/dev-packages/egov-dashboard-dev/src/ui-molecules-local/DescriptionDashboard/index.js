@@ -5,6 +5,8 @@ import CardContent from '@material-ui/core/CardContent';
 // import ChartDataLabels from 'chartjs-plugin-datalabels';
 import ReactTable from "react-table-6";  
 import "react-table-6/react-table.css" ;
+import jsPDF from 'jspdf'
+import 'jspdf-autotable'
 // import Dashboardtable from './Dashboardtable'
 import data from './data.json';
 import './index.css';
@@ -32,9 +34,111 @@ class DescriptionDashboard extends React.Component {
             graphOneData : {},
             graphTwoData : {},
             graphThreeData : {},
+            defaultPageSize : 10,
+            toggleColumnCheck: false,
+            unchangeColumnData: []
         }
         }
     
+        // PDF function 
+        pdfDownload = (e) => {
+
+            debugger;
+            e.preventDefault();
+            var columnData = this.state.unchangeColumnData
+            var columnDataCamelize = this.state.columnData
+            var rowData = this.state.rowData
+
+            var group = columnData.reduce((r, a) => {
+                r[a["show"]] = [...r[a["show"]] || [], a];
+                return r;
+                }, {});
+
+            columnData = group["true"]
+            var tableColumnData = []
+            var tableColumnDataCamel = []
+            for(var i=0; i<columnData.length; i++){
+                tableColumnData.push(columnData[i]["Header"]);
+                tableColumnDataCamel.push(columnDataCamelize[i]["Header"])
+            }
+
+            var tableRowData = [];
+            for(var i=0; i<rowData.length; i++){
+                var rowItem = [];
+                for(var j=0; j<tableColumnData.length; j++){
+                    const demo1 = rowData[i]
+                    const demo2 = tableColumnData[j];
+                    rowItem.push(rowData[i][demo2]);
+                }
+                tableRowData.push(rowItem);
+            }
+
+            var tableRowDataFinal = []
+            for(var i=0; i<tableRowData.length; i++){
+                tableRowDataFinal.push(tableRowData[i]);
+            }
+
+            
+            debugger;
+            // PDF Code 
+            const unit = "pt";
+            const size = "A4"; // Use A1, A2, A3 or A4
+            const orientation = "portrait"; // portrait or landscape
+            const marginLeft = 40;
+            const doc = new jsPDF(orientation, unit, size);
+
+            var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
+            var pageWidth = doc.internal.pageSize.width || doc.internal.pageSize.getWidth();
+            
+            doc.text("mChandigarh Application", pageWidth / 2, 20, 'center');
+            
+            doc.setFontSize(10);
+            doc.text(this.state.graphOneData.title, pageWidth / 2, 40, 'center');
+            
+            doc.autoTable({ html: '#my-table' });
+            doc.setFontSize(5);
+            
+            doc.autoTable({
+                head: [tableColumnDataCamel],
+                theme: "striped",
+                styles: {
+                    fontSize: 7,
+                },
+                body:tableRowData
+            });
+            
+            doc.save(this.state.graphOneData.title+".pdf");
+
+        }
+
+        // Toggle Column 
+        toggleColumn = (e) => {
+            e.preventDefault();
+            this.setState({
+                toggleColumnCheck : !this.state.toggleColumnCheck
+            })
+        }
+
+        // Hide / Show Column
+        showHideColumn = (e) => {
+            e.preventDefault();
+            debugger;
+            var sortColumn = JSON.parse(JSON.stringify(this.state.columnData));
+            const removeIndex = parseInt(e.target.value);
+            // sortColumn.splice(removeIndex, 1)
+            sortColumn[removeIndex]["show"] = !(sortColumn[removeIndex]["show"]);
+
+            var sortColumn2 = JSON.parse(JSON.stringify(this.state.unchangeColumnData));
+            const removeIndex2 = parseInt(e.target.value);
+            // sortColumn.splice(removeIndex, 1)
+            sortColumn2[removeIndex2]["show"] = !(sortColumn2[removeIndex2]["show"])
+
+            this.setState({
+                columnData: sortColumn,
+                unchangeColumnData: sortColumn2
+            })
+        }
+
         // Not use
         handleBack = (e) => {
         e.preventDefault();
@@ -123,7 +227,7 @@ class DescriptionDashboard extends React.Component {
         }
     
         // Column Sort for indexing react table
-        customColumnSort = (colData) => {
+        customColumnSort = (colData, unchangeColData) => {
             debugger
             const data = colData;
             var indexingData = []
@@ -131,7 +235,15 @@ class DescriptionDashboard extends React.Component {
             for(var i=0; i<indexCol.length; i++){
                 indexingData.push(colData[indexCol[i]])
             }
-            return indexingData
+
+            const data2 = unchangeColData;
+            var indexingData2 = []
+            var indexCol2 = [2,3,0,4,5,7,11,16,15]
+            for(var i=0; i<indexCol2.length; i++){
+                indexingData2.push(unchangeColData[indexCol2[i]])
+            }
+
+            return [indexingData, indexingData2]
         }
 
         // CamelCase Column Name 
@@ -201,8 +313,18 @@ class DescriptionDashboard extends React.Component {
             columnData.push(col)
         }
 
+        var unchangeColumnData = []
+        for(var i=0; i<reportHeader.length; i++){
+            var col = {};
+            col["Header"]= reportHeader[i].name;
+            col["accessor"]= reportHeader[i].name
+            col["show"]= (i === 0 || i === 2 || i === 3 || i === 4 || i === 5 || i === 7 || i === 11 || i === 15 || i ===16 ) ? true : false
+            unchangeColumnData.push(col)
+        }
 
-        const indexingColumn = this.customColumnSort(columnData);
+
+
+        const indexingColumn = this.customColumnSort(columnData, unchangeColumnData);
 
         var rowData = []
         for(var i=0; i<reportData.length; i++){
@@ -222,12 +344,13 @@ class DescriptionDashboard extends React.Component {
             graphLabel : Object.keys(group),
             grahData: graphData,
             drilDownLevel : 0,
-            columnData : indexingColumn,
+            columnData : indexingColumn[0],
             rowData: rowData,
             sortBy: this.camelize(sortBy),
             graphOneData : graphSearchOption[0],
             graphTwoData : graphSearchOption[1],
             graphThreeData : graphSearchOption[2],
+            unchangeColumnData: indexingColumn[1],
         })
         }
         }
@@ -290,8 +413,16 @@ class DescriptionDashboard extends React.Component {
             columnData.push(col)
         }
 
+        var unchangeColumnData = []
+        for(var i=0; i<reportHeader.length; i++){
+            var col = {};
+            col["Header"]= reportHeader[i].name;
+            col["accessor"]= reportHeader[i].name
+            col["show"]= (i === 0 || i === 2 || i === 3 || i === 4 || i === 5 || i === 7 || i === 11 || i === 15 || i ===16 ) ? true : false
+            unchangeColumnData.push(col)
+        }
 
-        const indexingColumn = this.customColumnSort(columnData);
+        const indexingColumn = this.customColumnSort(columnData, unchangeColumnData);
 
         var rowData = []
         for(var i=0; i<reportData.length; i++){
@@ -311,12 +442,13 @@ class DescriptionDashboard extends React.Component {
             graphLabel : Object.keys(group),
             grahData: graphData,
             drilDownLevel : 0,
-            columnData : indexingColumn,
+            columnData : indexingColumn[0],
             rowData: rowData,
             sortBy: this.camelize(sortBy),
             graphOneData : graphSearchOption[0],
             graphTwoData : graphSearchOption[1],
             graphThreeData : graphSearchOption[2],
+            unchangeColumnData: indexingColumn[1],
         })
         }
         }
@@ -812,21 +944,53 @@ class DescriptionDashboard extends React.Component {
             </React.Fragment>
         </CardContent>
         :null}
-        <br/><br/><br/><br/>
+        <br/><br/>
+        
+        {/* Table Feature Code */}
+        
+
         {
             this.state.drilDownLevel >= 0 ?
+
+            <div className="tableContainer">
+            <div className="tableFeature">
+                <div className="columnToggle-Text"> Download As: </div>
+                <button className="columnToggleBtn" onClick={this.pdfDownload}> PDF </button>
+    
+                <button className="columnToggleBtn" onClick={this.toggleColumn}> Column Visibility </button>
+            </div>
+            
+            {
+               this.state.toggleColumnCheck ?
+               <div className="columnVisibilityCard">
+                <dl>
+                    {
+                        this.state.columnData.map((data, index)=>{
+                            return(
+                                <ul className={ this.state.columnData[index]["show"] ? "" : "toggleBtnClicked" }><button value={index} className={ this.state.columnData[index]["show"] ? "toggleBtn" : "toggleBtnClicked" } onClick={ this.showHideColumn }> { this.state.columnData[index]["Header"] } </button></ul> 
+                            )
+                        })
+                    }
+                </dl>
+                </div> 
+               : null
+            }
             <ReactTable id="customReactTable"
-            data={this.state.rowData}  
+            data={this.state.rowData}
             columns={this.state.columnData}  
-            defaultPageSize = {10}  
+            defaultPageSize = {this.state.defaultPageSize}
+            pageSize={this.state.rowData.length > 10 ? 10 : this.state.rowData.length}  
             pageSizeOptions = {[20,40,60]}  
+             
             /> 
+             </div>
         :null 
         }
 
          {/* <Dashboardtable 
           colData = {this.state.columnData}
          /> */}
+        
       </div>
     );
   }
