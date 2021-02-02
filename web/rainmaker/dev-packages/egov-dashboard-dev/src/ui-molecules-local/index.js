@@ -91,8 +91,8 @@ const HCDashboard = Loadable({
   loading: () => <Loading />
 });
 
-const ReportPreviewWF = Loadable({
-  loader: () => import("./ReportPreviewWF"),
+const ReportPreview = Loadable({
+  loader: () => import("./ReportPreview"),
   loading: () => <Loading />
 });
 
@@ -115,5 +115,5 @@ export {
   DashboardPIEGraph,
   DescriptionDashboard,
   HCDashboard,
-  ReportPreviewWF
+  ReportPreview
 };

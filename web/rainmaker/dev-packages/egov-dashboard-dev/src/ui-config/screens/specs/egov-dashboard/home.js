@@ -179,6 +179,8 @@ const getDropDownData = async (action, state, dispatch) => {
 
 const getMdmsData = async (action, state, dispatch) => {
 
+  debugger;
+  
   let tenantId = getTenantId();
   let mdmsBody = {
     MdmsCriteria: {

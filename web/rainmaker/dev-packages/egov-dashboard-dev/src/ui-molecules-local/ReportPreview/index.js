@@ -11,7 +11,7 @@ import { Doughnut } from 'react-chartjs-2';
 import WorkFlowTableImage from './WorkFlowTableImage';
 import "./index.css"
 
-class ReportPreviewWF extends React.Component {
+class ReportPreview extends React.Component {
   constructor(props) {
     super(props);
     this.state ={
@@ -1647,32 +1647,32 @@ class ReportPreviewWF extends React.Component {
   render() {
     
     return (
-        <div>
-            <center>
+        <div className="previewContainer">
+            {/* <center> */}
             {/* <WorkFlowTableImage  images = {[
             'http://placeimg.com/1200/800/nature',
             ]}
             /> */}
             {/* <Collapsible trigger="Workflow Table Structure">  */}
-                <div className="tableFeature">
-                    <div className="columnToggle-Text"> Download As: </div>
-                    <button className="columnToggleBtn" onClick={this.pdfDownload}> PDF </button>
+                <div className="previewTableDownload">
+                    <div className="downloadLabel"> Download As: </div>
+                    <button className="downloadBtn" onClick={this.pdfDownload}> PDF </button>
 
                     {/* <button className="columnToggleBtn" onClick={this.toggleColumn}> Column Visibility </button> */}
                 </div>
 
             <h2> { this.state.description } </h2>
-                <div className="tablePreview">
+                <div className="previewTableContainer">
                 {
                     this.state.DATAJSON.map((applicationState, index) => (
-                        <table class={ (index > 0 && (index %2 === 0)) ? "bodyTable2" : "bodyTable"}>
+                        <table className={ (index > 0 && (index %2 === 0)) ? "evenRow" : "oddRow"}>
                         {index === 0 ? 
                         <tr>
-                        <td className="tableHeading"> <b> {"Application State            "} </b> </td>
-                        <td className="tableHeading"> <b> {"Application Status           "} </b></td>
-                        <td className="tableHeading"> <b> {"Action                        "} </b> </td>
-                        <td className="tableHeading"> <b> {"Actor                        "} </b> </td>
-                        <td className="tableHeading"> <b> {"Next State                        "} </b> </td>
+                        <td className="tableHead"> <b> {"Application State            "} </b> </td>
+                        <td className="tableHead"> <b> {"Application Status           "} </b></td>
+                        <td className="tableHead"> <b> {"Action                        "} </b> </td>
+                        <td className="tableHead"> <b> {"Actor                        "} </b> </td>
+                        <td className="tableHead"> <b> {"Next State                        "} </b> </td>
                         </tr>
                         :
                         null}
@@ -1682,11 +1682,11 @@ class ReportPreviewWF extends React.Component {
                             <tr>
                                 {/* class={index === this.state.DATAJSON.length ? "apply" : ""} */}
                             {/* <dd>{ index }</dd>  */}
-                            <td className={ index+1 === this.state.DATAJSON.length ? "endLine" : ""}> { applicationState.state } </td>
-                            <td className={ index+1 === this.state.DATAJSON.length ? "endLine" : ""}> { applicationState.applicationStatus } </td>
-                            <td className={ index+1 === this.state.DATAJSON.length ? "endLine" : ""}> --- </td>
-                            <td className={ index+1 === this.state.DATAJSON.length ? "endLine" : ""}> --- </td>
-                            <td className={ index+1 === this.state.DATAJSON.length ? "endLine" : ""}> --- </td>
+                            <td className={ index+1 === this.state.DATAJSON.length ? "" : ""}> { applicationState.state } </td>
+                            <td className={ index+1 === this.state.DATAJSON.length ? "" : ""}> { applicationState.applicationStatus } </td>
+                            <td className={ index+1 === this.state.DATAJSON.length ? "" : ""}> --- </td>
+                            <td className={ index+1 === this.state.DATAJSON.length ? "" : ""}> --- </td>
+                            <td className={ index+1 === this.state.DATAJSON.length ? "" : ""}> --- </td>
                             </tr>
                             :
                             null  
@@ -1729,11 +1729,11 @@ class ReportPreviewWF extends React.Component {
                 </div>
 
             {/* </Collapsible> */}
-            </center>
+            {/* </center> */}
         </div>
     
   );
   }
 }
 
-export default ReportPreviewWF;
+export default ReportPreview;

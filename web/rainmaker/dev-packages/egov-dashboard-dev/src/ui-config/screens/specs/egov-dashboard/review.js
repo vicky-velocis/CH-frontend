@@ -60,8 +60,8 @@ const sortDataReportDropDown  = (selectedModuleName, state, dispatch) => {
 export const WorkflowReport = getCommonCard({
   reportCardGraph : {
     uiFramework: "custom-molecules-local",
-    moduleName: "egov-report",
-    componentPath: "ReportPreviewWF",
+    moduleName: "egov-dashboard",
+    componentPath: "ReportPreview",
     props: {
     formKey: `newapplication`,
     data : []
@@ -78,7 +78,7 @@ export const WorkflowReport = getCommonCard({
 
 const getRedirectionURL = () => {
   /* Mseva 2.0 changes */
-  const redirectionURL = "/egov-report/home"
+  const redirectionURL = "/egov-dashboard/home"
   return redirectionURL;
 };
 
