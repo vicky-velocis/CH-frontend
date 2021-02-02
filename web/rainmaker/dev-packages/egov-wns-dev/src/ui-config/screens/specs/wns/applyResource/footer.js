@@ -421,6 +421,7 @@ else if(wnsStatus && (wnsStatus === "REACTIVATE_CONNECTION"||wnsStatus === "TEMP
   
         );
         if (payload) {
+          dispatch(prepareFinalObject("Properties", payload.Properties[0]));
           if(payload.Properties[0].propertyId != null)
           searchPropertyId = payload.Properties[0].propertyId
           else{
