@@ -3,9 +3,9 @@ import {
     getLabel,
     getBreak,
     getCommonApplyFooter
-  } from "egov-ui-framework/ui-config/screens/specs/utils";
-  import { getSearchPensioner } from "../../../../ui-utils/commons";
+  } from "egov-ui-framework/ui-config/screens/specs/utils";  
   import { conectionDetails} from "./linkConnectionResources/conectionDetails"  
+  import {  getSearchResults,getSearchResultsForSewerage } from "../../../../ui-utils/commons";
   import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
   import {
     getTenantId
@@ -19,44 +19,47 @@ import {
   } from "egov-ui-framework/ui-redux/screen-configuration/actions";
   import { footer } from "./linkConnectionResources/footer";
   
-  export const prepareEditFlow = async (
+  export const prepareData = async (
     state,
     dispatch,
-    applicationNumber,
+    connectionNumber,
+    id,
     tenantId
   ) => {
    
     
-    if (applicationNumber) {
+    if (connectionNumber && id) {
   
       let queryObject = [
         {
-          key: "pensionerNumber",
-        value: applicationNumber
-         
-        }];
-      queryObject.push({
-        key: "tenantId",
-        value: tenantId
-      });
-      
-       
-       //export const pmsfooter = footer(response) ;
-       //dispatch(prepareFinalObject("ProcessInstances", get(response, "Pensioners", [])));
-       const ActionItem = [
-        { action: "WS_COMMON_BUTTON_SUBMIT" }, 
-      
-      ];
-  
-       set(state, "screenConfiguration.preparedFinalObject.ProcessInstances[0].state.actions", ActionItem);
+          key: "connectionNumber",
+        value: connectionNumber         
+        }];       
+      try {
+        //let queryObject = [];
+        //queryObject.push({ key: "connectionNumber", value: connectionNumber });
+        let getSearchResult = getSearchResults(queryObject)
+        let getSearchResultForSewerage = getSearchResultsForSewerage(queryObject, dispatch)
+        let finalArray = [];
+        let searchWaterConnectionResults, searcSewerageConnectionResults;
+    
+     try { searchWaterConnectionResults = await getSearchResult } catch (error) { finalArray = []; console.log(error) }
+     try { searcSewerageConnectionResults = await getSearchResultForSewerage } catch (error) { finalArray = []; console.log(error) }
+     const waterConnections = searchWaterConnectionResults ? searchWaterConnectionResults.WaterConnection.map(e => { e.service = 'WATER'; return e }) : []
+     const sewerageConnections = searcSewerageConnectionResults ? searcSewerageConnectionResults.SewerageConnections.map(e => { e.service = 'SEWERAGE'; return e }) : [];
+     
+     let combinedSearchResults = searchWaterConnectionResults || searcSewerageConnectionResults ? sewerageConnections.concat(waterConnections) : []
+     combinedSearchResults = combinedSearchResults.filter(x=>x.id === id)
+     dispatch(prepareFinalObject("combinedSearchResults", combinedSearchResults));
+    } catch (err) { console.log(err) }
   
      
     }
   };
   
   const header = getCommonHeader({
-    labelName: "Death of an Pensioner",
-    labelKey: "PENSION_DEATH_OF_AN_PENSIONER"
+    labelName: "Link Water Connection",
+    labelKey: "WS_LINK_WATER_COMNNECTION"
   });
   const LinkConnectionResult = {
     uiFramework: "material-ui",
@@ -68,13 +71,20 @@ import {
         window.location.href,
         "id"
       );
+      const connectionNumber = getQueryArg(
+        window.location.href,
+        "connectionNumber"
+      );
      
      //get Eployee details data
-  prepareEditFlow(state, dispatch, id, tenantId).then(res=>
+  prepareData(state, dispatch, connectionNumber,id, tenantId).then(res=>
     {
   
     }
   );
+
+
+
       return action;
     },
     components: {

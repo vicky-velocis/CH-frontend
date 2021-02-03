@@ -32,7 +32,7 @@ export const getFileUrl = (linkText="") => {
   return fileURL;
 }
 
-export const saveBilling = async (state, dispatch) => {
+ const saveBilling = async (state, dispatch) => {
 let fileUpload = false;
 let fileUrl=''
 // check validation for file uplaod
@@ -64,14 +64,20 @@ fileUpload = true
           fileStoreUrl:fileUrl
         }
       }
-      let response = await savebillGeneration(
-        queryObject,        
-        billGeneration,
-        dispatch,      
-      );
-      if(response){
-       
+      try{
+        let abc = await savebillGeneration(state, dispatch,billGeneration);
+        window.localStorage.setItem("ActivityStatusFlag","true");
+      }catch (err){
+        console.log("errrr")
       }
+      // let response = await savebillGeneration(
+      //   queryObject,        
+      //   billGeneration,
+      //   dispatch,      
+      // );
+      // if(response){
+       
+      // }
     } catch (error) {
       //furnishindentData(state, dispatch);
     }

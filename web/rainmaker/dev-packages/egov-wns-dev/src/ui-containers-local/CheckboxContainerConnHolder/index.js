@@ -76,6 +76,8 @@ class CheckboxLabels extends React.Component {
     if (isChecked) {
       toggleConnHolderDetails(onFieldChange, false);
       //set Owner Information
+      if(preparedFinalObject.applyScreen.property.owners && preparedFinalObject.applyScreen.property.owners[0])
+      {
       const mobileNumber =  get(preparedFinalObject.applyScreen.property.owners[0], "mobileNumber");
       const name =  get(preparedFinalObject.applyScreen.property.owners[0], "name");
       const emailId =  get(preparedFinalObject.applyScreen.property.owners[0], "emailId");
@@ -85,6 +87,7 @@ class CheckboxLabels extends React.Component {
       approveCheck('connectionHolders[0].emailId', emailId)
       approveCheck('connectionHolders[0].correspondenceAddress', correspondenceAddress)
      // approveCheck('connectionHolders[0].mobileNumber', mobileNumber)
+      }
 
 
     } else {

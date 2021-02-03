@@ -11,7 +11,8 @@ import {
 import {
   toggleSnackbar,
   prepareFinalObject,
-  handleScreenConfigurationFieldChange as handleField
+  handleScreenConfigurationFieldChange as handleField,
+  toggleSpinner
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import get from "lodash/get";
 import {
@@ -26,6 +27,7 @@ import {
 } from "lodash";
 import "./index.css";
 import {
+  getPMDetailsByFileNumber,
   setDocumentData,
   setPrevOwnerDocs
 } from '../apply'
@@ -83,6 +85,7 @@ export const moveToSuccess = (data, dispatch, type) => {
 };
 
 const callBackForNext = async (state, dispatch) => {
+  let scrollTop = true;
   let activeStep = get(
     state.screenConfiguration.screenConfig[screenKey],
     "components.div.children.stepper.props.activeStep",
@@ -90,8 +93,8 @@ const callBackForNext = async (state, dispatch) => {
   );
   let isFormValid = true;
   let hasFieldToaster = true;
-  let ownerOnePosAllotDateValid = true;
-  let ownerTwoPosAllotDateValid = true;
+  let ownerPosAllotDateValid = true;
+  // let ownerTwoPosAllotDateValid = true;
   let auctionEMDDateValid = true;
   let isStartAndEndYearValid = true
   let propertyType = get(
@@ -181,32 +184,70 @@ const callBackForNext = async (state, dispatch) => {
     let emdDate = get(state.screenConfiguration.screenConfig[screenKey], "components.div.children.formwizardSecondStep.children.AllotmentAuctionDetails.children.cardContent.children.detailsContainer.children.cardContent.children.auctionCard.children.emdAmountDate.props.value") || get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.emdDate");
 
     
-    let auctionDateEpoch = convertDateToEpoch(auctionDate)
-    let emdDateEpoch = convertDateToEpoch(emdDate)
-  
-    let typeOfAllocationSelected = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.typeOfAllocation");
-    auctionEMDDateValid = auctionDateEpoch - emdDateEpoch > 0 ? true : false
-  
 
-    if(typeOfAllocationSelected !== "ALLOCATION_TYPE.ALLOTMENT"){
-    if (isAuctionValid && auctionEMDDateValid) {
-      const res = await applyEstates(state, dispatch, activeStep);
-      if (!res) {
-        return
+    let typeOfAllocationSelected = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.typeOfAllocation");
+    if (typeOfAllocationSelected !== "ALLOCATION_TYPE.ALLOTMENT"){
+      if (!!auctionDate || !!emdDate) {
+        let auctionDateEpoch = convertDateToEpoch(auctionDate)
+        let emdDateEpoch = convertDateToEpoch(emdDate)
+        
+        auctionEMDDateValid = auctionDateEpoch - emdDateEpoch > 0 ? true : false;
       }
-    } else {
-      isFormValid = false;
+      if (isAuctionValid && auctionEMDDateValid) {
+        const res = await applyEstates(state, dispatch, activeStep);
+        if (!res) {
+          return
+        }
+      } else {
+        isFormValid = false;
+      }
     }
-  }
   }
 
   if (activeStep === ENTITY_OWNER_DETAILS_STEP) {
+    let propertyRegisteredTo = get(
+      state.screenConfiguration.preparedFinalObject,
+      "Properties[0].propertyDetails.propertyRegisteredTo",
+      ""
+    )
     let entityType = get(
       state.screenConfiguration.preparedFinalObject,
       "Properties[0].propertyDetails.entityType",
       ""
     )
-    let ownerOnePossessionDate = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.owners[0].ownerDetails.possesionDate");
+
+    entityType = propertyRegisteredTo == "ENTITY" ? entityType : "";
+    
+    let propertyOwnersItems = get(
+      state.screenConfiguration.screenConfig,
+      `apply.components.div.children.formwizardThirdStep.children.ownerDetails.children.cardContent.children.detailsContainer.children.multipleApplicantContainer.children.multipleApplicantInfo.props.items`
+    );
+
+    if (propertyOwnersItems && propertyOwnersItems.length) {
+      for (var i = 0; i < propertyOwnersItems.length; i++) {
+        if (!!propertyOwnersItems[i].isDeleted) {
+          continue;
+        }
+        let ownerPossessionDate = get(state.screenConfiguration.preparedFinalObject, `Properties[0].propertyDetails.owners[${i}].ownerDetails.possesionDate`);
+        let ownerDateOfAllotment = get(state.screenConfiguration.preparedFinalObject, `Properties[0].propertyDetails.owners[${i}].ownerDetails.dateOfAllotment`);
+
+        if(!!ownerPossessionDate)
+        {
+        let ownerPossessionDateEpoch = convertDateToEpoch(ownerPossessionDate)
+        let ownerDateOfAllotmentEpoch = convertDateToEpoch(ownerDateOfAllotment)
+
+        if(ownerPossessionDateEpoch !== undefined && ownerDateOfAllotmentEpoch !== undefined){
+          ownerPosAllotDateValid = ownerPossessionDateEpoch - ownerDateOfAllotmentEpoch >= 0 ? true : false
+          isFormValid = ownerPosAllotDateValid == true ? true : false;
+        }
+
+        if (!ownerPosAllotDateValid) {
+          break;
+        }
+      }
+      }
+    }
+    /* let ownerOnePossessionDate = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.owners[0].ownerDetails.possesionDate");
     let ownerOneDateOfAllotment = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.owners[0].ownerDetails.dateOfAllotment");
     let ownerTwoPossessionDate = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.owners[1].ownerDetails.possesionDate") || 0;
     let ownerTwoDateOfAllotment = get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.owners[1].ownerDetails.dateOfAllotment") || 0;
@@ -228,27 +269,8 @@ const callBackForNext = async (state, dispatch) => {
           ownerTwoPosAllotDateValid = false;
           isFormValid = false;
         }
-  }
+  } */
   
-    if (!!entityType) {
-      if (entityType == "ET.PARTNERSHIP_FIRM") {
-        dispatch(
-          prepareFinalObject(
-            `Properties[0].propertyDetails.owners[${i}].ownershipType`,
-            "PARTNER"
-          )
-        )
-      }
-      else {
-        dispatch(
-          prepareFinalObject(
-            `Properties[0].propertyDetails.owners[${i}].ownershipType`,
-            "OWNER"
-          )
-        )
-      }
-    }
-
     let isOwnerOrPartnerDetailsValid = true;
 
     switch(entityType) {
@@ -261,8 +283,8 @@ const callBackForNext = async (state, dispatch) => {
           screenKey
         );
 
-        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "ownerDetails");
-        if (isOwnerOrPartnerDetailsValid && isCompanyDetailsValid && (ownerOnePosAllotDateValid || ownerTwoPosAllotDateValid)) {
+        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "ownerDetails", entityType);
+        if (isOwnerOrPartnerDetailsValid && isCompanyDetailsValid && (ownerPosAllotDateValid)) {
           const res = await applyEstates(state, dispatch, activeStep, screenKey);
           if (!res) {
             return
@@ -279,8 +301,8 @@ const callBackForNext = async (state, dispatch) => {
           screenKey
         )
 
-        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "partnerDetails");
-        if (isFirmDetailsValid && isOwnerOrPartnerDetailsValid && (ownerOnePosAllotDateValid || ownerTwoPosAllotDateValid)) {
+        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "partnerDetails", entityType);
+        if (isFirmDetailsValid && isOwnerOrPartnerDetailsValid && ownerPosAllotDateValid) {
           const res = await applyEstates(state, dispatch, activeStep, screenKey);
           if (!res) {
             return
@@ -302,7 +324,7 @@ const callBackForNext = async (state, dispatch) => {
           dispatch,
           screenKey
         )
-        if (isFirmDetailsValid && isProprietorshipDetailsValid && (ownerOnePosAllotDateValid || ownerTwoPosAllotDateValid)) {
+        if (isFirmDetailsValid && isProprietorshipDetailsValid && ownerPosAllotDateValid) {
           const res = await applyEstates(state, dispatch, activeStep, screenKey);
           if (!res) {
             return
@@ -312,8 +334,8 @@ const callBackForNext = async (state, dispatch) => {
         }
         break;
       default:
-        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "ownerDetails");
-        if (isOwnerOrPartnerDetailsValid && (ownerOnePosAllotDateValid || ownerTwoPosAllotDateValid)) {
+        isOwnerOrPartnerDetailsValid = setOwnersOrPartners(state, dispatch, "ownerDetails", entityType);
+        if (isOwnerOrPartnerDetailsValid && ownerPosAllotDateValid) {
           const res = await applyEstates(state, dispatch, activeStep, screenKey);
           if (!res) {
             return
@@ -674,9 +696,8 @@ const callBackForNext = async (state, dispatch) => {
           )
           }
         }
-
         const filterRentArr = rentItems.filter(item => !item.isDeleted)
-        rentItems = filterRentArr.map((item, index) => ({...item, groundRentStartMonth: !!index ? Number(filterRentArr[index-1].groundRentEndMonth) + 1 : 0, groundRentEndMonth: item.groundRentEndMonth, groundRentAmount: item.groundRentAmount}))
+        rentItems = filterRentArr.map((item, index) => ({...item, groundRentStartMonth: !!index ? Number(filterRentArr[index-1].groundRentEndMonth) + 1 : 1, groundRentEndMonth: item.groundRentEndMonth, groundRentAmount: item.groundRentAmount}))
 
       const rentValidation = rentItems.filter(item => !item.groundRentAmount || !item.groundRentEndMonth)
       isRentDetailsValid = rentValidation.length === 0
@@ -756,46 +777,52 @@ const callBackForNext = async (state, dispatch) => {
   if (activeStep !== SUMMARY_STEP) {
     if (isFormValid) {
       changeStep(state, dispatch, screenKey);
-    }else if(ownerOnePosAllotDateValid === false){
+    }else if(ownerPosAllotDateValid === false){
       let errorMessage = {
         labelName: "Date of possession should be on and after date of allotment",
         labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
     };
+      scrollTop = false
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
     } 
-    else if(!ownerTwoPosAllotDateValid && ownerOnePosAllotDateValid){
+    /* else if(!ownerTwoPosAllotDateValid && ownerOnePosAllotDateValid){
         let errorMessage = {
           labelName: "Date of possession should be on and after date of allotment",
           labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
       };
-        dispatch(toggleSnackbar(true, errorMessage, "warning"));
-    } 
-    else if(!ownerTwoPosAllotDateValid && !ownerOnePosAllotDateValid){
+    
+      dispatch(toggleSnackbar(true, errorMessage, "warning"));
+    }  */
+    /* else if(!ownerTwoPosAllotDateValid && !ownerOnePosAllotDateValid){
       let errorMessage = {
         labelName: "Date of possession should be on and after date of allotment",
         labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
     };
+
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
-  } 
-  else if(ownerTwoPosAllotDateValid && !ownerOnePosAllotDateValid){
+  }  */
+  /* else if(ownerTwoPosAllotDateValid && !ownerOnePosAllotDateValid){
     let errorMessage = {
       labelName: "Date of possession should be on and after date of allotment",
       labelKey: "ES_ERR_DATE_OF_POSSESSION_BEFORE_DATE_OF_ALLOTMENT"
   };
+
     dispatch(toggleSnackbar(true, errorMessage, "warning"));
-} 
+}  */
     else if(!auctionEMDDateValid){
     
     let errorMessage = {
       labelName: "EMD date should be before date of auction",
       labelKey: "ES_ERR_EMD_DATE_BEFORE_AUCTION_DATE"
   };
+    scrollTop = false
     dispatch(toggleSnackbar(true, errorMessage, "warning"));
     } else if(!isStartAndEndYearValid) {
       let errorMessage = {
         labelName: "End Month should be greater than Start Month",
         labelKey: "ES_ERR_END_MONTH_START_MONTH"
       }
+      scrollTop = false
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
     }
     else if (hasFieldToaster) {
@@ -828,6 +855,7 @@ const callBackForNext = async (state, dispatch) => {
               labelKey: "ES_ERR_FILL_MANDATORY_FIELDS"
             };
           }
+         
           break;
         case DOCUMENT_UPLOAD_STEP:
         case PURCHASER_DOCUMENTS_STEP:
@@ -835,15 +863,19 @@ const callBackForNext = async (state, dispatch) => {
             labelName: "Please upload all the required documents !",
             labelKey: "ES_ERR_UPLOAD_REQUIRED_DOCUMENTS"
           };
+       
           break;
       }
+      scrollTop = false
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
     }
   }
-  window.scrollTo(0,0)
+  if(scrollTop){
+    window.scrollTo(0,0)
+  }
 }
 
-const setOwnersOrPartners = (state, dispatch, container) => {
+const setOwnersOrPartners = (state, dispatch, container, entityType) => {
   let propertyOwners = get(
     state.screenConfiguration.preparedFinalObject,
     "Properties[0].propertyDetails.owners"
@@ -869,6 +901,25 @@ const setOwnersOrPartners = (state, dispatch, container) => {
       )
 
       var ownerName = propertyOwners ? propertyOwners[i] ? propertyOwners[i].ownerDetails.ownerName ?  propertyOwners[i].ownerDetails.ownerName : "NA" : "NA" : "NA";
+
+      if (!!entityType) {
+        if (entityType == "ET.PARTNERSHIP_FIRM") {
+          dispatch(
+            prepareFinalObject(
+              `Properties[0].propertyDetails.owners[${i}].ownershipType`,
+              "PARTNER"
+            )
+          )
+        }
+        else {
+          dispatch(
+            prepareFinalObject(
+              `Properties[0].propertyDetails.owners[${i}].ownershipType`,
+              "OWNER"
+            )
+          )
+        }
+      }
       
       if (i > 0) {
         var documentDetailsString = JSON.stringify(get(
@@ -1034,6 +1085,34 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+
+      dispatch(handleField(
+        screenName,
+        "components.div.children.formwizardEighthStep.children.groundRentDetails.children.cardContent.children.detailsContainer.children.advanceRent",
+        "visible",
+        false
+      ))
+
+      dispatch(handleField(
+        screenName,
+        "components.div.children.formwizardEighthStep.children.groundRentDetails.children.cardContent.children.detailsContainer.children.dateOfPaymentOfAdvanceRent",
+        "visible",
+        false
+      ))
+
+      dispatch(handleField(
+        screenName,
+        "components.div.children.formwizardEighthStep.children.licenseFeeDetails.children.cardContent.children.detailsContainer.children.advanceRent",
+        "visible",
+        false
+      ))
+
+      dispatch(handleField(
+        screenName,
+        "components.div.children.formwizardEighthStep.children.licenseFeeDetails.children.cardContent.children.detailsContainer.children.dateOfPaymentOfAdvanceRent",
+        "visible",
+        false
+      ))
       break;
     case PAYMENT_DETAILS_STEP:
       dispatchMultipleFieldChangeAction(
@@ -1044,7 +1123,7 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         dispatch
       );
       break;
-    default:
+    case SUMMARY_STEP:
       dispatchMultipleFieldChangeAction(
         screenName,
         getActionDefinationForStepper(
@@ -1052,6 +1131,9 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      break;
+    default:
+      break;
   }
 };
 
@@ -1122,9 +1204,13 @@ export const getActionDefinationForStepper = path => {
   return actionDefination;
 };
 
-export const callBackForPrevious = (state, dispatch) => {
+export const callBackForPrevious = async (state, dispatch) => {
+  dispatch(toggleSpinner());
+  const fileNumber = get(state.screenConfiguration.preparedFinalObject, "Properties[0].fileNumber")
+  await getPMDetailsByFileNumber("", state, dispatch, fileNumber, screenKey, false)
   window.scrollTo(0,0)
   changeStep(state, dispatch, screenKey, "previous");
+  dispatch(toggleSpinner())
 };
 
 export const previousButton = {
@@ -1268,14 +1354,14 @@ export const downloadPrintContainer = (
   dispatch,
   applicationState,
   applicationType,
-  branchType
+  branchType,
+  application
 ) => {
- 
+  let typeOfNotice = application.applicationDetails.typeOfNotice
   /** MenuButton data based on status */
   let downloadMenu = [];
   let printMenu = [];  
  
-
   let receiptDownloadObject = {
     label: { labelName: "Payment Receipt", labelKey: "ES_PAYMENT_RECEIPT" },
     link: () => {
@@ -1327,7 +1413,7 @@ export const downloadPrintContainer = (
   };
 
   let LetterDownloadObject = {
-    label: { labelName: "Letter", labelKey: (applicationType === 'NDC' && branchType === 'EstateBranch') ? "ES_NDC_GENERAL_REASON":  applicationType === "PatnershipDeed" ? "ES_LETTER_PRIVATE_LIMITED" : "ES_LETTER" },
+    label: { labelName: "Letter", labelKey: (applicationType === 'NDC' && branchType === 'EstateBranch') ? "ES_NDC_GENERAL_REASON":  applicationType === "PartnershipDeed" ? "ES_LETTER_PRIVATE_LIMITED" : "ES_LETTER" },
     link: () => {
       const { Applications,temp } = state.screenConfiguration.preparedFinalObject;
       const documents = temp[0].reviewDocData;
@@ -1346,7 +1432,7 @@ export const downloadPrintContainer = (
   }
 
   let LetterPrintObject = {
-    label: { labelName: "Letter", labelKey: (applicationType === 'NDC' && branchType === 'EstateBranch') ? "ES_NDC_GENERAL_REASON": "ES_LETTER" },
+    label: { labelName: "Letter", labelKey: (applicationType === 'NDC' && branchType === 'EstateBranch') ? "ES_NDC_GENERAL_REASON":  applicationType === "PartnershipDeed" ? "ES_LETTER_PRIVATE_LIMITED" : "ES_LETTER" },
     link: () => {
       const { Applications,temp } = state.screenConfiguration.preparedFinalObject;
       const documents = temp[0].reviewDocData;
@@ -1446,7 +1532,7 @@ export const downloadPrintContainer = (
       const { Applications,temp } = state.screenConfiguration.preparedFinalObject;
       const documents = temp[0].reviewDocData;
       set(Applications[0],"additionalDetails.documents",documents)
-      downloadNotice(Applications,applicationType,'print');
+      downloadNotice(Applications,applicationType,'','print');
     },
     leftIcon: "assignment"
   }
@@ -1468,7 +1554,7 @@ export const downloadPrintContainer = (
       const { Applications,temp } = state.screenConfiguration.preparedFinalObject;
       const documents = temp[0].reviewDocData;
       set(Applications[0],"additionalDetails.documents",documents)
-      downloadNotice(Applications,"BB-" + applicationType,'print');
+      downloadNotice(Applications,"BB-" + applicationType,'','print');
     },
     leftIcon: "assignment"
   }
@@ -1709,23 +1795,24 @@ export const downloadPrintContainer = (
     },
     leftIcon: "assignment"
   }
-  
+
   if(branchType === 'BuildingBranch'){
-      switch(applicationType && applicationState){
-        case 'NOC' && 'ES_PENDING_DS_VERIFICATION':
-        case 'NOC' && 'ES_PENDING_CLARIFICATION':
-        case 'NOC' && 'ES_PENDING_DA_VERIFICATION':
-        case 'NOC' && 'ES_PENDING_JE_VERIFICATION':
-        case 'NOC' && 'ES_PENDING_SDE_VERIFICATION':
-        case 'NOC' && 'ES_PENDING_DRAFSMAN_CALCULATION':
-        case 'NOC' && 'ES_PENDING_SDE_CALCULATION_VERIFICATION':
-        case 'NOC' && 'ES_PENDING_DA_PROPOSAL':
-        case 'NOC' && 'ES_PENDING_SDE_PROPOSAL_VERIFICATION':  
-        case 'NOC' && 'ES_PENDING_AC_APPROVAL':
-        case 'NOC' && 'ES_PENDING_SDE_PROPOSAL_APPROVAL':
-        case 'NOC' && 'ES_PENDING_DA_FEE':
-        case 'NOC' && 'ES_PENDING_PAYMENT': 
-        case 'NOC' && 'ES_PENDING_DA_PREPARE_LETTER': 
+      switch(applicationType + `-${applicationState}`){
+        case 'NOC-ES_PENDING_DS_VERIFICATION':
+        case 'NOC-ES_PENDING_CLARIFICATION':
+        case 'NOC-ES_PENDING_DA_VERIFICATION':
+        case 'NOC-ES_PENDING_JE_VERIFICATION':
+        case 'NOC-ES_PENDING_SDE_VERIFICATION':
+        case 'NOC-ES_PENDING_DRAFSMAN_CALCULATION':
+        case 'NOC-ES_PENDING_SDE_CALCULATION_VERIFICATION':
+        case 'NOC-ES_PENDING_DA_PROPOSAL':
+        case 'NOC-ES_PENDING_SDE_PROPOSAL_VERIFICATION':  
+        case 'NOC-ES_PENDING_AC_APPROVAL':
+        case 'NOC-ES_PENDING_SDE_PROPOSAL_APPROVAL':
+        case 'NOC-ES_PENDING_DA_FEE':
+        case 'NOC-ES_PENDING_PAYMENT': 
+        case 'NOC-ES_PENDING_DA_PREPARE_LETTER': 
+        case 'NOC-ES_REJECTED':
         
             downloadMenu = [
               applicationDownloadObject
@@ -1734,9 +1821,20 @@ export const downloadPrintContainer = (
               applicationPrintObject
            ] 
           break;
-
-        case 'NOC' && 'ES_PENDING_SDE_APPROVAL': 
-        case 'NOC' && 'ES_APPROVED' : 
+          case 'IssuanceOfNotice-ES_APPROVED': 
+          case 'IssuanceOfNotice-APPROVED': 
+              downloadMenu = [
+                applicationDownloadObject,
+                BBViolationNoticeDownloadObject
+              ]
+              printMenu = [
+                applicationPrintObject,
+                BBViolationNoticePrintObject
+            ] 
+  
+            break;
+        case 'NOC-ES_PENDING_SDE_APPROVAL': 
+        case 'NOC-ES_APPROVED' : 
             downloadMenu = [
               applicationDownloadObject,
               LetterDownloadObject,
@@ -1751,11 +1849,22 @@ export const downloadPrintContainer = (
               paymentLetterPrintObject
             ] 
           break;
-        case 'IssuanceOfNotice' && 'PENDING_SDE_VERIFICATION':
-        case 'IssuanceOfNotice' && 'ES_PENDING_AC_APPROVAL':
-        case 'IssuanceOfNotice' && 'ES_REJECTED':  
-        case 'IssuanceOfNotice' && 'ES_PENDING_JE_CLARIFICATION':
-        
+        case 'IssuanceOfNotice-ES_REJECTED':  
+        case 'IssuanceOfNotice-ES_PENDING_JE_CLARIFICATION':
+        case 'IssuanceOfNotice-ES_PENDING_DS_VERIFICATION':
+        case 'IssuanceOfNotice-ES_PENDING_CLARIFICATION':
+        case 'IssuanceOfNotice-ES_PENDING_DA_VERIFICATION':
+        case 'IssuanceOfNotice-ES_PENDING_JE_VERIFICATION':
+        case 'IssuanceOfNotice-ES_PENDING_SDE_VERIFICATION':
+        case 'IssuanceOfNotice-ES_PENDING_DRAFSMAN_CALCULATION':
+        case 'IssuanceOfNotice-ES_PENDING_SDE_CALCULATION_VERIFICATION':
+        case 'IssuanceOfNotice-ES_PENDING_DA_PROPOSAL':
+        case 'IssuanceOfNotice-ES_PENDING_SDE_PROPOSAL_VERIFICATION':  
+        case 'IssuanceOfNotice-ES_PENDING_AC_APPROVAL':
+        case 'IssuanceOfNotice-ES_PENDING_SDE_PROPOSAL_APPROVAL':
+        case 'IssuanceOfNotice-ES_PENDING_DA_FEE':
+        case 'IssuanceOfNotice-ES_PENDING_PAYMENT': 
+        case 'IssuanceOfNotice-ES_PENDING_DA_PREPARE_LETTER': 
             downloadMenu = [
               applicationDownloadObject
             ]
@@ -1764,760 +1873,828 @@ export const downloadPrintContainer = (
           ]   
           break;
          
-        case 'IssuanceOfNotice' && 'ES_APPROVED': 
-        case 'IssuanceOfNotice' && 'APPROVED': 
-            downloadMenu = [
-              applicationDownloadObject,
-              BBViolationNoticeDownloadObject
-            ]
-            printMenu = [
-              applicationPrintObject,
-              BBViolationNoticePrintObject
-          ] 
-
-          break;
+       
         default:
             downloadMenu = []
             printMenu = []      
       }
   }
   else if(branchType === 'ManiMajra'){
-     switch(applicationType && applicationState){
-      case `${applicationType}` && 'ES_MM_PENDING_DS_VERIFICATION':
-        case `${applicationType}` && 'ES_MM_PENDING_CLARIFICATION': 
-        case `${applicationType}` && 'ES_MM_PENDING_DA_VERIFICATION':
-        case `${applicationType}` && 'ES_MM_PENDING_BI_VERIFICATION': 
-        case `${applicationType}` && 'ES_MM_PENDING_BI_DA_VERIFICATION':
-        case `${applicationType}` && 'ES_MM_PENDING_TCM_VERIFICATION':     
-        case `${applicationType}` && 'ES_MM_PENDING_TCM_DA_VERIFICATION': 
-        case `${applicationType}` && 'ES_MM_PENDING_SRA_VERIFICATION':
-        case `${applicationType}` && 'ES_MM_PENDING_SO_VERIFICATION':
-        case `${applicationType}` && 'ES_MM_PENDING_AC_APPROVAL': 
-        case `${applicationType}` && 'ES_MM_REJECTED':
-        case `${applicationType}` && 'ES_MM_PENDING_SO_PH_VERIFICATION':
-        case `${applicationType}` && 'ES_MM_PENDING_DA_PN_CREATION':
-        case `${applicationType}` && 'ES_MM_PENDING_SRA_PN_VERIFICATION':
-        case `${applicationType}` && 'ES_MM_PENDING_SO_PN_VERIFICATION':
-        case `${applicationType}` && 'ES_MM_PENDING_SO_NOTICE':
-        case `${applicationType}` && 'ES_MM_PENIDNG_CITIZEN_NOTICE':
-        case `${applicationType}` && 'ES_MM_PENDING_DS_NOTICE_VERIFICATION':
-        case `${applicationType}` && 'ES_MM_PENDING_DA_NOTICE_VERIFICATION':
-        case `${applicationType}` && 'ES_MM_PENDING_SRA_NOTICE_VERIFICATION':
-        case `${applicationType}` && 'ES_MM_PENDING_SO_NOTICE_VERIFICATION':
-        case `${applicationType}` && 'ES_MM_PENDING_AC_NOTICE_APPROVAL':
-          
-            downloadMenu = [
-              applicationDownloadObject
+    switch(applicationType + `-${applicationState}`){
+     case `${applicationType}-ES_MM_PENDING_DS_VERIFICATION`:
+       case `${applicationType}-ES_MM_PENDING_CLARIFICATION`: 
+       case `${applicationType}-ES_MM_PENDING_DA_VERIFICATION`:
+       case `${applicationType}-ES_MM_PENDING_BI_VERIFICATION`: 
+       case `${applicationType}-ES_MM_PENDING_BI_DA_VERIFICATION`:
+       case `${applicationType}-ES_MM_PENDING_TCM_VERIFICATION`:     
+       case `${applicationType}-ES_MM_PENDING_TCM_DA_VERIFICATION`: 
+       case `${applicationType}-ES_MM_PENDING_SRA_VERIFICATION`:
+       case `${applicationType}-ES_MM_PENDING_SO_VERIFICATION`:
+       case `${applicationType}-ES_MM_PENDING_AC_APPROVAL`: 
+       case `${applicationType}-ES_MM_REJECTED`:
+       case `${applicationType}-ES_MM_PENDING_SO_PH_VERIFICATION`:
+       case `${applicationType}-ES_MM_PENDING_DA_PN_CREATION`:
+       case `${applicationType}-ES_MM_PENDING_SRA_PN_VERIFICATION`:
+       case `${applicationType}-ES_MM_PENDING_SO_PN_VERIFICATION`:
+       case `${applicationType}-ES_MM_PENDING_SO_NOTICE`:
+       case `${applicationType}-ES_REJECTED`:  
+       case `${applicationType}-ES_MM_PENIDNG_CITIZEN_NOTICE`:
+       case `${applicationType}-ES_MM_PENDING_DS_NOTICE_VERIFICATION`:
+       case `${applicationType}-ES_MM_PENDING_DA_NOTICE_VERIFICATION`:
+       case `${applicationType}-ES_MM_PENDING_SRA_NOTICE_VERIFICATION`:
+       case `${applicationType}-ES_MM_PENDING_SO_NOTICE_VERIFICATION`:
+       case `${applicationType}-ES_MM_PENDING_AC_NOTICE_APPROVAL`:
+         
+           downloadMenu = [
+             applicationDownloadObject
+           ]
+           printMenu = [
+               applicationPrintObject
+          ]
+      break;
+
+      case `${applicationType}-ES_MM_PENDING_DA_FEE`:
+      case `${applicationType}-ES_MM_PENDING_PAYMENT`: 
+      case `${applicationType}-ES_MM_PENDING_DA_PREPARE_LETTER`:
+      case `${applicationType}-ES_MM_PENDING_SRA_REVIEW_LETTER`:
+      case `${applicationType}-ES_MM_PENDING_PAYMENT`:
+      switch(applicationType){
+         case 'UnRegisteredWill':
+             if(process.env.REACT_APP_NAME === "Citizen"){
+               downloadMenu = [
+                 applicationDownloadObject,EmailDownloadObject
+               ]
+             
+               printMenu = [
+                 applicationPrintObject,EmailPrintObject
+               ]
+             }else{
+               downloadMenu = [
+                 applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject
+               ]
+             
+               printMenu = [
+                 applicationPrintObject,NoticePrintObject,EmailPrintObject
+               ] 
+             }
+             
+           break;
+         case 'RegisteredWill':
+             if(process.env.REACT_APP_NAME === "Citizen"){
+               downloadMenu = [
+                 applicationDownloadObject,EmailDownloadObject
+               ]
+             
+               printMenu = [
+                 applicationPrintObject,EmailPrintObject
+               ]
+             }else{
+               downloadMenu = [
+                 applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject
+               ]
+             
+               printMenu = [
+                 applicationPrintObject,NoticePrintObject,EmailPrintObject
+               ] 
+             }
+           break;
+         case 'IntestateDeath':
+             if(process.env.REACT_APP_NAME === "Citizen"){
+               downloadMenu = [
+                 applicationDownloadObject,EmailDownloadObject
+               ]
+             
+               printMenu = [
+                 applicationPrintObject,EmailPrintObject
+               ]
+             }else{
+               downloadMenu = [
+                 applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject
+               ]
+             
+               printMenu = [
+                 applicationPrintObject,NoticePrintObject,EmailPrintObject
+               ] 
+             }
+           break;
+       
+         default:
+             downloadMenu = [
+               applicationDownloadObject
+             ]
+             printMenu = [
+                 applicationPrintObject
             ]
-            printMenu = [
-                applicationPrintObject
+      }
+        
+        break;
+      case `${applicationType}-ES_MM_PENDING_SO_APPROVAL`:
+         switch(applicationType){
+             case 'UnRegisteredWill':
+             case 'RegisteredWill':
+             case 'IntestateDeath':
+               if(process.env.REACT_APP_NAME === "Citizen"){
+                       downloadMenu = [
+                       applicationDownloadObject,EmailDownloadObject
+                       ]
+                       printMenu = [
+                         applicationPrintObject,EmailPrintObject
+                       ]
+                     }else{
+                       downloadMenu = [
+                       applicationDownloadObject,
+                       LetterDownloadObject,
+                       NoticeDownloadObject,EmailDownloadObject
+                     ]
+                       printMenu = [
+                       applicationPrintObject,
+                       LetterPrintObject,NoticePrintObject,EmailPrintObject
+                       ]
+                     } 
+                   break;
+                 default:      
+           if(process.env.REACT_APP_NAME === "Citizen")
+                 {
+                   downloadMenu = [
+                   applicationDownloadObject
+                   ]
+                   printMenu = [
+                     applicationPrintObject
+                   ]
+                 }else{
+                   downloadMenu = [
+                   applicationDownloadObject,
+                   LetterDownloadObject
+                 ]
+                   printMenu = [
+                   applicationPrintObject,
+                   LetterPrintObject
+                   ]
+                 } 
+            }
+       break;       
+      case `${applicationType}-ES_MM_APPROVED`:
+        switch(applicationType){
+         case 'FamilySettlement':
+         case 'NDC':
+         case 'NOC':
+         case 'SaleGift':
+         case 'AllotmentOfNewHouse':
+
+             downloadMenu = [
+               applicationDownloadObject,
+               LetterDownloadObject
+             ]
+               printMenu = [
+               applicationPrintObject,
+               LetterPrintObject
+             ]
+             break;
+
+           case 'UnRegisteredWill':
+           case 'RegisteredWill':
+           case 'IntestateDeath':
+               downloadMenu = [
+                 applicationDownloadObject,
+                 LetterDownloadObject,
+                 NoticeDownloadObject,EmailDownloadObject
+               ]
+                 printMenu = [
+                 applicationPrintObject,
+                 LetterPrintObject,NoticePrintObject,EmailPrintObject
+                 ]
+             break;
+            
+        }
+        break;
+      
+      default:
+         downloadMenu = []
+         printMenu = [] 
+    }
+ }else{
+   switch (applicationType + `-${applicationState}`) {
+     case `${applicationType}-ES_PENDING_DS_VERIFICATION`:
+     case `${applicationType}-ES_PENDING_DA_VERIFICATION`: 
+     case `${applicationType}-ES_PENDING_SRA_VERIFICATION`:
+     case `${applicationType}-ES_PENDING_SO_VERIFICATION`: 
+     case `${applicationType}-ES_PENDING_AC_APPROVAL`:
+     case `${applicationType}-ES_PENDING_CLARIFICATION`:     
+     case `${applicationType}-ES_REJECTED`: 
+     case `${applicationType}-ES_PENDING_SO_TEMPLATE_CREATION`:
+     case `${applicationType}-ES_PENDING_CITIZEN_TEMPLATE_SUBMISSION`:
+     case `${applicationType}-ES_PENDING_DS_TEMPLATE_VERIFICATION`: 
+     case `${applicationType}-ES_PENDING_DA_TEMPLATE_VERIFICATION`:
+     case `${applicationType}-ES_PENDING_SRA_TEMPLATE_VERIFICATION`:
+     case `${applicationType}-ES_PENDING_SO_TEMPLATE_VERIFICATION`:
+         downloadMenu = [
+           applicationDownloadObject
+         ]
+         printMenu = [
+             applicationPrintObject
+        ] 
+         break;   
+     case `${applicationType}-ES_PENDING_SO_APPROVAL`:
+       switch(applicationType) {
+         case 'SaleDeed':
+         case 'PartnershipDeed':
+         case 'FamilySettlement':
+         case 'LeaseDeed':
+         case 'NOC':
+         case 'Mortgage':
+         case 'MortgageIntimation':  
+         case 'ScfToSco':
+         if(process.env.REACT_APP_NAME === "Citizen"){
+           downloadMenu = [
+             applicationDownloadObject
+             
+           ]
+           printMenu = [
+             applicationPrintObject
+             
+           ]
+         }else{
+           downloadMenu = [
+             applicationDownloadObject,
+             LetterDownloadObject
+           ]
+           printMenu = [
+             applicationPrintObject,
+             LetterPrintObject
+           ]
+         }
+           
+         break;    
+         
+         case 'ChangeInTrade':
+         case 'DuplicateCopy':
+           downloadMenu = [
+             applicationDownloadObject
+           ]
+         
+           printMenu = [
+             applicationPrintObject
            ]
        break;
 
-       case `${applicationType}` && 'ES_MM_PENDING_DA_FEE':
-       case `${applicationType}` && 'ES_MM_PENDING_PAYMENT': 
-       case `${applicationType}` && 'ES_MM_PENDING_DA_PREPARE_LETTER':
-       case `${applicationType}` && 'ES_MM_PENDING_SRA_REVIEW_LETTER':
-       case `${applicationType}` && 'ES_MM_PENDING_PAYMENT':
-       switch(applicationType){
-          case 'UnRegisteredWill':
-              if(process.env.REACT_APP_NAME === "Citizen"){
-                downloadMenu = [
-                  applicationDownloadObject,EmailDownloadObject
-                ]
-              
-                printMenu = [
-                  applicationPrintObject,EmailPrintObject
-                ]
-              }else{
-                downloadMenu = [
-                  applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject
-                ]
-              
-                printMenu = [
-                  applicationPrintObject,NoticePrintObject,EmailPrintObject
-                ] 
-              }
-              
-            break;
-          case 'RegisteredWill':
-              if(process.env.REACT_APP_NAME === "Citizen"){
-                downloadMenu = [
-                  applicationDownloadObject,EmailDownloadObject
-                ]
-              
-                printMenu = [
-                  applicationPrintObject,EmailPrintObject
-                ]
-              }else{
-                downloadMenu = [
-                  applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject
-                ]
-              
-                printMenu = [
-                  applicationPrintObject,NoticePrintObject,EmailPrintObject
-                ] 
-              }
-            break;
-          case 'IntestateDeath':
-              if(process.env.REACT_APP_NAME === "Citizen"){
-                downloadMenu = [
-                  applicationDownloadObject,EmailDownloadObject
-                ]
-              
-                printMenu = [
-                  applicationPrintObject,EmailPrintObject
-                ]
-              }else{
-                downloadMenu = [
-                  applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject
-                ]
-              
-                printMenu = [
-                  applicationPrintObject,NoticePrintObject,EmailPrintObject
-                ] 
-              }
-            break;
-        
-          default:
-              downloadMenu = [
-                applicationDownloadObject
-              ]
-              printMenu = [
-                  applicationPrintObject
-             ]
-       }
+       case 'NDC':
+           downloadMenu = [
+             applicationDownloadObject,LetterDownloadObject,NDCWHODownloadObject
+           ]
          
+           printMenu = [
+             applicationPrintObject,LetterPrintObject,NDCWHOPrintObject
+           ]
          break;
-       case `${applicationType}` && 'ES_MM_PENDING_SO_APPROVAL':
-          switch(applicationType){
-              case 'UnRegisteredWill':
-              case 'RegisteredWill':
-              case 'IntestateDeath':
-                if(process.env.REACT_APP_NAME === "Citizen"){
-                        downloadMenu = [
-                        applicationDownloadObject,EmailDownloadObject
-                        ]
-                        printMenu = [
-                          applicationPrintObject,EmailPrintObject
-                        ]
-                      }else{
-                        downloadMenu = [
-                        applicationDownloadObject,
-                        LetterDownloadObject,
-                        NoticeDownloadObject,EmailDownloadObject
-                      ]
-                        printMenu = [
-                        applicationPrintObject,
-                        LetterPrintObject,NoticePrintObject,EmailPrintObject
-                        ]
-                      } 
-                    break;
-                  default:      
-            if(process.env.REACT_APP_NAME === "Citizen")
-                  {
-                    downloadMenu = [
-                    applicationDownloadObject
-                    ]
-                    printMenu = [
-                      applicationPrintObject
-                    ]
-                  }else{
-                    downloadMenu = [
-                    applicationDownloadObject,
-                    LetterDownloadObject
-                  ]
-                    printMenu = [
-                    applicationPrintObject,
-                    LetterPrintObject
-                    ]
-                  } 
-             }
-        break;       
-       case `${applicationType}` && 'ES_MM_APPROVED':
-         switch(applicationType){
-          case 'FamilySettlement':
-          case 'NDC':
-          case 'NOC':
-          case 'SaleGift':
-          case 'AllotmentOfNewHouse':
-
-              downloadMenu = [
-                applicationDownloadObject,
-                LetterDownloadObject
-              ]
-                printMenu = [
-                applicationPrintObject,
-                LetterPrintObject
-              ]
-              break;
-
-            case 'UnRegisteredWill':
-            case 'RegisteredWill':
-            case 'IntestateDeath':
-                downloadMenu = [
-                  applicationDownloadObject,
-                  LetterDownloadObject,
-                  NoticeDownloadObject,EmailDownloadObject
-                ]
-                  printMenu = [
-                  applicationPrintObject,
-                  LetterPrintObject,NoticePrintObject,EmailPrintObject
-                  ]
-              break;
-             
-         }
+       case 'LeaseholdToFreehold':
+           if(process.env.REACT_APP_NAME === "Citizen"){
+             downloadMenu = [
+               applicationDownloadObject   
+             ]
+           
+             printMenu = [
+               applicationPrintObject
+             ]
+           }else{
+             downloadMenu = [
+               applicationDownloadObject,
+               LetterDownloadObject,
+               NoticeDownloadObject
+             ]
+           
+             printMenu = [
+               applicationPrintObject,LetterPrintObject,NoticePrintObject
+             ]
+           }
+         
          break;
        
-       default:
-          downloadMenu = []
-          printMenu = [] 
-     }
-  }else{
-    switch (applicationType && applicationState) {
-      case `${applicationType}` && 'ES_PENDING_DS_VERIFICATION':
-      case `${applicationType}` && 'ES_PENDING_DA_VERIFICATION': 
-      case `${applicationType}` && 'ES_PENDING_SRA_VERIFICATION':
-      case `${applicationType}` && 'ES_PENDING_SO_VERIFICATION': 
-      case `${applicationType}` && 'ES_PENDING_AC_APPROVAL':
-      case `${applicationType}` && 'ES_PENDING_CLARIFICATION':     
-      case `${applicationType}` && 'ES_REJECTED': 
-      case `${applicationType}` && 'ES_PENDING_SO_TEMPLATE_CREATION':
-      case `${applicationType}` && 'ES_PENDING_CITIZEN_TEMPLATE_SUBMISSION':
-      case `${applicationType}` && 'ES_PENDING_DS_TEMPLATE_VERIFICATION': 
-      case `${applicationType}` && 'ES_PENDING_DA_TEMPLATE_VERIFICATION':
-      case `${applicationType}` && 'ES_PENDING_SRA_TEMPLATE_VERIFICATION':
-      case `${applicationType}` && 'ES_PENDING_SO_TEMPLATE_VERIFICATION':
-          downloadMenu = [
-            applicationDownloadObject
-          ]
-          printMenu = [
-              applicationPrintObject
-         ] 
-          break;   
-      case `${applicationType}` && 'ES_PENDING_SO_APPROVAL':
-        switch(applicationType) {
-          case 'SaleDeed':
-          case 'PatnershipDeed':
-          case 'FamilySettlement':
-          case 'LeaseDeed':
-          case 'NOC':
-          case 'Mortgage':
-          case 'ScfToSco':
-          if(process.env.REACT_APP_NAME === "Citizen"){
-            downloadMenu = [
-              applicationDownloadObject
-              
-            ]
-            printMenu = [
-              applicationPrintObject
-              
-            ]
-          }else{
-            downloadMenu = [
-              applicationDownloadObject,
-              LetterDownloadObject
-            ]
-            printMenu = [
-              applicationPrintObject,
-              LetterPrintObject
-            ]
-          }
-            
-          break;    
-          
-          case 'ChangeInTrade':
-          case 'DuplicateCopy':
-            downloadMenu = [
-              applicationDownloadObject
-            ]
-          
-            printMenu = [
-              applicationPrintObject
-            ]
-        break;
-
-        case 'NDC':
-            downloadMenu = [
-              applicationDownloadObject,LetterDownloadObject,NDCWHODownloadObject
-            ]
-          
-            printMenu = [
-              applicationPrintObject,LetterPrintObject,NDCWHOPrintObject
-            ]
-          break;
-        case 'LeaseholdToFreehold':
-            if(process.env.REACT_APP_NAME === "Citizen"){
-              downloadMenu = [
-                applicationDownloadObject   
-              ]
-            
-              printMenu = [
-                applicationPrintObject
-              ]
-            }else{
-              downloadMenu = [
-                applicationDownloadObject,
-                LetterDownloadObject,
-                NoticeDownloadObject
-              ]
-            
-              printMenu = [
-                applicationPrintObject,LetterPrintObject,NoticePrintObject
-              ]
-            }
-          
-          break;
+       case 'UnRegisteredWill':
+           if(process.env.REACT_APP_NAME === "Citizen"){
+             downloadMenu = [
+               applicationDownloadObject,
+             ]
+           
+             printMenu = [
+               applicationPrintObject,
+             ]
+           }else{
+             downloadMenu = [
+               applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject,LetterDownloadObject
+             ]
+           
+             printMenu = [
+               applicationPrintObject,NoticePrintObject,EmailPrintObject,LetterPrintObject
+             ]
+           }
         
-        case 'UnRegisteredWill':
-            if(process.env.REACT_APP_NAME === "Citizen"){
-              downloadMenu = [
-                applicationDownloadObject,
-              ]
-            
-              printMenu = [
-                applicationPrintObject,
-              ]
-            }else{
-              downloadMenu = [
-                applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject,LetterDownloadObject
-              ]
-            
-              printMenu = [
-                applicationPrintObject,NoticePrintObject,EmailPrintObject,LetterPrintObject
-              ]
-            }
-         
-          break;
-           
-        case 'RegisteredWill':
-            if(process.env.REACT_APP_NAME === "Citizen"){
-              downloadMenu = [
-                applicationDownloadObject
-              ]
-            
-              printMenu = [
-                applicationPrintObject
-              ]
-            }else{
-              downloadMenu = [
-                applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject,LetterDownloadObject
-              ]
-            
-              printMenu = [
-                applicationPrintObject,NoticePrintObject,EmailPrintObject,LetterPrintObject
-              ]
-            }
-           
-        break;
-                  
-        case 'IntestateDeath':
-            if(process.env.REACT_APP_NAME === "Citizen"){
-              downloadMenu = [
-                applicationDownloadObject,EmailDownloadObject
-              ]
-            
-              printMenu = [
-                applicationPrintObject,EmailPrintObject
-              ]
-            }else{
-              downloadMenu = [
-                applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject,LetterDownloadObject
-              ]
-            
-              printMenu = [
-                applicationPrintObject,NoticePrintObject,EmailPrintObject,LetterPrintObject
-              ]
-            }
-            
-        break;
-
-        case 'IssuanceOfNotice':
-            if(process.env.REACT_APP_NAME === "Citizen"){
-              downloadMenu = [
-                applicationDownloadObject
-              ]
-            
-              printMenu = [
-                applicationPrintObject
-              ]
-            }else{
-              downloadMenu = [
-                applicationDownloadObject,
-                NoticeDownloadObject,
-                IssuanceViolationOrderDownloadObject,
-                cancellationOrderDownloadObject,
-                nonPaymentNoticeDownloadObject,
-                nonPaymentOrderDownloadObject,
-                occupationCertificateDownloadObject
-              ]
-            
-              printMenu = [
-                applicationPrintObject,
-                NoticePrintObject,
-                IssuanceViolationOrderPrintObject,
-                cancellationOrderPrintObject,
-                nonPaymentNoticePrintObject,
-                nonPaymentOrderPrintObject,
-                occupationCertificatePrintObject
-              ]
-            }
-            
-            break;
-      }  
-      break;                 
-      case `${applicationType}` && 'ES_PENDING_DA_PREPARE_LETTER':
-      case `${applicationType}` && 'ES_PENDING_DA_FEE':  
-      case `${applicationType}` && 'ES_PENDING_PAYMENT':
-          switch(applicationType) {
-            case 'SaleDeed':
-            case 'ScfToSco':
-            case 'ChangeInTrade':
-            case 'NOC':
-            case 'NDC':
-            case 'PatnershipDeed':
-            case 'DuplicateCopy':
-            case 'Mortgage':
-            case 'FamilySettlement':
-            case 'LeaseDeed':
-                downloadMenu = [
-                  applicationDownloadObject
-                ]
-              
-                printMenu = [
-                  applicationPrintObject
-                ]
-            break;
-            case 'LeaseholdToFreehold':
-                if(process.env.REACT_APP_NAME === "Citizen"){
-                  downloadMenu = [
-                    applicationDownloadObject
-                    
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject
-                  ]
-                }else{
-                  downloadMenu = [
-                    applicationDownloadObject,
-                    NoticeDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,NoticePrintObject
-                  ]
-                }
-              
-                
-              break;
-            
-            case 'UnRegisteredWill':
-                if(process.env.REACT_APP_NAME === "Citizen"){
-                  downloadMenu = [
-                    applicationDownloadObject,EmailDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,EmailPrintObject
-                  ]
-                }else{
-                  downloadMenu = [
-                    applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,NoticePrintObject,EmailPrintObject
-                  ]
-                }
-               
-              break;
-               
-            case 'RegisteredWill':
-                if(process.env.REACT_APP_NAME === "Citizen"){
-                  downloadMenu = [
-                    applicationDownloadObject,EmailDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,EmailPrintObject
-                  ]
-                }else{
-                  downloadMenu = [
-                    applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,NoticePrintObject,EmailPrintObject
-                  ]
-                }
-              
-            break;
-                      
-            case 'IntestateDeath':
-                if(process.env.REACT_APP_NAME === "Citizen"){
-                  downloadMenu = [
-                    applicationDownloadObject,EmailDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,EmailPrintObject
-                  ]
-                }else{
-                  downloadMenu = [
-                    applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,NoticePrintObject,EmailPrintObject
-                  ]
-                }
-               
-            break;
-
-            case 'IssuanceOfNotice':
-              
-                downloadMenu = [
-                  applicationDownloadObject,
-                  NoticeDownloadObject,
-                  IssuanceViolationOrderDownloadObject,
-                  cancellationOrderDownloadObject,
-                  nonPaymentNoticeDownloadObject,
-                  nonPaymentOrderDownloadObject,
-                  occupationCertificateDownloadObject
-                ]
-              
-                printMenu = [
-                  applicationPrintObject,
-                  NoticePrintObject,
-                  IssuanceViolationOrderPrintObject,
-                  cancellationOrderPrintObject,
-                  nonPaymentNoticePrintObject,
-                  nonPaymentOrderPrintObject,
-                  occupationCertificatePrintObject
-                ]
-                break;
-          }  
-          break;
-      case `${applicationType}` && 'ES_PENDING_DA_NOTICE_CREATION':    
-      case `${applicationType}` && 'ES_PENDING_CITIZEN_NOTICE_DOCUMENTS':
-      case `${applicationType}` && 'ES_PENDING_DS_NOTICE_VERIFICATION': 
-      case `${applicationType}` && 'ES_PENDING_NOTICE_CLARIFICATION':
-      case `${applicationType}` && 'ES_PENDING_DA_NOTICE_VERIFICATION':
-      case `${applicationType}` && 'ES_PENDING_SRA_NOTICE_VERIFICATION': 
-      case `${applicationType}` && 'ES_PENDING_SO_NOTICE_VERIFICATION':
-      case `${applicationType}` && 'ES_PENDING_AC_NOTICE_APPROVAL': 
-      case `${applicationType}` && 'ES_PENDING_DA_HEARING_APPROVAL':
-      case `${applicationType}` && 'ES_PENDING_AC_HEARING_APPROVAL': 
-      case `${applicationType}` && 'PENDING_DA_PENALTY':
-      case `${applicationType}` && 'PENDING_SRA_PENALTY_VERIFICATION':
-      case `${applicationType}` && 'PENDING_SO_PENALTY_VERIFICATION':
-      case `${applicationType}` && 'PENDING_AC_PENALTY_APPROVAL':
-      case `${applicationType}` && 'PENDING_DA_PENALTY_APPROVAL':      
-            switch(applicationType){
-              
-              case 'LeaseholdToFreehold':
-                    downloadMenu = [
-                      applicationDownloadObject,
-                      NoticeDownloadObject,
-                      LetterDownloadObject
-                    ]
-                  
-                    printMenu = [
-                      applicationPrintObject,
-                      NoticePrintObject,
-                      LetterPrintObject
-                    ]
-                  
-                  break;
-              case 'IssuanceOfNotice':
-                  downloadMenu = [
-                    applicationDownloadObject,
-                    NoticeDownloadObject,
-                    IssuanceViolationOrderDownloadObject,
-                    cancellationOrderDownloadObject,
-                    nonPaymentNoticeDownloadObject,
-                    nonPaymentOrderDownloadObject,
-                    occupationCertificateDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,
-                    NoticePrintObject,
-                    IssuanceViolationOrderPrintObject,
-                    cancellationOrderPrintObject,
-                    nonPaymentNoticePrintObject,
-                    nonPaymentOrderPrintObject,
-                    occupationCertificatePrintObject
-                  ]
-            }
-            break;
-      case `${applicationType}` && 'ES_APPROVED':  
-        switch(applicationType) {
-              case 'SaleDeed':
-                  downloadMenu = [
-                    applicationDownloadObject,LetterDownloadObject
-                    
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,LetterPrintObject
-                  ]
-              break;
-              case 'LeaseDeed':
-                  downloadMenu = [
-                    applicationDownloadObject,LetterDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,LetterPrintObject
-                  
-                  ]
-                break;
-              case 'ScfToSco':
-                  downloadMenu = [
-                    applicationDownloadObject,LetterDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,LetterPrintObject
-                  ]
-                break;
-              case 'LeaseholdToFreehold':
-                  downloadMenu = [
-                    applicationDownloadObject,LetterDownloadObject,
-                    AmountLetterAfterConversionDownloadObject,
-                    HousingBoardNotificationDownloadObject,
-                    NoticeDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,LetterPrintObject,
-                    AmountLetterAfterConversionPrintObject,
-                    HousingBoardNotificationPrintObject,NoticePrintObject
-                  ]
-                  
-                break;
-              case 'ChangeInTrade':
-                  downloadMenu = [
-                    applicationDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject
-                  ]
-                break;
-              case 'UnRegisteredWill':
-                  downloadMenu = [
-                    applicationDownloadObject,LetterDownloadObject,NoticeDownloadObject,EmailDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,LetterPrintObject,NoticePrintObject,EmailPrintObject
-                  ]
-                break;
-              case 'NOC':
-                  downloadMenu = [
-                    applicationDownloadObject,LetterDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,LetterPrintObject
-                  ]
-              break;
-              case 'RegisteredWill':
-                  downloadMenu = [
-                    applicationDownloadObject,LetterDownloadObject,NoticeDownloadObject,EmailDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,LetterPrintObject,NoticePrintObject,EmailPrintObject
-                  ]
-              break;
-              case 'NDC':
-                  downloadMenu = [
-                    applicationDownloadObject,LetterDownloadObject,NDCWHODownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,LetterPrintObject,NDCWHOPrintObject
-                  ]
-              break;
-              case 'PatnershipDeed':
-                  downloadMenu = [
-                    applicationDownloadObject,LetterDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,LetterPrintObject
-                  ]
-              break;
-              case 'DuplicateCopy':
-                  downloadMenu = [
-                    applicationDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject
-                  ]
-              break;
-              case 'Mortgage':
-                  downloadMenu = [
-                    applicationDownloadObject,LetterDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,LetterPrintObject
-                  ]
-              break;
-              case 'FamilySettlement':
-                  downloadMenu = [
-                    applicationDownloadObject,LetterDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,LetterPrintObject
-                  ]
-              break;
-              case 'IntestateDeath':
-                  downloadMenu = [
-                    applicationDownloadObject,LetterDownloadObject,NoticeDownloadObject,EmailDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,LetterPrintObject,NoticePrintObject,EmailPrintObject
-                  ]
-              break;
-
-              case 'IssuanceOfNotice':
-                  downloadMenu = [
-                    applicationDownloadObject,
-                    NoticeDownloadObject,
-                    IssuanceViolationOrderDownloadObject,
-                    cancellationOrderDownloadObject,
-                    nonPaymentNoticeDownloadObject,
-                    nonPaymentOrderDownloadObject,
-                    occupationCertificateDownloadObject
-                  ]
-                
-                  printMenu = [
-                    applicationPrintObject,
-                    NoticePrintObject,
-                    IssuanceViolationOrderPrintObject,
-                    cancellationOrderPrintObject,
-                    nonPaymentNoticePrintObject,
-                    nonPaymentOrderPrintObject,
-                    occupationCertificatePrintObject
-                  ]
-                  break;
-            } 
-          break;   
+         break;
           
-    
-    }
-  }
-  
+       case 'RegisteredWill':
+           if(process.env.REACT_APP_NAME === "Citizen"){
+             downloadMenu = [
+               applicationDownloadObject
+             ]
+           
+             printMenu = [
+               applicationPrintObject
+             ]
+           }else{
+             downloadMenu = [
+               applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject,LetterDownloadObject
+             ]
+           
+             printMenu = [
+               applicationPrintObject,NoticePrintObject,EmailPrintObject,LetterPrintObject
+             ]
+           }
+          
+       break;
+                 
+       case 'IntestateDeath':
+           if(process.env.REACT_APP_NAME === "Citizen"){
+             downloadMenu = [
+               applicationDownloadObject,EmailDownloadObject
+             ]
+           
+             printMenu = [
+               applicationPrintObject,EmailPrintObject
+             ]
+           }else{
+             downloadMenu = [
+               applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject,LetterDownloadObject
+             ]
+           
+             printMenu = [
+               applicationPrintObject,NoticePrintObject,EmailPrintObject,LetterPrintObject
+             ]
+           }
+           
+       break;
 
+       case 'IssuanceOfNotice':
+           if(process.env.REACT_APP_NAME === "Citizen"){
+             downloadMenu = [
+               applicationDownloadObject
+             ]
+           
+             printMenu = [
+               applicationPrintObject
+             ]
+           }else{
+             if(typeOfNotice === 'TYPE_OF_NOTICE.NONPAYMENTRENT'){
+               downloadMenu = [
+                 applicationDownloadObject,
+                 nonPaymentNoticeDownloadObject,
+                 nonPaymentOrderDownloadObject
+               ]
+             
+               printMenu = [
+                 applicationPrintObject,
+                 nonPaymentNoticePrintObject,
+                 nonPaymentOrderPrintObject
+               ]
+             }
+             else if(typeOfNotice == 'TYPE_OF_NOTICE.VIOLATION'){
+               downloadMenu = [
+                 applicationDownloadObject,
+                 NoticeDownloadObject,
+                 IssuanceViolationOrderDownloadObject
+               ]
+             
+               printMenu = [
+                 applicationPrintObject,
+                 NoticePrintObject,
+                 IssuanceViolationOrderPrintObject
+               ]
+             }else{
+               downloadMenu = [
+                 applicationDownloadObject,
+                 cancellationOrderDownloadObject,
+                 occupationCertificateDownloadObject
+               ]
+             
+               printMenu = [
+                 applicationPrintObject,
+                 cancellationOrderPrintObject,
+                 occupationCertificatePrintObject
+               ]
+             }
+            
+           }
+           
+           break;
+     }  
+     break;                 
+     case `${applicationType}-ES_PENDING_DA_PREPARE_LETTER`:
+     case `${applicationType}-ES_PENDING_DA_FEE`:  
+     case `${applicationType}-ES_PENDING_PAYMENT`:
+         switch(applicationType) {
+           case 'SaleDeed':
+           case 'ScfToSco':
+           case 'ChangeInTrade':
+           case 'NOC':
+           case 'NDC':
+           case 'PartnershipDeed':
+           case 'DuplicateCopy':
+           case 'Mortgage':
+           case 'MortgageIntimation':  
+           case 'FamilySettlement':
+           case 'LeaseDeed':
+               downloadMenu = [
+                 applicationDownloadObject
+               ]
+             
+               printMenu = [
+                 applicationPrintObject
+               ]
+           break;
+           case 'LeaseholdToFreehold':
+               if(process.env.REACT_APP_NAME === "Citizen"){
+                 downloadMenu = [
+                   applicationDownloadObject
+                   
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject
+                 ]
+               }else{
+                 downloadMenu = [
+                   applicationDownloadObject,
+                   NoticeDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,NoticePrintObject
+                 ]
+               }
+             
+               
+             break;
+           
+           case 'UnRegisteredWill':
+               if(process.env.REACT_APP_NAME === "Citizen"){
+                 downloadMenu = [
+                   applicationDownloadObject,EmailDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,EmailPrintObject
+                 ]
+               }else{
+                 downloadMenu = [
+                   applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,NoticePrintObject,EmailPrintObject
+                 ]
+               }
+              
+             break;
+              
+           case 'RegisteredWill':
+               if(process.env.REACT_APP_NAME === "Citizen"){
+                 downloadMenu = [
+                   applicationDownloadObject,EmailDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,EmailPrintObject
+                 ]
+               }else{
+                 downloadMenu = [
+                   applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,NoticePrintObject,EmailPrintObject
+                 ]
+               }
+             
+           break;
+                     
+           case 'IntestateDeath':
+               if(process.env.REACT_APP_NAME === "Citizen"){
+                 downloadMenu = [
+                   applicationDownloadObject,EmailDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,EmailPrintObject
+                 ]
+               }else{
+                 downloadMenu = [
+                   applicationDownloadObject,NoticeDownloadObject,EmailDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,NoticePrintObject,EmailPrintObject
+                 ]
+               }
+              
+           break;
+
+           case 'IssuanceOfNotice':
+               if(typeOfNotice === 'TYPE_OF_NOTICE.NONPAYMENTRENT'){
+                 downloadMenu = [
+                   applicationDownloadObject,
+                   nonPaymentNoticeDownloadObject,
+                   nonPaymentOrderDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,
+                   nonPaymentNoticePrintObject,
+                   nonPaymentOrderPrintObject
+                 ]
+               }
+               else if(typeOfNotice == 'TYPE_OF_NOTICE.VIOLATION'){
+                 downloadMenu = [
+                   applicationDownloadObject,
+                   NoticeDownloadObject,
+                   IssuanceViolationOrderDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,
+                   NoticePrintObject,
+                   IssuanceViolationOrderPrintObject
+                 ]
+               }else{
+                 downloadMenu = [
+                   applicationDownloadObject,
+                   cancellationOrderDownloadObject,
+                   occupationCertificateDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,
+                   cancellationOrderPrintObject,
+                   occupationCertificatePrintObject
+                 ]
+               }
+               break;
+         }  
+         break;
+     case `${applicationType}-ES_PENDING_DA_NOTICE_CREATION`:    
+     case `${applicationType}-ES_PENDING_CITIZEN_NOTICE_DOCUMENTS`:
+     case `${applicationType}-ES_PENDING_DS_NOTICE_VERIFICATION`: 
+     case `${applicationType}-ES_PENDING_NOTICE_CLARIFICATION`:
+     case `${applicationType}-ES_PENDING_DA_NOTICE_VERIFICATION`:
+     case `${applicationType}-ES_PENDING_SRA_NOTICE_VERIFICATION`: 
+     case `${applicationType}-ES_PENDING_SO_NOTICE_VERIFICATION`:
+     case `${applicationType}-ES_PENDING_AC_NOTICE_APPROVAL`: 
+     case `${applicationType}-ES_PENDING_DA_HEARING_APPROVAL`:
+     case `${applicationType}-ES_PENDING_AC_HEARING_APPROVAL`: 
+     case `${applicationType}-PENDING_DA_PENALTY`:
+     case `${applicationType}-PENDING_SRA_PENALTY_VERIFICATION`:
+     case `${applicationType}-PENDING_SO_PENALTY_VERIFICATION`:
+     case `${applicationType}-PENDING_AC_PENALTY_APPROVAL`:
+     case `${applicationType}-PENDING_DA_PENALTY_APPROVAL`:      
+           switch(applicationType){
+             
+             case 'LeaseholdToFreehold':
+                   downloadMenu = [
+                     applicationDownloadObject,
+                     NoticeDownloadObject,
+                     LetterDownloadObject
+                   ]
+                 
+                   printMenu = [
+                     applicationPrintObject,
+                     NoticePrintObject,
+                     LetterPrintObject
+                   ]
+                 
+                 break;
+             case 'IssuanceOfNotice':
+                 if(typeOfNotice === 'TYPE_OF_NOTICE.NONPAYMENTRENT'){
+                   downloadMenu = [
+                     applicationDownloadObject,
+                     nonPaymentNoticeDownloadObject,
+                     nonPaymentOrderDownloadObject
+                   ]
+                 
+                   printMenu = [
+                     applicationPrintObject,
+                     nonPaymentNoticePrintObject,
+                     nonPaymentOrderPrintObject
+                   ]
+                 }
+                 else if(typeOfNotice == 'TYPE_OF_NOTICE.VIOLATION'){
+                   downloadMenu = [
+                     applicationDownloadObject,
+                     NoticeDownloadObject,
+                     IssuanceViolationOrderDownloadObject
+                   ]
+                 
+                   printMenu = [
+                     applicationPrintObject,
+                     NoticePrintObject,
+                     IssuanceViolationOrderPrintObject
+                   ]
+                 }else{
+                   downloadMenu = [
+                     applicationDownloadObject,
+                     cancellationOrderDownloadObject,
+                     occupationCertificateDownloadObject
+                   ]
+                 
+                   printMenu = [
+                     applicationPrintObject,
+                     cancellationOrderPrintObject,
+                     occupationCertificatePrintObject
+                   ]
+                 }
+           }
+           break;
+     case `${applicationType}-ES_APPROVED`:  
+       switch(applicationType) {
+             case 'SaleDeed':
+                 downloadMenu = [
+                   applicationDownloadObject,LetterDownloadObject
+                   
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,LetterPrintObject
+                 ]
+             break;
+             case 'LeaseDeed':
+                 downloadMenu = [
+                   applicationDownloadObject,LetterDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,LetterPrintObject
+                 
+                 ]
+               break;
+             case 'ScfToSco':
+                 downloadMenu = [
+                   applicationDownloadObject,LetterDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,LetterPrintObject
+                 ]
+               break;
+             case 'LeaseholdToFreehold':
+                 downloadMenu = [
+                   applicationDownloadObject,LetterDownloadObject,
+                   AmountLetterAfterConversionDownloadObject,
+                   HousingBoardNotificationDownloadObject,
+                   NoticeDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,LetterPrintObject,
+                   AmountLetterAfterConversionPrintObject,
+                   HousingBoardNotificationPrintObject,NoticePrintObject
+                 ]
+                 
+               break;
+             case 'ChangeInTrade':
+                 downloadMenu = [
+                   applicationDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject
+                 ]
+               break;
+             case 'UnRegisteredWill':
+                 downloadMenu = [
+                   applicationDownloadObject,LetterDownloadObject,NoticeDownloadObject,EmailDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,LetterPrintObject,NoticePrintObject,EmailPrintObject
+                 ]
+               break;
+             case 'NOC':
+                 downloadMenu = [
+                   applicationDownloadObject,LetterDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,LetterPrintObject
+                 ]
+             break;
+             case 'RegisteredWill':
+                 downloadMenu = [
+                   applicationDownloadObject,LetterDownloadObject,NoticeDownloadObject,EmailDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,LetterPrintObject,NoticePrintObject,EmailPrintObject
+                 ]
+             break;
+             case 'NDC':
+                 downloadMenu = [
+                   applicationDownloadObject,LetterDownloadObject,NDCWHODownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,LetterPrintObject,NDCWHOPrintObject
+                 ]
+             break;
+             case 'PartnershipDeed':
+                 downloadMenu = [
+                   applicationDownloadObject,LetterDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,LetterPrintObject
+                 ]
+             break;
+             case 'DuplicateCopy':
+                 downloadMenu = [
+                   applicationDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject
+                 ]
+             break;
+             case 'Mortgage':
+             case 'MortgageIntimation': 
+                 downloadMenu = [
+                   applicationDownloadObject,LetterDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,LetterPrintObject
+                 ]
+             break;
+             case 'FamilySettlement':
+                 downloadMenu = [
+                   applicationDownloadObject,LetterDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,LetterPrintObject
+                 ]
+             break;
+             case 'IntestateDeath':
+                 downloadMenu = [
+                   applicationDownloadObject,LetterDownloadObject,NoticeDownloadObject,EmailDownloadObject
+                 ]
+               
+                 printMenu = [
+                   applicationPrintObject,LetterPrintObject,NoticePrintObject,EmailPrintObject
+                 ]
+             break;
+
+             case 'IssuanceOfNotice':
+                 if(typeOfNotice === 'TYPE_OF_NOTICE.NONPAYMENTRENT'){
+                   downloadMenu = [
+                     applicationDownloadObject,
+                     nonPaymentNoticeDownloadObject,
+                     nonPaymentOrderDownloadObject
+                   ]
+                 
+                   printMenu = [
+                     applicationPrintObject,
+                     nonPaymentNoticePrintObject,
+                     nonPaymentOrderPrintObject
+                   ]
+                 }
+                 else if(typeOfNotice == 'TYPE_OF_NOTICE.VIOLATION'){
+                   downloadMenu = [
+                     applicationDownloadObject,
+                     NoticeDownloadObject,
+                     IssuanceViolationOrderDownloadObject
+                   ]
+                 
+                   printMenu = [
+                     applicationPrintObject,
+                     NoticePrintObject,
+                     IssuanceViolationOrderPrintObject
+                   ]
+                 }else{
+                   downloadMenu = [
+                     applicationDownloadObject,
+                     cancellationOrderDownloadObject,
+                     occupationCertificateDownloadObject
+                   ]
+                 
+                   printMenu = [
+                     applicationPrintObject,
+                     cancellationOrderPrintObject,
+                     occupationCertificatePrintObject
+                   ]
+                 }
+                 break;
+           } 
+         break;   
+         
+   
+   }
+ }
+ 
   return {
     rightdiv: {
       uiFramework: "custom-atoms",

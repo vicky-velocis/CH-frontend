@@ -10,6 +10,47 @@ import { getTextToLocalMapping } from "./searchResults";
 import { validateFields,convertDateToEpoch } from "../../utils";
 import { getTenantId,getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
 import set from "lodash/set";
+export const addConnectionMappingApiCall = async (state, dispatch) => {  
+ 
+  let id = getQueryArg(window.location.href, "id");
+  let WFBody = {
+    WaterConnection: [
+      {
+        id: id,
+        tenantId: tenantId,
+          
+      }       
+  ]
+  };
+
+  try {
+    let payload = null;     
+    payload = await httpRequest(
+      "post",
+      "/ws-services/wc/_addConnectionMapping",
+      "",
+      [],
+      WFBody
+    );
+
+    
+    dispatch(toggleSnackbar(
+      true,
+      { labelName: "succcess ", labelKey: "WS_SUCCESS" },
+      "success"
+    ))
+
+  } catch (error) {      
+    
+      dispatch(toggleSnackbar(
+        true,
+        { labelName: error.message, labelKey: error.message },
+        "error"
+      ));
+     // moveToSuccess("INITIATED",dispatch)
+  }
+
+  }
 export const searchApiCall = async (state, dispatch) => {
   let { localisationLabels } = state.app || {};
   showHideTable(false, dispatch);

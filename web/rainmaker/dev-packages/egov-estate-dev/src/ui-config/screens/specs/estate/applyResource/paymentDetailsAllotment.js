@@ -30,15 +30,19 @@ let screenName = "apply";
 let paymentStep = "formwizardEighthStep";
 let summaryStep = "formwizardTenthStep";
 let reviewContainer = "reviewDetails";
+
 if ((window.location.href).includes("allotment")) {
     screenName = "allotment";
     paymentStep = "formwizardSixthStepAllotment";
     summaryStep = "formwizardSeventhStepAllotment";
     reviewContainer = "reviewAllotmentDetails"
 }
+else if ((window.location.href).includes("edit-rent-info")) {
+  screenName = "edit-rent-info";
+}
 
 var data = []
-new Array(28).fill(undefined).map((val,idx) => {
+new Array(31).fill(undefined).map((val,idx) => {
   data.push({ code: idx + 1 })
 });
 /***************** Common fields to Ground rent and License fee *********************/
@@ -55,6 +59,8 @@ const advancedRentField = {
       xs: 12,
       sm: 6
   },
+  // visible:false,
+  pattern: _getPattern("float"),
   required: true,
   jsonPath: "Properties[0].propertyDetails.paymentConfig.groundRentAdvanceRent"
 }
@@ -370,6 +376,7 @@ const rentAmountField = {
   maxLength: 100,
   minLength: 1,
   required: true,
+  pattern: _getPattern("float"),
   jsonPath: "Properties[0].propertyDetails.paymentConfig.paymentConfigItems[0].groundRentAmount"
 }
 
@@ -420,10 +427,15 @@ const endYearField = {
     const items = get(state, "screenConfiguration.preparedFinalObject.Properties[0].propertyDetails.paymentConfig.paymentConfigItems");
     const findIndex = items.findIndex((item, ind) =>  ind > index && !item.isDeleted)
     if(findIndex !== -1) {
-      const groundRentStartMonth = Number(value) + 1 + ""
+      const groundRentStartMonth = Number(value) + 1 + "";
+      let componentJsonPath = `components.div.children.${paymentStep}.children.groundRentDetails.children.cardContent.children.rentContainer.children.cardContent.children.detailsContainer.children.multipleRentContainer.children.multipleRentInfo.props.items[${findIndex}].item${findIndex}.children.cardContent.children.rentCard.children.startYear`;
+
+      if (screenName == "edit-rent-info") {
+        componentJsonPath = `components.div.children.reviewRentInfo.children.cardContent.children.rentTable.children.cardContent.children.detailsContainer.children.multipleRentContainer.children.multipleRentInfo.props.items[${findIndex}].item${findIndex}.children.cardContent.children.rentCard.children.startYear`
+      }
       dispatch(handleField(
         screenName,
-        `components.div.children.${paymentStep}.children.groundRentDetails.children.cardContent.children.rentContainer.children.cardContent.children.detailsContainer.children.multipleRentContainer.children.multipleRentInfo.props.items[${findIndex}].item${findIndex}.children.cardContent.children.rentCard.children.startYear`,
+        componentJsonPath,
         "props.value",
         groundRentStartMonth
       ))
@@ -520,11 +532,15 @@ export const rentDetails = getCommonGrayCard({
                 "Properties[0].propertyDetails.paymentConfig.paymentConfigItems",
                 []
               );
+              let changeFieldPath = `components.div.children.${paymentStep}.children.groundRentDetails.children.cardContent.children.rentContainer.children.cardContent.children.detailsContainer.children.multipleRentContainer.children.multipleRentInfo.props.items[${nextYearObj}].item${nextYearObj}.children.cardContent.children.rentCard.children.startYear`;
+              if (screenName == "edit-rent-info") {
+                changeFieldPath = `components.div.children.reviewRentInfo.children.cardContent.children.rentTable.children.cardContent.children.detailsContainer.childre.multipleRentContainer.children.multipleRentInfo.props.items[${nextYearObj}].item${nextYearObj}.children.cardContent.children.rentCard.children.startYear`
+              }
                 const previewYearObj = rent.filter((item, index) => index < deletedIndex && !item.isDeleted).pop()
                 const nextYearObj = rent.findIndex((item, index) => index > deletedIndex && !item.isDeleted)
                 nextYearObj !== -1 && changeField(
                   screenName,
-                  `components.div.children.${paymentStep}.children.groundRentDetails.children.cardContent.children.rentContainer.children.cardContent.children.detailsContainer.children.multipleRentContainer.children.multipleRentInfo.props.items[${nextYearObj}].item${nextYearObj}.children.cardContent.children.rentCard.children.startYear`,
+                  changeFieldPath,
                   "props.value",
                   !!previewYearObj && !!previewYearObj.groundRentEndMonth ? Number(previewYearObj.groundRentEndMonth)+1 + "" : "0"
                 )
@@ -884,8 +900,13 @@ const getMonthsOfRentRadioButton = {
     xs: 12,
     sm: 6,
   },
+
   jsonPath: "Properties[0].propertyDetails.paymentConfig.noOfMonths",
   props: {
+    label: {
+      name: "Select",
+      key: "ES_SELECT"
+    },
     buttons: [{
         labelName: "2 months of rent",
         labelKey: "ES_TWO_MONTHS_RENT_LABEL",

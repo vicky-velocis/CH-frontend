@@ -160,6 +160,12 @@ const fileNumberField = {
   pattern: _getPattern("fileNumber"),
   jsonPath: "Properties[0].fileNumber",
   afterFieldChange: (action, state, dispatch) => {
+    dispatch(handleField(
+      "apply-building-branch",
+      "components.div.children.footer.children.nextButton",
+      "props.disabled",
+      false
+    ))
     if (action.value.length > 50) {
       displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_50", action.screenKey);
     } else {
@@ -211,7 +217,7 @@ export const mohallaField = {
   jsonPath: "Properties[0].propertyDetails.mohalla",
   afterFieldChange: (action, state, dispatch) => {
       if (action.value.length > 150) {
-          displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_50", action.screenKey);
+          displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_150", action.screenKey);
       }
       else {
           displayDefaultErr(action.componentJsonpath, dispatch, action.screenKey);
@@ -237,7 +243,7 @@ const villageField = {
   jsonPath: "Properties[0].propertyDetails.village",
   afterFieldChange: (action, state, dispatch) => {
       if (action.value.length > 150) {
-          displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_50", action.screenKey);
+          displayCustomErr(action.componentJsonpath, dispatch, "ES_ERR_MAXLENGTH_150", action.screenKey);
       }
       else {
           displayDefaultErr(action.componentJsonpath, dispatch, action.screenKey);

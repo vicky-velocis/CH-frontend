@@ -8,6 +8,7 @@ import set from "lodash/set";
 import store from "redux/store";
 import { convertDateToEpoch, getCheckBoxJsonpath, getHygeneLevelJson, getLocalityHarmedJson, getSafetyNormsJson, getTranslatedLabel, ifUserRoleExists, updateDropDowns } from "../ui-config/screens/specs/utils";
 import { httpRequest } from "./api";
+
 import cloneDeep from "lodash/cloneDeep";
 export const serviceConst = {
     "WATER": "WATER",
@@ -773,12 +774,12 @@ const parserFunction = (state) => {
         proposedTaps: parseInt(queryObject.proposedTaps),
         waterApplicationType: (queryObject.waterApplicationType === null || queryObject.waterApplicationType === "NA") ? "" : queryObject.waterApplicationType,
         waterProperty :{
-        id : get(state.screenConfiguration.preparedFinalObject, "WaterConnection[0].waterProperty.id", null),
+        id : get(state.screenConfiguration.preparedFinalObject, "Properties.id", null),
         usageCategory: (queryObject.waterProperty.usageCategory === null || queryObject.waterProperty.usageCategory === "NA") ? "" : queryObject.waterProperty.usageCategory,
         usageSubCategory: (queryObject.waterProperty.usageSubCategory === null || queryObject.waterProperty.usageSubCategory === "NA") ? "" : queryObject.waterProperty.usageSubCategory
         },
         swProperty :{
-            id : get(state.screenConfiguration.preparedFinalObject, "WaterConnection[0].waterProperty.id", null),
+            id : get(state.screenConfiguration.preparedFinalObject, "Properties.id", null),
             usageCategory: (queryObject.waterProperty.usageCategory === null || queryObject.waterProperty.usageCategory === "NA") ? "" : queryObject.waterProperty.usageCategory,
             usageSubCategory: (queryObject.waterProperty.usageSubCategory === null || queryObject.waterProperty.usageSubCategory === "NA") ? "" : queryObject.waterProperty.usageSubCategory
             },
@@ -1033,6 +1034,8 @@ export const prefillDocuments = async (payload, destJsonPath, dispatch) => {
 };
 
 export const applyForWaterOrSewerage = async (state, dispatch) => {
+   // let queryObject = parserFunction(state);
+   // let queryObject = parserFunction(state);
     if (get(state, "screenConfiguration.preparedFinalObject.applyScreen.water") && get(state, "screenConfiguration.preparedFinalObject.applyScreen.sewerage")) {
         let response = await applyForBothWaterAndSewerage(state, dispatch);
         return response;
@@ -2114,7 +2117,8 @@ export const validateConnHolderDetails = (holderData) => {
                 holderOwners[i]["relationship"] !== ""
             ) { valid.push(1) } else { valid.push(0) }
         }
-        if (valid.includes(0)) { return false; } else { return true; }
+        //if (valid.includes(0)) { return false; } else { return true; }
+        return true
     }
 }
 
@@ -2186,24 +2190,57 @@ export const showHideFieldsFirstStep = (dispatch, propertyId, value) => {
         )
     );
 }
-export const savebillGeneration = async (queryObject, payload, dispatch) => {
+export const savebillGeneration = async (state, dispatch,billGeneration) => {
+    const tenantId =  getTenantId();
+    let queryObject = [
+      {
+        key: "tenantId",
+        value: tenantId
+      }
+    ];
     try {
-      const response = await httpRequest(
-        "post",
-        "/ws-service/billGeneration/_saveBilling",
-        "",
-        queryObject,
-        { billGeneration: payload}
-      );
-      return response;
+         
+           
+            response = await httpRequest(
+                "post", 
+                "/ws-service/billGeneration/_saveBilling",
+                 "", queryObject,
+                 { billGeneration: billGeneration
+                
+                });
+           // dispatch(prepareFinalObject("WaterConnection", response.WaterConnection));
+           // setApplicationNumberBox(state, dispatch);
+        //}
+        if(response)
+        {
+            alert('success')
+            return response;
+        }
+        
     } catch (error) {
-      dispatch(
-        toggleSnackbar(
-          true,
-          { labelName: error.message, labelKey: error.message },
-          "error"
-        )
-      );
-      throw error;
+        dispatch(toggleSnackbar(true, { labelName: error.message }, "error"));
+        console.log(error);
+       // return false;
     }
+   
+   
+    // try {
+    //   const response = await httpRequest(
+    //     "post",
+    //     "/ws-service/billGeneration/_saveBilling",
+    //     "",
+    //     queryObject,
+    //     { billGeneration: payload}
+    //   );
+    //   return response;
+    // } catch (error) {
+    //   dispatch(
+    //     toggleSnackbar(
+    //       true,
+    //       { labelName: error.message, labelKey: error.message },
+    //       "error"
+    //     )
+    //   );
+    //   throw error;
+    // }
   };

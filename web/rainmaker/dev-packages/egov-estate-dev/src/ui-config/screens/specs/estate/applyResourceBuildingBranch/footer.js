@@ -32,6 +32,7 @@ import {
   getReviewOwner
 } from "./reviewDetails";
 import {
+  getPMDetailsByFileNumber,
  setDocumentData
 } from "../apply-building-branch";
 import { getFileUrl, getFileUrlFromAPI } from "egov-ui-framework/ui-utils/commons";
@@ -66,6 +67,7 @@ export const moveToSuccess = (data, dispatch, type) => {
 };
 
 const callBackForNext = async (state, dispatch) => {
+  let scrollTop = true;
   let activeStep = get(
     state.screenConfiguration.screenConfig["apply-building-branch"],
     "components.div.children.stepper.props.activeStep",
@@ -270,18 +272,24 @@ const callBackForNext = async (state, dispatch) => {
             labelName: "Please fill all mandatory fields, then do next !",
             labelKey: "ES_ERR_FILL_MANDATORY_FIELDS"
           };
+       
           break;
         case OWNER_DOCUMENTS_STEP:
           errorMessage = {
             labelName: "Please upload all the required documents !",
             labelKey: "ES_ERR_UPLOAD_REQUIRED_DOCUMENTS"
           };
+       
           break;
+          
       }
+      scrollTop = false
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
     }
   }
-  window.scrollTo(0,0)
+  if(scrollTop){
+    window.scrollTo(0,0)
+  }
 }
 
 export const changeStep = (
@@ -344,6 +352,7 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+      
       break;
     case OWNER_DETAILS_STEP:
       dispatchMultipleFieldChangeAction(
@@ -353,6 +362,7 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+    
       break;
     case OWNER_DOCUMENTS_STEP:
       dispatchMultipleFieldChangeAction(
@@ -362,6 +372,7 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+
       break;
     default:
       dispatchMultipleFieldChangeAction(
@@ -371,6 +382,7 @@ export const renderSteps = (activeStep, dispatch, screenName) => {
         ),
         dispatch
       );
+  
   }
 };
 
@@ -411,9 +423,11 @@ export const getActionDefinationForStepper = path => {
   return actionDefination;
 };
 
-export const callBackForPrevious = (state, dispatch) => {
-  window.scrollTo(0,0)
-  changeStep(state, dispatch, "apply-building-branch", "previous");
+export const callBackForPrevious = async (state, dispatch) => {
+    const fileNumber = get(state.screenConfiguration.preparedFinalObject, "Properties[0].fileNumber")
+    await getPMDetailsByFileNumber("", state, dispatch, fileNumber)
+    window.scrollTo(0,0)
+    changeStep(state, dispatch, "apply-building-branch", "previous");
 };
 
 export const previousButton = {
