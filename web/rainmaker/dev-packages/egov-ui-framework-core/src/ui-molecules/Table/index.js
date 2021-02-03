@@ -184,7 +184,7 @@ class Table extends React.Component {
 
   render() {
     const { data, columns,title } = this.state;
-    const { options, customSortDate, hideHorizontalScroll } = this.props;
+    const { options, customSortDate } = this.props;
 
     return (
       <MuiThemeProvider theme={this.getMuiTheme()}>
