@@ -319,7 +319,7 @@ const HideshowEdit = (state, action, nocStatus, amount, applicationNumber,dispat
   set(
     action,
     "components.adhocDialogForward.children.popup.children.adhocRebateCardSeRoadCutForward.children.ContainerSeRoadCutForward.children.assigneeList.visible",
-    checkForRole(roles, 'SDE') ? nocStatus == "APPROVED BY EE" ? false : true : true);
+    checkForRole(roles, 'SDE') ? (nocStatus == "APPROVED BY EE"|| nocStatus == "VERIFY AFTER APPROVAL L2") ? false : true : true);
 
     dispatch(
       handleField(

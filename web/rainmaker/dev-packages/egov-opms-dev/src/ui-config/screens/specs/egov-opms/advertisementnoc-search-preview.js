@@ -426,7 +426,6 @@ const setSearchResponse = async (state, action, dispatch, applicationNumber, ten
     let exampted = get(state.screenConfiguration.preparedFinalObject, 'nocApplicationDetail[0].applicationdetail');
     let exemptedcategory = JSON.parse(exampted)['exemptedCategory'];
     await setCurrentApplicationProcessInstance(state);
-    await getEmployeeList(state);
 
     HideshowEdit(state, action, nocStatus, exemptedcategory, dispatch);
 

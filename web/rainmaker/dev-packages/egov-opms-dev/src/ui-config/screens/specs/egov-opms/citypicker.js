@@ -11,7 +11,7 @@ export const cityPicker = getCommonContainer({
     labelKey: "PM_PICK_YOUR_CITY_CITIZEN"
   }),
   cityPicker: getCommonContainer({
-    citydropdown: {
+    cityDropdown: {
       uiFramework: "custom-containers-local",
       moduleName: "egov-OPMS",
       componentPath: "AutosuggestContainer",
