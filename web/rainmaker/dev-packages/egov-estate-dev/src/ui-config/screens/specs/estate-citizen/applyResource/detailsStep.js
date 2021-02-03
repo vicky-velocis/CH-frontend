@@ -429,6 +429,7 @@ const tableSection = (section, state) => {
         customSortColumn: {
         },
         title: getLocaleLabels(header, header),
+        hideHorizontalScroll: true,
         data
     }
   }
