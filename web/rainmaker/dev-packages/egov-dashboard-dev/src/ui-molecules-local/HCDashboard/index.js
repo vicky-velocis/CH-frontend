@@ -7,7 +7,7 @@ import ReactTable from "react-table-6";
 import "react-table-6/react-table.css" ;
 // import Dashboardtable from './Dashboardtable';
 // import Pagination from "./Pagination";
-import HCdata from './data.json';
+// import HCdata from './data.json';
 import './index.css'
 
 class HCDashboard extends React.Component {
@@ -37,7 +37,7 @@ class HCDashboard extends React.Component {
 
   graphSorting = ( sortBy, data ) => {
 
-    // debugger;
+    // //debugger;
     // passing sortBy, data
     var sortNo = null;
     var group = data.reduce((r, a) => {
@@ -67,7 +67,7 @@ class HCDashboard extends React.Component {
 
   componentDidMount(){
       
-    debugger;
+    // debugger;
     const propsData = this.props.data 
     if(JSON.stringify(propsData) !== JSON.stringify(this.state.checkData)){
         const propSortBy = "service_request_status";
@@ -142,8 +142,8 @@ class HCDashboard extends React.Component {
         ] : "";
     
         // Table Data Header 
-        debugger;
-        const tableData = Object.keys(data[0]);
+        //debugger;
+        const tableData = data.length>0 ? Object.keys(data[0]) : [];
         var columnData = []
         for(var i=0; i<tableData.length; i++){
             var itemHeader = {}
@@ -154,7 +154,7 @@ class HCDashboard extends React.Component {
             }
         }
     
-        debugger;
+        //debugger;
         this.setState({
             allData: data,
             graphOneLabel: graphOneData[0],
@@ -174,7 +174,7 @@ class HCDashboard extends React.Component {
 
   componentDidUpdate(){
 
-    debugger;
+    // debugger;
     const propsData = this.props.data 
     if(JSON.stringify(this.state.checkData) !== JSON.stringify(propsData)){
         console.log("OK");
@@ -251,8 +251,8 @@ class HCDashboard extends React.Component {
         ] : "";
     
         // Table Data Header 
-        debugger;
-        const tableData = Object.keys(data[0]);
+        //debugger;
+        const tableData = data.length>0 ? Object.keys(data[0]) : [];
         var columnData = []
         for(var i=0; i<tableData.length; i++){
             var itemHeader = {}
@@ -263,7 +263,7 @@ class HCDashboard extends React.Component {
             }
         }
     
-        debugger;
+        //debugger;
         this.setState({
             allData: data,
             graphOneLabel: graphOneData[0],
@@ -314,7 +314,7 @@ class HCDashboard extends React.Component {
     onClick: (e, element) => {
         if (element.length > 0) {
             var ind = element[0]._index;
-            debugger;
+            //debugger;
             const selectedVal = this.state.graphOneLabel[ind];
             var graphSorting = this.graphSorting( this.state.graphHardTwoData.sortBy, this.state.dataOne[selectedVal] );
             
@@ -419,7 +419,7 @@ class HCDashboard extends React.Component {
     onClick: (e, element) => {
         if (element.length > 0) {
             var ind = element[0]._index;
-            debugger;
+            //debugger;
             const selectedVal = this.state.graphOneLabel[ind];
             var graphSorting = this.graphSorting( this.state.graphHardTwoData.sortBy, this.state.dataOne[selectedVal] );
             
@@ -545,7 +545,7 @@ class HCDashboard extends React.Component {
         onClick: (e, element) => {
             if (element.length > 0) {
                 var ind = element[0]._index;
-                debugger;
+                //debugger;
                 const selectedVal = this.state.graphTwoLabel[ind];
                 var graphSorting = this.graphSorting( this.state.graphHardThirdData.sortBy, this.state.dataTwo[selectedVal] );
                 
@@ -696,7 +696,7 @@ class HCDashboard extends React.Component {
         onClick: (e, element) => {
             if (element.length > 0) {
 
-                debugger;
+                //debugger;
                 var ind = element[0]._index;   
                 const selectedVal = this.state.graphThirdLabel[ind];
 				

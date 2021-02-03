@@ -1,5 +1,5 @@
 import React, { Component }  from "react";
-import ImageViewer from "react-simple-image-viewer";
+// import ImageViewer from "react-simple-image-viewer";
 import './index.css';
 
 
@@ -15,12 +15,12 @@ class WorkFlowTableImage extends React.Component{
     
       componentDidMount(){
     
-        debugger;
+        //debugger;
         const data = this.state.images
       }
     
       closeImageViewer=()=>{
-          debugger;
+          //debugger;
         this.setState({
             currentImage: 0,
             isViewerOpen: false

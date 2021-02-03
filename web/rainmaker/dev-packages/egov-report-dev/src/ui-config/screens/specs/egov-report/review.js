@@ -19,12 +19,12 @@ const getDropdonDta = async(state, dispatch, status) => {
 
 const SearchWorkflowPreview = async (state, dispatch, status) => {
 
-  debugger;
+  // debugger;
   let response = await workflowPreview(state, dispatch, status);
 }
 
 const sortDataReportDropDown  = (selectedModuleName, state, dispatch) => {
-  debugger;
+  // debugger;
   const selectedModuleNameData = selectedModuleName;
   var dropdownTwo = get(state, "screenConfiguration.preparedFinalObject.DropdownItem");
   dropdownTwo = dropdownTwo[selectedModuleNameData.value].businessService;
