@@ -22,6 +22,7 @@ import { callbackforSummaryActionCancel, callbackforSummaryActionSubmit } from '
 import set from "lodash/set";
 import get from "lodash/get";
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { getEmployeeList } from "../../../../../ui-utils/commons";
 
 const toggleactionmenu = (state, dispatch) => {
 
@@ -221,7 +222,7 @@ export const footerEmp = getCommonApplyFooter({
         try {
           
           set(state, 'screenConfiguration.preparedFinalObject.ROADCUTNOCWF.REASSIGNDO', false);
-          if (localStorageGet("applicationStatus") == "INITIATED" || localStorageGet("applicationStatus") == "REASSIGNTOJE" || localStorageGet("applicationStatus") == "RESENT") {
+          if (localStorageGet("applicationStatus") == "REVIEWOFJE" || localStorageGet("applicationStatus") == "REASSIGNTOJE") {
             const ROADCUTNOC = get(
               state, "screenConfiguration.preparedFinalObject.nocApplicationDetail[0]", {});
             const typeOfApplicant = JSON.parse(ROADCUTNOC.applicationdetail).hasOwnProperty('typeOfApplicant') ?
@@ -238,10 +239,25 @@ export const footerEmp = getCommonApplyFooter({
                 JSON.parse(ROADCUTNOC.applicationdetail).isAnyChangeInRoadCutEstimation : undefined;
               if (isAnyChangeInRoadCutEstimation) {
                 set(state.screenConfiguration.preparedFinalObject, "OPMS[0].RoadCutUpdateStautsDetails.additionalDetail.isAnyChangeInRoadCutEstimation", isAnyChangeInRoadCutEstimation);
+                dispatch(
+                  handleField(
+                    "roadcutnoc-search-preview",
+                    "components.adhocDialog.children.popup.children.adhocRebateCardRoadCutForward.children.ForwardContainerRoadCutForward.children.isAnyChangeInRoadCutEstimation",
+                    "props.value", isAnyChangeInRoadCutEstimation));
+
+              } else { 
+                dispatch(
+                  handleField(
+                    "roadcutnoc-search-preview",
+                    "components.adhocDialog.children.popup.children.adhocRebateCardRoadCutForward.children.ForwardContainerRoadCutForward.children.isAnyChangeInRoadCutEstimation",
+                    "props.value", "No"));
+                    set(state.screenConfiguration.preparedFinalObject, "OPMS[0].RoadCutUpdateStautsDetails.additionalDetail.isAnyChangeInRoadCutEstimation", "No");
               }
             }
+            getEmployeeList(state,dispatch, "nextButton");
             showHideAdhocPopup(state, dispatch, "roadcutnoc-search-preview")
           } else {
+            getEmployeeList(state,dispatch, "nextButton");
             showHideAdhocPopupopmsForward(state, dispatch, "roadcutnoc-search-preview", "nextButton")
           }
         } catch (e) { 
@@ -333,6 +349,7 @@ export const footerEmp = getCommonApplyFooter({
 
       callBack: (state, dispatch) => {
         set(state, 'screenConfiguration.preparedFinalObject.ROADCUTNOCWF.REASSIGNDO', false);
+        getEmployeeList(state,dispatch, "reassign");
         showHideAdhocPopupopmsReassign(state, dispatch, "roadcutnoc-search-preview", "reject")
       }
     },
