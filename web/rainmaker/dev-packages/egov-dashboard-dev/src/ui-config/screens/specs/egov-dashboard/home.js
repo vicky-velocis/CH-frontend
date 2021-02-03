@@ -98,7 +98,7 @@ var data = [
 const displayCards = async (action, state, dispatch) => {
 
   let roles = JSON.parse(getUserInfo()).roles;
-  debugger;
+  //debugger;
 
   cardList = [{
     label: {
@@ -116,6 +116,11 @@ const displayCards = async (action, state, dispatch) => {
     route: "review"
 
   }]
+
+  let mdmsCardList = get(state, "screenConfiguration.preparedFinalObject.applyScreenMdmsData.dashboard.dashboardCardList",
+    []
+  );
+  data = mdmsCardList
   data.map((item)=>{
     roles.some(r => {
       if (item.roles.includes(r.code)) {
@@ -179,7 +184,7 @@ const getDropDownData = async (action, state, dispatch) => {
 
 const getMdmsData = async (action, state, dispatch) => {
 
-  debugger;
+  //debugger;
   
   let tenantId = getTenantId();
   let mdmsBody = {
@@ -220,7 +225,7 @@ const DashboardHome = {
   beforeInitScreen: (action, state, dispatch) => {
   
 
-    debugger;
+    //debugger;
     getDropDownData(action, state, dispatch);
 
 

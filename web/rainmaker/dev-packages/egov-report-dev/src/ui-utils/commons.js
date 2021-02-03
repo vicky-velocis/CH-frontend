@@ -370,7 +370,7 @@ export const prepareDocumentsUploadData = (state, dispatch, type) => {
   dispatch(prepareFinalObject("documentsContract", documentsContract));
 };
 export const furnishServiceRequestDetailResponse = (state, response, dispatch) => {
-  debugger
+  // debugger
   let refurnishresponse = {};
   var serviceRequestType = []
   var sectorData = []
@@ -427,7 +427,7 @@ export const furnishServiceRequestDetailResponse = (state, response, dispatch) =
   return refurnishresponse;
 };
 export const furnishServiceRequestDetailResponseForEdit = (response, state,dispatch)=> {
-  debugger
+  // debugger
   let refurnishresponse = {};
   var serviceRequestType = []
   var sectorData = []
@@ -632,7 +632,7 @@ export const getWorkflowDropdownData = async (state, dispatch, status) => {
     // response = await httpRequest("post", "egov-workflow-v2/egov-wf/businessservice/_search?businessServices=ROADCUTNOC&tenantId=ch.chandigarh", "", [], {services: arraypayload });
     response = await httpRequest("post", "/egov-workflow-v2/egov-wf/businessservice/_desc?tenantId=ch.chandigarh", "", [], {services: arraypayload });
  
-    debugger;
+    // debugger;
     const HARDDATA = response
 
 		if (response) {
@@ -718,7 +718,7 @@ export const getWorkflowDropdownData = async (state, dispatch, status) => {
 // API call for Search workflowPreview Data
 export const workflowPreview = async (state, dispatch, status) => {
 
-  debugger;
+  // debugger;
   let response = '';
 	let method = "CREATE";
 
@@ -736,7 +736,7 @@ export const workflowPreview = async (state, dispatch, status) => {
     response = await httpRequest("post", "egov-workflow-v2/egov-wf/businessservice/_search?businessServices="+getModuleNAme.value+"&tenantId=ch.chandigarh", "", [], {services: arraypayload });
     // response = await httpRequest("post", "egov-workflow-v2/egov-wf/businessservice/_desc?tenantId=ch.chandigarh", "", [], {services: arraypayload });
     
-    debugger;
+    // debugger;
     
     workflowDescription = workflowDescription[getModuleNAme.label]
 
