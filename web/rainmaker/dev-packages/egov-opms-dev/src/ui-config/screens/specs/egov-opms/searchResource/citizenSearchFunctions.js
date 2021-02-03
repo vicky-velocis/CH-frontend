@@ -811,28 +811,34 @@ export const getTextForRoadCuttNoc = label => {
   switch (label) {
     case "INITIATED":
       return 'Initiated'
+    case "REVIEWOFJE":
+      return 'Review To JE'
     case "REASSIGNTOJE":
       return 'Reassign To JE'
     case "RESENT":
       return 'Resent'
-    case "REASSIGNTOSDO":
-      return 'Reassign To SDO'
-    case "REVIEWSDO":
-      return 'Review Of SDO'
-    case "REASSIGNTOSE":
-      return 'Reassign To SE'
-    case "REVIEWOFSE":
+    case "REASSIGNTOSDE L2":
+      return 'Reassign To SDE'
+    case "REVIEWSDE L1":
+      return 'Review Of SDE'
+    case "REVIEWSDE L2":
+      return 'Review Of SDE L2'
+    case "REVIEWOFSE L1":
       return 'Review of SE'
-    case "APPLIED":
-      return 'Applied'
-    case "REVIEWOFEE":
-      return 'Review of EE'
+    case "REVIEWOFEE L2":
+      return 'Review of EE L2'
+    case "REVIEWOFEE L3":
+      return 'Review Approval of EE'
     case "REJECTED":
       return 'Rejected'
     case "REASSIGN":
       return 'Reassign'
-    case "APPROVED":
-      return 'Approved'
+    case "APPROVED BY EE":
+      return 'Approved By EE'
+    case "APPROVED BY SE":
+      return 'Approved By SE'
+    case "APPROVED BY CE":
+      return 'Approved By CE'
     case "PAID":
       return 'Paid'
     case "PENDINGAPPROVAL":
@@ -841,35 +847,50 @@ export const getTextForRoadCuttNoc = label => {
       return 'Reassign To EE'
     case "PAYMENTPENDING":
       return 'Payment Pending'
-    case "REVIEWAPPROVEEE":
-      return 'Review Approve Of EE'
-    case "REVIEWAPPROVESE":
-      return 'Review Approve Of SE'
-    case "REASSIGNAPPROVEEE":
+    case "VERIFYHDMEE":
+      return 'Verification Of HDMEE'
+    case "VERIFYDMEE":
+      return 'Verification Of DMEE'
+    case "VERIFYCHD":
+      return 'Verification Of CHD'
+    case "VERIFYDMSE":
+      return 'Verification Of DMSE'
+    case "VERIFYHDMCE L1":
+      return 'Verification Of HDMCE L1'
+    case "VERIFYDMCE":
+      return 'Verification Of DMCE'
+    case "VERIFYHDMCE L2":
+      return 'Verification Of HDMCE L2'
+    case "REVIEWOFEE L3":
+      return 'Review Approval Of EE'
+    case "REVIEWOFSE L2":
+      return 'Review Approval Of SE'
+    case "REASSIGNTOEE L3":
       return 'Reassigned To EE'
-    case "REASSIGNAPPROVESE":
+    case "REASSIGNTOSE L2":
       return 'Reassigned To SE'
-    case "VERIFYDOEE":
-      return 'Verfication Of DOEE'
-    case "VERIFYDOSE":
-      return 'Verfication Of DOSE'
-    case "VERIFYDOCE":
-      return 'Verfication Of DOCE'
-    case "REASSIGNDOEE":
-      return 'Reassigned To DOEE'
-    case "REASSIGNDOSE":
-      return 'Reassigned To DOSE'
-    case "REASSIGNDOCE":
-      return 'Reassigned To DOCE'
-    case "REASSIGNDOCE":
-      return 'Reassigned To DOCE'
-    case "REVIEWOFCE":
+    case "REVIEWOFCE L1":
       return 'Review of CE'
     case "REVIEWOFWD":
       return 'Review of WD'
-    case "VERIFYANDFORWARD":
-      return 'Verify And Forward'
-    case "COMPLETED":
+    case "REASSIGNTOWD":
+      return 'Reassign of WD'
+    case "VERIFY FOR COMPLETION":
+      return 'Verify For Completion'
+    case "VERIFY AFTER APPROVAL L1":
+      return 'Verification After Approval L1'
+    case "VERIFY AFTER APPROVAL L2":
+      return 'Verification After Approval L2'
+    case "VERIFY AFTER APPROVAL L3":
+      return 'Verification After Approval L3'
+    case "REASSIGNTODMEE":
+      return 'Reassign To DMEE'
+    case "REASSIGNTODMSE":
+      return 'Reassign To DMSE'
+    case "REASSIGNTODMCE":
+      return 'Reassign To DMCE'
+
+    case "COMPLETE":
       return 'Completed'
       default:
       return '-'
