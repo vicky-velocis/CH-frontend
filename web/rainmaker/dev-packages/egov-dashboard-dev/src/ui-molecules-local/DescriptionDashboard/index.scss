@@ -44,13 +44,13 @@ select {
   font-size: 14px;
   text-align: left;
   list-style: none;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 1);
   background-clip: padding-box;
-  border: 1px solid #ccc;
+  border: 1px solid rgba(204, 204, 204, 1);
   border: 1px solid rgba(0,0,0,.15);
   border-radius: 4px;
-  -webkit-box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
-  box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
+  /* -webkit-box-shadow: 0 6px 12px rgb(0 0 0 / 18%); */
+  /* box-shadow: 0 6px 12px rgb(0 0 0 / 18%); */
   margin-left: 80%;
 }
 
@@ -59,9 +59,9 @@ select {
   margin-left: 10px;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-  color: #333;
-  background-color: #fff;
-  border-color: #ccc;
+  color: rgba(51, 51, 51, 1);
+  background-color: rgba(255, 255, 255, 1);
+  border-color: rgba(204, 204, 204, 1);
   display: inline-block;
   padding: 6px 12px;
   margin-bottom: 0;
@@ -79,16 +79,16 @@ select {
   -ms-user-select: none;
   user-select: none;
   background-image: none;
-  border: 1px solid #ccc;
+  border: 1px solid rgba(204, 204, 204, 1);
   border-radius: 4px;
 }
 
 .columnToggle-Text{
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-  color: #333;
-  background-color: #fff;
-  border-color: #ccc;
+  color: rgba(51, 51, 51, 1);
+  background-color: rgba(255, 255, 255, 1);
+  border-color: rgba(204, 204, 204, 1);
   display: inline-block;
   padding: 6px 12px;
   margin-bottom: 0;
@@ -106,7 +106,7 @@ select {
   -ms-user-select: none;
   user-select: none;
   background-image: none;
-  border: 1px solid #fff;
+  border: 1px solid rgba(255, 255, 255, 1);
   border-radius: 4px;
 }
 
@@ -120,9 +120,9 @@ select {
 .toggleBtn{
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-  color: #333;
-  background-color: #fe7a51;
-  border-color: #ccc;
+  color: rgba(51, 51, 51, 1);
+  background-color: rgba(254, 122, 81, 1);
+  border-color: rgba(204, 204, 204, 1);
   display: inline-block;
   padding: 6px 12px;
   margin-bottom: 0;
@@ -140,7 +140,7 @@ select {
   -ms-user-select: none;
   user-select: none;
   background-image: none;
-  border: 1px solid #fff;
+  border: 1px solid rgba(255, 255, 255, 1);
   border-radius: 4px;
   /* margin: 10px; */
   /* padding: 10px; */
@@ -149,14 +149,14 @@ select {
 
 .toggleBtnClicked{
   border:none;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 1);
   margin-bottom: 0;
   font-size: 14px;
   cursor: pointer;
 }
 
 .toggleBtn:hover {
-  background-color: #ccc;
+  background-color: rgba(204, 204, 204, 1);
 }
 
 .clickedlistItem{
@@ -175,9 +175,9 @@ select {
   font-size: 14px;
   text-align: left;
   list-style: none;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 1);
   background-clip: padding-box;
-  border: 1px solid #ccc;
+  border: 1px solid rgba(204, 204, 204, 1);
   border: 1px solid rgba(0,0,0,.15);
   border-radius: 4px;
   /* -webkit-box-shadow: 0 6px 12px rgb(0 0 0 / 18%); */
