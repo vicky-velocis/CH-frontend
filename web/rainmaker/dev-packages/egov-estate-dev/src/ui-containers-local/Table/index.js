@@ -66,6 +66,60 @@ class Table extends React.Component {
       }
     });
 
+    getMuiThemeNoHorizontalScroll = () =>
+    createMuiTheme({
+      overrides: {
+        MUIDataTableBody:{
+          emptyTitle: {
+          marginLeft:window.innerWidth <900 ?"-100% !important":"0px",
+          marginTop: window.innerWidth <900 ?"8% !important":"0px",
+          wordBreak: window.innerWidth <900 ?"break-word":"break-word"
+        }},
+        MuiPaper: {
+          root: {
+            backgroundColor: "#FFF",
+            // overflowX: "scroll"
+          },
+          titleText: {
+            fontSize: "24px",
+            fontWeight: "400"
+          }
+        },
+        MUIDataTableHeadCell:{
+          fixedHeader:{
+            zIndex:"0"
+          }
+        },
+        MUIDataTableBodyCell: {
+          root: {
+            "&:nth-child(2)": {
+              color: "#2196F3",
+              cursor: "pointer"
+            }
+          }
+        },
+        MuiTypography: {
+          // root: {
+          //   fontSize: "24px",
+          //   color: "#000"
+          // },
+          caption: {
+            fontSize: "14px"
+          }
+        },
+        MuiFormLabel: {
+          root: {
+            fontSize: "14px"
+          }
+        },
+        MuiTableCell: {
+          body: {
+            fontSize: 14
+          }
+        }
+      }
+    });
+
   formatData = (data, columns) => {
     
     return (
@@ -187,7 +241,7 @@ class Table extends React.Component {
     const { options, customSortDate, hideHorizontalScroll } = this.props;
 
     return (
-      <MuiThemeProvider theme={this.getMuiTheme()}>
+      <MuiThemeProvider theme={(!!hideHorizontalScroll && hideHorizontalScroll === true) ? this.getMuiThemeNoHorizontalScroll() : this.getMuiTheme()}>
         <MUIDataTable
           title={title}
           data={data}
