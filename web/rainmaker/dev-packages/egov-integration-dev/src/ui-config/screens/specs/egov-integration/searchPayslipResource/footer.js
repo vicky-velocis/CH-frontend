@@ -46,7 +46,7 @@ export const footer = () => {
         action: "condition",
         callBack: payslipDownloadApiCall
       },
-      visible: false
+      visible: true
     },
   
   
