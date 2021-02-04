@@ -39,7 +39,26 @@ export const handleCardDelete = (prepareFinalObject , arrayPath , isActive = fal
   set(prepareFinalObject,arrayPath, finalArray);
   return prepareFinalObject;
   }
-
+// HRMS Search API
+export const getHRMSEmpSearchResults = async (queryObject, dispatch) => {
+  try {
+    const response = await httpRequest(
+      "post",
+      "/egov-hrms/employees/_search",
+      "",
+      queryObject
+    );
+    return response;
+  } catch (error) {
+    dispatch(
+      toggleSnackbar(
+        true,
+        { labelName: error.message, labelKey: error.message },
+        "error"
+      )
+    );
+  }
+};
 
 export const getSearchResults = async (queryObject=[],requestBody={},dispatch,screenName) => {
   let url =""
@@ -51,6 +70,12 @@ export const getSearchResults = async (queryObject=[],requestBody={},dispatch,sc
     case "verifyOTP": url =  "/integration-services/pt/v1/_verifyOTP";
     break;
     case "getpayslip": url =  "/integration-services/hrms/v1/_getpayslip";
+    break;
+    case "Empdata": url =  "/integration-services/hrms/v1/_getEmpDetails";
+    break;
+    case "Empleavedata": url =  "/integration-services/hrms/v1/_getEmpLeaveDetails";
+    break;
+    case "EmpJoiningdata": url =  "/integration-services/hrms/v1/_getEmpJoiningDetails";
     break;
     
   }
