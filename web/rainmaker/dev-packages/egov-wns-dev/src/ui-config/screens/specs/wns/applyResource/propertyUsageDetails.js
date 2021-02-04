@@ -17,7 +17,7 @@ import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-fra
 
     let subTypeValues = get(
             state.screenConfiguration.preparedFinalObject,
-            "applyScreenMdmsData.PropertyTax.subUsageType"
+            "applyScreenMdmsData.ws-services-masters.wsCategory"
           );
 
         let subUsage=[];
@@ -30,7 +30,7 @@ import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-fra
   const PropertyUsageDetails = getCommonContainer({
     propertyUsageType: getSelectField({
         label: { labelKey: "WS_PROPERTY_USAGE_TYPE_TARRIF_LABEL_INPUT" },
-        sourceJsonPath: "applyScreenMdmsData.PropertyTax.UsageType",
+        sourceJsonPath: "applyScreenMdmsData.ws-services-masters.tariffType",
         placeholder: { labelKey: "WS_PROPERTY_USAGE_TYPE_TARRIF_LABEL_INPUT_PLACEHOLDER" },
         required: true,
         gridDefination: { xs: 12, sm: 6 },
@@ -40,7 +40,7 @@ import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-fra
             optionLabel: "name",
         },
        beforeFieldChange: async (action, state, dispatch) => {
-                    displaysubUsageType(action.value, dispatch, state);
+                   // displaysubUsageType(action.value, dispatch, state);
                }
       }),
 

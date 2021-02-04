@@ -68,7 +68,7 @@ const getLocalisedSuggestions = (suggestions, localePrefix, transfomedKeys) => {
           ? appendModulePrefix(option.code, localePrefix)	
           : option.name,	
         transfomedKeys	
-      )}(${option.code})`;	
+      )}`;//(${option.code})`;	
       return option;	
     })	
   );
