@@ -17,7 +17,7 @@ class HorizontalBarMolecule extends React.Component {
   }
 
   componentDidMount(){
-    debugger;
+    //debugger;
     // const allRes = AllRes.allResponse;
     const allRes = this.props.data;
     this.setState({
@@ -27,7 +27,7 @@ class HorizontalBarMolecule extends React.Component {
   }
 
   componentDidUpdate(){
-    debugger;
+    //debugger;
     // const allRes = AllRes.allResponse;
     const allRes = this.props.data;
     if(JSON.stringify(this.state.AllDataRes) !== JSON.stringify(allRes)){

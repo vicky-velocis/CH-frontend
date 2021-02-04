@@ -362,13 +362,18 @@ const updateAllFields = async (action, state, dispatch) => {
 
   let containers={}
   if(properties[0].propertyDetails.owners){
-    // properties[0].propertyDetails.owners.forEach((element,index) => { 
-    await asyncForEach(properties[0].propertyDetails.owners, async (element,index) => {
+    let applicationBranchType = "EstateBranch";
+    let applicationsPresent = false;
+     await asyncForEach(properties[0].propertyDetails.owners, async (element,index) => {
       if (!!element.ownerDetails.isCurrentOwner) {
         let ownerdetailsComponent = getOwnerDetails(false, index, (!!findItem && applicationState == ESTATE_APPROVED_STATE));
         let allotmentDetailsComponent = getAllotmentDetails(false,index);
-        let applicationBranchType = "EstateBranch";
-
+        if(branchType == 'MANI_MAJRA'){
+          delete ownerdetailsComponent.children.cardContent.children.viewFour.children.dob
+          delete ownerdetailsComponent.children.cardContent.children.viewFour.children.cpNumber
+          delete allotmentDetailsComponent.children.cardContent.children.viewFour.children.dateOfAllotment
+          delete allotmentDetailsComponent.children.cardContent.children.viewFour.children.allotmentNumber
+        }
         if (applicationState == ESTATE_APPROVED_STATE) {
           switch(branchType) {
             case "BUILDING_BRANCH":
@@ -381,10 +386,20 @@ const updateAllFields = async (action, state, dispatch) => {
           let ownerId = element.id;
           let queryObject = [
             { key: "ownerId", value: ownerId },
-            { key: "branchType", value: applicationBranchType }
+            { key: "branchType", value: applicationBranchType },
+            { key: "state", value: ESTATE_APPROVED_STATE },
+            { key: "moduleType", value: "OwnershipTransfer"},
+            {key: "relations", value: "owner"}
           ]
           let payload = await getSearchApplicationsResults(queryObject);
           let modeOfTransferArr = [];
+          const fileNumber = getQueryArg(window.location.href, "fileNumber");
+
+          payload.Applications = payload.Applications && payload.Applications.filter(function(item){
+            if(fileNumber === item.property.fileNumber){
+              return item
+            }
+          })
 
           if (payload.Applications && payload.Applications.length) {
             payload.Applications.map(item => {
@@ -396,29 +411,28 @@ const updateAllFields = async (action, state, dispatch) => {
               })
             })
 
+            if(modeOfTransferArr.length >=1){
+              applicationsPresent = true;
+            }
             dispatch(
               prepareFinalObject(`Properties[0].propertyDetails.owners[${index}].ownerDetails.modeOfTransferArr`, modeOfTransferArr)
             )
-  
-            var modeOfTransferComponent = getModeOfTransferDetailsForApprovedProperty(applicationBranchType);
-          }
+            }
         }
-
-        if (!!modeOfTransferComponent) {
-          containers[index] = getCommonCard({
-            ownerdetailsComponent,
-            allotmentDetailsComponent,
-            modeOfTransferComponent
-          });
-        }
-        else {
           containers[index] = getCommonCard({
             ownerdetailsComponent,
             allotmentDetailsComponent
           });  
-        }
       }
     });
+
+    var modeOfTransferComponent = getModeOfTransferDetailsForApprovedProperty(applicationBranchType);
+    if (applicationsPresent) {
+          containers["modeOfTransfer"] = getCommonCard({
+            modeOfTransferComponent
+          });
+        }
+      
   }
   let entityDetails = companyDetails ? companyDetails : firmDetails ? firmDetails : {};
 

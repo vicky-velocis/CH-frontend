@@ -17,7 +17,7 @@ import {
 } from "../../utils";
 import moment from 'moment'
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-
+import get from "lodash/get";
 let screenName = "apply-manimajra"
 
 const houseNumberField = {
@@ -111,12 +111,12 @@ export const propertyTypeField = {
   beforeFieldChange: (action, state, dispatch) => {
 
     const monthlyData = [
-       {label:"JAN",code:"01"},{label:"FEB",code:"02"},{label:"MAR",code:"03"},{label:"APR",code:"04"},{label:"MAY",code:"05"},{label:"JUN",code:"06"},{label:"JUL",code:"07"},
-      {label:"AUG",code:"08"},{label:"SEP",code:"09"},{label:"OCT",code:"10"},{label:"NOV",code:"11"},{label:"DEC",code:"12"}
+       {label:"JAN",code:1},{label:"FEB",code:2},{label:"MAR",code:3},{label:"APR",code:4},{label:"MAY",code:5},{label:"JUN",code:6},{label:"JUL",code:7},
+      {label:"AUG",code:8},{label:"SEP",code:9},{label:"OCT",code:10},{label:"NOV",code:11},{label:"DEC",code:12}
     ]
     
     var yearlyData = []
-    const min = 1992
+    const min = 1990
     const max = moment(new Date()).format('YYYY')
     for(var i = min; i <= max; i++){
       yearlyData.push({"code": i})
@@ -170,9 +170,18 @@ export const propertyTypeField = {
         yearlyData
       )
     )
+    dispatch(
+      handleField(
+        action.screenKey,
+        "components.div.children.formwizardFirstStep.children.monthlyDetails.children.cardContent.children.detailsContainer.children.yearly",
+        "props.data",
+        yearlyData
+      )
+    )
     
     switch(action.value){
        case 'PROPERTY_TYPE.JANTA_READY_MARKET':
+       case 'PROPERTY_TYPE.PUNJAB_AGRO_JUICE':
           dispatch(
             handleField(
               action.screenKey,
@@ -207,26 +216,26 @@ export const propertyTypeField = {
             )
           )
          break;
-      case 'PROPERTY_TYPE.PUNJAB_AGRO_JUICE':
-          dispatch(
-            handleField(
-              action.screenKey,
-              "components.div.children.formwizardFirstStep.children",
-              "monthlyDetails.visible",
-               true
-            )
-          )
+      // case 'PROPERTY_TYPE.PUNJAB_AGRO_JUICE':
+      //     dispatch(
+      //       handleField(
+      //         action.screenKey,
+      //         "components.div.children.formwizardFirstStep.children",
+      //         "monthlyDetails.visible",
+      //          true
+      //       )
+      //     )
 
-          dispatch(
-            handleField(
-              action.screenKey,
-              "components.div.children.formwizardEighthStep.children.reviewDetails.children.cardContent.children",
-              "monthlyDetails.visible",
-               true
-            )
-          )
+      //     dispatch(
+      //       handleField(
+      //         action.screenKey,
+      //         "components.div.children.formwizardEighthStep.children.reviewDetails.children.cardContent.children",
+      //         "monthlyDetails.visible",
+      //          true
+      //       )
+      //     )
           
-         break;
+      //    break;
       case 'PROPERTY_TYPE.OTHERS':
         //do nothing
         break;    
@@ -289,10 +298,52 @@ export const annualTextField = {
   gridDefination: {
       xs: 12,
       sm: 6
-  }
- 
-}
+  },
+  afterFieldChange: (action, state, dispatch) => {
+let mmyear=get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.mmDemandStartYear")
 
+if(!!mmyear){
+dispatch(
+  handleField(
+    action.screenKey,
+    "components.div.children.formwizardFirstStep.children.monthlyDetails.children.cardContent.children.detailsContainer.children.yearly",
+    "props.disabled",
+    true
+  )
+)
+  }
+  }
+}
+export const yearTextField = {
+  label: {
+      labelName: "Annual License fee Pending from",
+      labelKey: "ES_ANNUAL_LICENSE_FEE_PENDING_LABEL"
+  },
+  placeholder: {
+      labelName: "Select Year",
+      labelKey: "ES_SELECT_YEAR_PLACEHOLDER"
+  },
+  required: true,
+  jsonPath: "Properties[0].propertyDetails.mmDemandStartYear",
+  gridDefination: {
+      xs: 12,
+      sm: 6
+  },
+  afterFieldChange: (action, state, dispatch) => {
+let mmanualyear=get(state.screenConfiguration.preparedFinalObject,"Properties[0].propertyDetails.mmDemandStartYear")
+
+if(!!mmanualyear){
+dispatch(
+  handleField(
+    action.screenKey,
+    "components.div.children.formwizardFirstStep.children.annualDetails.children.cardContent.children.detailsContainer.children.annual",
+    "props.disabled",
+    true
+  )
+)
+  }
+  }
+}
 export const monthTextField = {
   label: {
       labelName: "Monthly Charges pending from",
@@ -343,7 +394,8 @@ export const annualDetails = getCommonCard({
 export const monthlyDetails = getCommonCard({
   header: monthlyDetailsHeader,
   detailsContainer: getCommonContainer({
-      monthly: getSelectField(monthTextField)
+      monthly: getSelectField(monthTextField),
+      yearly: getSelectField(yearTextField)
   })
 })
 

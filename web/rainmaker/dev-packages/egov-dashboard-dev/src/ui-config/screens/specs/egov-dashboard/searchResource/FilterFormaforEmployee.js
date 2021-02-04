@@ -175,7 +175,7 @@ export const FilterFormDashboard = getCommonCard({
           },
       props: {
         style: {
-        width: "130%",
+        width: "100%",
         cursor: "pointer"
       },
   
@@ -190,7 +190,7 @@ export const FilterFormDashboard = getCommonCard({
       maxLength:5,
       labelsFromLocalisation: false,
       suggestions: [],
-      fullwidth: true,
+      // fullwidth: true,
       // required: true,
       inputLabelProps: {
         shrink: true
