@@ -1,7 +1,7 @@
 import get from "lodash/get";
 import { convertEpochToDate, convertDateToEpoch,epochToYmd } from "../../utils/index";
 
-import { toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { toggleSnackbar, handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 //import { httpRequest } from "egov-ui-framework/ui-utils/api";
 import { httpRequest } from "../../../../../ui-utils/api";
@@ -52,6 +52,14 @@ export const addConnectionMappingApiCall = async (state, dispatch) => {
       { labelName: "succcess ", labelKey: "WS_SUCCESS" },
       "success"
     ))
+    dispatch(
+      handleField(
+        "link-connection-details",
+        "components.div.children.footer.children.SubmitButton",
+        "visible",
+        false
+      )
+    );
 
   } catch (error) {      
     
@@ -60,6 +68,14 @@ export const addConnectionMappingApiCall = async (state, dispatch) => {
         { labelName: error.message, labelKey: error.message },
         "error"
       ));
+      dispatch(
+        handleField(
+          "link-connection-details",
+          "components.div.children.footer.children.SubmitButton",
+          "visible",
+          true
+        )
+      );
      // moveToSuccess("INITIATED",dispatch)
   }
 

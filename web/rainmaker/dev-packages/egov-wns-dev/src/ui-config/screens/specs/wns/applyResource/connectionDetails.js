@@ -1,5 +1,6 @@
 import { getCommonCard, getPattern, getCommonSubHeader, getTextField, getSelectField, getCommonContainer } from "egov-ui-framework/ui-config/screens/specs/utils";
-
+import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import get from 'lodash/get';
 // export const getGenderRadioButton = {
 //   uiFramework: "custom-containers",
 //   componentPath: "RadioGroupContainer",
@@ -16,6 +17,26 @@ import { getCommonCard, getPattern, getCommonSubHeader, getTextField, getSelectF
 //   },
 //   type: "array"
 // };
+const displaysubUsageType = (usageType, dispatch, state) => {
+
+  let subTypeValues = get(
+          state.screenConfiguration.preparedFinalObject,
+          "applyScreenMdmsData.ws-services-masters.wsCategory"
+        );
+
+      let subUsage=[];
+      if(subTypeValues!== undefined)
+      {
+      subUsage = subTypeValues.filter(cur => {
+                  return (cur.applicationType === usageType ) 
+                });
+          if(subUsage&&subUsage[0])
+          {
+            dispatch(prepareFinalObject("propsubusagetypeForSelectedusageCategory",subUsage[0].category));
+          }
+        }
+          
+}
 
 export const getCheckboxContainer = {
   uiFramework: "custom-containers-local",
@@ -124,6 +145,9 @@ export const OwnerInfoCard = getCommonCard({
       //   }
       // ]
     },
+    beforeFieldChange: async (action, state, dispatch) => {
+       displaysubUsageType(action.value, dispatch, state);
+   }
     }),
 
     numberOfWaterClosets: getTextField({

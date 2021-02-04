@@ -166,7 +166,10 @@ export const getMdmsData = async (state,dispatch) => {
             {name : "Division"},
             {name:"MeterUnit"},
             {name:"MFRCode"},
-            {name:"sectorList"}
+            {name:"sectorList"},
+            {name:"tariffType"},
+            {name:"wsCategory"},
+            {name:"wsDocument"}
           ]
         }
       ]
@@ -503,6 +506,7 @@ export const getData = async (action, state, dispatch) => {
     let propertyObj = payload.Properties[0];
     dispatch(prepareFinalObject("applyScreen.property", findAndReplace(propertyObj, null, "NA")));
     dispatch(prepareFinalObject("searchScreen.propertyIds", propertyID));
+
      //set applyScreen.waterProperty.usageCategory
      if(propertyObj)
      {
@@ -519,7 +523,10 @@ export const getData = async (action, state, dispatch) => {
      }
      
   }
-
+  dispatch(prepareFinalObject("applyScreen.property.subusageCategory", "RESIDENTIAL.PLOTTED"));
+  dispatch(prepareFinalObject("applyScreen.waterProperty.usageSubCategory", "PRIVATEHOUSESWITHINSECTORS"));
+  dispatch(prepareFinalObject("applyScreen.waterApplicationType", "REGULAR"));
+  prepareDocumentsUploadData(state, dispatch);
 
   dispatch(
     handleField(
@@ -552,12 +559,12 @@ const getApplyScreenChildren = () => {
     case "CONNECTION_CONVERSION":
     return {connConversionDetails};
     case "APPLY_FOR_REGULAR_INFO":
-      return { IDDetails, Details, ownerDetails,propertyUsageDetails, connectionHolderDetails, OwnerInfoCard };
-    default :    return { IDDetails, Details, ownerDetails,propertyUsageDetails, connectionHolderDetails, OwnerInfoCard };
+      return { IDDetails, Details,OwnerInfoCard, propertyUsageDetails, ownerDetails,connectionHolderDetails,  };
+    default :    return { IDDetails, Details, OwnerInfoCard,propertyUsageDetails,ownerDetails, connectionHolderDetails,  };
   }
  }
  else {
-   return { IDDetails, Details, ownerDetails,propertyUsageDetails, connectionHolderDetails, OwnerInfoCard };
+   return { IDDetails, Details, OwnerInfoCard, propertyUsageDetails,ownerDetails, connectionHolderDetails,  };
  }
 
 }

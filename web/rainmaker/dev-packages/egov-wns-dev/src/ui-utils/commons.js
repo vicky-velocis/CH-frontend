@@ -702,7 +702,7 @@ const validatePropertyOwners = (applyScreenObject) => {
 
 export const prepareDocumentsUploadData = (state, dispatch,type="upload") => {
     let documents = '';
-
+    let wsDocument ='';
     if (type == "wsupload") {
         documents = get(
           state,
@@ -716,9 +716,42 @@ export const prepareDocumentsUploadData = (state, dispatch,type="upload") => {
             "screenConfiguration.preparedFinalObject.applyScreenMdmsData.ws-services-masters.Documents",
             []
         );
+        wsDocument = get(
+            state,
+            "screenConfiguration.preparedFinalObject.applyScreenMdmsData.ws-services-masters.wsDocument",
+            []
+        );
+
+        // fiter baed on occupancycode (Property Sub Usage Type),category(Uses Caregory) and applicationType(Application Type) 
+        let occupancycode = get(
+            state,
+            "screenConfiguration.preparedFinalObject.applyScreen.property.subusageCategory",
+            ''
+        );
+        let category = get(
+            state,
+            "screenConfiguration.preparedFinalObject.applyScreen.waterProperty.usageSubCategory",
+            ''
+        );
+        let applicationType = get(
+            state,
+            "screenConfiguration.preparedFinalObject.applyScreen.waterApplicationType",
+            ''
+        );
+if(occupancycode && applicationType && category)
+{
+    wsDocument = wsDocument.filter(x=>x.occupancycode === occupancycode 
+        && x.applicationType === applicationType
+        && x.category === category )
+
+        if(wsDocument && wsDocument[0])
+            documents = wsDocument[0].document;
+}
+        
 
       }
- 
+ if(documents !== undefined)
+ {
     documents = documents.filter(item => {
         return item.active;
     });
@@ -758,6 +791,7 @@ export const prepareDocumentsUploadData = (state, dispatch,type="upload") => {
     });
 
     dispatch(prepareFinalObject("documentsContract", documentsContract));
+}
 };
 
 const parserFunction = (state) => {
@@ -774,12 +808,14 @@ const parserFunction = (state) => {
         proposedTaps: parseInt(queryObject.proposedTaps),
         waterApplicationType: (queryObject.waterApplicationType === null || queryObject.waterApplicationType === "NA") ? "" : queryObject.waterApplicationType,
         waterProperty :{
-        id : get(state.screenConfiguration.preparedFinalObject, "Properties.id", null),
+        //id : get(state.screenConfiguration.preparedFinalObject, "Properties.id", null),
+        id : get(state.screenConfiguration.preparedFinalObject, "WaterConnection[0].waterProperty.id", null),
         usageCategory: (queryObject.waterProperty.usageCategory === null || queryObject.waterProperty.usageCategory === "NA") ? "" : queryObject.waterProperty.usageCategory,
         usageSubCategory: (queryObject.waterProperty.usageSubCategory === null || queryObject.waterProperty.usageSubCategory === "NA") ? "" : queryObject.waterProperty.usageSubCategory
         },
         swProperty :{
-            id : get(state.screenConfiguration.preparedFinalObject, "Properties.id", null),
+           // id : get(state.screenConfiguration.preparedFinalObject, "Properties.id", null),
+            id : get(state.screenConfiguration.preparedFinalObject, "WaterConnection[0].waterProperty.id", null),
             usageCategory: (queryObject.waterProperty.usageCategory === null || queryObject.waterProperty.usageCategory === "NA") ? "" : queryObject.waterProperty.usageCategory,
             usageSubCategory: (queryObject.waterProperty.usageSubCategory === null || queryObject.waterProperty.usageSubCategory === "NA") ? "" : queryObject.waterProperty.usageSubCategory
             },

@@ -35,7 +35,7 @@ class MyConnections extends React.Component {
 
 let tenantId = data.tenantId;
 if(data.property)
-tenantId = data.property.tenantIdl;
+tenantId = data.property.tenantId;
     window.location.href = `/citizen/wns/connection-details?connectionNumber=${data.connectionNo}&tenantId=${tenantId}&service=${data.service.toUpperCase()}&connectionType=${data.connectionType}`
   }
 
