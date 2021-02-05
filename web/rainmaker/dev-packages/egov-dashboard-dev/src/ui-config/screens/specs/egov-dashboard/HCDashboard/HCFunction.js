@@ -7,7 +7,7 @@ import { getHCDashboardData } from "../../../../../ui-utils/commons";
 
 export const SearchHCDashboardData = async (state, dispatch) =>{
   
-    debugger;
+    //debugger;
     var flag_for_api_call = true
     let queryObject = [
       {

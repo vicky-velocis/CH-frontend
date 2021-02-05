@@ -79,7 +79,7 @@ class HorizontalBarChart extends React.Component {
   }
 
   componentDidUpdate(){
-    debugger;
+    //debugger;
     const resData = this.props.graphData
     if(JSON.stringify(this.state.GRAPHDATA) !== JSON.stringify(this.props.graphData)){
       var label = [];

@@ -18,7 +18,7 @@ class ReportMolecule extends React.Component {
   }
 
   componentDidMount(){
-    debugger;
+    //debugger;
     // const allRes = AllRes.allResponse;
     const allRes = this.props.data;
     this.setState({
@@ -28,7 +28,7 @@ class ReportMolecule extends React.Component {
   }
 
   componentDidUpdate(){
-    debugger;
+    //debugger;
     // const allRes = AllRes.allResponse;
     const allRes = this.props.data;
     if(JSON.stringify(this.state.AllDataRes) !== JSON.stringify(allRes)){

@@ -46,7 +46,7 @@ export const footer = () => {
         action: "condition",
         callBack: addConnectionMappingApiCall
       },
-      visible: true
+      visible: false
     },
   
   

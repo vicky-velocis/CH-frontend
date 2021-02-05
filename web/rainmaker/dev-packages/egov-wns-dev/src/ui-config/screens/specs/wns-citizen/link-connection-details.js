@@ -15,6 +15,8 @@ import {
   import get from "lodash/get";
   import {
     prepareFinalObject,
+    toggleSnackbar,
+  toggleSpinner,
     handleScreenConfigurationFieldChange as handleField
   } from "egov-ui-framework/ui-redux/screen-configuration/actions";
   import { footer } from "./linkConnectionResources/footer";
@@ -51,6 +53,39 @@ import {
      let combinedSearchResults = searchWaterConnectionResults || searcSewerageConnectionResults ? sewerageConnections.concat(waterConnections) : []
      combinedSearchResults = combinedSearchResults.filter(x=>x.id === id)
      dispatch(prepareFinalObject("combinedSearchResults", combinedSearchResults));
+
+     if(combinedSearchResults && combinedSearchResults[0].connectionHolders && combinedSearchResults[0].connectionHolders !=="NA" )
+     {
+      dispatch(
+        handleField(
+          "link-connection-details",
+          "components.div.children.footer.children.SubmitButton",
+          "visible",
+          false
+        )
+      );
+      dispatch(
+        toggleSnackbar(
+          true, {
+          labelKey: "WS_LINK_CONNECTION_VALLIDATION",
+          labelName: "This connection is already assign to other user"
+        },
+          "warning"
+        )
+      )
+     }
+     else
+     {
+      dispatch(
+        handleField(
+          "link-connection-details",
+          "components.div.children.footer.children.SubmitButton",
+          "visible",
+          true
+        )
+      );
+
+     }
     } catch (err) { console.log(err) }
   
      

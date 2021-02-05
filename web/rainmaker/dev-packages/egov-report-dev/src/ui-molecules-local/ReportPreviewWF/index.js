@@ -8,7 +8,7 @@ import get from "lodash/get";
 import set from "lodash/set";
 import { Line } from "react-chartjs-2";
 import { Doughnut } from 'react-chartjs-2';
-import WorkFlowTableImage from './WorkFlowTableImage';
+// import WorkFlowTableImage from './WorkFlowTableImage';
 import "./index.css"
 
 class ReportPreviewWF extends React.Component {
@@ -25,7 +25,7 @@ class ReportPreviewWF extends React.Component {
 
     // PDF function 
     pdfDownload = (e) => {
-    debugger;
+    // debugger;
     e.preventDefault();
     const DATAJSON = this.state.DATAJSON;
     const columnData = ["Application State", "Application Status", "Action", "Actor", "Next"]
@@ -35,7 +35,7 @@ class ReportPreviewWF extends React.Component {
     for(var i=0; i<DATAJSON.length; i++){
         allStateJSON[DATAJSON[i].uuid] = DATAJSON[i].state
     }
-    debugger;
+    // debugger;
     // Logic to combine data into one JSON
     var state = []
     var row = []
@@ -78,7 +78,7 @@ class ReportPreviewWF extends React.Component {
     }
     tableRowData = [...tableRowData, ...rejectedRow]
 
-    debugger;
+    // debugger;
     // PDF Code 
     const unit = "pt";
     const size = "A4"; // Use A1, A2, A3 or A4
@@ -110,7 +110,7 @@ class ReportPreviewWF extends React.Component {
     }
 
     componentDidMount(){
-        debugger;
+        // debugger;
         // const data = this.props.data
         // var DATAJSON = data.demo ? data.demo.BusinessServices[0].states : []
         // const data = {
@@ -1553,7 +1553,7 @@ class ReportPreviewWF extends React.Component {
     }
 
     componentDidUpdate(){
-        debugger;
+        // debugger;
         var data = []
         var desc = []
         if(this.props.data.length > 0){

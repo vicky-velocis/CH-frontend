@@ -9,6 +9,7 @@ import "./index.css";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import get from "lodash/get";
 import set from 'lodash/set';
+import { propertySearchApiCall } from './functions';
 import { httpRequest } from "../../../../../ui-utils";
 import {
   prepareDocumentsUploadData,
@@ -427,6 +428,9 @@ else if(wnsStatus && (wnsStatus === "REACTIVATE_CONNECTION"||wnsStatus === "TEMP
           else{
             searchPropertyId = payload.Properties[0].id
           }
+          dispatch(prepareFinalObject("searchScreen.propertyIds", searchPropertyId));
+          propertySearchApiCall(state,dispatch);
+          
         }
         else{
           dispatch(
@@ -787,6 +791,7 @@ const acknoledgementForBothWaterAndSewerage = async (state, activeStep, isFormVa
 const acknoledgementForWater = async (state, activeStep, isFormValid, dispatch) => {
   if (isFormValid) {
     if (activeStep === 0) {
+      
       prepareDocumentsUploadData(state, dispatch);
     }
     if (activeStep === 3) {
