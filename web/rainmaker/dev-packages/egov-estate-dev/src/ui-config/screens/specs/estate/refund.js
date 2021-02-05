@@ -183,16 +183,6 @@ const auctionDetailsContainer = getCommonCard({
 
 const auctionTableContainer = auctionTable;
 
-// let queryObject = [
-//   { key: "auctionId", value: auctionId },
-//   {key: "relations", value: "bidder"}
-// ];
-// let storeData = await getSearchResults(queryObject);
-// debugger;
-
-
-// const headerrow = getCommonApplyHeader({label: headerLabel, number: applicationNumber});
-
 const submitButton = {
   componentPath: "Button",
   props: {
