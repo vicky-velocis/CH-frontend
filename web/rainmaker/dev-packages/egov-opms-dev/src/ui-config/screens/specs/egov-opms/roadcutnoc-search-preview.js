@@ -277,11 +277,11 @@ const HideshowEdit = (state, action, nocStatus, amount, applicationNumber,dispat
 
   checkVisibility(state, "APPROVED BY EE,APPROVED BY SE,APPROVED BY CE,COMPLETE", "approve", action, "screenConfig.components.div.children.footerEmp.children.approve.visible", (amount < 50000 && checkForRole(roles, 'EE') && (nocStatus == "REVIEWOFEE L3" || nocStatus == "REASSIGNTOEE L3")) || (amount < 200000 && checkForRole(roles, 'SE') && (nocStatus == "REVIEWOFSE L2" || nocStatus == "REASSIGNTOSE L2")) || checkForRole(roles, 'CE') || (nocStatus === "VERIFY FOR COMPLETION" && checkForRole(roles, 'EE')))
 
-  checkVisibility(state, "REASSIGN,REASSIGNTOJE,REASSIGNTOSDE L2,REASSIGNTODMEE,REASSIGNTOEE L3,REASSIGNTODMSE,REASSIGNTOSE L2,REASSIGNTOWD  ", "reassign", action, "screenConfig.components.div.children.footerEmp.children.reassign.visible", null)
+  checkVisibility(state, "REASSIGN,REASSIGNTOJE,REASSIGNTOSDE L2,REASSIGNTODMEE,REASSIGNTOHDMEE,REASSIGNTOEE L3,REASSIGNTOCHDSE,REASSIGNTODMSE,REASSIGNTOSE L2,REASSIGNTOWD,REASSIGNTOCHDCE,REASSIGNTODMCE,REASSIGNTOSDEHQ", "reassign", action, "screenConfig.components.div.children.footerEmp.children.reassign.visible", null)
 
   checkVisibility(state, "REASSIGNDOEE,REASSIGNDOSE,REASSIGNDOCE", "reassignToDO", action, "screenConfig.components.div.children.footerEmp.children.reassignToDO.visible", null)
 
-  checkVisibility(state, "INITIATED,REVIEWSDE L1,REVIEWOFJE,REVIEWSDE L2,REVIEWOFEE L2,VERIFYHDMEE,VERIFYDMEE,REVIEWOFEE L3,REVIEWOFSE L1,VERIFYCHD,VERIFYDMSE,REVIEWOFSE L2,REVIEWOFCE L1,VERIFYHDMCE L1,VERIFYDMCE,VERIFYHDMCE L2,REVIEWOFWD,PENDINGAPPROVAL,VERIFY AFTER APPROVAL L1,VERIFY AFTER APPROVAL L2,VERIFY AFTER APPROVAL L3,VERIFY FOR COMPLETION","nextButton", action, "screenConfig.components.div.children.footerEmp.children.nextButton.visible", null)
+  checkVisibility(state, "INITIATED,REVIEWSDE L1,REVIEWOFJE,REVIEWSDE L2,REVIEWOFEE L2,VERIFYHDMEE L1,VERIFYHDMEE L2,VERIFYDMEE,REVIEWOFEE L3,REVIEWOFSE L1,VERIFYCHDSE L1,VERIFYCHDSE L2,VERIFYDMSE,REVIEWOFSE L2,REVIEWOFCE L1,VERIFYDMCE,VERIFYCHDCE L1,VERIFYCHDCE L2,REVIEWOFSDEHQ,REVIEWOFWD,PENDINGAPPROVAL,VERIFY AFTER APPROVAL L1,VERIFY AFTER APPROVAL L2,VERIFY AFTER APPROVAL L3,VERIFY FOR COMPLETION","nextButton", action, "screenConfig.components.div.children.footerEmp.children.nextButton.visible", null)
 
   set(
     action,
@@ -339,15 +339,15 @@ const HideshowEdit = (state, action, nocStatus, amount, applicationNumber,dispat
         "components.adhocDialog2.children.popup.children.adhocRebateCardRoadCutReassign.children.ContainerRoadCutReassign.children.assigneeList",
         "visible", checkForRole(roles, 'EE') || checkForRole(roles, 'JE') ? (nocStatus == "INITIATED" || nocStatus == "RESENT" || nocStatus == "REVIEWOFJE" || nocStatus == "REASSIGNTOJE") ? false : true : true));
 
-  if (checkForRole(roles, 'JE') && (nocStatus == "REVIEWOFJE" || nocStatus == "REASSIGNTOJE")) {
-    if (typeOfApplicant != "TELECOM" && typeOfApplicant != "NATURAL_GAS_PIPELINE_PNG") {
-      set(
-        action,
-        "screenConfig.components.div.children.footerEmp.children.reassign.visible",
-        false
-      );
-    }
-  }
+  // if (checkForRole(roles, 'JE') && (nocStatus == "REVIEWOFJE" || nocStatus == "REASSIGNTOJE")) {
+  //   if (typeOfApplicant != "TELECOM" && typeOfApplicant != "NATURAL_GAS_PIPELINE_PNG") {
+  //     set(
+  //       action,
+  //       "screenConfig.components.div.children.footerEmp.children.reassign.visible",
+  //       false
+  //     );
+  //   }
+  // }
 
 }
 
@@ -374,7 +374,7 @@ const setSearchResponse = async (state, action, dispatch, applicationNumber, ten
     await setCurrentApplicationProcessInstance(state);
     HideshowEdit(state, action, nocStatus, amount, applicationNumber,dispatch);
     // await getEmployeeList(state);
-    if (nocStatus === 'PAID' && checkForRole(roles, 'CITIZEN')) {
+    if ((nocStatus === 'PAID'|| nocStatus === 'COMPLETE' || nocStatus === 'VERIFY FOR COMPLETION') && checkForRole(roles, 'CITIZEN')) {
       searchBill(dispatch, applicationNumber, tenantId);
     } else {
       if (amount > 0) {

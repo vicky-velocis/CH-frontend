@@ -1139,6 +1139,8 @@ export const getOPMSPattern = type => {
       return /^[a-zA-Z0-9-, ]{1,200}$/i;
     case "petnocIdentificationMark":
       return /^[a-zA-Z0-9-!%:;“”‘’*=@\n\r#?\\\\~`$&^<>?{}[\]|()\\-`.+,/\"' ]{1,100}$/i;
+    case "Length":
+      return /^\d{1,7}(\.\d{1,2})?$/i;
 
     case "Remarks":
       return /^[a-zA-Z0-9.',\n\r ]{1,128}$/i;
