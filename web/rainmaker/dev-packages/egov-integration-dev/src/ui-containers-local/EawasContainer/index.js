@@ -38,12 +38,12 @@ class EawasContainer extends Component {
        if(totalAccommodation)
        totalAccommodation = parseInt((totalAccommodation.replace(',','')))
         let data=[];
-        data.push(totalAccommodation)
-        data.push(AllottedAccommodations_)       
+        data.push(totalAccommodation)             
        // data.push(get(APIData.ResponseBody, `totalAccommodation`, 0))
         data.push(get(APIData.ResponseBody, `totalBidSubmitted`, 0))
         data.push(get(APIData.ResponseBody, `totalOnlineAllotment`, 0))
         data.push(get(APIData.ResponseBody, `vacantAccommodation`, 0))
+        data.push(AllottedAccommodations_)  
 
           var PIEgraphOneSortedData = {
             labels: ["Total Accommodation","Total Bid Submitted","Total Online Allotment","Vacant Accommodation","Allotted Accommodations"],

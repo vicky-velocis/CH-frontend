@@ -8,9 +8,9 @@ import set from "lodash/set";
 import {  
   getSearchResults,
   getHRMSEmpSearchResults,
-  
+  updateEmployee
 } from "../../../../..//ui-utils/commons";
-
+import { httpRequest } from "../../../../../ui-utils/api";//../../../../ui-utils
 import {
   convertDateToEpoch,
   epochToYmdDate,
@@ -149,7 +149,8 @@ export const getEmployeeData = async (
   userInfo,
   tenantId
 ) => {
-  let empCode='11832' 
+  let hrmsCodeAbailable = false;
+  
   let queryObject = [
     {
       key: "tenantId",
@@ -159,14 +160,23 @@ export const getEmployeeData = async (
   queryObject.push({ key: "uuids", value: userInfo.uuid });
 
   let payload = await getHRMSEmpSearchResults(queryObject, dispatch);
+  let hrmsCode = '11832' ;
   if(payload){ 
-    empCode = payload.Employees[0].code
-    //dispatch(prepareFinalObject("searchScreen.empCode", payload.Employees[0].code));
+    if(payload.Employees[0].hrmsCode !==null)
+    {
+      hrmsCode = payload.Employees[0].hrmsCode
+      hrmsCodeAbailable = true
+    }
+    else{
+      hrmsCode = '11832';
+    }
+    dispatch(prepareFinalObject("Employees", payload));
+    
   }
   let requestBody ={
     hrmsRequest:
     {
-      empCode:empCode
+      empCode:hrmsCode
     }
     
 
@@ -177,6 +187,16 @@ export const getEmployeeData = async (
   dispatch(prepareFinalObject("Employeebasic", get(Empdata, "ResponseBody",{})));
   dispatch(prepareFinalObject("Empleavedata", get(Empleavedata, "ResponseBody",{})));
   dispatch(prepareFinalObject("EmpJoiningdata", get(EmpJoiningdata, "ResponseBody",{})));
+  let Message = get(
+    state.screenConfiguration.preparedFinalObject.Employeebasic, 'Message','');
+  if(Message)
+  {
+    const errorMessage = {
+      labelName: Message,
+      labelKey: Message
+    };
+    dispatch(toggleSnackbar(true, errorMessage, "warning"));
+  }
   dispatch(
     handleField(
       "create",
@@ -188,6 +208,8 @@ export const getEmployeeData = async (
       }
     )
   );
+if(hrmsCodeAbailable)
+{
   dispatch(
     handleField(
       "empDetails",
@@ -196,5 +218,76 @@ export const getEmployeeData = async (
       { display: "none" }
     )
   );
+  dispatch(
+    handleField(
+      "empDetails",
+      "components.div.children.footer.children.editDetails",
+        "visible",
+        //false
+        true
+    )
+  );
+  dispatch(
+    handleField(
+      "empDetails",
+      "components.div.children.empCode",
+      "visible",
+      //false
+      true
+    )
+  );
+
+}
+else{
+  dispatch(
+    handleField(
+      "empDetails",
+      "components.div.children.EmpUpdateInfoText",
+      "props.style",
+      { display: "inline-block" }
+    )
+  );
+  dispatch(
+    handleField(
+      "empDetails",
+      "components.div.children.empCode",
+      "visible",
+      true
+    )
+  );
+  dispatch(
+    handleField(
+      "empDetails",
+      "components.div.children.footer.children.editDetails",
+        "visible",
+        true
+    )
+  );
+
+}
+
   //furnishEmployeeData(state, dispatch);
+};
+// HRMS Update API
+export const updateEmployees = async (queryObject, payload, dispatch) => {
+  try {
+    const response = await httpRequest(
+      "post",
+      "/egov-hrms/employees/_update",
+      "",
+      queryObject,
+      { Employees: [payload] }
+    );
+    return response;
+  } catch (error) {
+    console.log(error)
+    dispatch(
+      toggleSnackbar(
+        true,
+        { labelName: error.message, labelKey: error.message },
+        "error"
+      )
+    );
+    throw error;
+  }
 };

@@ -30,7 +30,7 @@ const screenConfig = {
   name: "empDetails",
   beforeInitScreen: (action, state, dispatch) => {
     let employeeCode = getQueryArg(window.location.href, "employeeID");
-    let tenantId = getQueryArg(window.location.href, "tenantId");
+    let tenantId = getTenantId();
     const userInfo = JSON.parse(getUserInfo());
     getEmployeeData(state, dispatch, userInfo, tenantId);
    // showHideAdhocPopup(state, dispatch);
@@ -87,9 +87,9 @@ const screenConfig = {
               disabled:false
             },
             required: true, 
-            visiblw:false,
+            visible:false,
             errorMessage:"INTIGRATION_ERROR_SF_EMPLOYEE_ID",      
-            jsonPath: "searchScreen.empCode",     
+            jsonPath: "Employees.Employees[0].hrmsCode",     
            
           }),
          
