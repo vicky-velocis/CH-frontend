@@ -29,10 +29,17 @@ class EawasContainer extends Component {
           APIData, 
           pageName,        
           moduleName } = this.props;
-       // let x =  parseInt(('1,234'.replace(',','')))
+          let mystr ='1,1234'
+        let x =  parseInt((mystr.replace(',','')))
+       let AllottedAccommodations_ = get(APIData.ResponseBody, `AllottedAccommodations`, '')
+       if(AllottedAccommodations_)
+       AllottedAccommodations_ = parseInt((AllottedAccommodations_.replace(',','')))
+       let totalAccommodation = get(APIData.ResponseBody, `totalAccommodation`, '')
+       if(totalAccommodation)
+       totalAccommodation = parseInt((totalAccommodation.replace(',','')))
         let data=[];
-        data.push(parseInt((get(APIData.ResponseBody, `AllottedAccommodations`, 0).replace(',',''))))
-        data.push(parseInt((get(APIData.ResponseBody, `totalAccommodation`, 0).replace(',',''))))       
+        data.push(totalAccommodation)
+        data.push(AllottedAccommodations_)       
        // data.push(get(APIData.ResponseBody, `totalAccommodation`, 0))
         data.push(get(APIData.ResponseBody, `totalBidSubmitted`, 0))
         data.push(get(APIData.ResponseBody, `totalOnlineAllotment`, 0))

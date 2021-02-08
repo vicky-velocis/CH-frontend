@@ -4601,11 +4601,11 @@ export const adhocPopupForJeRoadCutForward = getCommonContainer({
           beforeFieldChange: (action, state, dispatch) => {
             
             if (action.value === "Yes") {
-              let ROADCUTNOC = get(
-                state, "screenConfiguration.preparedFinalObject.nocApplicationDetail[0]", {});
-              let typeOfApplicant = JSON.parse(ROADCUTNOC.applicationdetail).hasOwnProperty('typeOfApplicant') ?
-                JSON.parse(ROADCUTNOC.applicationdetail).typeOfApplicant : undefined;
-              if (typeOfApplicant && (typeOfApplicant === "TELECOM" || typeOfApplicant === "NATURAL_GAS_PIPELINE_PNG")) {
+              // let ROADCUTNOC = get(
+              //   state, "screenConfiguration.preparedFinalObject.nocApplicationDetail[0]", {});
+              // let typeOfApplicant = JSON.parse(ROADCUTNOC.applicationdetail).hasOwnProperty('typeOfApplicant') ?
+              //   JSON.parse(ROADCUTNOC.applicationdetail).typeOfApplicant : undefined;
+              // if (typeOfApplicant && (typeOfApplicant === "TELECOM" || typeOfApplicant === "NATURAL_GAS_PIPELINE_PNG")) {
                 showHideAdhocPopup(state, dispatch, "roadcutnoc-search-preview")
                 dispatch(
                   toggleSnackbar(
@@ -4614,7 +4614,7 @@ export const adhocPopupForJeRoadCutForward = getCommonContainer({
                     "warning"
                   )
                 );
-              }
+              // }
             }
           },
             props: {

@@ -225,35 +225,35 @@ export const footerEmp = getCommonApplyFooter({
           if (localStorageGet("applicationStatus") == "REVIEWOFJE" || localStorageGet("applicationStatus") == "REASSIGNTOJE") {
             const ROADCUTNOC = get(
               state, "screenConfiguration.preparedFinalObject.nocApplicationDetail[0]", {});
-            const typeOfApplicant = JSON.parse(ROADCUTNOC.applicationdetail).hasOwnProperty('typeOfApplicant') ?
-              JSON.parse(ROADCUTNOC.applicationdetail).typeOfApplicant : undefined;
-            if (typeOfApplicant && (typeOfApplicant === "TELECOM" || typeOfApplicant === "NATURAL_GAS_PIPELINE_PNG")) {
+            // const typeOfApplicant = JSON.parse(ROADCUTNOC.applicationdetail).hasOwnProperty('typeOfApplicant') ?
+            //   JSON.parse(ROADCUTNOC.applicationdetail).typeOfApplicant : undefined;
+            // if (typeOfApplicant && (typeOfApplicant === "TELECOM" || typeOfApplicant === "NATURAL_GAS_PIPELINE_PNG")) {
               set(state.screenConfiguration.preparedFinalObject, "OPMS[0].RoadCutUpdateStautsDetails.additionalDetail.isAnyChangeInRoadCutEstimation", "No");
               dispatch(
                 handleField(
                   "roadcutnoc-search-preview",
                   "components.adhocDialog.children.popup.children.adhocRebateCardRoadCutForward.children.ForwardContainerRoadCutForward.children.isAnyChangeInRoadCutEstimation",
                   "props.value", "No"));
-            } else {
-              const isAnyChangeInRoadCutEstimation = JSON.parse(ROADCUTNOC.applicationdetail).hasOwnProperty('isAnyChangeInRoadCutEstimation') ?
-                JSON.parse(ROADCUTNOC.applicationdetail).isAnyChangeInRoadCutEstimation : undefined;
-              if (isAnyChangeInRoadCutEstimation) {
-                set(state.screenConfiguration.preparedFinalObject, "OPMS[0].RoadCutUpdateStautsDetails.additionalDetail.isAnyChangeInRoadCutEstimation", isAnyChangeInRoadCutEstimation);
-                dispatch(
-                  handleField(
-                    "roadcutnoc-search-preview",
-                    "components.adhocDialog.children.popup.children.adhocRebateCardRoadCutForward.children.ForwardContainerRoadCutForward.children.isAnyChangeInRoadCutEstimation",
-                    "props.value", isAnyChangeInRoadCutEstimation));
+            // } else {
+              // const isAnyChangeInRoadCutEstimation = JSON.parse(ROADCUTNOC.applicationdetail).hasOwnProperty('isAnyChangeInRoadCutEstimation') ?
+              //   JSON.parse(ROADCUTNOC.applicationdetail).isAnyChangeInRoadCutEstimation : undefined;
+              // if (isAnyChangeInRoadCutEstimation) {
+              //   set(state.screenConfiguration.preparedFinalObject, "OPMS[0].RoadCutUpdateStautsDetails.additionalDetail.isAnyChangeInRoadCutEstimation", isAnyChangeInRoadCutEstimation);
+              //   dispatch(
+              //     handleField(
+              //       "roadcutnoc-search-preview",
+              //       "components.adhocDialog.children.popup.children.adhocRebateCardRoadCutForward.children.ForwardContainerRoadCutForward.children.isAnyChangeInRoadCutEstimation",
+              //       "props.value", isAnyChangeInRoadCutEstimation));
 
-              } else { 
-                dispatch(
-                  handleField(
-                    "roadcutnoc-search-preview",
-                    "components.adhocDialog.children.popup.children.adhocRebateCardRoadCutForward.children.ForwardContainerRoadCutForward.children.isAnyChangeInRoadCutEstimation",
-                    "props.value", "No"));
-                    set(state.screenConfiguration.preparedFinalObject, "OPMS[0].RoadCutUpdateStautsDetails.additionalDetail.isAnyChangeInRoadCutEstimation", "No");
-              }
-            }
+              // } else { 
+              //   dispatch(
+              //     handleField(
+              //       "roadcutnoc-search-preview",
+              //       "components.adhocDialog.children.popup.children.adhocRebateCardRoadCutForward.children.ForwardContainerRoadCutForward.children.isAnyChangeInRoadCutEstimation",
+              //       "props.value", "No"));
+              //       set(state.screenConfiguration.preparedFinalObject, "OPMS[0].RoadCutUpdateStautsDetails.additionalDetail.isAnyChangeInRoadCutEstimation", "No");
+              // }
+            // }
             getEmployeeList(state,dispatch, "nextButton");
             showHideAdhocPopup(state, dispatch, "roadcutnoc-search-preview")
           } else {
