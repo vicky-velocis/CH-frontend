@@ -2,7 +2,7 @@ import { getLabel } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import { showHideAdhocPopup } from "../../utils";
-import { handleCreateUpdateEmployee } from "./functions";
+import { handleCreateUpdateEmployee,updateEmployees } from "./functions";
 import {
   handleScreenConfigurationFieldChange as handleField,
   toggleSnackbar,
@@ -10,15 +10,62 @@ import {
   prepareFinalObject
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import get from "lodash/get";
-const gotoCreateFlow = (state, dispatch) => {
+import { getTenantId,getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
+const gotoCreateFlow = async (state, dispatch) => {
   // const employeeCode = getQueryArg(window.location.href, "employeeID");
   let employeeCode = get(
     state.screenConfiguration.preparedFinalObject,
-    "searchScreen.empCode",
+    "Employees.Employees[0].hrmsCode",
     ''
   );
   if(employeeCode)
   {
+    let employeeObject = get(
+      state.screenConfiguration.preparedFinalObject,
+      "Employees.Employees[0]",
+      []
+    );
+    let queryObject = [
+      {
+        key: "tenantId",
+        value: getTenantId()
+      }
+    ];
+    try {
+      let response = await updateEmployees(
+        queryObject,
+        employeeObject,
+        dispatch
+      );
+      let employeeId = response && get(response, "Employees[0].code");
+      dispatch(
+        handleField(
+          "empDetails",
+          "components.div.children.EmpUpdateInfoText",
+          "props.style",
+          { display: "none" }
+        )
+      );
+      dispatch(
+        handleField(
+          "empDetails",
+          "components.div.children.empCode",
+          "visible",
+          false
+        )
+      );
+     
+    } catch (error) {
+     // furnishEmployeeData(state, dispatch);
+     dispatch(
+      handleField(
+        "empDetails",
+        "components.div.children.empCode",
+        "visible",
+        true
+      )
+    );
+    }
 
   }
   else{
@@ -26,36 +73,36 @@ const gotoCreateFlow = (state, dispatch) => {
       toggleSnackbar(
         true,
         {
-          labelName: "Please fill Employee code",
+          labelName: "Please fill HRMS code",
           labelKey: "INTIGRATION_HRMS_EMPLOYEE_CODE_VALIDATION",
         },
         "warning"
       )
     );
-    dispatch(
-      handleField(
-        "empDetails",
-        "components.div.children.EmpUpdateInfoText",
-        "props.style",
-        { display: "inline-block" }
-      )
-    );
-    dispatch(
-      handleField(
-        "empDetails",
-        "components.div.children.empCode",
-        "visible",
-        false
-      )
-    );
-    dispatch(
-      handleField(
-        "empDetails",
-        "components.div.children.footer.children.editDetails",
-        "visible",
-        false
-      )
-    );
+    // dispatch(
+    //   handleField(
+    //     "empDetails",
+    //     "components.div.children.EmpUpdateInfoText",
+    //     "props.style",
+    //     { display: "inline-block" }
+    //   )
+    // );
+    // dispatch(
+    //   handleField(
+    //     "empDetails",
+    //     "components.div.children.empCode",
+    //     "visible",
+    //     false
+    //   )
+    // );
+    // dispatch(
+    //   handleField(
+    //     "empDetails",
+    //     "components.div.children.footer.children.editDetails",
+    //     "visible",
+    //     false
+    //   )
+    // );
   }
   // const tenantId = getQueryArg(window.location.href, "tenantId");
   // const createUrl =
