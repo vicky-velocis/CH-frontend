@@ -24,6 +24,7 @@ import {
   validateConnHolderDetails,
   isActiveProperty,
   showHideFieldsFirstStep,
+  getPropertyResults,
   isModifyMode,
   isModifyModeAction
 } from "../../../../../ui-utils/commons";
@@ -403,11 +404,32 @@ else if(wnsStatus && (wnsStatus === "REACTIVATE_CONNECTION"||wnsStatus === "TEMP
         propertyPayload.landArea = parseInt(propertyPayload.landArea);
         propertyPayload.totalConstructedArea = parseInt(propertyPayload.landArea);
         propertyPayload.tenantId = tenantId;
+        if(propertyPayload.address.city !== undefined)
         propertyPayload.address.city = propertyPayload.address.city;
-        if(propertyPayload.address.locality.code.value)
-            propertyPayload.address.locality.code = propertyPayload.address.locality.code.value;
-            else
-            propertyPayload.address.locality.code = "DB_1";
+        else
+        {
+          let city  = get(
+            state,
+            "screenConfiguration.preparedFinalObject.applyScreenMdmsData.City[0].name"
+          );
+          propertyPayload.address.city = city;
+        }
+        if(propertyPayload.address.locality !== undefined)
+        {
+          if(propertyPayload.address.locality.code.value)
+          propertyPayload.address.locality.code = propertyPayload.address.locality.code.value;
+          else
+          {
+         // propertyPayload.address.locality.code = "DB_1";
+          set(propertyPayload, "address.locality.code", "DB_1");
+          }
+        }
+        else
+        {
+          // propertyPayload.address.locality.code = "DB_1";
+           set(propertyPayload, "address.locality.code", "DB_1");
+           }
+        
        // propertyPayload.address.locality.code = propertyPayload.address.locality.code.value;
         propertyPayload.rainWaterHarvesting=false;
         try {
@@ -429,8 +451,25 @@ else if(wnsStatus && (wnsStatus === "REACTIVATE_CONNECTION"||wnsStatus === "TEMP
             searchPropertyId = payload.Properties[0].id
           }
           dispatch(prepareFinalObject("searchScreen.propertyIds", searchPropertyId));
-          propertySearchApiCall(state,dispatch);
-          
+         // propertySearchApiCall(state,dispatch);
+         let tenantId = getTenantIdCommon();
+         let queryObject = [{ key: "tenantId", value: tenantId }];
+         let searchScreenObject = get(state.screenConfiguration.preparedFinalObject, "searchScreen", {});
+         for (var key in searchScreenObject) {
+          if (searchScreenObject.hasOwnProperty(key) && searchScreenObject[key].trim() !== "") {
+            queryObject.push({ key: key, value: searchScreenObject[key].trim() });
+          }
+        }
+         let response = await getPropertyResults(queryObject, dispatch);
+         if (response && response.Properties.length > 0) {
+          if(response.Properties[0].status === 'INACTIVE'){
+            dispatch(toggleSnackbar(true, { labelKey: "ERR_WS_PROP_STATUS_INACTIVE", labelName: "Property Status is INACTIVE" }, "warning"));
+          }else{
+            let propertyData = response.Properties[0];
+         // let contractedCorAddress = "";
+         dispatch(prepareFinalObject("applyScreen.property", propertyData));
+          }
+        }
         }
         else{
           dispatch(
@@ -657,6 +696,57 @@ else if(wnsStatus && (wnsStatus === "REACTIVATE_CONNECTION"||wnsStatus === "TEMP
      else if (process.env.REACT_APP_NAME === "Citizen" && getQueryArg(window.location.href, "action") === "edit") {  
         setReviewPageRoute(state, dispatch);
       }
+          // set ledgerRange dropdown based on sectore code code
+
+    let sectorcode = get(
+      state.screenConfiguration.preparedFinalObject,
+      "applyScreen.property.address.locality.code",
+      null
+    );
+    //get  ledgerRange from sectorList jason
+    let sectorList = get(
+      state.screenConfiguration.preparedFinalObject,
+      "applyScreenMdmsData.ws-services-masters.sectorList",
+      []
+    );
+    if(sectorcode.value!== undefined)
+    sectorcode = sectorcode.value
+    sectorList = sectorList.filter(x=>x.code === sectorcode);
+    let ledgerRange=[];
+    if(sectorList && sectorList[0])
+    {
+      
+      let maxvalue = parseInt(sectorList[0].ledgerRange)
+      dispatch(prepareFinalObject("applyScreen.subdiv", sectorList[0].subdivision));
+      for (let index = 1; index <= maxvalue; index++) {
+       // const element = array[index];
+       //let code
+        if(index<= 9)
+        {
+          //let code = `0${index}`;
+          ledgerRange.push(
+          {
+            code:`0${index}`,
+            name :index
+          }
+            
+          )
+
+        }
+        else{
+          ledgerRange.push(
+            {
+              code:index,
+              name :index
+            }
+              
+            )
+
+        }
+        
+      }
+    }
+    dispatch(prepareFinalObject("ledgerlist",ledgerRange));
     }
     else { isFormValid = false; hasFieldToaster = true; }
   }
@@ -670,6 +760,7 @@ else if(wnsStatus && (wnsStatus === "REACTIVATE_CONNECTION"||wnsStatus === "TEMP
     //   isFormValid = false;
     //   hasFieldToaster = true;
     // }
+
     isFormValid = true;
   }
   if (activeStep === 3) {

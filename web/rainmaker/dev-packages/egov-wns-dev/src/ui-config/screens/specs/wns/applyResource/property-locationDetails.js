@@ -8,7 +8,9 @@ import {
     getLabelWithValue,
     getLabel
   } from "egov-ui-framework/ui-config/screens/specs/utils";
-  
+  import get from "lodash/get";
+import set from 'lodash/set';
+import { prepareFinalObject, handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
   import { changeStep } from "../viewBillResource/footer";
   
   // const getHeader = label => {
@@ -90,6 +92,7 @@ import {
       }
     },
     locality: {
+      ...getTextField({
       uiFramework: "custom-containers-local",
       moduleName: "egov-wns",
       componentPath: "AutosuggestContainer",
@@ -127,6 +130,24 @@ import {
         xs: 12,
         sm: 6
       }
+    }),
+    beforeFieldChange: async (action, state, dispatch) => {
+      if(action.value)
+      {
+        //alert(action.value)
+        let sectorList = get(
+          state.screenConfiguration.preparedFinalObject,
+          "applyScreenMdmsData.ws-services-masters.sectorList",
+          []
+        );
+        sectorList = sectorList.filter(x=>x.code === action.value.value);
+        if(sectorList && sectorList[0])
+        {
+          dispatch(prepareFinalObject("applyScreen.subdiv", sectorList[0].subdivision));
+        }
+      }
+      
+    }
     },
     // plotOrHouseOrSurveyNo: getLabelWithValue(
     //   {
