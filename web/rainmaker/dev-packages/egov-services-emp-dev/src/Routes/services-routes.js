@@ -19,10 +19,7 @@ const RequestReAssign = Loadable({
   loader: () => import("../Screens/RequestReAssign"),
   loading: Loading
 });
-// const AllComplaints = Loadable({
-//   loader: () => import("../Screens/AllComplaints"),
-//   loading: Loading
-// });
+
 const AllRequests = Loadable({
   loader: () => import("../Screens/AllApplications"),
   loading: Loading
@@ -34,10 +31,7 @@ const ServicesTest = Loadable({
   loading: Loading
 })
 
-// const MasterData = Loadable({
-//   loader: () => import("../Screens/MasterData"),
-//   loading: Loading
-// });
+
 const OsbmFeeMasterData = Loadable({
   loader: () => import("../Screens/MasterData/OsbmFeeMasterData"),
   loading: Loading
@@ -58,10 +52,7 @@ const ApplicationResolved = Loadable({
   loader: () => import("../Screens/ApplicationResolved"),
   loading: Loading
 });
-// const ComplaintCreated = Loadable({
-//   loader: () => import("../Screens/ComplaintCreated"),
-//   loading: Loading
-// });
+
 const ApplicationSummary = Loadable({
   loader: () => import("../Screens/ApplicationDetails"),
   loading: Loading
@@ -72,10 +63,6 @@ const ParkAndCommunityCenterAppDetails=Loadable({
   loader: () => import("../Screens/ParkAndCommunityCenterAppDetails"),
   loading: Loading
 });
-// const LocationSummary = Loadable({
-//   loader: () => import("../Screens/LocationSummaryComponent"),
-//   loading: Loading
-// });
 
 const CGApplicationDetails = Loadable({
   loader: () => import("../Screens/CGApplicationDetails"),
@@ -150,10 +137,7 @@ const EmployeeDirectory = Loadable({
   loader: () => import("../Screens/EmployeeDirectory"),
   loading: Loading
 });
-// const ClosedComplaints = Loadable({
-//   loader: () => import("../Screens/ClosedComplaints"),
-//   loading: Loading
-// });
+
 const RejectComplaint = Loadable({
   loader: () => import("../Screens/RejectComplaint"),
   loading: Loading
@@ -180,10 +164,7 @@ const ApplicationRejected = Loadable({
   loader: () => import("../Screens/ApplicationRejected"),
   loading: Loading
 });
-// const ComplaintAssigned = Loadable({
-//   loader: () => import("../Screens/ComplaintAssigned"),
-//   loading: Loading
-// });
+
 const ResolveSuccess = Loadable({
   loader: () => import("../Screens/ResolveSuccess"),
   loading: Loading
@@ -219,10 +200,7 @@ const ReassignSuccess = Loadable({
   loader: () => import("../Screens/ReassignSuccess"),
   loading: Loading
 });
-// const CreateComplaint = Loadable({
-//   loader: () => import("../Screens/CreateComplaint"),
-//   loading: Loading
-// });
+
 const SearchScreen = Loadable({
   loader: () => import("../Screens/SearchScreen"),
   loading: Loading
@@ -270,20 +248,6 @@ const routes = [
     needsAuthentication: false,
     redirectionUrl: "/"
   },
-  // {
-  //   path: "all-complaints",
-  //   component: AllComplaints,
-  //   needsAuthentication: true,
-  //   options: {
-  //     hideFooter: true,
-  //     title: "ES_OPEN_COMPLAINTS_HEADER",
-  //     hideTitle: false,
-  //     redirectionUrl,
-  //     hideFor: "ao",
-  //     customFor: "csr",
-  //     customTitle: "ES_ALL_COMPLAINTS_HEADER"
-  //   }
-  // },
   {
     path: "egov-services/all-applications",
     component: AllRequests,
@@ -415,21 +379,6 @@ const routes = [
     customTitle: "BK_MYBK_APPLY_PACC_REQUEST_HEADER"
   }
 },
-//newMasterData
-// {
-//   path: "egov-services/MasterData",
-//   component: MasterData,
-//   needsAuthentication: true,
-//   options: {
-//     hideFooter: true,
-//     title: "ES_OPEN_APPLICAION_HEADER",
-//     hideTitle: false,
-//     redirectionUrl,
-//     hideFor: "ao",
-//     customFor: "employee",
-//     customTitle: "MYBK_ALL_APPLICAION_HEADER"
-//   }
-// },
 {
   path: "egov-services/checkavailability_pcc",
   component: CheckAvailabilityPcc,
@@ -567,19 +516,6 @@ const routes = [
       redirectionUrl
     }
   },
-
-  
-  // {
-  //   path: "egov-services/new-location-details/:applicationId",
-  //   component: LocationSummary,
-  //   needsAuthentication: true,
-  //   options: {
-  //     hideFooter: true,
-  //     // title: "BK_CS_HEADER_APPLICATION_SUMMARY",
-  //     redirectionUrl
-  //   }
-  // },
- 
   {
     path: "egov-services/cg-application-details/:applicationId",
     component: CGApplicationDetails,
@@ -647,19 +583,6 @@ const routes = [
       redirectionUrl
     }
   },
-  // 
-  
-  // {
-  //   path: "complaint-reassigned/:serviceRequestId?",
-  //   component: ComplaintAssigned,
-  //   needsAuthentication: true,
-  //   options: {
-  //     hideFooter: true,
-  //     title: "ES_COMPLAINT_REASSIGNED_HEADER",
-  //     hideTitle: true,
-  //     redirectionUrl
-  //   }
-  // },
   {
     path: "egov-services/DataSubmitted",
     component: ResolveSuccess,
@@ -754,18 +677,6 @@ const routes = [
       redirectionUrl
     }
   },
-  // {
-  //   path: "complaint-assigned/:serviceRequestId?",
-  //   component: ComplaintAssigned,
-  //   needsAuthentication: true,
-  //   options: {
-  //     hideBackButton: true,
-  //     hideFooter: true,
-  //     hideTitle: true,
-  //     title: "ES_COMPLAINT_ASSIGNED_HEADER",
-  //     redirectionUrl
-  //   }
-  // },
   {
     path: "egov-services/application-rejected",
     component: ApplicationRejected,
@@ -914,6 +825,7 @@ const routes = [
     }
   },
 
+  
   {
     path: "/egov-services/MyTry",
     component: MyTry,
