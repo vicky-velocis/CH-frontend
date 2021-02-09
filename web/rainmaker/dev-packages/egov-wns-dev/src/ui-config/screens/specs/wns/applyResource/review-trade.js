@@ -184,21 +184,21 @@ export const propertyDetails={
       callBack: handleNA
     }
   ),
-  reviewPropertyType: getLabelWithValue(
-    {
-      labelName: "Property Type",
-      labelKey: "WS_PROPERTY_TYPE_LABEL"
-    },
-    {
-      jsonPath: "WaterConnection[0].property.propertyType",
-      callBack: handleNA,
-      localePrefix: {
-        moduleName: "WS",
-        masterName: "PROPTYPE"
-      }
+  // reviewPropertyType: getLabelWithValue(
+  //   {
+  //     labelName: "Property Type",
+  //     labelKey: "WS_PROPERTY_TYPE_LABEL"
+  //   },
+  //   {
+  //     jsonPath: "WaterConnection[0].property.propertyType",
+  //     callBack: handleNA,
+  //     localePrefix: {
+  //       moduleName: "WS",
+  //       masterName: "PROPTYPE"
+  //     }
       
-    }
-  ),
+  //   }
+  // ),
   reviewPropertyUsageType: getLabelWithValue(
     {
       labelName: "Property Usage Type",
@@ -235,14 +235,14 @@ export const propertyDetails={
     { jsonPath: "WaterConnection[0].property.landArea",
     callBack: handleNA }
   ),
-  // reviewNumberOfFloors: getLabelWithValue(
-  //   {
-  //     labelName: "Number Of Floors",
-  //     labelKey: "WS_PROPERTY_NO_OF_FLOOR_LABEL"
-  //   },
-  //   { jsonPath: "WaterConnection[0].property.noOfFloors",
-  //   callBack: handleNA }
-  // ),
+  reviewNumberOfFloors: getLabelWithValue(
+    {
+      labelName: "Number Of Floors",
+      labelKey: "WS_PROPERTY_NO_OF_FLOOR_LABEL"
+    },
+    { jsonPath: "WaterConnection[0].property.noOfFloors",
+    callBack: handleNA }
+  ),
   // rainwaterHarvestingFacility: getLabelWithValue(
   //   {
   //     labelKey: "WS_SERV_DETAIL_CONN_RAIN_WATER_HARVESTING_FAC",

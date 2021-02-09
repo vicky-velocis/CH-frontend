@@ -443,7 +443,8 @@ export const handleFileUpload = (event, handleDocument, props) => {
         {
         const file_ = files[key];
         //fileValid = isFileValid(file_, acceptedFiles(inputProps.accept));
-        if(file_.name.indexOf("xlsx")>1 || file_.name.indexOf("xls")>1)
+       // if(file_.name.indexOf("xlsx")>1 || file_.name.indexOf("xls")>1)
+        if(file_.name.indexOf("csv")>1)
         {
           fileValid = true
         }
