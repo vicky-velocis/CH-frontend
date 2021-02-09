@@ -8,9 +8,29 @@ import {
   getPattern,
   getLabel
 } from "egov-ui-framework/ui-config/screens/specs/utils";
+import get from 'lodash/get';
+import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { propertySearchApiCall } from './functions';
 import { handlePropertySubUsageType, handleNA } from '../../utils';
+const displaysubUsageType = (usageType, dispatch, state) => {
 
+  let UsageCategory = get(
+          state.screenConfiguration.preparedFinalObject,
+          "applyScreenMdmsData.PropertyTax.subUsageType"
+        );
+      let  subUsageType=[];
+      UsageCategory.forEach(item=>{
+        if(item.code.split(`${usageType}.`).length==2){
+          subUsageType.push({
+              active:item.active,
+              name:item.name,
+              code:item.code,
+              fromFY:item.fromFY
+            })
+          }
+      });
+          dispatch(prepareFinalObject("applyScreenMdmsData.subUsageType",subUsageType));
+}
 export const propertyHeader = getCommonSubHeader({
   labelKey: "WS_COMMON_PROP_DETAIL",
   labelName: "Property Details"
@@ -103,6 +123,8 @@ const propertyDetails = getCommonContainer({
         optionLabel: "name",
       },
       beforeFieldChange: async (action, state, dispatch) => {
+        displaysubUsageType(action.value, dispatch, state);
+
        
    }
     }),
@@ -113,7 +135,7 @@ const propertyDetails = getCommonContainer({
       label: { labelKey: "WS_PROPERTY_SUB_USAGE_TYPE_LABEL_INPUT" },
       placeholder: { labelKey: "WS_PROPERTY_SUB_USAGE_TYPE_LABEL_INPUT_PLACEHOLDER" },
       required: true,
-      sourceJsonPath: "applyScreenMdmsData.PropertyTax.subUsageType",
+      sourceJsonPath: "applyScreenMdmsData.subUsageType",
       gridDefination: { xs: 12, sm: 6 },
      // errorMessage: "ERR_INVALID_BILLING_PERIOD",
       jsonPath: "applyScreen.property.subusageCategory",

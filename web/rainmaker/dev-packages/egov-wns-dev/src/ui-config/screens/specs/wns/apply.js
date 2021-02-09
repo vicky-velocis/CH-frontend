@@ -53,6 +53,47 @@ export const stepperData = () => {
     return [{ labelKey: "WS_COMMON_CONNECTION_DETAILS" }, { labelKey: "WS_COMMON_DOCS" }, { labelKey: "WS_COMMON_ADDN_DETAILS" }, { labelKey: "WS_COMMON_SUMMARY" }];
   }
 }
+
+
+const displaysubUsageType = (usageType, dispatch, state) => {
+
+  let UsageCategory = get(
+          state.screenConfiguration.preparedFinalObject,
+          "applyScreenMdmsData.PropertyTax.subUsageType"
+        );
+      let  subUsageType=[];
+      UsageCategory.forEach(item=>{
+        if(item.code.split(`${usageType}.`).length==2){
+          subUsageType.push({
+              active:item.active,
+              name:item.name,
+              code:item.code,
+              fromFY:item.fromFY
+            })
+          }
+      });
+          dispatch(prepareFinalObject("applyScreenMdmsData.subUsageType",subUsageType));
+}
+const displayUsagecategory = (usageType, dispatch, state) => {
+
+  let subTypeValues = get(
+          state.screenConfiguration.preparedFinalObject,
+          "applyScreenMdmsData.ws-services-masters.wsCategory"
+        );
+
+      let subUsage=[];
+      if(subTypeValues!== undefined)
+      {
+      subUsage = subTypeValues.filter(cur => {
+                  return (cur.applicationType === usageType ) 
+                });
+          if(subUsage&&subUsage[0])
+          {
+            dispatch(prepareFinalObject("propsubusagetypeForSelectedusageCategory",subUsage[0].category));
+          }
+        }
+          
+}
 export const stepper = getStepperObject({ props: { activeStep: 0 } }, stepperData());
 
 const getLabelForWnsHeader = () => {
@@ -324,11 +365,19 @@ export const getData = async (action, state, dispatch) => {
               );
     
             let subUsage=[];
-            subUsage = subTypeValues.filter(cur => {
+            if(subTypeValues !== undefined)
+            {
+              subUsage = subTypeValues.filter(cur => {
                         return (cur.code.startsWith(usageCategory))
                       });
                 dispatch(prepareFinalObject("propsubusagetypeForSelectedusageCategory",subUsage));
 
+            }            
+    // binddependent dropdown object Property Sub Usage Type , Uses Caregory
+    const usageCategory_ = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].property.usageCategory");
+    const waterApplicationType = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].waterApplicationType");
+    displaysubUsageType(usageCategory_, dispatch, state);
+    displayUsagecategory(waterApplicationType, dispatch, state);
                 // check for security deposite
                 if(applicationStatus === "PENDING_FOR_METER_INSTALLATION" ){
                     if(proposedPipeSize == 15){
@@ -523,10 +572,11 @@ export const getData = async (action, state, dispatch) => {
      }
      
   }
-  dispatch(prepareFinalObject("applyScreen.property.subusageCategory", "RESIDENTIAL.PLOTTED"));
-  dispatch(prepareFinalObject("applyScreen.waterProperty.usageSubCategory", "PRIVATEHOUSESWITHINSECTORS"));
-  dispatch(prepareFinalObject("applyScreen.waterApplicationType", "REGULAR"));
-  prepareDocumentsUploadData(state, dispatch);
+  //set document
+  // dispatch(prepareFinalObject("applyScreen.property.subusageCategory", "RESIDENTIAL.PLOTTED"));
+  // dispatch(prepareFinalObject("applyScreen.waterProperty.usageSubCategory", "PRIVATEHOUSESWITHINSECTORS"));
+  // dispatch(prepareFinalObject("applyScreen.waterApplicationType", "REGULAR"));
+  // prepareDocumentsUploadData(state, dispatch);
 
   dispatch(
     handleField(
@@ -823,6 +873,8 @@ const screenConfig = {
         toggleSewerageFeilds(action, false);
       }
     } else if (applicationNumber && getQueryArg(window.location.href, "action") === "edit") {
+     
+
       togglePropertyFeilds(action, true);
       if (applicationNumber.includes("SW")) {
         dispatch(prepareFinalObject("applyScreen.water", false));
@@ -847,6 +899,7 @@ const screenConfig = {
        }
        
        window.localStorage.removeItem("isTubeWell");
+    
       }
     } else {
       // togglePropertyFeilds(action, false)

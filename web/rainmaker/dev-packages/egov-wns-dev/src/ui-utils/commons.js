@@ -234,6 +234,23 @@ export const fetchBill = async (queryObject, dispatch) => {
         console.log(error)
     }
 };
+export const getBillingEstimation = async (queryObject, dispatch) => {
+    dispatch(toggleSpinner());
+    try {
+        const response = await httpRequest(
+            "post",
+            "/ws-calculator/billing/_getBillingEstimation",
+            "_search",
+            [],
+            queryObject
+        );
+        dispatch(toggleSpinner());
+        return findAndReplace(response, null, "NA");
+    } catch (error) {
+        dispatch(toggleSpinner());
+        console.log(error)
+    }
+};
 
 //Workflow process instances for application status
 export const getWorkFlowData = async (queryObject) => {
