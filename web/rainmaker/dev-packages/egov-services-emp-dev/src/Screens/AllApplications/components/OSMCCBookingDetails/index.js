@@ -241,6 +241,7 @@ class BookingDetails extends Component {
                         body2: "body2-word-wrap"
                       }}
                     >
+                      
                       <LabelContainer
                         labelName={ProcessInstances && ProcessInstances.length > 0 && ProcessInstances[0].assigner ?
                           ProcessInstances[0].assigner.name

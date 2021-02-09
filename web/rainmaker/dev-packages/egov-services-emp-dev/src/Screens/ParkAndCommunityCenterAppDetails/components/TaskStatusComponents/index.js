@@ -131,6 +131,7 @@ const TaskStatusComponents = ({ currentObj, index }) => {
                 : "NA"
             }
           />
+ 
           
         </Typography>
       </Grid>

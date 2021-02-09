@@ -364,6 +364,7 @@ class ApplicationDetails extends Component {
 		downloadPaymentReceipt({ BookingInfo: BookingInfo })
 	}
 
+	
 	downloadApplicationFunction = async (e) => {
 		const { ab,xyz } = this.props;
 		const { transformedComplaint, paymentDetailsForReceipt, downloadApplication,paymentDetails,userInfo,documentMap } = this.props;
