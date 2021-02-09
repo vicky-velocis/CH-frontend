@@ -327,7 +327,8 @@ const shareField = {
   errorMessage:"ES_ERR_SHARE_FIELD",
   // required: true,
   pattern: _getPattern("ownerShare"),
-  jsonPath: "Properties[0].propertyDetails.purchaser[0].share"
+  jsonPath: "Properties[0].propertyDetails.purchaser[0].share",
+  visible:!!(window.location.href).includes("apply-manimajra")
 }
 
 const modeOfTransferField = {
