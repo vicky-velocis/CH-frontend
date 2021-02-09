@@ -433,6 +433,10 @@ export const handleFileUpload = (event, handleDocument, props) => {
       else {
         isSizeValid = getFileSize(file.size) <= maxFileSize;
       }
+      if (moduleName === 'egov-opms') {
+       fileValid = isFileValid(file, inputProps.accept);
+      }
+	  
       if(pageName !== undefined)
       {
         if(pageName ==='egov-wns-upload')
