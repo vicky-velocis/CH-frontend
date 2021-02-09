@@ -196,6 +196,9 @@ export const additionDetails = getCommonCard({
         gridDefination: { xs: 12, sm: 6 },
         sourceJsonPath: "applyScreenMdmsData.ws-services-masters.subDivision",
         jsonPath: "applyScreen.subdiv",
+        props: {         
+          disabled: true
+        },
        // pattern: /^[0-9]*$/i,
         errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG"
       }),
@@ -205,7 +208,8 @@ export const additionDetails = getCommonCard({
           label: { labelKey: "WS_SERV_DETAIL_LEDGER_NO" },
           placeholder: { labelKey: "WS_SERV_DETAIL_LEDGER_NO_PLACEHOLDER" },
           required: false,
-          sourceJsonPath: "applyScreenMdmsData.ws-services-masters.Ledger",
+          //sourceJsonPath: "applyScreenMdmsData.ws-services-masters.Ledger",
+          sourceJsonPath: "ledgerlist",
           gridDefination: { xs: 12, sm: 6 },
           errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
           jsonPath: "applyScreen.ledgerNo"

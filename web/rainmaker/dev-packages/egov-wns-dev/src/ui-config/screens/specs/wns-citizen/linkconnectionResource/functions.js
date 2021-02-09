@@ -54,6 +54,8 @@ export const addConnectionMappingApiCall = async (state, dispatch) => {
 export const searchApiCall = async (state, dispatch) => {
   let { localisationLabels } = state.app || {};
   showHideTable(false, dispatch);
+  // logic change for particular page only for sending  tenantId to api.
+  //const tenantId =  process.env.REACT_APP_NAME === "Employee" ?  getTenantId() : JSON.parse(getUserInfo()).permanentCity;
   const tenantId =  process.env.REACT_APP_NAME === "Employee" ?  getTenantId() : JSON.parse(getUserInfo()).permanentCity;
 
   let queryObject = [];

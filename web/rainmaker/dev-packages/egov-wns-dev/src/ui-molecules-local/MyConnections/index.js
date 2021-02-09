@@ -40,7 +40,7 @@ tenantId = data.property.tenantId;
   }
 
   getViewBillDetails = data => {
-    window.location.href = `/citizen/wns/viewBill?connectionNumber=${data.connectionNo}&tenantId=${tenantId}&service=${data.service.toUpperCase()}&connectionType=${data.connectionType}`
+    window.location.href = `/citizen/wns/viewBill?connectionNumber=${data.connectionNo}&tenantId=${data.tenantId}&service=${data.service.toUpperCase()}&connectionType=${data.connectionType}`
   }
 
   render() {

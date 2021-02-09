@@ -6,6 +6,7 @@ import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 //import { httpRequest } from "egov-ui-framework/ui-utils/api";
 import { httpRequest } from "../../../../../ui-utils/api";
 import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
+
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 const moveToSuccess = async(Action, dispatch) => {
   
@@ -27,11 +28,18 @@ const moveToSuccess = async(Action, dispatch) => {
 export const addConnectionMappingApiCall = async (state, dispatch) => {  
  
   let id = getQueryArg(window.location.href, "id");
+  let propertyId = get(
+    state.screenConfiguration.preparedFinalObject,
+    "combinedSearchResults[0].propertyId",
+    ''
+  );
+  
   let WFBody = {
     WaterConnection:
       {
         id: id,
         tenantId: getTenantId(),
+        propertyId: propertyId,
           
       } 
   };
