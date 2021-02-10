@@ -179,8 +179,8 @@ return (
 <Card
   textChildren={
     <div>
-       <div className="rainmaker-displayInline">      
-       <Label label="BK_MYBK_PAYMENT_CAP_PMT" containerStyle={{ marginLeft: "13px" }} labelClassName="dark-heading" />              </div>
+       <div className="rainmaker-displayInline">      {/*BK_MYBK_PAYMENT_CAP_PMT*/}
+       <Label label="Payment Collection Details" containerStyle={{ marginLeft: "13px" }} labelClassName="dark-heading" />              </div>
     <div key={10} className="complaint-detail-full-width">
     
     <div className="complaint-detail-detail-section-status row">
@@ -239,7 +239,7 @@ return (
     <FormControl style={{ width: '100%' }}>
       <InputLabel shrink style={{ width: '100%' }} id="demo-controlled-open-select-label"><Label
         required={true}
-        label="BK_MYBK_PAYMENT_PAID_BY_LABEL"
+        label="Paid By" /*BK_MYBK_PAYMENT_PAID_BY_LABEL*/
       /></InputLabel>
       <Select
         maxWidth={false}
@@ -253,7 +253,7 @@ return (
         value={PaidBy}
         onChange={handleChange('PaidBy')}
       >
-        <MenuItem value="" disabled>BK_MYBK_PAYMENT_PAID_BY_LABEL</MenuItem>
+        <MenuItem value="" disabled>Paid By</MenuItem>
         <MenuItem value='OWNER'>OWNER</MenuItem>
         <MenuItem value='OTHER'>OTHER</MenuItem>
       </Select>
@@ -268,7 +268,7 @@ return (
             required = {true}
             hintText={
               <Label
-                label="BK_MYBK_PAYMENT_PAYER_NAME_LABEL"
+                label="PAYER NAME" //BK_MYBK_PAYMENT_PAYER_NAME_LABEL
                 color="rgba(0, 0, 0, 0.3799999952316284)"
                 fontSize={16}
                 labelStyle={hintTextStyle}
@@ -277,7 +277,7 @@ return (
             floatingLabelText={
               <Label
                 key={0}
-                label="BK_MYBK_PAYMENT_PAYER_NAME_LABEL"
+                label="PAYER NAME"
                 color="rgba(0,0,0,0.60)"
                 fontSize="12px"
               />
@@ -299,7 +299,7 @@ return (
             required = {true}  
             hintText={
               <Label
-                label="BK_MYBK_PAYER_MOB_LABEL"
+                label="Payer Mobile Number"
                 color="rgba(0, 0, 0, 0.3799999952316284)"
                 fontSize={16}
                 labelStyle={hintTextStyle}
@@ -308,7 +308,7 @@ return (
             floatingLabelText={
               <Label
                 key={0}
-                label="BK_MYBK_PAYER_MOB_LABEL"
+                label="Payer Mobile Number"// label="BK_MYBK_PAYER_MOB_LABEL"
                 color="rgba(0,0,0,0.60)"
                 fontSize="12px"
               />
@@ -332,7 +332,7 @@ return (
     <FormControl style={{ width: '100%' }}>
       <InputLabel shrink style={{ width: '100%' }} id="demo-controlled-open-select-label"><Label
         required={true}
-        label="BK_MYBK_PAYMENT_PAID_BY_LABEL"
+        label="PAID BY"
       /></InputLabel>
       <Select
         maxWidth={false}
@@ -346,7 +346,7 @@ return (
         value={PaidBy}
         onChange={handleChange('PaidBy')}
       >
-        <MenuItem value="" disabled>BK_MYBK_PAYMENT_PAID_BY_LABEL</MenuItem>
+        <MenuItem value="" disabled>PAID BY</MenuItem>
         <MenuItem value='OWNER'>OWNER</MenuItem>
         <MenuItem value='OTHER'>OTHER</MenuItem>
       </Select>
@@ -361,7 +361,7 @@ return (
             required = {true}
             hintText={
               <Label
-                label="BK_MYBK_PAYMENT_PAYER_NAME_LABEL"
+                label="PAYER NAME"
                 color="rgba(0, 0, 0, 0.3799999952316284)"
                 fontSize={16}
                 labelStyle={hintTextStyle}
@@ -370,7 +370,7 @@ return (
             floatingLabelText={
               <Label
                 key={0}
-                label="BK_MYBK_PAYMENT_PAYER_NAME_LABEL"
+                label="Payer Name"
                 color="rgba(0,0,0,0.60)"
                 fontSize="12px"
               />
@@ -392,7 +392,7 @@ return (
             required = {true}  
             hintText={
               <Label
-                label="BK_MYBK_PAYER_MOB_LABEL"
+                label="Payer Mobile Number"
                 color="rgba(0, 0, 0, 0.3799999952316284)"
                 fontSize={16}
                 labelStyle={hintTextStyle}
@@ -401,7 +401,7 @@ return (
             floatingLabelText={
               <Label
                 key={0}
-                label="BK_MYBK_PAYER_MOB_LABEL"
+                label="Payer Mobile Number"
                 color="rgba(0,0,0,0.60)"
                 fontSize="12px"
               />
@@ -603,7 +603,7 @@ return (
     <FormControl style={{ width: '100%' }}>
       <InputLabel shrink style={{ width: '100%' }} id="demo-controlled-open-select-label"><Label
         required={true}
-        label="BK_MYBK_PAYMENT_PAID_BY_LABEL"
+        label="Paid By"
       /></InputLabel>
       <Select
         maxWidth={false}
@@ -617,7 +617,7 @@ return (
         value={PaidBy}
         onChange={handleChange('PaidBy')}
       >
-        <MenuItem value="" disabled>BK_MYBK_PAYMENT_PAID_BY_LABEL</MenuItem>
+        <MenuItem value="" disabled>Paid By</MenuItem>
         <MenuItem value='OWNER'>OWNER</MenuItem>
         <MenuItem value='OTHER'>OTHER</MenuItem>
       </Select>
@@ -632,7 +632,7 @@ return (
             required = {true}
             hintText={
               <Label
-                label="BK_MYBK_PAYMENT_PAYER_NAME_LABEL"
+                label="Payer Name"
                 color="rgba(0, 0, 0, 0.3799999952316284)"
                 fontSize={16}
                 labelStyle={hintTextStyle}
@@ -641,7 +641,7 @@ return (
             floatingLabelText={
               <Label
                 key={0}
-                label="BK_MYBK_PAYMENT_PAYER_NAME_LABEL"
+                label="Payer Name"
                 color="rgba(0,0,0,0.60)"
                 fontSize="12px"
               />
@@ -663,7 +663,7 @@ return (
             required = {true}  
             hintText={
               <Label
-                label="BK_MYBK_PAYER_MOB_LABEL"
+                label="Payer Mobile Number"
                 color="rgba(0, 0, 0, 0.3799999952316284)"
                 fontSize={16}
                 labelStyle={hintTextStyle}
@@ -672,7 +672,7 @@ return (
             floatingLabelText={
               <Label
                 key={0}
-                label="BK_MYBK_PAYER_MOB_LABEL"
+                label="Payer Mobile Number"
                 color="rgba(0,0,0,0.60)"
                 fontSize="12px"
               />
@@ -901,7 +901,7 @@ return (
     <FormControl style={{ width: '100%' }}>
       <InputLabel shrink style={{ width: '100%' }} id="demo-controlled-open-select-label"><Label
         required={true}
-        label="BK_MYBK_PAYMENT_PAID_BY_LABEL"
+        label="Paid By"
       /></InputLabel>
       <Select
         maxWidth={false}
@@ -915,7 +915,7 @@ return (
         value={PaidBy}
         onChange={handleChange('PaidBy')}
       >
-        <MenuItem value="" disabled>BK_MYBK_PAYMENT_PAID_BY_LABEL</MenuItem>
+        <MenuItem value="" disabled>Paid By</MenuItem>
         <MenuItem value='OWNER'>OWNER</MenuItem>
         <MenuItem value='OTHER'>OTHER</MenuItem>
       </Select>
@@ -930,7 +930,7 @@ return (
             required = {true}
             hintText={
               <Label
-                label="BK_MYBK_PAYMENT_PAYER_NAME_LABEL"
+                label="Payer Name"
                 color="rgba(0, 0, 0, 0.3799999952316284)"
                 fontSize={16}
                 labelStyle={hintTextStyle}
@@ -939,7 +939,7 @@ return (
             floatingLabelText={
               <Label
                 key={0}
-                label="BK_MYBK_PAYMENT_PAYER_NAME_LABEL"
+                label="Payer Name"
                 color="rgba(0,0,0,0.60)"
                 fontSize="12px"
               />
@@ -961,7 +961,7 @@ return (
             required = {true}  
             hintText={
               <Label
-                label="BK_MYBK_PAYER_MOB_LABEL"
+                label="Payer Mobile Number"
                 color="rgba(0, 0, 0, 0.3799999952316284)"
                 fontSize={16}
                 labelStyle={hintTextStyle}
@@ -970,7 +970,7 @@ return (
             floatingLabelText={
               <Label
                 key={0}
-                label="BK_MYBK_PAYER_MOB_LABEL"
+                label="Payer Mobile Number"
                 color="rgba(0,0,0,0.60)"
                 fontSize="12px"
               />

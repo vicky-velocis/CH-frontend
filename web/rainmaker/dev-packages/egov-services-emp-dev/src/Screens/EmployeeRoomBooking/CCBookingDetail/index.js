@@ -5,13 +5,12 @@ import { toggleSnackbarAndSetText } from "egov-ui-kit/redux/app/actions";
 import { connect } from "react-redux";
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import Grid from '@material-ui/core/Grid';
-import Footer from "../../../../modules/footer"
+import Footer from "../../../modules/footer"
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
  import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import Radio from '@material-ui/core/Radio';
 import "./index.css"; 
 import Typography from "@material-ui/core/Typography";
@@ -30,7 +29,8 @@ const styles= theme=>({
 class ApplicatInfo extends Component {
 
   state = {
-    NewbkBookingType: "Normal Booking"
+    NewbkBookingType: "Normal Booking",
+    ReasonForDiscount : ""
   }
 
   componentDidMount = async () => {
@@ -39,30 +39,45 @@ class ApplicatInfo extends Component {
   }
 
   continue = e => {
+    let re = /\S+@\S+\.\S+/;
+    let mb=/^\d{10}$/;
+    let fname = /^[a-zA-Z'-]+$/;
     e.preventDefault();
-    const { BankAccountName, NomineeName, BankAccountNumber, toggleSnackbarAndSetText,IFSCCode,AccountHolderName, handleChange,accountType,AccountType,classes,prepareFinalObject } = this.props;
-    if (BankAccountName == "" || NomineeName == "" || BankAccountNumber == "" || IFSCCode == "" || AccountHolderName == "") {
+    // if(this.props.email==""||this.props.mobileNo==""||this.props.houseNo==""){
+    //   this.props.toggleSnackbarAndSetText(
+    //     true,
+    //     {
+    //       labelName: "Error_Message_For_Water_tanker_Application",
+    //       labelKey: `BK_ERROR_MESSAGE_FOR_WATER_TANKER_APPLICATION`
+    //     },
+    //     "warning"
+    //   );
+    // }
+    // else if(!re.test(this.props.email)){
+    //   this.props.toggleSnackbarAndSetText(
+    //     true,
+    //     {
+    //       labelName: "Please enter valid email address",
+    //       labelKey: `BK_ERROR_MESSAGE_EMAIL_VALIDATION`
+    //     },
+    //     "warning"
+    //   );
+    // }else if(!mb.test(this.props.mobileNo)){
+    //   this.props.toggleSnackbarAndSetText(
+    //     true,
+    //     {
+    //       labelName: "Please enter valid mobile number",
+    //       labelKey: `BK_ERROR_MESSAGE_FOR_MOBILE_VALIDATION`
+    //     },
+    //     "warning"
+    //   );
 
-
-      toggleSnackbarAndSetText(
-        true,
-        {
-          labelName: "Error_Message_For_Water_tanker_Application",
-          labelKey: `BK_ERROR_MESSAGE_FOR_ALL_FILLED_REQUIRED`
-        },
-        "warning"
-      );
-    } 
-    else {
-      this.props.nextStep();
-    }
+    // }
+    this.props.nextStep();
+    
   }
   onCitizenNameChange = e => {
 
-  }
-  back = e => {
-    e.preventDefault();
-    this.props.prevStep();
   }
 
   newBookingType = async (event) => {
@@ -72,8 +87,15 @@ class ApplicatInfo extends Component {
       prepareFinalObject("NewbkBookingTypeApplicant", event.target.value)
   };
 
+  ResonForDiscount = async (event) => {
+    let { prepareFinalObject } = this.props;
+    this.setState(
+      { ReasonForDiscount: event.target.value }); 
+      prepareFinalObject("ReasonForDiscount", event.target.value)
+  };
+
   render() {
-    const { BankAccountName, NomineeName, BankAccountNumber, IFSCCode,AccountHolderName, handleChange,accountType,AccountType,classes,prepareFinalObject} = this.props;
+    const { firstName, email, mobileNo, lastName,houseNo, handleChange,discountType,handleChangeDiscount,classes,prepareFinalObject} = this.props;
     const hintTextStyle = {
       letterSpacing: "0.7px",
       textOverflow: "ellipsis",
@@ -81,21 +103,22 @@ class ApplicatInfo extends Component {
       width: "90%",
       overflow: "hidden"
     };
+    
     return (
       <div style={{float: 'left', width: '100%', padding: '36px 15px' }}>
       <div className="col-xs-12" style={{background:'#fff', padding: '15px 0'}}>
      
       <div className="col-sm-6 col-xs-6">       
           <TextField
-            id="Bank Account Name"
-            name="Bank Account Name"
+            id="name"
+            name="name"
             type="text"
-            value={BankAccountName}
+            value={this.props.Name}
             pattern="[A-Za-z]"
             required = {true}
             hintText={
               <Label
-                label="Bank Name"// label="BK_MYBK_Bank_Account_Name"
+                label="BK_MYBK_CC_ROOM_NAME"
                 color="rgba(0, 0, 0, 0.3799999952316284)"
                 fontSize={16}
                 labelStyle={hintTextStyle}
@@ -104,12 +127,12 @@ class ApplicatInfo extends Component {
             floatingLabelText={
               <Label
                 key={0}
-                label="Bank Name"
+                label="BK_MYBK_CREATE_CITIZEN_NAME"
                 color="rgba(0,0,0,0.60)"
                 fontSize="12px"
               />
             }
-            onChange={handleChange('BankAccountName')}
+            onChange={handleChange('firstName')}
             underlineStyle={{ bottom: 7 }}
             underlineFocusStyle={{ bottom: 7 }}
             hintStyle={{ width: "100%" }}
@@ -118,14 +141,14 @@ class ApplicatInfo extends Component {
         
         <div className="col-sm-6 col-xs-6">
           <TextField
-            id="Nominee Name"
-            name="Nominee Name"
+            id="purpose"
+            name="purpose"
             type="string"
-            value={NomineeName}
+            value={this.props.purpose}
             required = {true}
             hintText={
               <Label
-              label="Nominee Name"    // label="BK_MYBK_Nominee_Name"
+                label="BK_MYBK_CC_ROOM_PURPOSE"
                 color="rgba(0, 0, 0, 0.3799999952316284)"
                 fontSize={16}
                 labelStyle={hintTextStyle}
@@ -134,12 +157,12 @@ class ApplicatInfo extends Component {
             floatingLabelText={
               <Label
                 key={0}
-                label="Nominee Name"
+                label="BK_MYBK_CC_ROOM_PURPOSE"
                 color="rgba(0,0,0,0.60)"
                 fontSize="12px"
               />
             }
-            onChange={handleChange('NomineeName')}
+            onChange={handleChange('email')}
             underlineStyle={{ bottom: 7 }}
             underlineFocusStyle={{ bottom: 7 }}
             hintStyle={{ width: "100%" }}
@@ -149,14 +172,14 @@ class ApplicatInfo extends Component {
         
         <div className="col-sm-6 col-xs-6">
           <TextField
-            id="Bank Account Number"
-            name="Bank Account Number"
+            id="houseNo"
+            name="houseNo"
             type="text"
-            value={BankAccountNumber}
+            value={this.props.houseNo}
             required = {true}
             hintText={
               <Label
-              label="Bank Account Number" // label="BK_MYBK_Bank_Account_Number"
+                label="BK_MYBK_CC_ROOM_HOUSENO"
                 color="rgba(0, 0, 0, 0.3799999952316284)"
                 fontSize={16}
                 labelStyle={hintTextStyle}
@@ -165,29 +188,28 @@ class ApplicatInfo extends Component {
             floatingLabelText={
               <Label
                 key={0}
-                label="Bank Account Number"
+                label="BK_MYBK_CC_ROOM_HOUSENO"
                 color="rgba(0,0,0,0.60)"
                 fontSize="12px"
               />
             }
-            onChange={handleChange('BankAccountNumber')}
+            onChange={handleChange('mobileNo')}
             underlineStyle={{ bottom: 7 }}
             underlineFocusStyle={{ bottom: 7 }}
             hintStyle={{ width: "100%" }}
-          />
-        
+          />     
         </div>    
 
         <div className="col-sm-6 col-xs-6">
             <TextField
-              id="IFSC Code"
-              name="IFSC Code"
+              id="mobileNo"
+              name="mobileNo"
               type="text"
-              value={IFSCCode}
+              value={this.props.mobileNo}
               required = {true}
               hintText={
                 <Label
-                label="IFSC Code" // label="BK_MYBK_IFSCCode"
+                  label="BK_MYBK_CC_ROOM_MOBILENO"
                   color="rgba(0, 0, 0, 0.3799999952316284)"
                   fontSize={16}
                   labelStyle={hintTextStyle}
@@ -196,12 +218,12 @@ class ApplicatInfo extends Component {
               floatingLabelText={
                 <Label
                   key={0}
-                  label="IFSC Code"
+                  label="BK_MYBK_CC_ROOM_MOBILENO"
                   color="rgba(0,0,0,0.60)"
                   fontSize="12px"
                 />
               }
-              onChange={handleChange('IFSCCode')}
+              onChange={handleChange('houseNo')}
               underlineStyle={{ bottom: 7 }}
               underlineFocusStyle={{ bottom: 7 }}
               hintStyle={{ width: "100%" }}
@@ -210,14 +232,14 @@ class ApplicatInfo extends Component {
 
           <div className="col-sm-6 col-xs-6">
             <TextField
-              id="Account Holder Name"
-              name="Account Holder Name"
+              id="gst"
+              name="gst"
               type="text"
-              value={AccountHolderName}
+              value={this.props.gstNo}
               required = {true}
               hintText={
                 <Label
-                label="Account Holder Name"// label="BK_MYBK_AccountHolderName"
+                  label="BK_MYBK_CC_ROOM_GST_NO"
                   color="rgba(0, 0, 0, 0.3799999952316284)"
                   fontSize={16}
                   labelStyle={hintTextStyle}
@@ -226,50 +248,65 @@ class ApplicatInfo extends Component {
               floatingLabelText={
                 <Label
                   key={0}
-                  label="Account Holder Name"
+                  label="BK_MYBK_CC_ROOM_GST_NO"
                   color="rgba(0,0,0,0.60)"
                   fontSize="12px"
                 />
               }
-              onChange={handleChange('AccountHolderName')}
+              onChange={handleChange('houseNo')}
               underlineStyle={{ bottom: 7 }}
               underlineFocusStyle={{ bottom: 7 }}
               hintStyle={{ width: "100%" }}
             />
           </div>
-
-          {/*newRequirement*/} 
-          <div className="col-sm-12" style={{marginTop: '19px'}}> 
-            <FormControl component="fieldset">  {/*label="BK_MYBK_BankAccount_Type"*/}
-              <FormLabel component="legend"><Label label="Bank Account Type" /></FormLabel>
-              <RadioGroup row aria-label="position" name="gender1"  value={accountType} onChange={AccountType}>
-                <FormControlLabel className={classes.cool} value="Saving" control={<Radio color="primary" />} label="Saving" />
-                <FormControlLabel className={classes.cool} value="Current"  control={<Radio color="primary" />} label="Current" />
-            </RadioGroup>
-            </FormControl>         
+          <div className="col-sm-6 col-xs-6">
+            <TextField
+              id="doc"
+              name="doc"
+              type="text"
+              value={this.props.ProofOfResidence}
+              required = {true}
+              hintText={
+                <Label
+                  label="BK_MYBK_CC_ROOM_RESIDENCE_PROOF"
+                  color="rgba(0, 0, 0, 0.3799999952316284)"
+                  fontSize={16}
+                  labelStyle={hintTextStyle}
+                />
+              }
+              floatingLabelText={
+                <Label
+                  key={0}
+                  label="BK_MYBK_CREATE_HOUSE_NUMBER"
+                  color="rgba(0,0,0,0.60)"
+                  fontSize="12px"
+                />
+              }
+              onChange={handleChange('houseNo')}
+              underlineStyle={{ bottom: 7 }}
+              underlineFocusStyle={{ bottom: 7 }}
+              hintStyle={{ width: "100%" }}
+            />
           </div>
+<div className="col-sm-6 col-xs-6">
+  <div>
+
+  </div>
+  </div>
   
-          <Footer className="apply-wizard-footer" style={{ display: 'flex', justifyContent: 'flex-end' }} children={
-            <div className="col-sm-12 col-xs-12" style={{ textAlign: 'right' }}>
-              <Button
-                className="responsive-action-button"
-                primary={true}
-                label={<Label buttonLabel={true} label="BK_CORE_COMMON_GOBACK" />}
-                fullWidth={true}
-                onClick={this.back}
-                style={{ marginRight: 18 }}
-                startIcon={<ArrowBackIosIcon />}
-              />
-              <Button
-                className="responsive-action-button"
-                primary={true}
-                label={<Label buttonLabel={true} label="BK_CORE_COMMON_GONEXT" />}
-                fullWidth={true}
-                onClick={this.continue}
-                startIcon={<ArrowForwardIosIcon />}
-              />
-            </div>
-          }></Footer>
+        <Footer className="apply-wizard-footer" style={{ display: 'flex', justifyContent: 'flex-end' }} children={
+      <div className="col-sm-12 col-xs-12" style={{textAlign: 'right'}}>
+          <Button
+            className="responsive-action-button"
+            primary={true}
+            label={<Label buttonLabel={true} label="BK_CORE_COMMON_GONEXT" />}
+            fullWidth={true}
+            onClick={this.continue}
+            startIcon={<ArrowForwardIosIcon />}
+          />
+       
+        </div> 
+       }></Footer>
       </div> 
       </div>
     );
@@ -280,8 +317,13 @@ class ApplicatInfo extends Component {
 
 const mapStateToProps = state => {
   const { complaints, common, auth, form } = state;
+  const { userInfo } = state.auth;
+
+  let DataForRoomBooking = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.RoomBookingData : "NA"
+
+
   return {
-    state
+    state,userInfo,DataForRoomBooking
   }
 }
 const mapDispatchToProps = dispatch => {
