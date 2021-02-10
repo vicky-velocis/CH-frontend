@@ -5,7 +5,7 @@ form#datagridsummary .MuiPaper-elevation4-466 {
 /************************ OPMS CSS END *************************/
 @media only screen and (max-width: 551px) {
   .apply-wizard-footer {
-    background-color: white;
+    background-color: rgba(255, 255, 255, 1);
     -webkit-box-shadow: 0 -2px 4px 0 rgba(0, 0, 0, 0.24);
     box-shadow: 0 -2px 4px 0 rgba(0, 0, 0, 0.24);
     /* padding: 8px; */
@@ -63,17 +63,8 @@ div#custom-containers-local-moduleDashboardDropdown {
   width: 150%; }
 
 div#custom-containers-local-moduleDashboardDropdown {
-  position: absolute;
-  width: 30%; }
+  position: inherit;
+  /* width: 50%; */ }
 
-.css-16pqwjk-indicatorContainer {
-  color: #1a1a1a;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 8px;
-  -webkit-transition: color 150ms;
-  transition: color 150ms;
-  box-sizing: border-box;
-  width: 10%; }
+div#material-ui-FilterConstraintsContainer {
+  width: 150%; }
