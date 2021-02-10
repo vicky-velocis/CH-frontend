@@ -24,7 +24,9 @@ let screenName = "apply";
 if ((window.location.href).includes("allotment")) {
     screenName = "allotment";
 }
-
+else if((window.location.href).includes("apply-manimajra")){
+  screenName = "apply-manimajra";
+}
 export const purchaserHeader = getCommonTitle({
   labelName: "Previous Owner Details",
   labelKey: "ES_PREVIOUS_OWNER_DETAILS_HEADER"
