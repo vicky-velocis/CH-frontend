@@ -858,7 +858,7 @@ export const getModuleName = () => {
   } else if (pathName.indexOf("login") > -1) {
     return "rainmaker-common";
   } else if (pathName.indexOf("pay") > -1) {
-    return "rainmaker-noc";
+    return "rainmaker-noc,rainmaker-services";
   } else if (pathName.indexOf("abg") > -1) {
     return "rainmaker-abg";
   } else if (pathName.indexOf("pgr-home") > -1 || pathName.indexOf("rainmaker-pgr") > -1 || pathName.indexOf("master/auto-routing") > -1) {

@@ -31,10 +31,25 @@ const gotoCreateFlow = async (state, dispatch) => {
         value: getTenantId()
       }
     ];
+
+    let requestBody = {
+      Employees: [
+        {
+          uuid:employeeObject.uuid,
+          hrmsCode:employeeCode,
+        }
+        
+
+      ],
+      Fields: [        
+        "hrmsCode"
+    ]
+      
+    }
     try {
       let response = await updateEmployees(
         queryObject,
-        employeeObject,
+        requestBody,
         dispatch
       );
       let employeeId = response && get(response, "Employees[0].code");

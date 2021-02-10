@@ -924,6 +924,23 @@ const screenConfig = {
         toggleWaterFeilds(action, true);
         toggleSewerageFeilds(action, true);
       }
+      // action(
+      //   "apply",
+      //   "components.div.children.formwizardFirstStep.children.OwnerInfoCard.children.cardContent.children.tradeUnitCardContainer.children.numberOfWaterClosets",
+      //   "visible",
+      //   false
+      // );
+
+      set(
+        action.screenConfig,
+        "components.div.children.formwizardFirstStep.children.OwnerInfoCard.children.cardContent.children.tradeUnitCardContainer.children.numberOfWaterClosets.visible",
+        value
+      );
+      set(
+        action.screenConfig,
+        "components.div.children.formwizardFirstStep.children.OwnerInfoCard.children.cardContent.children.tradeUnitCardContainer.children.numberOfToilets.visible",
+        value
+      );
     }
 
     // const tenantId = getTenantId();

@@ -2251,22 +2251,26 @@ export const savebillGeneration = async (state, dispatch,billGeneration) => {
         value: tenantId
       }
     ];
-    try {
-         
+    try {       
            
-            response = await httpRequest(
+        const response = await httpRequest(
                 "post", 
-                "/ws-service/billGeneration/_saveBilling",
-                 "", queryObject,
-                 { billGeneration: billGeneration
-                
-                });
+                "/ws-services/billGeneration/_saveBilling",
+                 "", 
+                 queryObject,
+                 { billGeneration: billGeneration}
+                 );
            // dispatch(prepareFinalObject("WaterConnection", response.WaterConnection));
            // setApplicationNumberBox(state, dispatch);
         //}
         if(response)
         {
-            alert('success')
+           // alert('success')
+           dispatch(toggleSnackbar(
+            true,
+            { labelName: "succcess ", labelKey: "WS_SUCCESS" },
+            "success"
+          ))
             return response;
         }
         

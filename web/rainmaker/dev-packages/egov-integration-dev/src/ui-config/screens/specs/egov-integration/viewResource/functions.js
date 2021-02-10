@@ -223,8 +223,8 @@ if(hrmsCodeAbailable)
       "empDetails",
       "components.div.children.footer.children.editDetails",
         "visible",
-        //false
-        true
+        false
+        //true
     )
   );
   dispatch(
@@ -232,8 +232,8 @@ if(hrmsCodeAbailable)
       "empDetails",
       "components.div.children.empCode",
       "visible",
-      //false
-      true
+      false
+      //true
     )
   );
 
@@ -273,10 +273,10 @@ export const updateEmployees = async (queryObject, payload, dispatch) => {
   try {
     const response = await httpRequest(
       "post",
-      "/egov-hrms/employees/_update",
+      "/egov-hrms/employees/_updateEmployeeTable",
       "",
       queryObject,
-      { Employees: [payload] }
+      payload
     );
     return response;
   } catch (error) {
