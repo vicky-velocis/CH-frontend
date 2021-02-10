@@ -102,12 +102,12 @@ class CheckAvailability extends Component {
 
     if (this.state.vanueType != undefined) {
       if (this.state.vanueType == "Commercial Ground") {
-        alert("Commercial Ground");
+        // alert("Commercial Ground");
       } else if (
         this.state.vanueType === "Community Center" ||
         this.state.vanueType === "Parks"
       ) {
-        alert("park & community");
+        // alert("park & community");
       }
     }
     this.setState({

@@ -300,7 +300,7 @@ class ApplicationDetails extends Component {
 				"bookingPeriod": getDurationDate(
 					complaint.bkFromDate,
 					complaint.bkToDate
-				),
+ 				),
 				"bookingItem": "Online Payment Against Booking of Open Space for Building Material",
 				"amount": paymentDetailsForReceipt.Payments[0].paymentDetails[0].bill.billDetails[0].billAccountDetails.filter(
 					(el) => !el.taxHeadCode.includes("PARKING_LOTS_MANUAL_OPEN_SPACE_BOOKING_BRANCH")
@@ -578,6 +578,18 @@ downloadPermissionLetterButton = async (mode) => {
 downloadPermissionLetterFunction = async (e) => {
 	const { transformedComplaint,paymentDetails,downloadPermissionLetter ,userInfo} = this.props;
 	const {complaint} = transformedComplaint;
+let approverName;
+//userInfo.roles
+	if(bookingType === "OSBM"){
+		for(let i = 0; i < userInfo.roles.length ; i++ ){
+			if(userInfo.roles[i].code == "BK_OSBM_APPROVER"){
+				approverName = userInfo.roles[i].name
+			}
+		}
+
+	}
+	//
+
 	let receiptData = [
 		{
 			applicantDetail: {
@@ -620,8 +632,8 @@ downloadPermissionLetterFunction = async (e) => {
 
 
 			approvedBy:{
-				approvedBy: "Renil Commissioner",
-				role: "Additional Commissioner"
+				approvedBy: approverName,
+				role: userInfo.name,
 			},
 			tenantInfo:{
 				municipalityName: "Municipal Corporation Chandigarh",

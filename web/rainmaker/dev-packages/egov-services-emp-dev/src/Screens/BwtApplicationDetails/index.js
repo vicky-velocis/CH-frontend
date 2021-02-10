@@ -6,7 +6,7 @@ import { Comments } from "modules/common";
 import { ActionButton } from "modules/common";
 import { Icon, MapLocation, ShareButton } from "components";
 import CommonShare from "egov-ui-kit/components/CommonShare";
-import { Screen } from "modules/common";
+import { Screen } from "modules/common"; 
 import pinIcon from "egov-ui-kit/assets/Location_pin.svg";
 import { resetFiles } from "egov-ui-kit/redux/form/actions";
 import Button from "@material-ui/core/Button";
@@ -1165,6 +1165,7 @@ const mapStateToProps = (state, ownProps) => {
   console.log("pdfBankName--",pdfBankName)
   
 
+  
 	const serviceRequestId = ownProps.match.params.applicationId;
 	let selectedComplaint = applicationData ? applicationData.bookingsModelList[0] : ''
 	console.log("selectedComplaint--",selectedComplaint)

@@ -10,9 +10,9 @@ class CGBookingDetails extends Component {
   render() {
     const { locality, surcharge, fromDate, toDate,SummaryutGST,SummarycGST,Summarysurcharge,
         utGST, cGST, GSTnumber, cgstone, PrintutGST2,
-        PrintcGST,
+        PrintcGST,ConcatFirstToDate,
         Printsurcharge,
-       utgstRateOne,surchargeOne,fCharges,
+       utgstRateOne,surchargeOne,fCharges,firstToTimeSlot,
       dimension, cleaningCharges, rent, purpose, bkLocation, myLocation, secondRate ,myLocationtwo,firstrent, cleanOne} = this.props;
       console.log("propsInbookingSummaryPage--",this.props)
       if(PrintutGST2 != "notfound"){
@@ -124,6 +124,7 @@ return (
                                 />
                             </div>
 
+
                             <div className="col-md-4">
                                 <Label className="col-xs-12  col-sm-12 col-md-12 status-color" label="BK_MYBK_FROM_DATE" />
                                 <Label
@@ -142,6 +143,32 @@ return (
                                     label={toDate}
                                 />
                             </div>
+
+                             {/*new-requirement*/}
+   {/* {this.props.SecTimeSlotFromTime != "notFound" && this.props.SecTimeSlotToTime != "notFound" ? 
+   <div>
+     <div className="col-md-4">
+     <Label className="col-xs-12  col-sm-12 col-md-12 status-color" label="BK_SECOND_FROM_DATE" />
+     <Label
+         labelStyle={{ color: "inherit" }}
+         className="col-xs-12  col-sm-12 col-md-12  status-result-color"
+         id="complaint-details-complaint-number"
+         label={this.props.ConcatFromDateTime}
+     />
+ </div>
+
+ <div className="col-md-4">
+     <Label className="col-xs-12  col-sm-12 col-md-12 status-color" label="BK_SECOND_TO_DATE" />
+     <Label
+         labelStyle={{ color: "inherit" }}
+         className="col-xs-12  col-sm-12 col-md-12  status-result-color"
+         id="complaint-details-complaint-number"
+         label={this.props.ConcatToDateTime}
+     />
+ </div>
+ </div>
+   : ""}   */}
+          {/*new requirement end*/}
 
                             <div className="col-md-4">
                                 <Label className="col-xs-12  col-sm-12 col-md-12 status-color" label="BK_MYBK_CREATE_CLEANING_CHARGES" />
@@ -264,13 +291,54 @@ const mapStateToProps = state => {
    let Printsurcharge = Summarysurcharge && Summarysurcharge ? Summarysurcharge : " notfound";
    console.log("Printsurcharge--",Printsurcharge) 
 
+   let NewBookFromDate = state.screenConfiguration.preparedFinalObject.availabilityCheckData && state.screenConfiguration.preparedFinalObject.availabilityCheckData.bkFromDate || "notFound"
+  console.log("NewBookFromDate--",NewBookFromDate)
+
+  let NewBookToDate = state.screenConfiguration.preparedFinalObject.availabilityCheckData && state.screenConfiguration.preparedFinalObject.availabilityCheckData.bkToDate || "notFound"
+  console.log("NewBookToDate--",NewBookToDate)
+
+  let DropDownValue = state.screenConfiguration.preparedFinalObject ? state.screenConfiguration.preparedFinalObject.bkBookingData.name : "";
+   console.log("DropDownValue--",DropDownValue)
    
+   let SecTimeSlotFromTime = ""
+   let SecTimeSlotToTime = ""
+   let firstToTimeSlot = ""
+   let ConcatFromDateTime = ""
+   let ConcatToDateTime = ""
+   let ConcatFirstToDate = ""
+   let SecondTimeSlotValue = ""
+   let second = ""
+   let conJsonSecond = ""
 
+   if(DropDownValue === "HALL FOR 4 HOURS AT COMMUNITY CENTRE SECTOR 39 CHANDIGARH"){
 
+    SecTimeSlotFromTime = state.screenConfiguration.preparedFinalObject.Booking.bkFromTimeTwo && state.screenConfiguration.preparedFinalObject.Booking.bkFromTimeTwo || "notFound"
+    console.log("SecTimeSlotFromTime--",SecTimeSlotFromTime)
+  
+    SecTimeSlotToTime = state.screenConfiguration.preparedFinalObject.Booking.bkToTimeTwo && state.screenConfiguration.preparedFinalObject.Booking.bkToTimeTwo || "notFound"
+    console.log("SecTimeSlotToTime--",SecTimeSlotToTime)
+  
+    let strMid = ","
+  
+    ConcatFromDateTime = NewBookFromDate.concat(strMid).concat(SecTimeSlotFromTime);
+      console.log("ConcatFromDateTime--",ConcatFromDateTime)
+      
+     ConcatToDateTime = NewBookToDate.concat(strMid).concat(SecTimeSlotToTime);
+      console.log("ConcatToDateTime--",ConcatToDateTime)
+  
+      firstToTimeSlot = state.screenConfiguration.preparedFinalObject.Booking.bkToTimeTwo && state.screenConfiguration.preparedFinalObject.Booking.bkToTime || "notFound"
+    console.log("firstToTimeSlot--",firstToTimeSlot)
+  
+     ConcatFirstToDate = NewBookToDate.concat(strMid).concat(firstToTimeSlot);
+      console.log("ConcatFromDateTime--",ConcatFirstToDate)
+  
+   }
+
+  
     const { createPACCApplicationData } = complaints;
    
-    return {
-        createPACCApplicationData,
+    return {ConcatFirstToDate,
+        createPACCApplicationData,SecTimeSlotFromTime,SecTimeSlotToTime,ConcatFromDateTime,ConcatToDateTime,
         SummarycGST,
         Summarysurcharge,
         SummaryutGST,
@@ -286,7 +354,7 @@ const mapStateToProps = state => {
          utgstRateOne,
          surchargeOne,
          facilationChargesSuccess,
-         fCharges
+         fCharges,firstToTimeSlot
     }
 
 }

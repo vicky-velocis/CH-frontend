@@ -135,7 +135,19 @@ const PaymentReceiptDteail = Loadable({
   loader: () => import("../Screens/ParkAndCommunityCenterAppDetails/components/PayPage"),
   loading: Loading
 })
-
+//RoomBooking
+const RoomBooking = Loadable({
+  loader: () => import("../Screens/EmployeeRoomBooking/CheckApplicationPage"),
+  loading: Loading
+})
+const BeforeApplyScreen = Loadable({
+  loader: () => import("../Screens/EmployeeRoomBooking/BeforeApplyScreen"),
+  loading: Loading
+})
+const RoomSteeper = Loadable({
+  loader: () => import("../Screens/EmployeeRoomBooking/formForRoomApplication"),
+  loading: Loading
+})
 const ServiceHome = Loadable({
   loader: () => import("../Screens/ApplicationDetails"),
   loading: Loading
@@ -307,7 +319,49 @@ const routes = [
       // title: "ES_OPEN_APPLICAION_HEADER",
       hideTitle: false,
       customFor: "employee",
-      customTitle: "BK_MYBK_PAYMENT_RCPT_DETAILS"
+      customTitle: "Make Offline Payment"
+      // customTitle: "BK_MYBK_PAYMENT_RCPT_DETAILS"
+    }
+  },
+  //RoomBooking
+  {
+    path: "egov-services/ApplyForRoomBooking",
+    component: RoomBooking,
+    needsAuthentication: true,
+    options: {
+      hideFooter: true,
+      // title: "ES_OPEN_APPLICAION_HEADER",
+      hideTitle: false,
+      customFor: "employee",
+      customTitle: "Make Offline Payment",
+      customTitle: "BK_MYBK_APPLY_FOR_ROOM_BOOKING"
+    }
+  },//BeforeApplyScreen
+  {
+    path: "egov-services/ApplyRoomBooking",
+    component: BeforeApplyScreen,
+    needsAuthentication: true,
+    options: {
+      hideFooter: true,
+      // title: "ES_OPEN_APPLICAION_HEADER",
+      hideTitle: false,
+      customFor: "employee",
+      customTitle: "Make Offline Payment",
+      customTitle: "BK_MYBK_APPLY_FOR_ROOM_BOOKING"
+    }
+  },
+  //RoomSteeper
+  {
+    path: "egov-services/Employee/ApplyRoomBooking",
+    component: RoomSteeper,
+    needsAuthentication: true,
+    options: {
+      hideFooter: true,
+      // title: "ES_OPEN_APPLICAION_HEADER",
+      hideTitle: false,
+      customFor: "employee",
+      customTitle: "Make Offline Payment",
+      customTitle: "BK_MYBK_APPLY_FOR_ROOM_BOOKING"
     }
   },
   {

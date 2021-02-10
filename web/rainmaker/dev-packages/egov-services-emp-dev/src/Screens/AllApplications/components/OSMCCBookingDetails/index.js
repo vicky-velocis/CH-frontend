@@ -109,6 +109,7 @@ class BookingDetails extends Component {
 
   render() {
     const { status, historyApiData, bkBookingVenue, bkFromDate, bkToDate, applicantName, applicationNo, submittedDate, dateCreated, address, sector, houseNo, bookingType, mapAction, images, action, role } = this.props;
+    console.log("")
     var ProcessInstances = [];
 
     if (historyApiData != undefined && historyApiData.ProcessInstances && historyApiData.ProcessInstances.length > 0) {
@@ -194,7 +195,7 @@ class BookingDetails extends Component {
                     <Typography variant="caption">
                       <LabelContainer
                         labelName="Updated By"
-                        labelKey="BK_UPDATED_BY_LABEL"
+                        labelKey="BK_UPDATED_BY_LABEL" 
                       />
                     </Typography>
                     <Typography variant="body2">
@@ -262,8 +263,8 @@ class BookingDetails extends Component {
                       }}
                     >
                       <LabelContainer
-                        labelName={ProcessInstances && ProcessInstances.length > 0 && ProcessInstances[0].assignee ?
-                          ProcessInstances[0].assignee.name
+                        labelName={ProcessInstances && ProcessInstances.length > 0 && ProcessInstances[0].assigner ?
+                          ProcessInstances[0].assigner.name
                           : "NA"
                         }
                       />
