@@ -3,9 +3,8 @@ import { getBreak, getCommonHeader } from "egov-ui-framework/ui-config/screens/s
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getUserInfo, setapplicationType } from "egov-ui-kit/utils/localStorageUtils";
 import { getDashboardDropdownData } from "../../../../ui-utils/commons";
-import { HCDashboardFilterForm, HCDashboardResults } from "./HCDashboard/HCDashboard";
-import { PGRDashboardResults } from "./searchResource/dashboardTypeSearchResults";
-import { allDashboardSearchAPICall, SearchDashboardData } from "./searchResource/functions";
+// import { HCDashboardFilterForm, HCDashboardResults } from "./HCDashboard/HCDashboard";
+import { SportCultureDashboardFilterForm, SportCultureDashboardResults } from "./SportCultureDashboard/SportCultureDashboard";
 import './index.css';
 
 let role_name = JSON.parse(getUserInfo()).roles[0].code
@@ -44,34 +43,30 @@ const getDropDownData = async (action, state, dispatch) => {
   debugger
 //   let data = getDashboardDropdownData(state, dispatch, status)
   var data =  [
-  {
-    "name" : "Service Request By Status",
-    "code" : "service_request_status"
-  },
-  {
-  "name" : "Service Request By Type",
-  "code" : "service_type"
-  },
-  {
-  "name" : "Service Request By Locality",
-  "code" : "locality"
-  },
+    {
+    "name" : "Event Type",
+    "code" : "eventStatus"
+    },
+    {
+      "name" : "Event Status",
+      "code" : "status"
+    }
   ]
-  var selectedDefaultData = {value: "service_request_status", label: "Service Request By Status"};
+  var selectedDefaultData = {value: "eventStatus", label: "Event Type"};
 
   // Date default
   var fromDate = new Date();
   var formatDt = defaultDate(fromDate);
 
-  dispatch(prepareFinalObject("HCdahsboardHome.dropDownData", data));
-  dispatch(prepareFinalObject("HCdahsboardHome.dropDownData2", selectedDefaultData));
-  dispatch(prepareFinalObject("HCdahsboardHome.defaultFromDate", formatDt));
-  dispatch(prepareFinalObject("HCdahsboardHome.defaulttoDate", formatDt));
+  dispatch(prepareFinalObject("dahsboardHome.dropDownData", data));
+  dispatch(prepareFinalObject("dahsboardHome.dropDownData2", selectedDefaultData));
+  dispatch(prepareFinalObject("dahsboardHome.defaultFromDate", formatDt));
+  dispatch(prepareFinalObject("dahsboardHome.defaulttoDate", formatDt));
 }
 
-const HCDashboard = {
+const SportCultureDashboard = {
   uiFramework: "material-ui",
-  name: "HCDashboard",
+  name: "SportCultureDashboard",
   beforeInitScreen: (action, state, dispatch) => {
     
     debugger
@@ -98,12 +93,12 @@ const HCDashboard = {
             
           }
         },
-        HCDashboardFilterForm,
+        SportCultureDashboardFilterForm,
         breakAfterSearch: getBreak(),
-        HCDashboardResults,
+        SportCultureDashboardResults
       }
     },
   }
 };
 
-export default HCDashboard;
+export default SportCultureDashboard;

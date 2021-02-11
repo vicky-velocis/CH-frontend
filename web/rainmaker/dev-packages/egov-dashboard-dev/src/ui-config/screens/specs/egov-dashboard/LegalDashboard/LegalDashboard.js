@@ -1,61 +1,61 @@
 import { getCommonCard, getCommonContainer, getDateField, getLabel, getPattern,} from "egov-ui-framework/ui-config/screens/specs/utils";
 // import { searchAPICall, SearchDashboardData, SearchPGRDashboardData } from "./functions";
-import { SearchHCDashboardData } from "./HCFunction";
+import { SearchLegalDashboardData } from "./LegalFunction";
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import './index.css';
 
-export const HCDashboardFilterForm = getCommonCard({
+export const LegalDashboardFilterForm = getCommonCard({
   FilterConstraintsContainer: getCommonContainer({
-    fromDate: getDateField({
-      label: { labelName: "From Date", labelKey: "DASHBOARD_FROM_DATE_LABEL" },
-      placeholder: {
-        labelName: "",
-        labelKey: "Select From Date"
-      },
-      gridDefination: {
-        xs: 6,
-        sm: 2,
-        md: 2
-      },
-      pattern: getPattern("Date"),
-      jsonPath: "HCdahsboardHome.defaultFromDate",
-      required: true,
-      afterFieldChange: (action, state, dispatch) => {
-        dispatch(
-          handleField(
-            "dashboardSource",
-            "components.div.children.FilterFormforEmployee.children.cardContent.children.FilterConstraintsContainer.children.toDate",
-            "props.inputProps.min",
-            action.value
-          )
-        );
-        }
-    }),
-    toDate: getDateField({
-      label: { labelName: "To Date", labelKey: "DASHBOARD_TO_DATE_LABEL" },
-      placeholder: {
-        labelName: "To Date",
-        labelKey: "Select To Date"
-      },
-      props: {
-        inputProps: {
-          min: ''
-        }
-      },
-      gridDefination: {
-        xs: 6,
-        sm: 2,
-        md: 2
-      },
-      pattern: getPattern("Date"),
-      jsonPath: "HCdahsboardHome.defaulttoDate",
-      required: true,
-    }),
+    // fromDate: getDateField({
+    //   label: { labelName: "From Date", labelKey: "DASHBOARD_FROM_DATE_LABEL" },
+    //   placeholder: {
+    //     labelName: "",
+    //     labelKey: "Select From Date"
+    //   },
+    //   gridDefination: {
+    //     xs: 6,
+    //     sm: 2,
+    //     md: 2
+    //   },
+    //   pattern: getPattern("Date"),
+    //   jsonPath: "dahsboardHome.defaultFromDate",
+    //   required: true,
+    //   afterFieldChange: (action, state, dispatch) => {
+    //     dispatch(
+    //       handleField(
+    //         "dashboardSource",
+    //         "components.div.children.FilterFormforEmployee.children.cardContent.children.FilterConstraintsContainer.children.toDate",
+    //         "props.inputProps.min",
+    //         action.value
+    //       )
+    //     );
+    //     }
+    // }),
+    // toDate: getDateField({
+    //   label: { labelName: "To Date", labelKey: "DASHBOARD_TO_DATE_LABEL" },
+    //   placeholder: {
+    //     labelName: "To Date",
+    //     labelKey: "Select To Date"
+    //   },
+    //   props: {
+    //     inputProps: {
+    //       min: ''
+    //     }
+    //   },
+    //   gridDefination: {
+    //     xs: 6,
+    //     sm: 2,
+    //     md: 2
+    //   },
+    //   pattern: getPattern("Date"),
+    //   jsonPath: "dahsboardHome.defaulttoDate",
+    //   required: true,
+    // }),
     moduleDashboardDropdown: {
       uiFramework: "custom-containers-local",
       moduleName: "egov-dashboard",
       componentPath: "AutosuggestContainer",
-      jsonPath: "HCdahsboardHome.dropDownData2",
+      jsonPath: "dahsboardHome.dropDownData2",
       required: true,
       gridDefination: {
             xs: 6,
@@ -64,7 +64,7 @@ export const HCDashboardFilterForm = getCommonCard({
           },
       props: {
         style: {
-        width: "130%",
+        width: "200%",
         cursor: "pointer"
       },
   
@@ -74,8 +74,8 @@ export const HCDashboardFilterForm = getCommonCard({
         labelName: "",
         labelKey: "Select Module"
       },
-      sourceJsonPath: "HCdahsboardHome.dropDownData",
-      jsonPath: "HCdahsboardHome.dropDownData2",
+      sourceJsonPath: "dahsboardHome.dropDownData",
+      jsonPath: "dahsboardHome.dropDownData2",
       maxLength:5,
       labelsFromLocalisation: false,
       suggestions: [],
@@ -104,7 +104,7 @@ export const HCDashboardFilterForm = getCommonCard({
         width: "60%",
         height: "55px",
         /* margin-right: 80px; */
-        marginLeft: "90%"
+        marginLeft: "180px"
         }
       },
       children: {
@@ -116,17 +116,17 @@ export const HCDashboardFilterForm = getCommonCard({
       onClickDefination: {
         action: "condition",
         callBack: (state, dispatch) => {
-          SearchHCDashboardData(state, dispatch)
+          SearchLegalDashboardData(state, dispatch)
         }
       }
     },
   })
 });
 
-export const HCDashboardResults = {
+export const LegalDashboardResults = {
   uiFramework: "custom-molecules-local",
   moduleName: "egov-dashboard",
-  componentPath: "HCDashboard",
+  componentPath: "DashboardEchallan",
   props: {
   // className: "dashboard-graph",
   formKey: `newapplication`,
