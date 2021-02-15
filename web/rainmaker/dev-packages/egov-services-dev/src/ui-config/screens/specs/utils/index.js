@@ -1373,7 +1373,7 @@ export const downloadApplication = async (
             propertyType: applicationData.bkType,
             date: convertDateInDMY(applicationData.bkDate),
             time: applicationData.bkTime,  
-            applicationStatus: applicationData.bkApplicationStatus==="PENDINGASSIGNMENTDRIVER"? "Request Verification Pending" :applicationData.bkApplicationStatus,
+            applicationStatus: applicationData.bkApplicationStatus==="PENDINGASSIGNMENTDRIVER"? "Request Verification Pending" :applicationData.bkApplicationStatus==="PENDINGUPDATE" ? "Out for Delivery":applicationData.bkApplicationStatus==="DELIVERED"? "Processed":applicationData.bkApplicationStatus,
             applicationType: applicationData.bkStatus,
         };
         let bookingDataGFCP = {
