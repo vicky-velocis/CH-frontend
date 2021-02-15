@@ -50,8 +50,8 @@ return (
           textChildren={
             <div>
               <div className="rainmaker-displayInline">
-                
-                <Label label="BK_MYBK_PAYMENT_RCPT_DETAILS" containerStyle={{ marginLeft: "13px" }} labelClassName="dark-heading" />
+                {/*BK_MYBK_PAYMENT_RCPT_DETAILS*/}
+                <Label label="Make Payment Receipt Detail" containerStyle={{ marginLeft: "13px" }} labelClassName="dark-heading" />
               </div>
               <div key={10} className="complaint-detail-full-width">
               
@@ -66,7 +66,7 @@ return (
             required = {true}
             hintText={
               <Label
-                label="BK_MYBK_RECEIPT_NUMBER"
+                label="Receipt Number"   // label="BK_MYBK_RECEIPT_NUMBER"
                 color="rgba(0, 0, 0, 0.3799999952316284)"
                 fontSize={16}
                 labelStyle={hintTextStyle}
@@ -75,7 +75,7 @@ return (
             floatingLabelText={
               <Label
                 key={0}
-                label="BK_MYBK_RECEIPT_NUMBER"
+                label="Receipt Number"
                 color="rgba(0,0,0,0.60)"
                 fontSize="12px"
               />
@@ -104,7 +104,7 @@ return (
                     floatingLabelText={
                       <Label
                         key={1}
-                        label="BK_MYBK_TRDATE_PLACEHOLDER"
+                        label="Transaction Date"    // label="BK_MYBK_TRDATE_PLACEHOLDER"
                         color="rgba(0,0,0,0.60)"
                         fontSize="12px"
                       />
