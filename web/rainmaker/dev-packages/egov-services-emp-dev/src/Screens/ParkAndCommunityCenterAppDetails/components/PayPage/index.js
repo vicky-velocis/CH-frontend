@@ -16,7 +16,8 @@ import SubmitPaymentDetails from "../SubmitPaymentDetails"
 import { getFileUrlFromAPI } from '../../../../modules/commonFunction'
 import jp from "jsonpath";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import { httpRequest } from "egov-ui-kit/utils/api"
+import { httpRequest } from "egov-ui-kit/utils/api" //PaymentDetailsTwo
+import PaymentDetailsTwo from "../PaymentDetailsTwo"  
 
 class SummaryDetails extends Component {
 
@@ -311,8 +312,14 @@ console.log("this.state--PaidBy",PaidBy)
                 <div className="form-without-button-cont-generic">
                     <div classsName="container">
                         <div className="col-xs-12">
-{this.props.ApplicantAppStatus != "OFFLINE_RE_INITIATED" ? 
+{/* {this.props.ApplicantAppStatus != "OFFLINE_RE_INITIATED" ? 
  <PaymentDetails
+ paymentDetails={paymentDetails && paymentDetails}
+  />     
+: ""} */}
+
+{this.props.ApplicantAppStatus != "OFFLINE_RE_INITIATED" ? 
+ <PaymentDetailsTwo
  paymentDetails={paymentDetails && paymentDetails}
   />     
 : ""}
@@ -409,6 +416,7 @@ Status={this.props.ApplicantAppStatus && this.props.ApplicantAppStatus}
         );
     }
 }
+
 
 const mapStateToProps = state => {
 
